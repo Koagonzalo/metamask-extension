@@ -136,8 +136,6 @@ import {
   TransactionType,
 } from '@metamask/transaction-controller';
 
-import { isSnapId } from '@metamask/snaps-utils';
-
 import { Interface } from '@ethersproject/abi';
 import { abiERC1155, abiERC721 } from '@metamask/metamask-eth-abis';
 import { isEvmAccountType } from '@metamask/keyring-api';
@@ -5533,12 +5531,6 @@ export default class MetamaskController extends EventEmitter {
     autoApprove,
     metadata,
   }) {
-    if (isSnapId(origin)) {
-      throw new Error(
-        `Cannot request permittedChains permission for Snaps with origin "${origin}"`,
-      );
-    }
-
     const caveatValueWithChains = setPermittedEthChainIds(
       {
         requiredScopes: {},
@@ -5607,10 +5599,6 @@ export default class MetamaskController extends EventEmitter {
       permissions[PermissionNames.permittedChains] = {};
     }
 
-    if (isSnapId(origin)) {
-      delete permissions[PermissionNames.permittedChains];
-    }
-
     const requestedAccounts =
       permissions[RestrictedMethods.eth_accounts]?.caveats?.find(
         (caveat) => caveat.type === CaveatTypes.restrictReturnedAccounts,
@@ -5633,7 +5621,7 @@ export default class MetamaskController extends EventEmitter {
 
     const caveatValueWithChains = setPermittedEthChainIds(
       newCaveatValue,
-      isSnapId(origin) ? [] : requestedChains,
+      requestedChains,
     );
 
     const caveatValueWithAccountsAndChains = setEthAccounts(
