@@ -240,7 +240,10 @@ function transformState(state: Record<string, unknown>) {
 
   const currentDomains = selectedNetworkControllerState.domains;
   const domains = Object.fromEntries(
-    updatedSubjects.map((subject) => [subject, currentChainId]),
+    updatedSubjects.map((subject) => [
+      subject,
+      networkControllerState.selectedNetworkClientId,
+    ]),
   );
 
   selectedNetworkControllerState.domains = {

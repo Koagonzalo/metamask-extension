@@ -116,7 +116,7 @@ describe(`migration #${version}`, () => {
     expect(newStorage.data.SelectedNetworkController).toStrictEqual({
       domains: {
         [METAMASK_DOMAIN]: 'mainnet',
-        [MOCK_SNAP_ID]: '0xe705',
+        [MOCK_SNAP_ID]: 'linea-sepolia',
       },
     });
   });
@@ -236,7 +236,7 @@ describe(`migration #${version}`, () => {
     expect(newStorage.data.SelectedNetworkController).toStrictEqual({
       domains: {
         [METAMASK_DOMAIN]: 'mainnet',
-        [MOCK_SNAP_ID]: '0x1',
+        [MOCK_SNAP_ID]: 'mainnet',
       },
     });
   });
