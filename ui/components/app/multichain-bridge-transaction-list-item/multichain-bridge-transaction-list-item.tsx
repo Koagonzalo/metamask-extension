@@ -119,6 +119,8 @@ const MultichainBridgeTransactionListItem: React.FC<
   if (transaction.isBridgeTx && bridgeInfo) {
     const { destChainName, provider, destChainId } = bridgeInfo;
     const displayChainName = destChainName || destChainId;
+    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31893
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     title = `${t('bridge')} ${t('to')} ${displayChainName}`;
     if (provider) {
       title = `${title} ${t('via')} ${provider}`;

@@ -192,6 +192,8 @@ async function start(): Promise<void> {
         benchmarkResults[platform][buildType] = benchmark;
       } catch (error) {
         console.error(
+          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31893
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           `Error encountered processing benchmark data for '${platform}': '${error}'`,
         );
       }
@@ -297,6 +299,8 @@ async function start(): Promise<void> {
       const benchmarkBody = `<details><summary>${benchmarkSummary}</summary>${benchmarkTable}</details>\n\n`;
       commentBody += `${benchmarkBody}`;
     } catch (error) {
+      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31893
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       console.error(`Error constructing benchmark results: '${error}'`);
     }
   } else {
@@ -367,6 +371,8 @@ async function start(): Promise<void> {
 
     commentBody += sizeDiffBody;
   } catch (error) {
+    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31893
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     console.error(`Error constructing bundle size diffs results: '${error}'`);
   }
 
