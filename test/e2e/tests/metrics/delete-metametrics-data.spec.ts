@@ -101,7 +101,10 @@ describe('Delete MetaMetrics Data', function (this: Suite) {
         const privacySettings = new PrivacySettings(driver);
         await privacySettings.check_pageIsLoaded();
         await privacySettings.deleteMetaMetrics();
-        assert.equal(await privacySettings.check_deleteMetaMetricsDataButtonEnabled(), false);
+        assert.equal(
+          await privacySettings.check_deleteMetaMetricsDataButtonEnabled(),
+          false,
+        );
 
         const events = await getEventPayloads(
           driver,
@@ -111,7 +114,11 @@ describe('Delete MetaMetrics Data', function (this: Suite) {
         assert.deepStrictEqual(events[0].properties, {
           category: 'Settings',
           locale: 'en',
+          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           chain_id: '0x539',
+          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           environment_type: 'fullscreen',
         });
 
@@ -123,7 +130,10 @@ describe('Delete MetaMetrics Data', function (this: Suite) {
 
         // check MetaMetrics data button is enabled when user goes back to privacy settings page
         await privacySettings.check_pageIsLoaded();
-        assert.equal(await privacySettings.check_deleteMetaMetricsDataButtonEnabled(), true);
+        assert.equal(
+          await privacySettings.check_deleteMetaMetricsDataButtonEnabled(),
+          true,
+        );
       },
     );
   });
@@ -150,7 +160,10 @@ describe('Delete MetaMetrics Data', function (this: Suite) {
 
         const privacySettings = new PrivacySettings(driver);
         await privacySettings.check_pageIsLoaded();
-        assert.equal(await privacySettings.check_deleteMetaMetricsDataButtonEnabled(), false);
+        assert.equal(
+          await privacySettings.check_deleteMetaMetricsDataButtonEnabled(),
+          false,
+        );
       },
     );
   });
@@ -172,7 +185,10 @@ describe('Delete MetaMetrics Data', function (this: Suite) {
 
         const privacySettings = new PrivacySettings(driver);
         await privacySettings.check_pageIsLoaded();
-        assert.equal(await privacySettings.check_deleteMetaMetricsDataButtonEnabled(), false);
+        assert.equal(
+          await privacySettings.check_deleteMetaMetricsDataButtonEnabled(),
+          false,
+        );
       },
     );
   });

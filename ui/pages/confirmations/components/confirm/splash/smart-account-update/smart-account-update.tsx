@@ -131,7 +131,7 @@ export function SmartAccountUpdate() {
         />
         <ListItem
           imgSrc="./images/sparkle.svg"
-          title={t('smartAccountPayToken')}
+          title={t('smartAccountSameAccount')}
           description={
             <>
               <Text

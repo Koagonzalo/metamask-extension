@@ -1,8 +1,9 @@
-import { useSelector } from 'react-redux';
 import { InternalAccount } from '@metamask/keyring-internal-api';
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
+import { Hex } from '@metamask/utils';
 import {
   AvatarAccount,
   AvatarAccountSize,
@@ -15,60 +16,68 @@ import {
   Button,
   ButtonIcon,
   ButtonIconSize,
-  ButtonVariant,
   ButtonSize,
-  Text,
+  ButtonVariant,
   Icon,
   IconName,
   IconSize,
+  Text,
 } from '../../../../components/component-library';
-import Tooltip from '../../../../components/ui/tooltip';
-import UnitInput from '../../../../components/ui/unit-input';
-import Dropdown from '../../../../components/ui/dropdown';
-import {
-  AlignItems,
-  FontWeight,
-  TextVariant,
-  TextAlign,
-  BackgroundColor,
-  Display,
-  JustifyContent,
-  FlexDirection,
-  BlockSize,
-  TextColor,
-  BorderColor,
-  BorderRadius,
-} from '../../../../helpers/constants/design-system';
-import Card from '../../../../components/ui/card';
-import { AccountPicker } from '../../../../components/multichain/account-picker';
 import { AccountListMenu } from '../../../../components/multichain/account-list-menu';
+import { AccountPicker } from '../../../../components/multichain/account-picker';
 import {
   Content,
   Footer,
   Header,
   Page,
 } from '../../../../components/multichain/pages/page';
+import Card from '../../../../components/ui/card';
+import Dropdown from '../../../../components/ui/dropdown';
+import Tooltip from '../../../../components/ui/tooltip';
+import UnitInput from '../../../../components/ui/unit-input';
+import {
+  AlignItems,
+  BackgroundColor,
+  BlockSize,
+  BorderColor,
+  BorderRadius,
+  Display,
+  FlexDirection,
+  FontWeight,
+  JustifyContent,
+  TextAlign,
+  TextColor,
+  TextVariant,
+} from '../../../../helpers/constants/design-system';
 
-import { SwapAllowance, TokenSymbol, ToTokenOption } from '../../remote.types';
 import {
   DEFAULT_ROUTE,
   REMOTE_ROUTE,
 } from '../../../../helpers/constants/routes';
 import { getIsRemoteModeEnabled } from '../../../../selectors/remote-mode';
 import {
+  BaseToTokenOption,
+  REMOTE_MODES,
+  SwapAllowance,
+  TokenSymbol,
+  ToTokenOption,
+} from '../../remote.types';
+
+import {
   RemoteModeHardwareWalletConfirm,
   RemoteModeSwapAllowanceCard,
-  StepIndicator,
   SmartAccountUpdateInformation,
+  StepIndicator,
 } from '../../components';
 
 import { isRemoteModeSupported } from '../../../../helpers/utils/remote-mode';
 
-import { InternalAccountWithBalance } from '../../../../selectors/selectors.types';
 import {
-  getSelectedInternalAccount,
   getMetaMaskAccountsOrdered,
+  getSelectedInternalAccount,
 } from '../../../../selectors';
+import { InternalAccountWithBalance } from '../../../../selectors/selectors.types';
+import { useRemoteMode } from '../../hooks/useRemoteMode';
 
 const TOTAL_STEPS = 3;
 
@@ -92,14 +101,16 @@ export default function RemoteModeSetupSwaps() {
     TokenSymbol.USDC,
   );
   const [selectedToToken, setSelectedToToken] = useState<ToTokenOption>(
-    ToTokenOption.AllowedOutcome,
+    BaseToTokenOption.AllowedOutcome,
   );
   const [dailyLimit, setDailyLimit] = useState<string>('');
   const [isAllowancesExpanded, setIsAllowancesExpanded] =
     useState<boolean>(false);
   const [selectedAccount, setSelectedAccount] =
     useState<InternalAccount | null>(null);
-  const [isHardwareAccount, setIsHardwareAccount] = useState<boolean>(false);
+  const [isHardwareAccount, setIsHardwareAccount] = useState<boolean>(true);
+  const [dailyLimitError, setDailyLimitError] = useState<boolean>(false);
+  const [swapToError, setSwapToError] = useState<boolean>(false);
 
   const selectedHardwareAccount = useSelector(getSelectedInternalAccount);
   const authorizedAccounts: InternalAccountWithBalance[] = useSelector(
@@ -109,6 +120,9 @@ export default function RemoteModeSetupSwaps() {
   const history = useHistory();
 
   const isRemoteModeEnabled = useSelector(getIsRemoteModeEnabled);
+  const { enableRemoteMode } = useRemoteMode({
+    account: selectedHardwareAccount.address as Hex,
+  });
 
   useEffect(() => {
     setIsHardwareAccount(isRemoteModeSupported(selectedHardwareAccount));
@@ -141,7 +155,13 @@ export default function RemoteModeSetupSwaps() {
   };
 
   const handleAddAllowance = () => {
-    if (!dailyLimit) {
+    if (!dailyLimit || parseFloat(dailyLimit) <= 0) {
+      setDailyLimitError(true);
+      return;
+    }
+
+    if (selectedToToken === BaseToTokenOption.AllowedOutcome) {
+      setSwapToError(true);
       return;
     }
 
@@ -152,20 +172,39 @@ export default function RemoteModeSetupSwaps() {
     };
 
     setSwapAllowance((prevAllowances) => {
-      const filteredAllowances = prevAllowances.filter(
-        (allowance) => allowance.from !== selectedFromToken,
+      const existingAllowance = prevAllowances.find(
+        (allowance) =>
+          allowance.from === selectedFromToken &&
+          allowance.to === selectedToToken,
       );
-      return [...filteredAllowances, newAllowance];
+
+      if (existingAllowance) {
+        return prevAllowances.map((allowance) =>
+          allowance === existingAllowance
+            ? { ...allowance, amount: parseFloat(dailyLimit) }
+            : allowance,
+        );
+      }
+
+      return [...prevAllowances, newAllowance];
     });
 
     setSelectedFromToken(TokenSymbol.USDC);
-    setSelectedToToken(ToTokenOption.AllowedOutcome);
+    setSelectedToToken(BaseToTokenOption.AllowedOutcome);
     setDailyLimit('');
+    setDailyLimitError(false);
+    setSwapToError(false);
   };
 
-  const handleRemoveAllowance = (tokenSymbol: TokenSymbol) => {
+  const handleRemoveAllowance = (
+    tokenSymbol: TokenSymbol,
+    toToken: ToTokenOption,
+  ) => {
     setSwapAllowance(
-      swapAllowance.filter((allowance) => allowance.from !== tokenSymbol),
+      swapAllowance.filter(
+        (allowance) =>
+          !(allowance.from === tokenSymbol && allowance.to === toToken),
+      ),
     );
   };
 
@@ -173,7 +212,34 @@ export default function RemoteModeSetupSwaps() {
     setIsConfirmModalOpen(true);
   };
 
-  const handleConfigureRemoteSwaps = () => {
+  const handleConfigureRemoteSwaps = async () => {
+    if (!selectedAccount) {
+      return;
+    }
+
+    try {
+      await enableRemoteMode({
+        selectedAccount: selectedHardwareAccount,
+        authorizedAccount: selectedAccount,
+        mode: REMOTE_MODES.SWAP,
+        meta: JSON.stringify({ allowances: swapAllowance }),
+      });
+    } catch (error) {
+      // TODO: show error on UI
+      console.error(error);
+    }
+
+    // todo: replace with delegation controller integration
+    const remoteMode = localStorage.getItem('remoteMode');
+    const parsedRemoteMode = remoteMode ? JSON.parse(remoteMode) : null;
+    const updatedRemoteMode = {
+      ...parsedRemoteMode,
+      swapAllowance: {
+        allowances: swapAllowance,
+      },
+    };
+    localStorage.setItem('remoteMode', JSON.stringify(updatedRemoteMode));
+
     history.replace(REMOTE_ROUTE);
   };
 
@@ -298,9 +364,14 @@ export default function RemoteModeSetupSwaps() {
                     <Text>Daily limit</Text>
                     <UnitInput
                       value={dailyLimit}
-                      onChange={(newDecimalValue: string) =>
-                        setDailyLimit(newDecimalValue)
-                      }
+                      onChange={(newDecimalValue: string) => {
+                        setDailyLimit(newDecimalValue);
+                        if (parseFloat(newDecimalValue) <= 0) {
+                          setDailyLimitError(true);
+                        } else {
+                          setDailyLimitError(false);
+                        }
+                      }}
                       placeholder="Enter amount"
                       style={{
                         width: '100%',
@@ -308,6 +379,7 @@ export default function RemoteModeSetupSwaps() {
                         minHeight: '45px',
                         marginTop: '8px',
                       }}
+                      error={dailyLimitError}
                     />
                   </Box>
                 </Box>
@@ -324,16 +396,26 @@ export default function RemoteModeSetupSwaps() {
                     onChange={(value) =>
                       setSelectedToToken(value as ToTokenOption)
                     }
-                    options={Object.values(ToTokenOption).map((value) => ({
-                      name: value,
-                      value,
-                    }))}
+                    options={[
+                      ...Object.values(BaseToTokenOption).map((value) => ({
+                        name: value,
+                        value,
+                      })),
+                      ...Object.values(TokenSymbol).map((value) => ({
+                        name: value,
+                        value,
+                      })),
+                    ]}
                     selectedOption={selectedToToken}
-                    title="Select token"
-                    style={{ width: '100%' }}
+                    style={{
+                      width: '100%',
+                      borderColor: swapToError
+                        ? 'var(--color-error-default)'
+                        : undefined,
+                    }}
                   />
                 </Box>
-                {selectedToToken === ToTokenOption.Any && (
+                {selectedToToken === BaseToTokenOption.Any && (
                   <Text variant={TextVariant.bodySm} marginBottom={4}>
                     Tip: This is a higher risk option if your authorized account
                     is compromised.
@@ -353,7 +435,9 @@ export default function RemoteModeSetupSwaps() {
                     <RemoteModeSwapAllowanceCard
                       key={allowance.from}
                       swapAllowance={allowance}
-                      onRemove={() => handleRemoveAllowance(allowance.from)}
+                      onRemove={() =>
+                        handleRemoveAllowance(allowance.from, allowance.to)
+                      }
                     />
                   ))}
                 </Box>
@@ -520,7 +604,9 @@ export default function RemoteModeSetupSwaps() {
                       <RemoteModeSwapAllowanceCard
                         key={allowance.from}
                         swapAllowance={allowance}
-                        onRemove={() => handleRemoveAllowance(allowance.from)}
+                        onRemove={() =>
+                          handleRemoveAllowance(allowance.from, allowance.to)
+                        }
                       />
                     ))}
                   </Box>
@@ -622,7 +708,7 @@ export default function RemoteModeSetupSwaps() {
           onClick={currentStep === 3 ? handleShowConfirmation : handleNext}
           width={BlockSize.Half}
           size={ButtonSize.Lg}
-          disabled={!isHardwareAccount}
+          disabled={!isHardwareAccount || swapAllowance.length === 0}
         >
           {currentStep === TOTAL_STEPS ? 'Confirm' : 'Next'}
         </Button>

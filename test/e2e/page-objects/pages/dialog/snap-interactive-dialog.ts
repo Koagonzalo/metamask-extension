@@ -1,18 +1,18 @@
-import { Driver } from '../../../webdriver/driver';
 import { strict as assert } from 'assert';
+import { Driver } from '../../../webdriver/driver';
 
 const selectors = {
   exampleDropdown: '[data-testid="snaps-dropdown"]',
   exampleInput: '#example-input',
   interactiveUITitle: {
-      text: 'Interactive UI Example Snap',
-      tag: 'p',
-    },
+    text: 'Interactive UI Example Snap',
+    tag: 'p',
+  },
   exampleSelectorDropdown: '.snap-ui-renderer__selector',
   selectorItem: '.snap-ui-renderer__selector-item',
   rendererPanel: '.snap-ui-renderer__panel',
   exampleCheckbox: '.mm-checkbox__input',
-} satisfies Record<string, string | Record<string, string>>
+} satisfies Record<string, string | Record<string, string>>;
 
 class SnapInteractiveDialog {
   private driver: Driver;
@@ -21,13 +21,15 @@ class SnapInteractiveDialog {
     this.driver = driver;
   }
 
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_pageIsLoaded(): Promise<void> {
     try {
       await this.driver.waitForMultipleSelectors([
         selectors.interactiveUITitle,
         selectors.exampleInput,
       ]);
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.log(
         'Timed out while waiting for Snap Interactive UI dialog to load',
         e,
@@ -44,12 +46,18 @@ class SnapInteractiveDialog {
 
   async clickCancelButton() {
     console.log(`Clicking cancel button`);
-    await this.driver.clickElementAndWaitForWindowToClose({ text: 'Cancel', tag: 'span' });
+    await this.driver.clickElementAndWaitForWindowToClose({
+      text: 'Cancel',
+      tag: 'span',
+    });
   }
 
   async clickOKButton() {
     console.log(`Clicking OK button`);
-    await this.driver.clickElementAndWaitForWindowToClose({ text: 'OK', tag: 'span' });
+    await this.driver.clickElementAndWaitForWindowToClose({
+      text: 'OK',
+      tag: 'span',
+    });
   }
 
   async fillMessage(message: string) {
@@ -61,7 +69,10 @@ class SnapInteractiveDialog {
     console.log(`Selecting selector option: "${option}"`);
     if (exampleDropName === 'selector') {
       await this.driver.clickElement(selectors.exampleSelectorDropdown);
-      await this.driver.clickElement({ text: option, css: selectors.selectorItem });
+      await this.driver.clickElement({
+        text: option,
+        css: selectors.selectorItem,
+      });
     } else {
       await this.driver.clickElement(selectors.exampleDropdown);
       await this.driver.clickElement({ text: option, tag: `option` });
@@ -85,20 +96,35 @@ class SnapInteractiveDialog {
     await this.driver.clickElement(selectors.exampleCheckbox);
   }
 
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_result() {
     console.log(`Checking that all the selected options appear in the result`);
-    await this.driver.waitForSelector({ text: 'foo bar', css: selectors.rendererPanel });
-    await this.driver.waitForSelector({ text: 'option2', css: selectors.rendererPanel });
-    await this.driver.waitForSelector({ text: 'option1', css: selectors.rendererPanel });
-    await this.driver.waitForSelector({ text: 'option3', css: selectors.rendererPanel });
-    await this.driver.waitForSelector({ text: 'true', css: selectors.rendererPanel });
+    await this.driver.waitForSelector({
+      text: 'foo bar',
+      css: selectors.rendererPanel,
+    });
+    await this.driver.waitForSelector({
+      text: 'option2',
+      css: selectors.rendererPanel,
+    });
+    await this.driver.waitForSelector({
+      text: 'option1',
+      css: selectors.rendererPanel,
+    });
+    await this.driver.waitForSelector({
+      text: 'option3',
+      css: selectors.rendererPanel,
+    });
+    await this.driver.waitForSelector({
+      text: 'true',
+      css: selectors.rendererPanel,
+    });
   }
 
   async checkElementIsDisabled(elementToCheck: keyof typeof selectors) {
     console.log(`Checking if ${elementToCheck} is disabled`);
-    const element = await this.driver.findElement(
-      selectors[elementToCheck],
-    );
+    const element = await this.driver.findElement(selectors[elementToCheck]);
     assert.equal(await element.isEnabled(), false);
   }
 }

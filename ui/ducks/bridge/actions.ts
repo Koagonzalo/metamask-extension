@@ -1,8 +1,7 @@
-import type { Hex } from '@metamask/utils';
 import {
   BridgeBackgroundAction,
+  type BridgeController,
   BridgeUserAction,
-  type GenericQuoteRequest,
 } from '@metamask/bridge-controller';
 import { forceUpdateMetamaskState } from '../../store/actions';
 import { submitRequestToBackground } from '../../store/background-connection';
@@ -41,27 +40,17 @@ export {
   setSlippage,
 };
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const callBridgeControllerMethod = <T>(
+const callBridgeControllerMethod = (
   bridgeAction: BridgeUserAction | BridgeBackgroundAction,
-  args?: T,
+  ...args: unknown[]
 ) => {
   return async (dispatch: MetaMaskReduxDispatch) => {
-    await submitRequestToBackground(bridgeAction, [args]);
+    await submitRequestToBackground(bridgeAction, args);
     await forceUpdateMetamaskState(dispatch);
   };
 };
 
 // Background actions
-export const setBridgeFeatureFlags = () => {
-  return async (dispatch: MetaMaskReduxDispatch) => {
-    return dispatch(
-      callBridgeControllerMethod(BridgeBackgroundAction.SET_FEATURE_FLAGS),
-    );
-  };
-};
-
 export const resetBridgeState = () => {
   return async (dispatch: MetaMaskReduxDispatch) => {
     dispatch(resetInputFields());
@@ -71,21 +60,17 @@ export const resetBridgeState = () => {
 
 // User actions
 export const updateQuoteRequestParams = (
-  params: Partial<GenericQuoteRequest>,
+  ...[params, context]: Parameters<
+    BridgeController['updateBridgeQuoteRequestParams']
+  >
 ) => {
   return async (dispatch: MetaMaskReduxDispatch) => {
     await dispatch(
-      callBridgeControllerMethod(BridgeUserAction.UPDATE_QUOTE_PARAMS, params),
+      callBridgeControllerMethod(
+        BridgeUserAction.UPDATE_QUOTE_PARAMS,
+        params,
+        context,
+      ),
     );
   };
-};
-
-export const getBridgeERC20Allowance = async (
-  contractAddress: string,
-  chainId: Hex,
-): Promise<string> => {
-  return await submitRequestToBackground(
-    BridgeBackgroundAction.GET_BRIDGE_ERC20_ALLOWANCE,
-    [contractAddress, chainId],
-  );
 };

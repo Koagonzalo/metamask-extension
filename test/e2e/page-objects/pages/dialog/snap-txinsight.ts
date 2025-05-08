@@ -1,5 +1,4 @@
 import { Driver } from '../../../webdriver/driver';
-import { veryLargeDelayMs } from '../../../helpers';
 
 class SnapTxInsights {
   private driver: Driver;
@@ -17,6 +16,8 @@ class SnapTxInsights {
     this.driver = driver;
   }
 
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_pageIsLoaded(): Promise<void> {
     try {
       await this.driver.waitForMultipleSelectors([
@@ -30,14 +31,20 @@ class SnapTxInsights {
       );
       throw e;
     }
-    console.log('Snap txInsight section is loaded under transaction confirmation dialog');
+    console.log(
+      'Snap txInsight section is loaded under transaction confirmation dialog',
+    );
   }
 
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_transactionInsightsTitle() {
     console.log('Checking transaction insights title');
     await this.driver.waitForSelector(this.insightTitle);
   }
 
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_transactionInsightsType(transactionType: string) {
     console.log('Checking transaction insights type');
     await this.driver.waitForSelector({
@@ -46,6 +53,8 @@ class SnapTxInsights {
     });
   }
 
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_transactionAddress(address: string) {
     console.log('Checking transaction address');
     await this.driver.waitForSelector({

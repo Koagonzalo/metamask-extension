@@ -67,6 +67,8 @@ class SecureWalletPage {
     this.driver = driver;
   }
 
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_pageIsLoaded(): Promise<void> {
     try {
       await this.driver.waitForMultipleSelectors([
@@ -86,11 +88,10 @@ class SecureWalletPage {
 
   /**
    * Reveal and confirm SRP on secure wallet page during onboarding
+   *
    * @param needEnterPassword - Whether to enter the password
    */
-  async revealAndConfirmSRP(
-    needEnterPassword: string = '',
-  ): Promise<void> {
+  async revealAndConfirmSRP(needEnterPassword: string = ''): Promise<void> {
     console.log(
       'Reveal and confirm SRP on secure wallet page during onboarding',
     );

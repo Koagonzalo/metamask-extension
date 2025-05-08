@@ -41,7 +41,7 @@ import {
 import { MetaMetricsContext } from '../../../contexts/metametrics';
 import { getUseExternalServices } from '../../../selectors';
 import { selectIsMetamaskNotificationsEnabled } from '../../../selectors/metamask-notifications/metamask-notifications';
-import { selectIsProfileSyncingEnabled } from '../../../selectors/identity/profile-syncing';
+import { selectIsBackupAndSyncEnabled } from '../../../selectors/identity/backup-and-sync';
 import {
   hideBasicFunctionalityModal,
   onboardingToggleBasicFunctionalityOff,
@@ -56,7 +56,7 @@ export function BasicConfigurationModal() {
   const dispatch = useDispatch();
   const trackEvent = useContext(MetaMetricsContext);
   const isExternalServicesEnabled = useSelector(getUseExternalServices);
-  const isProfileSyncingEnabled = useSelector(selectIsProfileSyncingEnabled);
+  const isBackupAndSyncEnabled = useSelector(selectIsBackupAndSyncEnabled);
   const isMetamaskNotificationsEnabled = useSelector(
     selectIsMetamaskNotificationsEnabled,
   );
@@ -117,6 +117,30 @@ export function BasicConfigurationModal() {
               ? t('basicConfigurationModalDisclaimerOff')
               : t('basicConfigurationModalDisclaimerOn')}
           </Text>
+          {isExternalServicesEnabled ? (
+            <Text variant={TextVariant.bodySm}>
+              {t('basicConfigurationModalDisclaimerOffAdditionalText', [
+                <Text
+                  key="basic-functionality-related-features-1"
+                  variant={TextVariant.bodySmBold}
+                  as="span"
+                >
+                  {t(
+                    'basicConfigurationModalDisclaimerOffAdditionalTextFeaturesFirst',
+                  )}
+                </Text>,
+                <Text
+                  key="basic-functionality-related-features-2"
+                  variant={TextVariant.bodySmBold}
+                  as="span"
+                >
+                  {t(
+                    'basicConfigurationModalDisclaimerOffAdditionalTextFeaturesLast',
+                  )}
+                </Text>,
+              ])}
+            </Text>
+          ) : null}
           {isExternalServicesEnabled && (
             <Box display={Display.Flex} alignItems={AlignItems.center} gap={2}>
               <Checkbox
@@ -172,7 +196,7 @@ export function BasicConfigurationModal() {
                         new_value: false,
                         // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
                         // eslint-disable-next-line @typescript-eslint/naming-convention
-                        was_profile_syncing_on: isProfileSyncingEnabled,
+                        was_profile_syncing_on: isBackupAndSyncEnabled,
                       },
                     }
                   : {
@@ -196,7 +220,7 @@ export function BasicConfigurationModal() {
                         was_notifications_on: isMetamaskNotificationsEnabled,
                         // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
                         // eslint-disable-next-line @typescript-eslint/naming-convention
-                        was_profile_syncing_on: isProfileSyncingEnabled,
+                        was_profile_syncing_on: isBackupAndSyncEnabled,
                       },
                     };
 

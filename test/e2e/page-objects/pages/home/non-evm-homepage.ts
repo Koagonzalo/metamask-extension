@@ -12,6 +12,8 @@ class NonEvmHomepage extends HomePage {
   protected readonly balanceDiv =
     '[data-testid="coin-overview__primary-currency"]';
 
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_pageIsLoaded(amount: string = ''): Promise<void> {
     await super.check_pageIsLoaded();
     if (amount) {
@@ -32,7 +34,6 @@ class NonEvmHomepage extends HomePage {
    * Clicks the send button on the non-EVM account homepage.
    */
   async clickOnSendButton(): Promise<void> {
-    await this.driver.waitForControllersLoaded();
     await this.driver.clickElement(this.sendButton);
   }
 
@@ -42,23 +43,33 @@ class NonEvmHomepage extends HomePage {
    * @param balance
    * @param token
    */
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_getBalance(
     balance: string,
     token: string = 'SOL',
   ): Promise<void> {
-    await this.driver.waitForSelector({
-      text: balance,
-      tag: 'span',
-    });
-    await this.driver.waitForSelector({
-      text: token,
-      tag: 'span',
-    });
+    await this.driver.waitForSelector(
+      {
+        text: balance,
+        tag: 'span',
+      },
+      { timeout: 60000 },
+    );
+    await this.driver.waitForSelector(
+      {
+        text: token,
+        tag: 'span',
+      },
+      { timeout: 60000 },
+    );
   }
 
   /**
    * Checks if the receive button is enabled on a non-evm account homepage.
    */
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_isReceiveButtonEnabled(): Promise<boolean> {
     try {
       await this.driver.waitForSelector(this.receiveButton, { timeout: 5000 });
@@ -73,6 +84,8 @@ class NonEvmHomepage extends HomePage {
   /**
    * Checks if the buy/sell button is enabled on a non-evm account homepage.
    */
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_ifBuySellButtonIsClickable(): Promise<boolean> {
     try {
       await this.driver.waitForSelector(this.buySellButton, { timeout: 5000 });

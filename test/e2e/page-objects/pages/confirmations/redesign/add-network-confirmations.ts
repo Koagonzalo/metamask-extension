@@ -1,7 +1,9 @@
 import { Driver } from '../../../../webdriver/driver';
 
 class AddNetworkConfirmation {
-  driver: Driver;
+  private readonly driver: Driver;
+
+  private readonly approveButton = '[data-testid="confirmation-submit-button"]';
 
   constructor(driver: Driver) {
     this.driver = driver;
@@ -10,6 +12,8 @@ class AddNetworkConfirmation {
   /**
    * @param networkName - The name of the network to check for in the confirmation page
    */
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_pageIsLoaded(networkName: string): Promise<void> {
     try {
       await this.driver.waitForSelector({
@@ -24,6 +28,11 @@ class AddNetworkConfirmation {
       throw e;
     }
     console.log(`Add network ${networkName} confirmation page is loaded`);
+  }
+
+  async approveAddNetwork() {
+    console.log('Approving add network on confirmation dialog');
+    await this.driver.clickElementAndWaitForWindowToClose(this.approveButton);
   }
 }
 

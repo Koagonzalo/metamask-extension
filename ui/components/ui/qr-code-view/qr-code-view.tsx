@@ -7,14 +7,14 @@ import { isHexPrefixed } from 'ethereumjs-util';
 // eslint-disable-next-line import/no-restricted-paths
 import { normalizeSafeAddress } from '../../../../app/scripts/lib/multichain/address';
 import { Box, Text } from '../../component-library';
-import type { CombinedBackgroundAndReduxState } from '../../../store/store';
+import type { MetaMaskReduxState } from '../../../store/store';
 import {
   TextAlign,
   TextColor,
   TextVariant,
 } from '../../../helpers/constants/design-system';
 
-function mapStateToProps(state: CombinedBackgroundAndReduxState) {
+function mapStateToProps(state: Pick<MetaMaskReduxState, 'appState'>) {
   const { buyView, warning } = state.appState;
   return {
     buyView,
@@ -32,7 +32,7 @@ function QrCodeView({
   // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
   // eslint-disable-next-line @typescript-eslint/naming-convention
   Qr: { message: string; data: string };
-  warning: null | string;
+  warning: string | null | undefined;
   accountName?: string;
 }) {
   const { message, data } = Qr;

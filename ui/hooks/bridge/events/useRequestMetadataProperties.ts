@@ -8,15 +8,20 @@ import {
 import { isHardwareKeyring } from '../../../helpers/utils/hardware';
 import { getCurrentKeyring } from '../../../selectors';
 import { getIsSmartTransaction } from '../../../../shared/modules/selectors';
+import { getMultichainCurrentChainId } from '../../../selectors/multichain';
+import { type SmartTransactionsState } from '../../../../shared/modules/selectors/smart-transactions';
 import { ActionType } from './types';
 import { useConvertedUsdAmounts } from './useConvertedUsdAmounts';
 
 export const useRequestMetadataProperties = () => {
   const { slippage } = useSelector(getQuoteRequest);
   const isBridgeTx = useSelector(getIsBridgeTx);
+  const currentChainId = useSelector(getMultichainCurrentChainId);
   // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const stx_enabled = useSelector(getIsSmartTransaction);
+  const stx_enabled = useSelector((state: SmartTransactionsState) => {
+    return getIsSmartTransaction(state, currentChainId);
+  });
   // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const { usd_amount_source } = useConvertedUsdAmounts();

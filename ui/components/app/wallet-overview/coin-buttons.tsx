@@ -81,6 +81,7 @@ import { getCurrentChainId } from '../../../../shared/modules/selectors/networks
 ///: BEGIN:ONLY_INCLUDE_IF(solana-swaps)
 import { MultichainNetworks } from '../../../../shared/constants/multichain/networks';
 ///: END:ONLY_INCLUDE_IF
+import { trace, TraceName } from '../../../../shared/lib/trace';
 ///: BEGIN:ONLY_INCLUDE_IF(multichain)
 import { useHandleSendNonEvm } from './hooks/useHandleSendNonEvm';
 ///: END:ONLY_INCLUDE_IF
@@ -392,8 +393,8 @@ const CoinButtons = ({
           iconButtonClassName={iconButtonClassName}
           Icon={
             <Icon
-              name={IconName.PlusMinus}
-              color={IconColor.primaryInverse}
+              name={IconName.PlusAndMinus}
+              color={IconColor.iconDefault}
               size={IconSize.Sm}
             />
           }
@@ -417,7 +418,7 @@ const CoinButtons = ({
         Icon={
           <Icon
             name={IconName.SwapHorizontal}
-            color={IconColor.primaryInverse}
+            color={IconColor.iconDefault}
             size={IconSize.Sm}
           />
         }
@@ -442,7 +443,7 @@ const CoinButtons = ({
           Icon={
             <Icon
               name={IconName.Bridge}
-              color={IconColor.primaryInverse}
+              color={IconColor.iconDefault}
               size={IconSize.Sm}
             />
           }
@@ -461,7 +462,7 @@ const CoinButtons = ({
         Icon={
           <Icon
             name={IconName.Arrow2UpRight}
-            color={IconColor.primaryInverse}
+            color={IconColor.iconDefault}
             size={IconSize.Sm}
           />
         }
@@ -487,12 +488,13 @@ const CoinButtons = ({
             Icon={
               <Icon
                 name={IconName.ScanBarcode}
-                color={IconColor.primaryInverse}
+                color={IconColor.iconDefault}
                 size={IconSize.Sm}
               />
             }
             label={t('receive')}
             onClick={() => {
+              trace({ name: TraceName.ReceiveModal });
               trackEvent({
                 event: MetaMetricsEventName.NavReceiveButtonClicked,
                 category: MetaMetricsEventCategory.Navigation,

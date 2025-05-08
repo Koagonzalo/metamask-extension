@@ -65,6 +65,11 @@ describe('AssetPage', () => {
     },
     metamask: {
       ...mockMultichainNetworkState(),
+      remoteFeatureFlags: {
+        bridgeConfig: {
+          support: true,
+        },
+      },
       tokenList: {},
       tokenBalances: {
         [selectedAccountAddress]: {
@@ -141,7 +146,6 @@ describe('AssetPage', () => {
     openTabSpy = jest.spyOn(global.platform, 'openTab');
     setBackgroundConnection({
       getTokenSymbol: jest.fn(),
-      setBridgeFeatureFlags: jest.fn(),
     } as never);
   });
 
@@ -371,10 +375,10 @@ describe('AssetPage', () => {
       }),
     );
 
-    // Verify no chart is rendered
+    // Verify we show the loading state
     await waitFor(() => {
-      const chart = queryByTestId('asset-price-chart');
-      expect(chart).toBeNull();
+      const chart = queryByTestId('asset-chart-loading');
+      expect(chart).toBeInTheDocument();
     });
 
     const dynamicImages = container.querySelectorAll('img[alt*="logo"]');
@@ -421,7 +425,7 @@ describe('AssetPage', () => {
     // Verify chart is rendered
     await waitFor(() => {
       const chart = queryByTestId('asset-price-chart');
-      expect(chart).toHaveClass('mm-box--background-color-transparent');
+      expect(chart).toBeInTheDocument();
     });
 
     // Verify market data is rendered

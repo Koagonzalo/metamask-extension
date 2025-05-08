@@ -20,7 +20,7 @@ import {
   selectIsMetamaskNotificationsEnabled,
   getIsUpdatingMetamaskNotifications,
 } from '../../selectors/metamask-notifications/metamask-notifications';
-import { selectIsProfileSyncingEnabled } from '../../selectors/identity/profile-syncing';
+import { selectIsBackupAndSyncEnabled } from '../../selectors/identity/backup-and-sync';
 import { useMetamaskNotificationsContext } from '../../contexts/metamask-notifications/metamask-notifications';
 import { Box, Text } from '../../components/component-library';
 import {
@@ -61,7 +61,7 @@ export function NotificationsSettingsAllowNotifications({
   const isUpdatingMetamaskNotifications = useSelector(
     getIsUpdatingMetamaskNotifications,
   );
-  const isProfileSyncingEnabled = useSelector(selectIsProfileSyncingEnabled);
+  const isBackupAndSyncEnabled = useSelector(selectIsBackupAndSyncEnabled);
 
   const { enableNotifications, error: errorEnableNotifications } =
     useEnableNotifications();
@@ -97,7 +97,7 @@ export function NotificationsSettingsAllowNotifications({
           settings_type: 'notifications',
           // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          was_profile_syncing_on: isProfileSyncingEnabled,
+          was_profile_syncing_on: isBackupAndSyncEnabled,
           // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
           // eslint-disable-next-line @typescript-eslint/naming-convention
           old_value: true,
@@ -117,7 +117,7 @@ export function NotificationsSettingsAllowNotifications({
           settings_type: 'notifications',
           // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          was_profile_syncing_on: isProfileSyncingEnabled,
+          was_profile_syncing_on: isBackupAndSyncEnabled,
           // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
           // eslint-disable-next-line @typescript-eslint/naming-convention
           old_value: false,
@@ -136,6 +136,8 @@ export function NotificationsSettingsAllowNotifications({
     disableNotifications,
     enableNotifications,
     toggleValue,
+    isBackupAndSyncEnabled,
+    trackEvent,
   ]);
 
   const privacyLink = useMemo(

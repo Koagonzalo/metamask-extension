@@ -299,24 +299,30 @@ async function walletCreateSessionHandler(
 
       const approvedEthAccounts = getEthAccounts(approvedCaip25CaveatValue);
 
-      hooks.sendMetrics({
-        event: MetaMetricsEventName.DappViewed,
-        category: MetaMetricsEventCategory.InpageProvider,
-        referrer: {
-          url: origin,
+      hooks.sendMetrics(
+        {
+          event: MetaMetricsEventName.DappViewed,
+          category: MetaMetricsEventCategory.InpageProvider,
+          referrer: {
+            url: origin,
+          },
+          properties: {
+            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            is_first_visit: isFirstVisit,
+            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            number_of_accounts: Object.keys(hooks.metamaskState.accounts)
+              .length,
+            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            number_of_accounts_connected: approvedEthAccounts.length,
+          },
         },
-        properties: {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          is_first_visit: isFirstVisit,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          number_of_accounts: Object.keys(hooks.metamaskState.accounts).length,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          number_of_accounts_connected: approvedEthAccounts.length,
+        {
+          excludeMetaMetricsId: true,
         },
-      });
+      );
     }
 
     res.result = {

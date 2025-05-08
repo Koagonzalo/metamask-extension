@@ -18,7 +18,7 @@ class LoginPage {
     this.unlockButton = '[data-testid="unlock-submit"]';
     this.welcomeBackMessage = {
       css: '[data-testid="unlock-page-title"]',
-      text: 'Welcome back!',
+      text: 'Welcome back',
     };
     this.forgotPasswordButton = {
       text: 'Forgot password?',
@@ -26,6 +26,8 @@ class LoginPage {
     };
   }
 
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_pageIsLoaded(): Promise<void> {
     try {
       await this.driver.waitForMultipleSelectors([

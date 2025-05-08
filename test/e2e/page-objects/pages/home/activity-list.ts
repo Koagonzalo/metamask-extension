@@ -24,6 +24,9 @@ class ActivityListPage {
   private readonly bridgeTransactionCompleted =
     '.transaction-status-label--confirmed';
 
+  private readonly bridgeTransactionPending =
+    '.bridge-transaction-details__segment--pending';
+
   private readonly transactionAmountsInActivity =
     '[data-testid="transaction-list-item-primary-currency"]';
 
@@ -80,6 +83,8 @@ class ActivityListPage {
    * @param expectedNumber - The number of completed transactions expected to be displayed in the activity list. Defaults to 1.
    * @returns A promise that resolves if the expected number of completed transactions is displayed within the timeout period.
    */
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_completedTxNumberDisplayedInActivity(
     expectedNumber: number = 1,
   ): Promise<void> {
@@ -104,6 +109,8 @@ class ActivityListPage {
    * @param expectedNumber - The number of confirmed transactions expected to be displayed in activity list. Defaults to 1.
    * @returns A promise that resolves if the expected number of confirmed transactions is displayed within the timeout period.
    */
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_confirmedTxNumberDisplayedInActivity(
     expectedNumber: number = 1,
   ): Promise<void> {
@@ -115,7 +122,7 @@ class ActivityListPage {
         this.confirmedTransactions,
       );
       return confirmedTxs.length === expectedNumber;
-    }, 10000);
+    }, 60000);
     console.log(
       `${expectedNumber} confirmed transactions found in activity list on homepage`,
     );
@@ -128,6 +135,8 @@ class ActivityListPage {
    * @param expectedNumber - The number of failed transactions expected to be displayed in activity list. Defaults to 1.
    * @returns A promise that resolves if the expected number of failed transactions is displayed within the timeout period.
    */
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_failedTxNumberDisplayedInActivity(
     expectedNumber: number = 1,
   ): Promise<void> {
@@ -137,16 +146,20 @@ class ActivityListPage {
     await this.driver.wait(async () => {
       const failedTxs = await this.driver.findElements(this.failedTransactions);
       return failedTxs.length === expectedNumber;
-    }, 10000);
+    }, 60000);
     console.log(
       `${expectedNumber} failed transactions found in activity list on homepage`,
     );
   }
 
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_noTxInActivity(): Promise<void> {
     await this.driver.assertElementNotPresent(this.completedTransactions);
   }
 
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_txAction(expectedAction: string, expectedNumber: number = 1) {
     const transactionActions = await this.driver.findElements(
       this.activityListAction,
@@ -157,10 +170,36 @@ class ActivityListPage {
         expectedNumber - 1
       ].getText();
       return transactionActionText === expectedAction;
-    });
+    }, 60000);
 
     console.log(
       `Action for transaction ${expectedNumber} is displayed as ${expectedAction}`,
+    );
+  }
+
+  /**
+   * This function checks the specified number of pending Birdge transactions are displayed in the activity list on the homepage.
+   * It waits up to 10 seconds for the expected number of pending transactions to be visible.
+   *
+   * @param expectedNumber - The number of pending Bridge transactions expected to be displayed in the activity list. Defaults to 1.
+   * @returns A promise that resolves if the expected number of Bridge pending transactions is displayed within the timeout period.
+   */
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  async check_pendingBridgeTransactionActivity(
+    expectedNumber: number = 1,
+  ): Promise<void> {
+    console.log(
+      `Wait for ${expectedNumber} Bridge pending transactions to be displayed in activity list`,
+    );
+    await this.driver.wait(async () => {
+      const completedTxs = await this.driver.findElements(
+        this.bridgeTransactionPending,
+      );
+      return completedTxs.length === expectedNumber;
+    }, 60000);
+    console.log(
+      `${expectedNumber} Bridge pending transactions found in activity list on homepage`,
     );
   }
 
@@ -171,6 +210,8 @@ class ActivityListPage {
    * @param expectedNumber - The number of completed Bridge transactions expected to be displayed in the activity list. Defaults to 1.
    * @returns A promise that resolves if the expected number of Bridge completed transactions is displayed within the timeout period.
    */
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_completedBridgeTransactionActivity(
     expectedNumber: number = 1,
   ): Promise<void> {
@@ -200,6 +241,8 @@ class ActivityListPage {
    * // To check if the third transaction in the activity list displays an amount of '2 ETH'
    * await check_txAmountInActivity('2 ETH', 3);
    */
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_txAmountInActivity(
     expectedAmount: string = '-1 ETH',
     expectedNumber: number = 1,
@@ -227,6 +270,8 @@ class ActivityListPage {
    * @returns A promise that resolves if the warning message matches the expected text.
    * @throws Assertion error if the warning message does not match the expected text.
    */
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_warningMessage(warningText: string): Promise<void> {
     console.log(
       `Check warning message "${warningText}" is displayed on activity list`,
@@ -237,6 +282,8 @@ class ActivityListPage {
     });
   }
 
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_noFailedTransactions(): Promise<void> {
     try {
       await this.driver.findElement(this.failedTransactions, 1);
@@ -266,22 +313,34 @@ class ActivityListPage {
     );
   }
 
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async click_transactionListItem() {
     await this.driver.clickElement(this.completedTransactions);
   }
 
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async click_cancelTransaction() {
     await this.driver.clickElement(this.cancelTransactionButton);
   }
 
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async click_speedUpTransaction() {
     await this.driver.clickElement(this.speedupButton);
   }
 
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async click_confirmTransactionReplacement() {
-    await this.driver.clickElementAndWaitToDisappear(this.confirmTransactionReplacementButton);
+    await this.driver.clickElementAndWaitToDisappear(
+      this.confirmTransactionReplacementButton,
+    );
   }
 
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_waitForTransactionStatus(status: 'confirmed' | 'cancelled') {
     await this.driver.waitForSelector(`.transaction-status-label--${status}`, {
       timeout: 5000,

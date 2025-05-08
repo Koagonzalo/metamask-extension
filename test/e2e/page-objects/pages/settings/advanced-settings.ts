@@ -7,7 +7,10 @@ class AdvancedSettings {
   private readonly downloadDataButton = '[data-testid="export-data-button"]';
 
   private readonly downloadStateLogsButton =
-    '[data-testid="advanced-setting-state-logs"]';
+    '[data-testid="advanced-setting-state-logs-button"]';
+
+  private readonly showConversionOnTestnetsToggle =
+    '.show-fiat-on-testnets-toggle';
 
   private readonly smartTransactionsToggle =
     '[data-testid="settings-page-stx-opt-in-toggle"]';
@@ -16,6 +19,8 @@ class AdvancedSettings {
     this.driver = driver;
   }
 
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_pageIsLoaded(): Promise<void> {
     try {
       await this.driver.waitForMultipleSelectors([
@@ -30,6 +35,16 @@ class AdvancedSettings {
       throw e;
     }
     console.log('Advanced Settings page is loaded');
+  }
+
+  async downloadStateLogs(): Promise<void> {
+    console.log('Downloading state logs on advanced settings page');
+    await this.driver.clickElement(this.downloadStateLogsButton);
+  }
+
+  async toggleShowConversionOnTestnets(): Promise<void> {
+    console.log('Toggling show conversion on testnets in advanced settings');
+    await this.driver.clickElement(this.showConversionOnTestnetsToggle);
   }
 
   async toggleSmartTransactions(): Promise<void> {

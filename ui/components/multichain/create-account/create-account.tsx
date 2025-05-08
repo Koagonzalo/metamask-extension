@@ -40,6 +40,7 @@ import { MetaMetricsContext } from '../../../contexts/metametrics';
 import { Display } from '../../../helpers/constants/design-system';
 import { SelectSrp } from '../multi-srp/select-srp/select-srp';
 import { getSnapAccountsByKeyringId } from '../../../selectors/multi-srp/multi-srp';
+import { endTrace, trace, TraceName } from '../../../../shared/lib/trace';
 
 type Props = {
   /**
@@ -146,6 +147,7 @@ export const CreateAccount: CreateAccountComponent = React.memo(
           setLoading(true);
           event.preventDefault();
           try {
+            trace({ name: TraceName.CreateAccount });
             await onCreateAccount(trimmedAccountName || defaultAccountName);
             trackEvent({
               category: MetaMetricsEventCategory.Accounts,
@@ -205,6 +207,8 @@ export const CreateAccount: CreateAccountComponent = React.memo(
                 },
               });
             }
+          } finally {
+            endTrace({ name: TraceName.CreateAccount });
           }
         },
         [trimmedAccountName, defaultAccountName, mostRecentOverviewPage],
