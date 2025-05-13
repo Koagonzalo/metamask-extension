@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   rawMessageV4,
   unapprovedTypedSignMsgV4,
@@ -35,14 +36,12 @@ describe('ConfirmInfoRowTypedSignData', () => {
   });
 
   it('should not render data whose type is not defined', () => {
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+    // TODO: Replace `any` with type
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const mockRawMessageV4 = { ...rawMessageV4 } as any;
 
     mockRawMessageV4.message.do_not_display = 'one';
     mockRawMessageV4.message.do_not_display_2 = {
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       do_not_display: 'two',
     };
 

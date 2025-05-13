@@ -1,4 +1,5 @@
-import { MockRequestResponse, SENDER_ADDRESS_MOCK } from './types';
+import type { MockRequestResponse } from './types';
+import { SENDER_ADDRESS_MOCK } from './types';
 
 export const NO_CHANGES_TRANSACTION_MOCK = {
   from: SENDER_ADDRESS_MOCK,

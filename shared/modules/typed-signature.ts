@@ -1,4 +1,4 @@
-import { MessageTypes } from '@metamask/eth-sig-util';
+import type { MessageTypes } from '@metamask/eth-sig-util';
 
 /**
  * Recursively sanitizes a message object based on the provided types and primary type.
@@ -8,8 +8,6 @@ import { MessageTypes } from '@metamask/eth-sig-util';
  * @param primaryType - The primary type of the message.
  * @returns The sanitized message object.
  */
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export function sanitizeMessageRecursively<T extends MessageTypes>(
   message: Record<string, unknown>,
   types: T,

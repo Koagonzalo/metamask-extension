@@ -1,5 +1,6 @@
-import React from 'react';
 import classnames from 'classnames';
+import React from 'react';
+
 import {
   BorderColor,
   Display,
@@ -9,20 +10,14 @@ import {
   IconColor,
   TextColor,
 } from '../../../helpers/constants/design-system';
-
-import { Icon } from '../icon';
+import type { AvatarBaseProps } from '../avatar-base';
+import { AvatarBase } from '../avatar-base';
 import type { PolymorphicRef } from '../box';
-import { AvatarBase, AvatarBaseProps } from '../avatar-base';
-import type { AvatarIconComponent } from './avatar-icon.types';
-import {
-  AvatarIconProps,
-  AvatarIconSize,
-  avatarIconSizeToIconSize,
-} from './avatar-icon.types';
+import { Icon } from '../icon';
+import type { AvatarIconComponent, AvatarIconProps } from './avatar-icon.types';
+import { AvatarIconSize, avatarIconSizeToIconSize } from './avatar-icon.types';
 
 export const AvatarIcon: AvatarIconComponent = React.forwardRef(
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   <C extends React.ElementType = 'div'>(
     {
       size = AvatarIconSize.Md,

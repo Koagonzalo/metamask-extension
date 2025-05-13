@@ -1,11 +1,13 @@
-import { describe, it, afterEach } from 'node:test';
 import assert from 'node:assert';
-import { LoaderContext } from 'webpack';
+import { describe, it, afterEach } from 'node:test';
+import type { LoaderContext } from 'webpack';
+
 import swcLoader, {
   type SwcLoaderOptions,
   type SwcConfig,
 } from '../utils/loaders/swcLoader';
-import { Combination, generateCases } from './helpers';
+import type { Combination } from './helpers';
+import { generateCases } from './helpers';
 
 describe('swcLoader', () => {
   type CallbackArgs = Parameters<LoaderContext<SwcLoaderOptions>['callback']>;

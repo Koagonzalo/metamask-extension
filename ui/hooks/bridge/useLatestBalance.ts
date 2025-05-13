@@ -1,24 +1,24 @@
-import { type Hex, type CaipChainId } from '@metamask/utils';
-import { useCallback, useMemo } from 'react';
+import type { ChainId } from '@metamask/bridge-controller';
 import {
   isSolanaChainId,
   calcLatestSrcBalance,
   formatChainIdToCaip,
   formatChainIdToHex,
-  ChainId,
   isNativeAddress,
 } from '@metamask/bridge-controller';
-import { useLocation } from 'react-router-dom';
-import { getSelectedInternalAccount } from '../../selectors';
-import { useAsyncResult } from '../useAsync';
-import { Numeric } from '../../../shared/modules/Numeric';
+import { type Hex, type CaipChainId } from '@metamask/utils';
+import { useMemo } from 'react';
+
+import { MULTICHAIN_NATIVE_CURRENCY_TO_CAIP19 } from '../../../shared/constants/multichain/assets';
 import { calcTokenAmount } from '../../../shared/lib/transactions-controller-utils';
-import { useMultichainSelector } from '../useMultichainSelector';
+import { Numeric } from '../../../shared/modules/Numeric';
+import { getSelectedInternalAccount } from '../../selectors';
 import {
   getMultichainBalances,
   getMultichainCurrentChainId,
 } from '../../selectors/multichain';
-import { MULTICHAIN_NATIVE_CURRENCY_TO_CAIP19 } from '../../../shared/constants/multichain/assets';
+import { useAsyncResult } from '../useAsync';
+import { useMultichainSelector } from '../useMultichainSelector';
 
 /**
  * Custom hook to fetch and format the latest balance of a given token or native asset.
@@ -32,18 +32,10 @@ const useLatestBalance = (
     decimals: number;
     symbol: string;
     string?: string;
-    chainId: Hex | CaipChainId | ChainId;
+    chainId?: Hex | CaipChainId | ChainId;
     assetId?: string;
   } | null,
 ) => {
-  const { search } = useLocation();
-
-  const searchParams = useMemo(() => new URLSearchParams(search), [search]);
-  const tokenAddressFromUrl = useMemo(
-    () => searchParams.get('token'),
-    [searchParams],
-  );
-
   const { address: selectedAddress, id } = useMultichainSelector(
     getSelectedInternalAccount,
   );
@@ -53,26 +45,27 @@ const useLatestBalance = (
     getMultichainBalances,
   );
 
-  const nonEvmBalances = useMemo(
-    () => nonEvmBalancesByAccountId?.[id],
-    [nonEvmBalancesByAccountId, id],
-  );
-
-  // Don't fetch the balance the src token balance until the tokenAddressFromUrl is unset
-  const shouldUpdateBalance = useCallback(
-    () => token?.chainId && !tokenAddressFromUrl,
-    [tokenAddressFromUrl, token],
-  );
+  const nonEvmBalances = nonEvmBalancesByAccountId?.[id];
 
   const value = useAsyncResult<string | undefined>(async () => {
-    if (!shouldUpdateBalance() || !token) {
+    if (!token?.chainId || !token) {
       return undefined;
     }
 
     const { chainId } = token;
-    // No need to fetch the balance for non-EVM tokens
-    if (isSolanaChainId(chainId)) {
-      return undefined;
+
+    // No need to fetch the balance for non-EVM tokens, use the balance provided by the
+    // multichain balances controller
+    if (isSolanaChainId(chainId) && token.decimals) {
+      const caipAssetType = isNativeAddress(token.address)
+        ? MULTICHAIN_NATIVE_CURRENCY_TO_CAIP19.SOL
+        : token.assetId ?? token.address;
+      return Numeric.from(
+        nonEvmBalances?.[caipAssetType]?.amount ?? token?.string,
+        10,
+      )
+        .shiftedBy(-1 * token.decimals)
+        .toString();
     }
 
     if (
@@ -90,35 +83,7 @@ const useLatestBalance = (
     }
 
     return undefined;
-  }, [
-    currentChainId,
-    token,
-    selectedAddress,
-    tokenAddressFromUrl,
-    shouldUpdateBalance,
-  ]);
-
-  const nonEvmBalance = useMemo(() => {
-    if (!shouldUpdateBalance() || !token) {
-      return undefined;
-    }
-
-    const { chainId, decimals, address } = token;
-
-    // Use the balance provided by the multichain balances controller
-    if (isSolanaChainId(chainId) && decimals) {
-      const caipAssetType = isNativeAddress(address)
-        ? MULTICHAIN_NATIVE_CURRENCY_TO_CAIP19.SOL
-        : token.assetId ?? token.address;
-      return Numeric.from(
-        nonEvmBalances?.[caipAssetType]?.amount ?? token?.string,
-        10,
-      )
-        .shiftedBy(-1 * token.decimals)
-        .toString();
-    }
-    return undefined;
-  }, [shouldUpdateBalance, token, nonEvmBalances]);
+  }, [currentChainId, token, selectedAddress, nonEvmBalances]);
 
   if (token && typeof token.decimals !== 'number') {
     throw new Error(
@@ -126,15 +91,10 @@ const useLatestBalance = (
     );
   }
 
-  const balance = useMemo(() => {
-    return token?.chainId && isSolanaChainId(token.chainId)
-      ? nonEvmBalance
-      : value?.value;
-  }, [nonEvmBalance, value?.value, token?.chainId]);
-
   return useMemo(
-    () => (balance ? calcTokenAmount(balance, token?.decimals) : undefined),
-    [balance, token?.decimals],
+    () =>
+      value?.value ? calcTokenAmount(value.value, token?.decimals) : undefined,
+    [value?.value, token?.decimals],
   );
 };
 

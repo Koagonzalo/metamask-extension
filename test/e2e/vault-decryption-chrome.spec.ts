@@ -1,15 +1,16 @@
-import os from 'os';
-import path from 'path';
 import fs from 'fs-extra';
 import level from 'level';
-import { Driver } from './webdriver/driver';
+import os from 'os';
+import path from 'path';
+
 import { WALLET_PASSWORD, WINDOW_TITLES, withFixtures } from './helpers';
+import { completeCreateNewWalletOnboardingFlowWithCustomSettings } from './page-objects/flows/onboarding.flow';
 import HeaderNavbar from './page-objects/pages/header-navbar';
 import HomePage from './page-objects/pages/home/homepage';
 import PrivacySettings from './page-objects/pages/settings/privacy-settings';
 import SettingsPage from './page-objects/pages/settings/settings-page';
 import VaultDecryptorPage from './page-objects/pages/vault-decryptor-page';
-import { completeCreateNewWalletOnboardingFlowWithCustomSettings } from './page-objects/flows/onboarding.flow';
+import type { Driver } from './webdriver/driver';
 
 const VAULT_DECRYPTOR_PAGE = 'https://metamask.github.io/vault-decryptor';
 
@@ -264,8 +265,6 @@ describe('Vault Decryptor Page', function () {
 
         // copy log file to a temp location, to avoid reading it while the browser is writting it
         type VaultData = {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           KeyringController: {
             vault: string;
           };

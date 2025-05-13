@@ -3,7 +3,12 @@ import {
   Caip25EndowmentPermissionName,
 } from '@metamask/chain-agnostic-permission';
 import * as Multichain from '@metamask/chain-agnostic-permission';
-import { Json, JsonRpcRequest, PendingJsonRpcResponse } from '@metamask/utils';
+import type {
+  Json,
+  JsonRpcRequest,
+  PendingJsonRpcResponse,
+} from '@metamask/utils';
+
 import {
   CaveatTypes,
   RestrictedMethods,
@@ -66,11 +71,11 @@ const createMockedHandler = () => {
     }),
   );
   const getAccounts = jest.fn().mockReturnValue([]);
-  const response: PendingJsonRpcResponse<Json> = {
+  const response: PendingJsonRpcResponse = {
     jsonrpc: '2.0' as const,
     id: 0,
   };
-  const handler = (request: JsonRpcRequest<Json[]>) =>
+  const handler = async (request: JsonRpcRequest<Json[]>) =>
     getPermissionsHandler.implementation(request, response, next, end, {
       getPermissionsForOrigin,
       getAccounts,

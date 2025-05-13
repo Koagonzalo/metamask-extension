@@ -1,6 +1,7 @@
+import type { AssetsContractController } from '@metamask/assets-controllers';
+import type { Hex } from '@metamask/utils';
 import { memoize } from 'lodash';
-import { Hex } from '@metamask/utils';
-import { AssetsContractController } from '@metamask/assets-controllers';
+
 import { getTokenStandardAndDetails } from '../../../store/actions';
 
 export type TokenDetailsERC20 = Awaited<

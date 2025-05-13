@@ -1,19 +1,21 @@
-import { SnapId } from '@metamask/snaps-sdk';
-import { parseCaipAssetType, CaipAssetType } from '@metamask/utils';
+import type { SnapId } from '@metamask/snaps-sdk';
+import type { CaipAssetType } from '@metamask/utils';
+import { parseCaipAssetType } from '@metamask/utils';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import {
-  sendMultichainTransaction,
-  setDefaultHomeActiveTabName,
-} from '../../../../store/actions';
+
+import { isMultichainWalletSnap } from '../../../../../shared/lib/accounts/snaps';
+import { CONFIRMATION_V_NEXT_ROUTE } from '../../../../helpers/constants/routes';
 import {
   getMemoizedUnapprovedTemplatedConfirmations,
   getSelectedInternalAccount,
 } from '../../../../selectors';
 import { getSelectedMultichainNetworkConfiguration } from '../../../../selectors/multichain/networks';
-import { isMultichainWalletSnap } from '../../../../../shared/lib/accounts/snaps';
-import { CONFIRMATION_V_NEXT_ROUTE } from '../../../../helpers/constants/routes';
+import {
+  sendMultichainTransaction,
+  setDefaultHomeActiveTabName,
+} from '../../../../store/actions';
 
 /**
  * Use this hook to trigger the send flow for non-EVM accounts.

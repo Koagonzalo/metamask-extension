@@ -1,20 +1,20 @@
 import { TransactionEnvelopeType } from '@metamask/transaction-controller';
-import { Suite } from 'mocha';
-import { MockedEndpoint } from 'mockttp';
+import type { Suite } from 'mocha';
+import type { MockedEndpoint } from 'mockttp';
+
+import {
+  BlockaidReason,
+  BlockaidResultType,
+} from '../../../../../shared/constants/security-provider';
 import { WINDOW_TITLES } from '../../../helpers';
+import Confirmation from '../../../page-objects/pages/confirmations/redesign/confirmation';
+import ConfirmAlertModal from '../../../page-objects/pages/dialog/confirm-alert';
 import {
   mockSignatureRejected,
   scrollAndConfirmAndAssertConfirm,
   withTransactionEnvelopeTypeFixtures,
 } from '../helpers';
-import { TestSuiteArguments } from '../transactions/shared';
-import Confirmation from '../../../page-objects/pages/confirmations/redesign/confirmation';
-import ConfirmAlertModal from '../../../page-objects/pages/dialog/confirm-alert';
-import {
-  BlockaidReason,
-  BlockaidResultType,
-} from '../../../../../shared/constants/security-provider';
-import { MetaMetricsRequestedThrough } from '../../../../../shared/constants/metametrics';
+import type { TestSuiteArguments } from '../transactions/shared';
 import {
   assertRejectedSignature,
   assertSignatureRejectedMetrics,
@@ -81,34 +81,17 @@ describe('Malicious Confirmation Signature - Bad Domain', function (this: Suite)
           ],
           location: 'confirmation',
           expectedProps: {
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             alert_action_clicked: [],
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             alert_key_clicked: [],
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             alert_resolved: [],
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             alert_resolved_count: 0,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             alert_triggered: ['requestFrom'],
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             alert_triggered_count: 1,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             alert_visualized: [],
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             alert_visualized_count: 0,
           },
           securityAlertReason: BlockaidReason.notApplicable,
           securityAlertResponse: BlockaidResultType.NotApplicable,
-          requestedThrough: MetaMetricsRequestedThrough.EthereumProvider,
         });
       },
       mockSignatureRejected,
@@ -148,34 +131,17 @@ describe('Malicious Confirmation Signature - Bad Domain', function (this: Suite)
           ],
           location: 'alert_friction_modal',
           expectedProps: {
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             alert_action_clicked: [],
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             alert_key_clicked: [],
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             alert_resolved: ['requestFrom'],
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             alert_resolved_count: 1,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             alert_triggered: ['requestFrom'],
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             alert_triggered_count: 1,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             alert_visualized: ['requestFrom'],
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             alert_visualized_count: 1,
           },
           securityAlertReason: BlockaidReason.notApplicable,
           securityAlertResponse: BlockaidResultType.NotApplicable,
-          requestedThrough: MetaMetricsRequestedThrough.EthereumProvider,
         });
       },
       mockSignatureRejected,

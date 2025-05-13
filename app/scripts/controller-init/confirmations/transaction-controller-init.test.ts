@@ -1,17 +1,18 @@
-import {
-  TransactionController,
+import { Messenger } from '@metamask/base-controller';
+import type { NetworkController } from '@metamask/network-controller';
+import type {
   TransactionControllerMessenger,
   TransactionControllerOptions,
 } from '@metamask/transaction-controller';
-import { Messenger } from '@metamask/base-controller';
-import { NetworkController } from '@metamask/network-controller';
-import { buildControllerInitRequestMock, CHAIN_ID_MOCK } from '../test/utils';
+import { TransactionController } from '@metamask/transaction-controller';
+
+import type { TransactionControllerInitMessenger } from '../messengers/transaction-controller-messenger';
 import {
   getTransactionControllerInitMessenger,
   getTransactionControllerMessenger,
-  TransactionControllerInitMessenger,
 } from '../messengers/transaction-controller-messenger';
-import { ControllerInitRequest } from '../types';
+import { buildControllerInitRequestMock, CHAIN_ID_MOCK } from '../test/utils';
+import type { ControllerInitRequest } from '../types';
 import { TransactionControllerInit } from './transaction-controller-init';
 
 jest.mock('@metamask/transaction-controller');

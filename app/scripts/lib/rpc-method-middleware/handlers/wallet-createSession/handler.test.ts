@@ -1,14 +1,17 @@
-import { JsonRpcError } from '@metamask/rpc-errors';
+import type {
+  Caip25Authorization,
+  NormalizedScopesObject,
+} from '@metamask/chain-agnostic-permission';
 import {
   Caip25CaveatType,
   Caip25EndowmentPermissionName,
-  Caip25Authorization,
-  NormalizedScopesObject,
   KnownSessionProperties,
 } from '@metamask/chain-agnostic-permission';
 import * as Multichain from '@metamask/chain-agnostic-permission';
 import { MultichainNetwork } from '@metamask/multichain-transactions-controller';
-import { Json, JsonRpcRequest, JsonRpcSuccess } from '@metamask/utils';
+import { JsonRpcError } from '@metamask/rpc-errors';
+import type { Json, JsonRpcRequest, JsonRpcSuccess } from '@metamask/utils';
+
 import * as Util from '../../../util';
 import { walletCreateSession } from './handler';
 
@@ -103,7 +106,7 @@ const createMockedHandler = () => {
     sessionProperties?: Record<string, Json>;
   }>;
   const getNonEvmAccountAddresses = jest.fn().mockReturnValue([]);
-  const handler = (
+  const handler = async (
     request: JsonRpcRequest<Caip25Authorization> & { origin: string },
   ) =>
     walletCreateSession.implementation(request, response, next, end, {
@@ -516,14 +519,8 @@ describe('wallet_createSession', () => {
         category: 'inpage_provider',
         event: 'Dapp Viewed',
         properties: {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           is_first_visit: true,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           number_of_accounts: 3,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           number_of_accounts_connected: 4,
         },
         referrer: {

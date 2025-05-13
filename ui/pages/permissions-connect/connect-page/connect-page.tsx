@@ -1,17 +1,25 @@
-import React, { useCallback, useContext, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { generateCaip25Caveat } from '@metamask/chain-agnostic-permission';
+import type { CaipAccountId, CaipChainId } from '@metamask/utils';
 import {
-  CaipAccountId,
-  CaipChainId,
   KnownCaipNamespace,
   parseCaipAccountId,
   parseCaipChainId,
 } from '@metamask/utils';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
 
-import { useI18nContext } from '../../../hooks/useI18nContext';
-import { getUpdatedAndSortedAccountsWithCaipAccountId } from '../../../selectors';
+import {
+  MetaMetricsEventCategory,
+  MetaMetricsEventName,
+} from '../../../../shared/constants/metametrics';
+import { CAIP_FORMATTED_EVM_TEST_CHAINS } from '../../../../shared/constants/network';
+import { getCaipAccountIdsFromCaip25CaveatValue } from '../../../../shared/lib/multichain/chain-agnostic-permission-utils/caip-accounts';
+import {
+  getAllNonWalletNamespacesFromCaip25CaveatValue,
+  getAllScopesFromCaip25CaveatValue,
+} from '../../../../shared/lib/multichain/chain-agnostic-permission-utils/caip-chainids';
 import { getAllNetworkConfigurationsByCaipChainId } from '../../../../shared/modules/selectors/networks';
+import { isEqualCaseInsensitive } from '../../../../shared/modules/string-utils';
 import {
   AvatarBase,
   AvatarBaseSize,
@@ -26,11 +34,18 @@ import {
   Text,
 } from '../../../components/component-library';
 import {
+  AccountListItem,
+  EditAccountsModal,
+} from '../../../components/multichain';
+import { CreateSolanaAccountModal } from '../../../components/multichain/create-solana-account-modal/create-solana-account-modal';
+import {
   Content,
   Footer,
   Header,
   Page,
 } from '../../../components/multichain/pages/page';
+import { useI18nContext } from '../../../hooks/useI18nContext';
+import { getUpdatedAndSortedAccountsWithCaipAccountId } from '../../../selectors';
 import { SiteCell } from '../../../components/multichain/pages/review-permissions-page/site-cell/site-cell';
 import {
   AlignItems,
@@ -44,40 +59,21 @@ import {
   TextColor,
   TextVariant,
 } from '../../../helpers/constants/design-system';
-import { CAIP_FORMATTED_EVM_TEST_CHAINS } from '../../../../shared/constants/network';
 import { getMultichainNetwork } from '../../../selectors/multichain';
 import { Tab, Tabs } from '../../../components/ui/tabs';
-import {
-  AccountListItem,
-  EditAccountsModal,
-} from '../../../components/multichain';
 import {
   getAvatarFallbackLetter,
   isIpAddress,
   transformOriginToTitle,
 } from '../../../helpers/utils/util';
 import ZENDESK_URLS from '../../../helpers/constants/zendesk-url';
-import {
-  MetaMetricsEventCategory,
-  MetaMetricsEventName,
-} from '../../../../shared/constants/metametrics';
 import { MetaMetricsContext } from '../../../contexts/metametrics';
-import {
+import type {
   EvmAndMultichainNetworkConfigurationsWithCaipChainId,
   MergedInternalAccountWithCaipAccountId,
 } from '../../../selectors/selectors.types';
-import {
-  getAllNonWalletNamespacesFromCaip25CaveatValue,
-  getAllScopesFromCaip25CaveatValue,
-} from '../../../../shared/lib/multichain/chain-agnostic-permission-utils/caip-chainids';
-import { getCaipAccountIdsFromCaip25CaveatValue } from '../../../../shared/lib/multichain/chain-agnostic-permission-utils/caip-accounts';
-import { isEqualCaseInsensitive } from '../../../../shared/modules/string-utils';
-import { CreateSolanaAccountModal } from '../../../components/multichain/create-solana-account-modal/create-solana-account-modal';
-import {
-  PermissionsRequest,
-  getRequestedCaip25CaveatValue,
-  getDefaultAccounts,
-} from './utils';
+import type { PermissionsRequest } from './utils';
+import { getRequestedCaip25CaveatValue, getDefaultAccounts } from './utils';
 
 export type ConnectPageRequest = {
   id: string;
@@ -162,7 +158,7 @@ export const ConnectPage: React.FC<ConnectPageProps> = ({
   );
 
   const supportedRequestedCaipChainIds = requestedCaipChainIds.filter(
-    (caipChainId) => allNetworksList.includes(caipChainId as CaipChainId),
+    (caipChainId) => allNetworksList.includes(caipChainId),
   );
 
   const [showEditAccountsModal, setShowEditAccountsModal] = useState(false);
@@ -200,7 +196,7 @@ export const ConnectPage: React.FC<ConnectPageProps> = ({
       : defaultSelectedNetworkList;
 
   const [selectedChainIds, setSelectedChainIds] = useState<CaipChainId[]>(
-    defaultSelectedChainIds as CaipChainId[],
+    defaultSelectedChainIds,
   );
 
   const allAccounts = useSelector(
@@ -222,26 +218,25 @@ export const ConnectPage: React.FC<ConnectPageProps> = ({
   );
 
   // all requested accounts that are found in the wallet
-  const supportedRequestedAccounts = requestedCaipAccountIds.reduce(
-    (acc, account) => {
-      const supportedRequestedAccount =
-        supportedAccountsForRequestedNamespaces.find(({ caipAccountId }) => {
-          const {
-            chain: { namespace },
-          } = parseCaipAccountId(caipAccountId);
-          // EIP155 (EVM) addresses are not case sensitive
-          if (namespace === KnownCaipNamespace.Eip155) {
-            return isEqualCaseInsensitive(caipAccountId, account);
-          }
-          return caipAccountId === account;
-        });
-      if (supportedRequestedAccount) {
-        acc.push(supportedRequestedAccount);
-      }
-      return acc;
-    },
-    [] as MergedInternalAccountWithCaipAccountId[],
-  );
+  const supportedRequestedAccounts = requestedCaipAccountIds.reduce<
+    MergedInternalAccountWithCaipAccountId[]
+  >((acc, account) => {
+    const supportedRequestedAccount =
+      supportedAccountsForRequestedNamespaces.find(({ caipAccountId }) => {
+        const {
+          chain: { namespace },
+        } = parseCaipAccountId(caipAccountId);
+        // EIP155 (EVM) addresses are not case sensitive
+        if (namespace === KnownCaipNamespace.Eip155) {
+          return isEqualCaseInsensitive(caipAccountId, account);
+        }
+        return caipAccountId === account;
+      });
+    if (supportedRequestedAccount) {
+      acc.push(supportedRequestedAccount);
+    }
+    return acc;
+  }, []);
 
   const defaultAccounts = getDefaultAccounts(
     requestedNamespaces,

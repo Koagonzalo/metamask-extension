@@ -1,4 +1,4 @@
-import { Mockttp } from 'mockttp';
+import type { Mockttp } from 'mockttp';
 
 /**
  * Mocks the segment API for specific payloads that we expect to see when these tests are run.

@@ -1,4 +1,12 @@
+import { IconName } from '@metamask/snaps-sdk/jsx';
 import React from 'react';
+
+import {
+  Box,
+  ButtonIcon,
+  ButtonIconSize,
+  Text,
+} from '../../../../components/component-library';
 import {
   AlignItems,
   Display,
@@ -7,18 +15,11 @@ import {
   IconColor,
   TextVariant,
 } from '../../../../helpers/constants/design-system';
-import {
-  Box,
-  ButtonIcon,
-  ButtonIconSize,
-  Text,
-  IconName,
-} from '../../../../components/component-library';
 import { useI18nContext } from '../../../../hooks/useI18nContext';
-import { AssetPill } from './asset-pill';
 import { AmountPill } from './amount-pill';
-import { BalanceChange } from './types';
+import { AssetPill } from './asset-pill';
 import { IndividualFiatDisplay } from './fiat-display';
+import type { BalanceChange } from './types';
 
 /**
  * Displays a single balance change, including the asset, amount, and fiat value.

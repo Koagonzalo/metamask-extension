@@ -1,10 +1,11 @@
 import { strict as assert } from 'assert';
+
+import { regularDelayMs, WINDOW_TITLES } from '../../helpers';
+import { TestDappSolana } from '../../page-objects/pages/test-dapp-solana';
 import {
   SOLANA_DEVNET_URL,
   withSolanaAccountSnap,
 } from '../../tests/solana/common-solana';
-import { TestDappSolana } from '../../page-objects/pages/test-dapp-solana';
-import { regularDelayMs, WINDOW_TITLES } from '../../helpers';
 import { updateNetworkCheckboxes } from '../multichain-api/testHelpers';
 import {
   account1Short,

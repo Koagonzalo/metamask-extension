@@ -1,6 +1,7 @@
-import { TransactionMeta } from '@metamask/transaction-controller';
+import type { TransactionMeta } from '@metamask/transaction-controller';
 import React from 'react';
 import { useSelector } from 'react-redux';
+
 import { TEST_CHAINS } from '../../../../../../../../shared/constants/network';
 import {
   AvatarToken,
@@ -38,9 +39,7 @@ const SendHeading = () => {
   } = useTokenValues(transactionMeta);
 
   type TestNetChainId = (typeof TEST_CHAINS)[number];
-  const isTestnet = TEST_CHAINS.includes(
-    transactionMeta.chainId as TestNetChainId,
-  );
+  const isTestnet = TEST_CHAINS.includes(transactionMeta.chainId);
   const { showFiatInTestnets } = useSelector(getPreferences);
 
   const TokenImage = (

@@ -1,27 +1,30 @@
-import {
-  getDefaultInternalOptions,
-  SnapKeyring,
+import type {
   SnapKeyringCallbacks,
   SnapKeyringInternalOptions,
 } from '@metamask/eth-snap-keyring';
-import browser from 'webextension-polyfill';
-import { SnapId } from '@metamask/snaps-sdk';
+import {
+  getDefaultInternalOptions,
+  SnapKeyring,
+} from '@metamask/eth-snap-keyring';
+import type { SnapId } from '@metamask/snaps-sdk';
 import { assertIsValidSnapId } from '@metamask/snaps-utils';
+import browser from 'webextension-polyfill';
+
+import { SNAP_MANAGE_ACCOUNTS_CONFIRMATION_TYPES } from '../../../../shared/constants/app';
 import {
   MetaMetricsEventAccountType,
   MetaMetricsEventCategory,
   MetaMetricsEventName,
 } from '../../../../shared/constants/metametrics';
-import { SNAP_MANAGE_ACCOUNTS_CONFIRMATION_TYPES } from '../../../../shared/constants/app';
-import { t } from '../../translate';
 // TODO: Remove restricted import
 // eslint-disable-next-line import/no-restricted-paths
-import { IconName } from '../../../../ui/components/component-library/icon';
-import MetaMetricsController from '../../controllers/metametrics-controller';
 import { getUniqueAccountName } from '../../../../shared/lib/accounts';
-import { isSnapPreinstalled } from '../../../../shared/lib/snaps/snaps';
 import { getSnapName } from '../../../../shared/lib/accounts/snaps';
-import { SnapKeyringBuilderMessenger } from './types';
+import { isSnapPreinstalled } from '../../../../shared/lib/snaps/snaps';
+import { IconName } from '../../../../ui/components/component-library/icon';
+import type MetaMetricsController from '../../controllers/metametrics-controller';
+import { t } from '../../translate';
+import type { SnapKeyringBuilderMessenger } from './types';
 import { isBlockedUrl } from './utils/isBlockedUrl';
 import { showError, showSuccess } from './utils/showResult';
 
@@ -303,18 +306,10 @@ class SnapKeyringImpl implements SnapKeyringCallbacks {
         event,
         category: MetaMetricsEventCategory.Accounts,
         properties: {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           account_type: MetaMetricsEventAccountType.Snap,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           snap_id: snapId,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           snap_name: snapName,
           ...(event === MetaMetricsEventName.AccountAdded && {
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             is_suggested_name: defaultAccountNameChosen,
           }),
         },
@@ -473,14 +468,8 @@ class SnapKeyringImpl implements SnapKeyringCallbacks {
         event,
         category: MetaMetricsEventCategory.Accounts,
         properties: {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           account_type: MetaMetricsEventAccountType.Snap,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           snap_id: snapId,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           snap_name: snapName,
         },
       });

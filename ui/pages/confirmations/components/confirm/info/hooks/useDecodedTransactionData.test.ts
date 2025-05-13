@@ -1,19 +1,19 @@
-import { act } from 'react-dom/test-utils';
+import type { TransactionParams } from '@metamask/transaction-controller';
 import {
-  TransactionParams,
   TransactionStatus,
   TransactionType,
 } from '@metamask/transaction-controller';
+import type { Hex } from '@metamask/utils';
+import { act } from 'react-dom/test-utils';
 
-import { Hex } from '@metamask/utils';
+import { getMockConfirmStateForTransaction } from '../../../../../../../test/data/confirmations/helper';
 import {
   TRANSACTION_DATA_FOUR_BYTE,
   TRANSACTION_DATA_UNISWAP,
   TRANSACTION_DECODE_SOURCIFY,
 } from '../../../../../../../test/data/confirmations/transaction-decode';
-import { decodeTransactionData } from '../../../../../../store/actions';
-import { getMockConfirmStateForTransaction } from '../../../../../../../test/data/confirmations/helper';
 import { renderHookWithConfirmContextProvider } from '../../../../../../../test/lib/confirmations/render-helpers';
+import { decodeTransactionData } from '../../../../../../store/actions';
 import { useDecodedTransactionData } from './useDecodedTransactionData';
 
 jest.mock('../../../../../../store/actions', () => ({
@@ -47,7 +47,6 @@ describe('useDecodedTransactionData', () => {
     jest.resetAllMocks();
   });
 
-  // @ts-expect-error This is missing from the Mocha type definitions
   it.each([undefined, null, '', '0x', '0X'])(
     'returns undefined if transaction data is %s',
     async (data: string | null | undefined) => {

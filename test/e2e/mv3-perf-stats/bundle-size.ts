@@ -2,6 +2,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { hideBin } from 'yargs/helpers';
 import yargs from 'yargs/yargs';
+
 import { exitWithError } from '../../../development/lib/exit-with-error';
 import {
   getFirstParentDirectoryThatExists,

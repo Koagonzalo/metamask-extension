@@ -1,18 +1,19 @@
 // eslint-disable-next-line import/no-named-as-default
-import Router from 'react-router-dom';
 
-import { AbstractMessage } from '@metamask/message-manager';
-import { ApprovalRequest } from '@metamask/approval-controller';
+import type { ApprovalRequest } from '@metamask/approval-controller';
+import { ApprovalType } from '@metamask/controller-utils';
+import type { AbstractMessage } from '@metamask/message-manager';
+import type { TransactionMeta } from '@metamask/transaction-controller';
 import {
-  TransactionMeta,
   TransactionStatus,
   TransactionType,
 } from '@metamask/transaction-controller';
-import { Json } from '@metamask/utils';
-import { ApprovalType } from '@metamask/controller-utils';
-import { renderHookWithProvider } from '../../../../test/lib/render-helpers';
-import mockState from '../../../../test/data/mock-state.json';
+import type { Json } from '@metamask/utils';
+import Router from 'react-router-dom';
+
 import { CHAIN_IDS } from '../../../../shared/constants/network';
+import mockState from '../../../../test/data/mock-state.json';
+import { renderHookWithProvider } from '../../../../test/lib/render-helpers';
 import useCurrentConfirmation from './useCurrentConfirmation';
 
 const ID_MOCK = '123-456';
@@ -41,14 +42,10 @@ const TRANSACTION_MOCK = {
   type: TransactionType.contractInteraction,
 };
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function arrayToIdMap<T>(array: T[]): Record<string, T> {
   return array.reduce(
     (acc, item) => ({
       ...acc,
-
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       [(item as any).id]: item,
     }),
@@ -61,7 +58,6 @@ function buildState({
   pendingApprovals,
   transaction,
 }: {
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   message?: Partial<AbstractMessage & { msgParams: any }>;
   pendingApprovals?: Partial<ApprovalRequest<Record<string, Json>>>[];

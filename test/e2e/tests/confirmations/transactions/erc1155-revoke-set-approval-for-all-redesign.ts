@@ -1,14 +1,16 @@
 /* eslint-disable @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires */
 import { TransactionEnvelopeType } from '@metamask/transaction-controller';
+
 import { DAPP_URL } from '../../../constants';
 import { unlockWallet, WINDOW_TITLES } from '../../../helpers';
-import { Mockttp } from '../../../mock-e2e';
+import type { Mockttp } from '../../../mock-e2e';
 import SetApprovalForAllTransactionConfirmation from '../../../page-objects/pages/confirmations/redesign/set-approval-for-all-transaction-confirmation';
 import TestDapp from '../../../page-objects/pages/test-dapp';
-import ContractAddressRegistry from '../../../seeder/contract-address-registry';
-import { Driver } from '../../../webdriver/driver';
+import type ContractAddressRegistry from '../../../seeder/contract-address-registry';
+import type { Driver } from '../../../webdriver/driver';
 import { withTransactionEnvelopeTypeFixtures } from '../helpers';
-import { TestSuiteArguments, mocked4BytesSetApprovalForAll } from './shared';
+import { mocked4BytesSetApprovalForAll } from './erc721-revoke-set-approval-for-all-redesign';
+import type { TestSuiteArguments } from './shared';
 
 const { SMART_CONTRACTS } = require('../../../seeder/smart-contracts');
 

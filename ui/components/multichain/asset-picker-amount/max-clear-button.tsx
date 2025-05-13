@@ -1,22 +1,21 @@
 import React, { useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
+import { MetaMetricsEventCategory } from '../../../../shared/constants/metametrics';
+import { AssetType } from '../../../../shared/constants/transaction';
+import { hexToDecimal } from '../../../../shared/modules/conversion.utils';
+import { MetaMetricsContext } from '../../../contexts/metametrics';
 import {
-  Asset,
   getSendAnalyticProperties,
   getSendMaxModeState,
   toggleSendMaxMode,
 } from '../../../ducks/send';
-import { MetaMetricsContext } from '../../../contexts/metametrics';
-import { MetaMetricsEventCategory } from '../../../../shared/constants/metametrics';
-import { ButtonLink } from '../../component-library';
-import { useI18nContext } from '../../../hooks/useI18nContext';
+import type { Asset } from '../../../ducks/send';
 import { TextVariant } from '../../../helpers/constants/design-system';
-import { AssetType } from '../../../../shared/constants/transaction';
-import { hexToDecimal } from '../../../../shared/modules/conversion.utils';
+import { useI18nContext } from '../../../hooks/useI18nContext';
+import { ButtonLink } from '../../component-library';
 
 // A button that updates the send amount to max balance or 0.
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export default function MaxClearButton({ asset }: { asset: Asset }) {
   const t = useI18nContext();
   const maxModeOn = useSelector(getSendMaxModeState);
@@ -31,8 +30,6 @@ export default function MaxClearButton({ asset }: { asset: Asset }) {
       properties: {
         ...sendAnalytics,
         action: 'Edit Screen',
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         legacy_event: true,
       },
     });

@@ -1,15 +1,14 @@
-import Rule from '@open-rpc/test-coverage/build/rules/rule';
-import { Call } from '@open-rpc/test-coverage/build/coverage';
-import {
+import type {
   ContentDescriptorObject,
   ErrorObject,
   MethodObject,
 } from '@open-rpc/meta-schema';
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
+import type { Call } from '@open-rpc/test-coverage/build/coverage';
+import type Rule from '@open-rpc/test-coverage/build/rules/rule';
 import _ from 'lodash';
-import { Driver } from '../webdriver/driver';
+
 import { WINDOW_TITLES, switchToOrOpenDapp } from '../helpers';
+import type { Driver } from '../webdriver/driver';
 import { addToQueue } from './helpers';
 
 type MultichainAuthorizationConfirmationOptions = {
@@ -18,11 +17,11 @@ type MultichainAuthorizationConfirmationOptions = {
 };
 // this rule makes sure that a multichain authorization error codes are returned
 export class MultichainAuthorizationConfirmationErrors implements Rule {
-  private driver: Driver;
+  private readonly driver: Driver;
 
-  private only: string[];
+  private readonly only: string[];
 
-  private errorCodesToHitCancel: number[];
+  private readonly errorCodesToHitCancel: number[];
 
   constructor(options: MultichainAuthorizationConfirmationOptions) {
     this.driver = options.driver;
@@ -34,8 +33,6 @@ export class MultichainAuthorizationConfirmationErrors implements Rule {
     return 'Multichain Authorization Confirmation Rule';
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async afterRequest(__: unknown, call: Call) {
     await new Promise((resolve, reject) => {
       addToQueue({
@@ -72,8 +69,6 @@ export class MultichainAuthorizationConfirmationErrors implements Rule {
     });
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   getCalls(__: unknown, method: MethodObject) {
     const calls: Call[] = [];
     const isMethodAllowed = this.only ? this.only.includes(method.name) : true;
@@ -118,7 +113,7 @@ export class MultichainAuthorizationConfirmationErrors implements Rule {
               error.message
             } `,
             methodName: method.name,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
             params: params as any,
             url: '',
             resultSchema: (method.result as ContentDescriptorObject).schema,

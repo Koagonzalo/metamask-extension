@@ -1,7 +1,8 @@
 import { waitFor } from '@testing-library/react';
+
 import { renderHookWithProviderTyped } from '../../../../test/lib/render-helpers';
-import * as actions from '../../../store/actions';
 import { MetamaskIdentityProvider } from '../../../contexts/identity';
+import * as actions from '../../../store/actions';
 import {
   useAccountSyncing,
   useDeleteAccountSyncingDataFromUserStorage,
@@ -11,7 +12,6 @@ import {
 type ArrangeMocksMetamaskStateOverrides = {
   isSignedIn?: boolean;
   isProfileSyncingEnabled?: boolean;
-  isAccountSyncingEnabled?: boolean;
   isUnlocked?: boolean;
   useExternalServices?: boolean;
   completedOnboarding?: boolean;
@@ -21,7 +21,6 @@ type ArrangeMocksMetamaskStateOverrides = {
 const initialMetamaskState: ArrangeMocksMetamaskStateOverrides = {
   isSignedIn: true,
   isProfileSyncingEnabled: true,
-  isAccountSyncingEnabled: true,
   isUnlocked: true,
   useExternalServices: true,
   completedOnboarding: true,
@@ -46,7 +45,6 @@ describe('useShouldDispatchAccountSyncing()', () => {
     const properties = [
       'isSignedIn',
       'isProfileSyncingEnabled',
-      'isAccountSyncingEnabled',
       'isUnlocked',
       'useExternalServices',
       'completedOnboarding',
@@ -55,7 +53,6 @@ describe('useShouldDispatchAccountSyncing()', () => {
     const baseState = {
       isSignedIn: true,
       isProfileSyncingEnabled: true,
-      isAccountSyncingEnabled: true,
       isUnlocked: true,
       useExternalServices: true,
       completedOnboarding: true,

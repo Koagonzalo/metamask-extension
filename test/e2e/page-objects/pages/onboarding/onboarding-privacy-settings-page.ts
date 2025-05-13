@@ -1,7 +1,7 @@
-import { Driver } from '../../../webdriver/driver';
+import type { Driver } from '../../../webdriver/driver';
 
 class OnboardingPrivacySettingsPage {
-  private driver: Driver;
+  private readonly driver: Driver;
 
   private readonly assetsSettings = '[data-testid="category-item-Assets"]';
 
@@ -85,8 +85,6 @@ class OnboardingPrivacySettingsPage {
     this.driver = driver;
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_pageIsLoaded(): Promise<void> {
     try {
       await this.driver.waitForMultipleSelectors([
@@ -192,7 +190,7 @@ class OnboardingPrivacySettingsPage {
     await Promise.all(
       (
         await this.driver.findClickableElements(this.assetsPrivacyToggle)
-      ).map((toggle) => toggle.click()),
+      ).map(async (toggle) => toggle.click()),
     );
     await this.navigateBackToSettingsPage();
   }

@@ -1,8 +1,3 @@
-import { hasProperty, isObject } from '@metamask/utils';
-import {
-  NetworkConfiguration,
-  RpcEndpointType,
-} from '@metamask/network-controller';
 import {
   BlockExplorerUrl,
   BUILT_IN_CUSTOM_NETWORKS_RPC,
@@ -10,6 +5,9 @@ import {
   NetworkNickname,
   NetworksTicker,
 } from '@metamask/controller-utils';
+import type { NetworkConfiguration } from '@metamask/network-controller';
+import { RpcEndpointType } from '@metamask/network-controller';
+import { hasProperty, isObject } from '@metamask/utils';
 import { cloneDeep } from 'lodash';
 
 type VersionedData = {

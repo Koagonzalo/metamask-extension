@@ -1,23 +1,24 @@
+import { EthAccountType } from '@metamask/keyring-api';
+import { fireEvent, waitFor } from '@testing-library/react';
+import nock from 'nock';
 import React from 'react';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { fireEvent, waitFor } from '@testing-library/react';
-import { EthAccountType } from '@metamask/keyring-api';
-import nock from 'nock';
+
+import { ETH_EOA_METHODS } from '../../../../shared/constants/eth-methods';
+import { KeyringType } from '../../../../shared/constants/keyring';
 import {
   CHAIN_IDS,
   MAINNET_DISPLAY_NAME,
 } from '../../../../shared/constants/network';
-import { renderWithProvider } from '../../../../test/jest/rendering';
-import { KeyringType } from '../../../../shared/constants/keyring';
 import { AssetType } from '../../../../shared/constants/transaction';
-import { ETH_EOA_METHODS } from '../../../../shared/constants/eth-methods';
-import { setBackgroundConnection } from '../../../store/background-connection';
+import { renderWithProvider } from '../../../../test/jest/rendering';
 import {
   mockNetworkState,
   mockMultichainNetworkState,
 } from '../../../../test/stub/networks';
 import useMultiPolling from '../../../hooks/useMultiPolling';
+import { setBackgroundConnection } from '../../../store/background-connection';
 import AssetPage from './asset-page';
 
 jest.mock('../../../store/actions', () => ({
@@ -47,8 +48,6 @@ jest.mock('../../../../shared/constants/network', () => ({
 }));
 
 jest.mock('../../../hooks/useMultiPolling', () => ({
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   __esModule: true,
   default: jest.fn(),
 }));
@@ -65,11 +64,6 @@ describe('AssetPage', () => {
     },
     metamask: {
       ...mockMultichainNetworkState(),
-      remoteFeatureFlags: {
-        bridgeConfig: {
-          support: true,
-        },
-      },
       tokenList: {},
       tokenBalances: {
         [selectedAccountAddress]: {
@@ -146,6 +140,7 @@ describe('AssetPage', () => {
     openTabSpy = jest.spyOn(global.platform, 'openTab');
     setBackgroundConnection({
       getTokenSymbol: jest.fn(),
+      setBridgeFeatureFlags: jest.fn(),
     } as never);
   });
 
@@ -375,10 +370,10 @@ describe('AssetPage', () => {
       }),
     );
 
-    // Verify we show the loading state
+    // Verify no chart is rendered
     await waitFor(() => {
-      const chart = queryByTestId('asset-chart-loading');
-      expect(chart).toBeInTheDocument();
+      const chart = queryByTestId('asset-price-chart');
+      expect(chart).toBeNull();
     });
 
     const dynamicImages = container.querySelectorAll('img[alt*="logo"]');
@@ -425,7 +420,7 @@ describe('AssetPage', () => {
     // Verify chart is rendered
     await waitFor(() => {
       const chart = queryByTestId('asset-price-chart');
-      expect(chart).toBeInTheDocument();
+      expect(chart).toHaveClass('mm-box--background-color-transparent');
     });
 
     // Verify market data is rendered

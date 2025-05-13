@@ -1,23 +1,24 @@
-import { Mockttp } from 'mockttp';
-import { mockedSourcifyTokenSend } from '../confirmations/helpers';
+import type { Mockttp } from 'mockttp';
+
+import FixtureBuilder from '../../fixture-builder';
 import {
   withFixtures,
   openDapp,
   WINDOW_TITLES,
   unlockWallet,
 } from '../../helpers';
-import FixtureBuilder from '../../fixture-builder';
-import { SMART_CONTRACTS } from '../../seeder/smart-contracts';
+import TokenTransferTransactionConfirmation from '../../page-objects/pages/confirmations/redesign/token-transfer-confirmation';
 import ActivityListPage from '../../page-objects/pages/home/activity-list';
 import AssetListPage from '../../page-objects/pages/home/asset-list';
 import HomePage from '../../page-objects/pages/home/homepage';
 import SendTokenPage from '../../page-objects/pages/send/send-token-page';
 import TestDapp from '../../page-objects/pages/test-dapp';
-import TokenTransferTransactionConfirmation from '../../page-objects/pages/confirmations/redesign/token-transfer-confirmation';
+import { SMART_CONTRACTS } from '../../seeder/smart-contracts';
+import { mockedSourcifyTokenSend } from '../confirmations/helpers';
 
 const recipientAddress = '0x2f318C334780961FB129D2a6c30D0763d9a5C970';
 
-describe('Transfer custom tokens', function () {
+describe('Transfer custom tokens @no-mmi', function () {
   const smartContract = SMART_CONTRACTS.HST;
   const symbol = 'TST';
   const valueWithSymbol = (value: string) => `${value} ${symbol}`;

@@ -1,12 +1,13 @@
-import { Mockttp } from 'mockttp';
 import { Context } from 'mocha';
+import type { Mockttp } from 'mockttp';
+
 import { CHAIN_IDS } from '../../../../shared/constants/network';
 import { formatCurrency } from '../../../../ui/helpers/utils/confirm-tx.util';
 import FixtureBuilder from '../../fixture-builder';
 import { unlockWallet, withFixtures } from '../../helpers';
-import { Driver } from '../../webdriver/driver';
-import HomePage from '../../page-objects/pages/home/homepage';
 import AssetListPage from '../../page-objects/pages/home/asset-list';
+import HomePage from '../../page-objects/pages/home/homepage';
+import type { Driver } from '../../webdriver/driver';
 import {
   mockEmptyHistoricalPrices,
   mockEmptyPrices,
@@ -30,7 +31,7 @@ describe('Token Details', function () {
     await withFixtures(
       {
         ...fixtures,
-        title: (this as Context).test?.fullTitle(),
+        title: this.test?.fullTitle(),
         testSpecificMock: async (mockServer: Mockttp) => [
           await mockEmptyPrices(mockServer, chainId),
           await mockEmptyHistoricalPrices(mockServer, tokenAddress, chainId),
@@ -69,7 +70,7 @@ describe('Token Details', function () {
     await withFixtures(
       {
         ...fixtures,
-        title: (this as Context).test?.fullTitle(),
+        title: this.test?.fullTitle(),
         ethConversionInUsd,
         testSpecificMock: async (mockServer: Mockttp) => [
           await mockSpotPrices(mockServer, chainId, {

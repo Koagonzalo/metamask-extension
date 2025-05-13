@@ -1,10 +1,8 @@
+import type { CaipAccountId } from '@metamask/utils';
+import { isHexString, parseCaipAccountId } from '@metamask/utils';
 import React, { useMemo } from 'react';
-import {
-  CaipAccountId,
-  isHexString,
-  parseCaipAccountId,
-} from '@metamask/utils';
-import { Box, Text } from '../../../component-library';
+
+import { toChecksumHexAddress } from '../../../../../shared/modules/hexstring-utils';
 import {
   AlignItems,
   Display,
@@ -12,9 +10,9 @@ import {
   TextVariant,
 } from '../../../../helpers/constants/design-system';
 import { shortenAddress } from '../../../../helpers/utils/util';
-import { toChecksumHexAddress } from '../../../../../shared/modules/hexstring-utils';
-import { SnapUIAvatar } from '../snap-ui-avatar';
 import { useDisplayName } from '../../../../hooks/snaps/useDisplayName';
+import { Box, Text } from '../../../component-library';
+import { SnapUIAvatar } from '../snap-ui-avatar';
 
 export type SnapUIAddressProps = {
   // The address must be a CAIP-10 string.

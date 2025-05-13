@@ -1,20 +1,17 @@
-import React from 'react';
+import type React from 'react';
 
 import type {
   PolymorphicComponentPropWithRef,
   StyleUtilityProps,
 } from '../box';
-
-import type { TextProps } from '../text';
-import type { ButtonLinkProps } from '../button-link';
 import type { ButtonIconProps } from '../button-icon';
+import type { ButtonLinkProps } from '../button-link';
+import type { TextProps } from '../text';
 
 /**
  * Makes all props optional so that if a prop object is used not ALL required props need to be passed
  * TODO: Move to appropriate place in app as this will be highly reusable
  */
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 type MakePropsOptional<T> = {
   [K in keyof T]?: T[K];
 };
@@ -77,13 +74,9 @@ export interface BannerBaseStyleUtilityProps extends StyleUtilityProps {
   className?: string;
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export type BannerBaseProps<C extends React.ElementType> =
   PolymorphicComponentPropWithRef<C, BannerBaseStyleUtilityProps>;
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export type BannerBaseComponent = <C extends React.ElementType = 'div'>(
   props: BannerBaseProps<C>,
 ) => React.ReactElement | null;

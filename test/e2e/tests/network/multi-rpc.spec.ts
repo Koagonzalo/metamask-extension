@@ -1,19 +1,13 @@
 import { strict as assert } from 'assert';
-import { Suite } from 'mocha';
+import type { Suite } from 'mocha';
+
 import FixtureBuilder from '../../fixture-builder';
 import { withFixtures } from '../../helpers';
-import { Driver } from '../../webdriver/driver';
-import { Mockttp } from '../../mock-e2e';
 import {
   expectMockRequest,
   expectNoMockRequest,
 } from '../../helpers/mock-server';
-import EditNetworkModal from '../../page-objects/pages/dialog/edit-network';
-import HeaderNavbar from '../../page-objects/pages/header-navbar';
-import HomePage from '../../page-objects/pages/home/homepage';
-import OnboardingCompletePage from '../../page-objects/pages/onboarding/onboarding-complete-page';
-import OnboardingPrivacySettingsPage from '../../page-objects/pages/onboarding/onboarding-privacy-settings-page';
-import SelectNetwork from '../../page-objects/pages/dialog/select-network';
+import type { Mockttp } from '../../mock-e2e';
 import {
   loginWithoutBalanceValidation,
   loginWithBalanceValidation,
@@ -22,6 +16,13 @@ import {
   completeImportSRPOnboardingFlow,
   importSRPOnboardingFlow,
 } from '../../page-objects/flows/onboarding.flow';
+import EditNetworkModal from '../../page-objects/pages/dialog/edit-network';
+import SelectNetwork from '../../page-objects/pages/dialog/select-network';
+import HeaderNavbar from '../../page-objects/pages/header-navbar';
+import HomePage from '../../page-objects/pages/home/homepage';
+import OnboardingCompletePage from '../../page-objects/pages/onboarding/onboarding-complete-page';
+import OnboardingPrivacySettingsPage from '../../page-objects/pages/onboarding/onboarding-privacy-settings-page';
+import type { Driver } from '../../webdriver/driver';
 
 describe('MultiRpc:', function (this: Suite) {
   it('should migrate to multi rpc', async function () {

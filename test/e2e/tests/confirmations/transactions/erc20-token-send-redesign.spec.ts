@@ -1,24 +1,25 @@
 /* eslint-disable @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires */
 import { TransactionEnvelopeType } from '@metamask/transaction-controller';
+
 import { DAPP_URL } from '../../../constants';
 import {
   unlockWallet,
   veryLargeDelayMs,
   WINDOW_TITLES,
 } from '../../../helpers';
-import { Mockttp } from '../../../mock-e2e';
+import type { Mockttp } from '../../../mock-e2e';
 import WatchAssetConfirmation from '../../../page-objects/pages/confirmations/legacy/watch-asset-confirmation';
 import TokenTransferTransactionConfirmation from '../../../page-objects/pages/confirmations/redesign/token-transfer-confirmation';
 import HomePage from '../../../page-objects/pages/home/homepage';
 import SendTokenPage from '../../../page-objects/pages/send/send-token-page';
 import TestDapp from '../../../page-objects/pages/test-dapp';
-import ContractAddressRegistry from '../../../seeder/contract-address-registry';
-import { Driver } from '../../../webdriver/driver';
+import type ContractAddressRegistry from '../../../seeder/contract-address-registry';
+import type { Driver } from '../../../webdriver/driver';
 import {
   mockedSourcifyTokenSend,
   withTransactionEnvelopeTypeFixtures,
 } from '../helpers';
-import { TestSuiteArguments } from './shared';
+import type { TestSuiteArguments } from './shared';
 
 const { SMART_CONTRACTS } = require('../../../seeder/smart-contracts');
 

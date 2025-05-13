@@ -1,24 +1,25 @@
 import React, { useContext } from 'react';
 import { useSelector } from 'react-redux';
+
+import {
+  MetaMetricsEventCategory,
+  MetaMetricsEventName,
+} from '../../../../shared/constants/metametrics';
+import { MetaMetricsContext } from '../../../contexts/metametrics';
 import {
   BackgroundColor,
   FontWeight,
   IconColor,
   TextColor,
 } from '../../../helpers/constants/design-system';
-import { Box, Icon, IconName, IconSize, Text } from '../../component-library';
-import {
-  MetaMetricsEventCategory,
-  MetaMetricsEventName,
-} from '../../../../shared/constants/metametrics';
 import { getPortfolioUrl } from '../../../helpers/utils/portfolio';
+import { useI18nContext } from '../../../hooks/useI18nContext';
 import {
   getDataCollectionForMarketing,
   getMetaMetricsId,
   getParticipateInMetaMetrics,
 } from '../../../selectors';
-import { MetaMetricsContext } from '../../../contexts/metametrics';
-import { useI18nContext } from '../../../hooks/useI18nContext';
+import { Box, Icon, IconName, IconSize, Text } from '../../component-library';
 
 type StakeableLinkProps = {
   chainId: string;
@@ -41,7 +42,7 @@ export const StakeableLink = ({ chainId, symbol }: StakeableLinkProps) => {
       paddingInlineStart={1}
       paddingInlineEnd={1}
       tabIndex={0}
-      onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         e.stopPropagation();
         const url = getPortfolioUrl(
@@ -59,11 +60,7 @@ export const StakeableLink = ({ chainId, symbol }: StakeableLinkProps) => {
             location: 'Token List Item',
             text: 'Stake',
             // FIXME: This might not be a number for non-EVM accounts
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             chain_id: chainId,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             token_symbol: symbol,
           },
         });
@@ -77,11 +74,11 @@ export const StakeableLink = ({ chainId, symbol }: StakeableLinkProps) => {
         paddingInlineEnd={1}
         fontWeight={FontWeight.Medium}
       >
-        {t('earn')}
+        {t('stake')}
       </Text>
       <Icon
         name={IconName.Stake}
-        size={IconSize.Xs}
+        size={IconSize.Sm}
         color={IconColor.primaryDefault}
       />
     </Box>

@@ -1,4 +1,5 @@
 import { Messenger, RestrictedMessenger } from '@metamask/base-controller';
+
 import { getDelegationControllerMessenger } from './delegation-controller-messenger';
 
 describe('getDelegationControllerMessenger', () => {

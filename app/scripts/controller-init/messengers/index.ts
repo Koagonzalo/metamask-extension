@@ -1,4 +1,33 @@
 import { noop } from 'lodash';
+
+import { getInstitutionalSnapControllerMessenger } from './accounts/institutional-snap-controller-messenger';
+import {
+  getAssetsContractControllerMessenger,
+  getNftControllerMessenger,
+  getNftDetectionControllerMessenger,
+  getTokenRatesControllerMessenger,
+} from './assets';
+import { getDeFiPositionsControllerMessenger } from './defi-positions';
+import { getDeFiPositionsControllerInitMessenger } from './defi-positions/defi-positions-controller-messenger';
+import {
+  getDelegationControllerInitMessenger,
+  getDelegationControllerMessenger,
+} from './delegation/delegation-controller-messenger';
+import {
+  getAuthenticationControllerMessenger,
+  getUserStorageControllerMessenger,
+} from './identity';
+import {
+  getMultichainBalancesControllerMessenger,
+  getMultichainTransactionsControllerMessenger,
+  getMultichainAssetsControllerMessenger,
+  getMultichainNetworkControllerMessenger,
+  getMultichainAssetsRatesControllerMessenger,
+} from './multichain';
+import {
+  getNotificationServicesControllerMessenger,
+  getNotificationServicesPushControllerMessenger,
+} from './notifications';
 import {
   getPPOMControllerMessenger,
   getPPOMControllerInitMessenger,
@@ -18,34 +47,6 @@ import {
   getTransactionControllerMessenger,
   getTransactionControllerInitMessenger,
 } from './transaction-controller-messenger';
-import {
-  getMultichainBalancesControllerMessenger,
-  getMultichainTransactionsControllerMessenger,
-  getMultichainAssetsControllerMessenger,
-  getMultichainNetworkControllerMessenger,
-  getMultichainAssetsRatesControllerMessenger,
-} from './multichain';
-import { getInstitutionalSnapControllerMessenger } from './accounts/institutional-snap-controller-messenger';
-import {
-  getAuthenticationControllerMessenger,
-  getUserStorageControllerMessenger,
-} from './identity';
-import {
-  getAssetsContractControllerMessenger,
-  getNftControllerMessenger,
-  getNftDetectionControllerMessenger,
-  getTokenRatesControllerMessenger,
-} from './assets';
-import {
-  getNotificationServicesControllerMessenger,
-  getNotificationServicesPushControllerMessenger,
-} from './notifications';
-import { getDeFiPositionsControllerMessenger } from './defi-positions';
-import { getDeFiPositionsControllerInitMessenger } from './defi-positions/defi-positions-controller-messenger';
-import {
-  getDelegationControllerInitMessenger,
-  getDelegationControllerMessenger,
-} from './delegation/delegation-controller-messenger';
 
 export const CONTROLLER_MESSENGERS = {
   AuthenticationController: {

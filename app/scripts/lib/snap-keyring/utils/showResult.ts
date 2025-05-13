@@ -2,10 +2,11 @@ import type {
   ResultComponent,
   ErrorResult,
 } from '@metamask/approval-controller';
+
 // TODO: Remove restricted import
 // eslint-disable-next-line import/no-restricted-paths
-import { IconName } from '../../../../../ui/components/component-library/icon';
-import { SnapKeyringBuilderMessenger } from '../types';
+import type { IconName } from '../../../../../ui/components/component-library/icon';
+import type { SnapKeyringBuilderMessenger } from '../types';
 
 const snapAuthorshipHeader = (snapId: string): ResultComponent => {
   return {
@@ -40,7 +41,7 @@ export type ResultComponentOptions = {
  * @returns Returns a promise that resolves once the user clicks the confirm
  * button.
  */
-export const showError = (
+export const showError = async (
   controllerMessenger: SnapKeyringBuilderMessenger,
   snapId: string,
   opts: ResultComponentOptions,
@@ -70,7 +71,7 @@ export const showError = (
  * @returns Returns a promise that resolves once the user clicks the confirm
  * button.
  */
-export const showSuccess = (
+export const showSuccess = async (
   controllerMessenger: SnapKeyringBuilderMessenger,
   snapId: string,
   opts: ResultComponentOptions,

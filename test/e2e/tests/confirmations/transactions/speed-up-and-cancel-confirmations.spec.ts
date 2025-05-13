@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires */
-import { Hex } from '@metamask/utils';
+import type { Hex } from '@metamask/utils';
+
 import { decimalToPrefixedHex } from '../../../../../shared/modules/conversion.utils';
 import { DEFAULT_FIXTURE_ACCOUNT } from '../../../constants';
 import { unlockWallet } from '../../../helpers';
@@ -7,10 +8,10 @@ import { createDappTransaction } from '../../../page-objects/flows/transaction';
 import Confirmation from '../../../page-objects/pages/confirmations/redesign/confirmation';
 import ActivityListPage from '../../../page-objects/pages/home/activity-list';
 import HomePage from '../../../page-objects/pages/home/homepage';
-import { TestSuiteArguments } from './shared';
+import type { TestSuiteArguments } from './shared';
 
-const { WINDOW_TITLES, withFixtures } = require('../../../helpers');
 const FixtureBuilder = require('../../../fixture-builder');
+const { WINDOW_TITLES, withFixtures } = require('../../../helpers');
 
 const ethInHexWei = (eth: number): Hex => decimalToPrefixedHex(eth * 10 ** 18);
 

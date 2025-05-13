@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 // //////////////////////////////////////////////////////////////////////////////
 //
 // Locale verification script
@@ -22,12 +21,13 @@
 //
 // //////////////////////////////////////////////////////////////////////////////
 
-const { deepStrictEqual, AssertionError } = require('node:assert');
-const fs = require('fs');
-const { promisify } = require('util');
-const log = require('loglevel');
 const glob = require('fast-glob');
+const fs = require('fs');
+const log = require('loglevel');
+const { deepStrictEqual, AssertionError } = require('node:assert');
+const { promisify } = require('util');
 const matchAll = require('string.prototype.matchall').getPolyfill();
+
 const localeIndex = require('../app/_locales/index.json');
 const {
   compareLocalesForMissingDescriptions,

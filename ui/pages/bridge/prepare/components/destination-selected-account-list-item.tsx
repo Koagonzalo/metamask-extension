@@ -1,5 +1,5 @@
-import React from 'react';
 import classnames from 'classnames';
+import React from 'react';
 import { useSelector } from 'react-redux';
 
 import {
@@ -9,7 +9,6 @@ import {
   Box,
   Text,
 } from '../../../../components/component-library';
-
 import {
   AlignItems,
   BackgroundColor,
@@ -18,10 +17,9 @@ import {
   TextColor,
   TextVariant,
 } from '../../../../helpers/constants/design-system';
-
-import { getUseBlockie } from '../../../../selectors';
 import { useI18nContext } from '../../../../hooks/useI18nContext';
-import { DestinationAccount } from '../types';
+import { getUseBlockie } from '../../../../selectors';
+import type { DestinationAccount } from '../types';
 
 type DestinationSelectedAccountListItemProps = {
   account: DestinationAccount;

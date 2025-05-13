@@ -1,13 +1,15 @@
 import { strict as assert } from 'assert';
-import { Driver } from '../../webdriver/driver';
-import HeaderNavbar from '../../page-objects/pages/header-navbar';
+
 import FixtureBuilder from '../../fixture-builder';
-import { loginWithoutBalanceValidation } from '../../page-objects/flows/login.flow';
 import { withFixtures, WINDOW_TITLES } from '../../helpers';
-import SettingsPage from '../../page-objects/pages/settings/settings-page';
-import PreinstalledExampleSettings from '../../page-objects/pages/settings/preinstalled-example-settings';
-import { TestSnaps } from '../../page-objects/pages/test-snaps';
+import { loginWithoutBalanceValidation } from '../../page-objects/flows/login.flow';
 import SnapInstall from '../../page-objects/pages/dialog/snap-install';
+import HeaderNavbar from '../../page-objects/pages/header-navbar';
+import HomePage from '../../page-objects/pages/home/homepage';
+import PreinstalledExampleSettings from '../../page-objects/pages/settings/preinstalled-example-settings';
+import SettingsPage from '../../page-objects/pages/settings/settings-page';
+import { TestSnaps } from '../../page-objects/pages/test-snaps';
+import type { Driver } from '../../webdriver/driver';
 
 describe('Pre-install example', function () {
   it('can display the Snap settings page', async function () {
@@ -37,7 +39,7 @@ describe('Pre-install example', function () {
         await testSnaps.openPage();
         await testSnaps.scrollAndClickButton('connectPreinstalledButton');
         await driver.switchToWindowWithTitle(WINDOW_TITLES.Dialog);
-        await snapInstall.clickConnectButton();
+        await snapInstall.clickConfirmButton();
         await driver.switchToWindowWithTitle(WINDOW_TITLES.TestSnaps);
         await testSnaps.clickButton('getSettingsStateButton');
         const jsonTextValidation = '"setting1": true';

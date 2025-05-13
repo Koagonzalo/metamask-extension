@@ -1,5 +1,6 @@
 import { TransactionEnvelopeType } from '@metamask/transaction-controller';
 import BigNumber from 'bignumber.js';
+
 import { EtherDenomination } from '../constants/common';
 import { CHAIN_IDS } from '../constants/network';
 import { Numeric } from '../modules/Numeric';
@@ -19,7 +20,6 @@ describe('transaction controller utils', () => {
   });
 
   describe('calcTokenAmount()', () => {
-    // @ts-expect-error This is missing from the Mocha type definitions
     it.each([
       // number values
       [0, 5, '0'],

@@ -1,39 +1,38 @@
-import log from 'loglevel';
-import { captureException } from '@sentry/browser';
-import {
-  CUSTODIAN_TYPES,
+import type { CustodyController } from '@metamask-institutional/custody-controller';
+import type {
   CustodyKeyring,
   MmiConfigurationController,
 } from '@metamask-institutional/custody-keyring';
+import { CUSTODIAN_TYPES } from '@metamask-institutional/custody-keyring';
 import {
   updateCustodianTransactions,
   custodianEventHandlerFactory,
 } from '@metamask-institutional/extension';
+import { handleMmiPortfolio } from '@metamask-institutional/portfolio-dashboard';
 import {
   REFRESH_TOKEN_CHANGE_EVENT,
   INTERACTIVE_REPLACEMENT_TOKEN_CHANGE_EVENT,
   API_REQUEST_LOG_EVENT,
 } from '@metamask-institutional/sdk';
-import { handleMmiPortfolio } from '@metamask-institutional/portfolio-dashboard';
-import { CustodyController } from '@metamask-institutional/custody-controller';
-import { IApiCallLogEntry } from '@metamask-institutional/types';
-import { TransactionUpdateController } from '@metamask-institutional/transaction-update';
-import { TransactionMeta } from '@metamask/transaction-controller';
-import { KeyringTypes } from '@metamask/keyring-controller';
-import { NetworkState } from '@metamask/network-controller';
-import {
+import type { TransactionUpdateController } from '@metamask-institutional/transaction-update';
+import type { IApiCallLogEntry } from '@metamask-institutional/types';
+import { toHex } from '@metamask/controller-utils';
+import type { KeyringTypes } from '@metamask/keyring-controller';
+import type { InternalAccount } from '@metamask/keyring-internal-api';
+import type { NetworkState } from '@metamask/network-controller';
+import type {
   MessageParamsPersonal,
   MessageParamsTyped,
   OriginalRequest,
   SignatureController,
 } from '@metamask/signature-controller';
-import { toHex } from '@metamask/controller-utils';
-import { InternalAccount } from '@metamask/keyring-internal-api';
-import { toChecksumHexAddress } from '../../../shared/modules/hexstring-utils';
+import type { TransactionMeta } from '@metamask/transaction-controller';
+import { captureException } from '@sentry/browser';
+import log from 'loglevel';
+
 // TODO: Remove restricted import
 // eslint-disable-next-line import/no-restricted-paths
-import { CONNECT_HARDWARE_ROUTE } from '../../../ui/helpers/constants/routes';
-import {
+import type {
   MMIControllerOptions,
   ISignedEvent,
   IInteractiveRefreshTokenChangeEvent,
@@ -42,9 +41,11 @@ import {
   ConnectionRequest,
   MMIControllerMessenger,
 } from '../../../shared/constants/mmi-controller';
+import { toChecksumHexAddress } from '../../../shared/modules/hexstring-utils';
+import { CONNECT_HARDWARE_ROUTE } from '../../../ui/helpers/constants/routes';
+import type AccountTrackerController from './account-tracker-controller';
+import type { AppStateController } from './app-state-controller';
 import { getPermissionBackgroundApiMethods } from './permissions';
-import AccountTrackerController from './account-tracker-controller';
-import { AppStateController } from './app-state-controller';
 
 type UpdateCustodianTransactionsParameters = {
   keyring: CustodyKeyring;
@@ -73,41 +74,46 @@ export class MMIController {
 
   public transactionUpdateController: TransactionUpdateController;
 
-  private custodyController: CustodyController;
+  private readonly custodyController: CustodyController;
 
   // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private getState: () => any;
+  private readonly getState: () => any;
 
   // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private getPendingNonce: (address: string) => Promise<any>;
+  private readonly getPendingNonce: (address: string) => Promise<any>;
 
-  private accountTrackerController: AccountTrackerController;
+  private readonly accountTrackerController: AccountTrackerController;
 
-  #networkControllerState: NetworkState;
-
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private permissionController: any;
-
-  private signatureController: SignatureController;
-
-  private messagingSystem: MMIControllerMessenger;
+  readonly #networkControllerState: NetworkState;
 
   // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private platform: any;
+  private readonly permissionController: any;
+
+  private readonly signatureController: SignatureController;
+
+  private readonly messagingSystem: MMIControllerMessenger;
 
   // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private extension: any;
+  private readonly platform: any;
 
-  private updateTransactionHash: (txId: string, txHash: string) => void;
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private readonly extension: any;
 
-  private setChannelId: (channelId: string) => void;
+  private readonly updateTransactionHash: (
+    txId: string,
+    txHash: string,
+  ) => void;
 
-  private setConnectionRequest: (payload: ConnectionRequest | null) => void;
+  private readonly setChannelId: (channelId: string) => void;
+
+  private readonly setConnectionRequest: (
+    payload: ConnectionRequest | null,
+  ) => void;
 
   public trackTransactionEvents: (
     args: { transactionMeta: TransactionMeta },
@@ -117,7 +123,7 @@ export class MMIController {
     event: any,
   ) => void;
 
-  private txStateManager: {
+  private readonly txStateManager: {
     // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getTransactions: (query?: any, opts?: any, fullTx?: boolean) => any[];
@@ -240,7 +246,7 @@ export class MMIController {
     return custodianEventHandlerFactory({
       log,
       getState: () => this.getState(),
-      getPendingNonce: (address) => this.getPendingNonce(address),
+      getPendingNonce: async (address) => this.getPendingNonce(address),
       setTxHash: (txId, txHash) => this.updateTransactionHash(txId, txHash),
       signatureController: this.signatureController,
       txStateManager: this.txStateManager,
@@ -323,7 +329,7 @@ export class MMIController {
             keyring,
             type,
             txList,
-            getPendingNonce: (address) => this.getPendingNonce(address),
+            getPendingNonce: async (address) => this.getPendingNonce(address),
             setTxHash: (txId, txHash) =>
               this.updateTransactionHash(txId, txHash),
             txStateManager: this.txStateManager,

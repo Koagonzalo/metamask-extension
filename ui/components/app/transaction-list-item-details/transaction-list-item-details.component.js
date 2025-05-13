@@ -1,24 +1,25 @@
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
-import copyToClipboard from 'copy-to-clipboard';
 import { getBlockExplorerLink } from '@metamask/etherscan-link';
 import { TransactionType } from '@metamask/transaction-controller';
+import copyToClipboard from 'copy-to-clipboard';
+import PropTypes from 'prop-types';
+import React, { PureComponent } from 'react';
+
+import { COPY_OPTIONS } from '../../../../shared/constants/copy';
+import { MetaMetricsEventCategory } from '../../../../shared/constants/metametrics';
+import { CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP } from '../../../../shared/constants/network';
+import { SECOND } from '../../../../shared/constants/time';
+import { NETWORKS_ROUTE } from '../../../helpers/constants/routes';
+import { getURLHostName } from '../../../helpers/utils/util';
+import { Box } from '../../component-library/box';
+import Button from '../../ui/button';
+import Disclosure from '../../ui/disclosure';
+import Popover from '../../ui/popover';
 import SenderToRecipient from '../../ui/sender-to-recipient';
 import { DEFAULT_VARIANT } from '../../ui/sender-to-recipient/sender-to-recipient.constants';
-import Disclosure from '../../ui/disclosure';
 import TransactionActivityLog from '../transaction-activity-log';
 import TransactionBreakdown from '../transaction-breakdown';
-import Button from '../../ui/button';
 import Tooltip from '../../ui/tooltip';
 import CancelButton from '../cancel-button';
-import Popover from '../../ui/popover';
-import { Box } from '../../component-library/box';
-import { SECOND } from '../../../../shared/constants/time';
-import { MetaMetricsEventCategory } from '../../../../shared/constants/metametrics';
-import { getURLHostName } from '../../../helpers/utils/util';
-import { NETWORKS_ROUTE } from '../../../helpers/constants/routes';
-import { COPY_OPTIONS } from '../../../../shared/constants/copy';
-import { CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP } from '../../../../shared/constants/network';
 
 export default class TransactionListItemDetails extends PureComponent {
   static contextTypes = {
@@ -33,12 +34,7 @@ export default class TransactionListItemDetails extends PureComponent {
     onRetry: PropTypes.func,
     showCancel: PropTypes.bool,
     showSpeedUp: PropTypes.bool,
-    /**
-     * Disabling the retry button until further notice
-     *
-     * @see {@link https://github.com/MetaMask/metamask-extension/issues/28615}
-     */
-    // showRetry: PropTypes.bool,
+    showRetry: PropTypes.bool,
     isEarliestNonce: PropTypes.bool,
     primaryCurrency: PropTypes.string,
     transactionGroup: PropTypes.object,
@@ -152,7 +148,7 @@ export default class TransactionListItemDetails extends PureComponent {
       transactionGroup,
       primaryCurrency,
       showSpeedUp,
-      // showRetry,
+      showRetry,
       recipientAddress,
       recipientName,
       senderAddress,
@@ -192,7 +188,7 @@ export default class TransactionListItemDetails extends PureComponent {
                   detailsModal
                 />
               )}
-              {/* {showRetry && (
+              {showRetry && (
                 <Tooltip title={t('retryTransaction')}>
                   <Button
                     type="raised"
@@ -203,7 +199,7 @@ export default class TransactionListItemDetails extends PureComponent {
                     <i className="fa fa-sync"></i>
                   </Button>
                 </Tooltip>
-              )} */}
+              )}
             </div>
           </div>
           <div className="transaction-list-item-details__header">

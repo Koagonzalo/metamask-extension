@@ -1,9 +1,9 @@
 import { getMockTypedSignConfirmStateForRequest } from '../../../../test/data/confirmations/helper';
-import { renderHookWithConfirmContextProvider } from '../../../../test/lib/confirmations/render-helpers';
 import { orderSignatureMsg } from '../../../../test/data/confirmations/typed_sign';
+import { renderHookWithConfirmContextProvider } from '../../../../test/lib/confirmations/render-helpers';
 import { generateSignatureUniqueId } from '../../../helpers/utils/metrics';
 import { updateEventFragment } from '../../../store/actions';
-import { SignatureRequestType } from '../types/confirm';
+import type { SignatureRequestType } from '../types/confirm';
 import { useSignatureEventFragment } from './useSignatureEventFragment';
 
 const renderUseSignatureEventFragment = (signature: SignatureRequestType) => {
@@ -25,11 +25,7 @@ describe('useSignatureEventFragment', () => {
   describe('updateSignatureEventFragment', () => {
     it('should call updateEventFragment to update the signature event fragment', () => {
       const mockUpdateProps = {
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         event_name1: 'test_event 1',
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         event_name2: 'test_event 2',
       };
       const expectedFragmentId = generateSignatureUniqueId(

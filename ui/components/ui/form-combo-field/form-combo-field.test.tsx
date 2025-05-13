@@ -1,8 +1,10 @@
+import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 import { act } from 'react-dom/test-utils';
-import { fireEvent } from '@testing-library/react';
+
 import { renderWithProvider } from '../../../../test/lib/render-helpers';
-import FormComboField, { FormComboFieldOption } from './form-combo-field';
+import type { FormComboFieldOption } from './form-combo-field';
+import FormComboField from './form-combo-field';
 
 const VALUE_MOCK = 'TestValue';
 const PLACEHOLDER_MOCK = 'TestPlaceholder';

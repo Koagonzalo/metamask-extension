@@ -1,10 +1,11 @@
-import { Context } from 'mocha';
+import type { Context } from 'mocha';
+
 import { CHAIN_IDS } from '../../../../shared/constants/network';
 import FixtureBuilder from '../../fixture-builder';
 import { unlockWallet, withFixtures, largeDelayMs } from '../../helpers';
-import { Driver } from '../../webdriver/driver';
-import HomePage from '../../page-objects/pages/home/homepage';
 import AssetListPage from '../../page-objects/pages/home/asset-list';
+import HomePage from '../../page-objects/pages/home/homepage';
+import type { Driver } from '../../webdriver/driver';
 
 describe('Token List Sorting', function () {
   const mainnetChainId = CHAIN_IDS.MAINNET;
@@ -22,7 +23,7 @@ describe('Token List Sorting', function () {
     await withFixtures(
       {
         ...testFixtures,
-        title: (this as Context).test?.fullTitle(),
+        title: this.test?.fullTitle(),
       },
       async ({ driver }: { driver: Driver }) => {
         await unlockWallet(driver);

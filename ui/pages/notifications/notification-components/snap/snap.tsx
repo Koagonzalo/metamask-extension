@@ -1,19 +1,16 @@
+import { TRIGGER_TYPES } from '@metamask/notification-services-controller/notification-services';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { TRIGGER_TYPES } from '@metamask/notification-services-controller/notification-services';
+
+import { SnapIcon } from '../../../../components/app/snaps/snap-icon';
+import { SnapUIMarkdown } from '../../../../components/app/snaps/snap-ui-markdown';
+import { SnapUIRenderer } from '../../../../components/app/snaps/snap-ui-renderer';
+import { Box, IconSize, Text } from '../../../../components/component-library';
 import {
   NotificationDetailTitle,
   NotificationListItemSnap,
 } from '../../../../components/multichain';
-import { getSnapsMetadata } from '../../../../selectors';
-import { getSnapRoute, getSnapName } from '../../../../helpers/utils/util';
-import {
-  NotificationComponent,
-  NotificationComponentType,
-} from '../types/notifications/notifications';
-import { formatIsoDateString } from '../../../../helpers/utils/notification.util';
-import { SnapUIRenderer } from '../../../../components/app/snaps/snap-ui-renderer';
 import {
   AlignItems,
   BackgroundColor,
@@ -21,13 +18,18 @@ import {
   FlexDirection,
   FontWeight,
 } from '../../../../helpers/constants/design-system';
-import { Box, IconSize, Text } from '../../../../components/component-library';
-import { isOfTypeNodeGuard } from '../node-guard';
-import { SnapIcon } from '../../../../components/app/snaps/snap-icon';
+import { formatIsoDateString } from '../../../../helpers/utils/notification.util';
+import { getSnapRoute, getSnapName } from '../../../../helpers/utils/util';
 import { useMarkNotificationAsRead } from '../../../../hooks/metamask-notifications/useNotifications';
-import { SnapUIMarkdown } from '../../../../components/app/snaps/snap-ui-markdown';
-import { DetailedViewData, SnapNotification } from './types';
+import { getSnapsMetadata } from '../../../../selectors';
+import { isOfTypeNodeGuard } from '../node-guard';
+import type {
+  NotificationComponent} from '../types/notifications/notifications';
+import {
+  NotificationComponentType,
+} from '../types/notifications/notifications';
 import { SnapFooterButton } from './snap-footer-button';
+import type { DetailedViewData, SnapNotification } from './types';
 
 export const components: NotificationComponent<SnapNotification> = {
   guardFn: isOfTypeNodeGuard([TRIGGER_TYPES.SNAP]),
@@ -73,9 +75,7 @@ export const components: NotificationComponent<SnapNotification> = {
   details: {
     title: ({ notification }) => (
       <NotificationDetailTitle
-        title={
-          (notification.data as DetailedViewData).detailedView.title as string
-        }
+        title={(notification.data as DetailedViewData).detailedView.title}
         date={formatIsoDateString(notification.createdAt)}
       />
     ),
@@ -114,7 +114,7 @@ export const components: NotificationComponent<SnapNotification> = {
                 snapId={notification.data.origin}
                 interfaceId={
                   (notification.data as DetailedViewData).detailedView
-                    .interfaceId as string
+                    .interfaceId
                 }
                 contentBackgroundColor={BackgroundColor.backgroundDefault}
               />

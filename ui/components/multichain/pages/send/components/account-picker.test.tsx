@@ -1,24 +1,25 @@
+import { BtcAccountType } from '@metamask/keyring-api';
 import React from 'react';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { BtcAccountType } from '@metamask/keyring-api';
+
+import { SendPageAccountPicker } from '.';
+import { normalizeSafeAddress } from '../../../../../../app/scripts/lib/multichain/address';
 import mockState from '../../../../../../test/data/mock-state.json';
 import { fireEvent, renderWithProvider } from '../../../../../../test/jest';
-import { SEND_STAGES } from '../../../../../ducks/send';
 import {
   INITIAL_SEND_STATE_FOR_EXISTING_DRAFT,
   createMockInternalAccount,
 } from '../../../../../../test/jest/mocks';
-import type { MetaMaskReduxState } from '../../../../../store/store';
+import { SEND_STAGES } from '../../../../../ducks/send';
 import { shortenAddress } from '../../../../../helpers/utils/util';
+import type { CombinedBackgroundAndReduxState } from '../../../../../store/store';
 // TODO: Remove restricted import
 // eslint-disable-next-line import/no-restricted-paths
-import { normalizeSafeAddress } from '../../../../../../app/scripts/lib/multichain/address';
-import { SendPageAccountPicker } from '.';
 
 type State = {
   metamask: Pick<
-    MetaMaskReduxState['metamask'],
+    CombinedBackgroundAndReduxState['metamask'],
     'internalAccounts' | 'keyrings'
   >;
 };
@@ -43,8 +44,6 @@ const render = (
       ...state.metamask,
       permissionHistory: {
         'https://test.dapp': {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           eth_accounts: {
             accounts: {
               '0x0dcd5d886577d5081b0c52e242ef29e70be3e7bc': 1596681857076,

@@ -1,7 +1,8 @@
 import { act } from '@testing-library/react-hooks';
+
 import { renderHookWithProviderTyped } from '../../../../test/lib/render-helpers';
-import * as actions from '../../../store/actions';
 import { MetamaskIdentityProvider } from '../../../contexts/identity';
+import * as actions from '../../../store/actions';
 import { useSignIn } from './useSignIn';
 
 type ArrangeMocksMetamaskStateOverrides = {
@@ -21,8 +22,13 @@ const arrangeMockState = (
 const arrangeMocks = () => {
   const mockPerformSignInAction = jest.spyOn(actions, 'performSignIn');
 
+  const mockDisableProfileSyncingAction = jest.spyOn(
+    actions,
+    'disableProfileSyncing',
+  );
   return {
     mockPerformSignInAction,
+    mockDisableProfileSyncingAction,
   };
 };
 

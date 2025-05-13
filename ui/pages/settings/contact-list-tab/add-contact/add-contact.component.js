@@ -1,3 +1,5 @@
+import { debounce } from 'lodash';
+import PropTypes from 'prop-types';
 import React, {
   useState,
   useEffect,
@@ -5,22 +7,17 @@ import React, {
   useCallback,
   useMemo,
 } from 'react';
-import PropTypes from 'prop-types';
-import { debounce } from 'lodash';
 import { useSelector } from 'react-redux';
-import TextField from '../../../../components/ui/text-field';
-import { CONTACT_LIST_ROUTE } from '../../../../helpers/constants/routes';
-import { isValidDomainName } from '../../../../helpers/utils/util';
-import DomainInput from '../../../confirmations/send/send-content/add-recipient/domain-input';
-import PageContainerFooter from '../../../../components/ui/page-container/page-container-footer';
+
 import {
   isBurnAddress,
   isValidHexAddress,
 } from '../../../../../shared/modules/hexstring-utils';
-import { INVALID_RECIPIENT_ADDRESS_ERROR } from '../../../confirmations/send/send.constants';
-import { DomainInputResolutionCell } from '../../../../components/multichain/pages/send/components';
+import {
+  getCurrentChainId,
+  getNetworkConfigurationsByChainId,
+} from '../../../../../shared/modules/selectors/networks';
 import { isDuplicateContact } from '../../../../components/app/contact-list/utils';
-import { I18nContext } from '../../../../contexts/i18n';
 import {
   AvatarNetwork,
   AvatarNetworkSize,
@@ -30,6 +27,10 @@ import {
   IconSize,
   Text,
 } from '../../../../components/component-library';
+import { DomainInputResolutionCell } from '../../../../components/multichain/pages/send/components';
+import PageContainerFooter from '../../../../components/ui/page-container/page-container-footer';
+import TextField from '../../../../components/ui/text-field';
+import { I18nContext } from '../../../../contexts/i18n';
 import {
   AlignItems,
   BackgroundColor,
@@ -39,11 +40,11 @@ import {
   IconColor,
   JustifyContent,
 } from '../../../../helpers/constants/design-system';
+import { CONTACT_LIST_ROUTE } from '../../../../helpers/constants/routes';
+import { isValidDomainName } from '../../../../helpers/utils/util';
 import { getImageForChainId } from '../../../../selectors/multichain';
-import {
-  getCurrentChainId,
-  getNetworkConfigurationsByChainId,
-} from '../../../../../shared/modules/selectors/networks';
+import DomainInput from '../../../confirmations/send/send-content/add-recipient/domain-input';
+import { INVALID_RECIPIENT_ADDRESS_ERROR } from '../../../confirmations/send/send.constants';
 import { ContactNetworks } from '../contact-networks';
 
 const AddContact = ({

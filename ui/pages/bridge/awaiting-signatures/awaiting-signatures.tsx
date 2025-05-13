@@ -1,12 +1,23 @@
+import isEqual from 'lodash/isEqual';
 import React, { useContext, useEffect } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
-import isEqual from 'lodash/isEqual';
 
+import { MetaMetricsEventCategory } from '../../../../shared/constants/metametrics';
 import {
-  isHardwareWallet,
-  getHardwareWalletType,
-} from '../../../selectors/selectors';
+  AvatarBase,
+  AvatarBaseSize,
+  Box,
+  Text,
+} from '../../../components/component-library';
 import PulseLoader from '../../../components/ui/pulse-loader';
+import { MetaMetricsContext } from '../../../contexts/metametrics';
+import {
+  getBridgeQuotes,
+  getFromChain,
+  getFromToken,
+  getToToken,
+  getToChain,
+} from '../../../ducks/bridge/selectors';
 import {
   TextVariant,
   JustifyContent,
@@ -16,29 +27,16 @@ import {
   FlexDirection,
   BackgroundColor,
 } from '../../../helpers/constants/design-system';
-import { MetaMetricsContext } from '../../../contexts/metametrics';
-import { MetaMetricsEventCategory } from '../../../../shared/constants/metametrics';
-import {
-  AvatarBase,
-  AvatarBaseSize,
-  Box,
-  Text,
-} from '../../../components/component-library';
-import {
-  getBridgeQuotes,
-  getFromChain,
-  getFromToken,
-  getToToken,
-  getToChain,
-} from '../../../ducks/bridge/selectors';
 import { useI18nContext } from '../../../hooks/useI18nContext';
+import {
+  isHardwareWallet,
+  getHardwareWalletType,
+} from '../../../selectors/selectors';
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export default function AwaitingSignatures() {
   const t = useI18nContext();
   const { activeQuote } = useSelector(getBridgeQuotes, shallowEqual);
-  const fromAmount = activeQuote?.sentAmount?.amount;
+  const fromAmount = activeQuote?.sentAmount?.amount?.toNumber();
   const fromToken = useSelector(getFromToken, isEqual);
   const toToken = useSelector(getToToken, isEqual);
   const fromChain = useSelector(getFromChain, isEqual);
@@ -53,28 +51,14 @@ export default function AwaitingSignatures() {
       event: 'Awaiting Signature(s) on a HW wallet',
       category: MetaMetricsEventCategory.Swaps,
       properties: {
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         needs_two_confirmations: needsTwoConfirmations,
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         token_from: fromToken?.symbol ?? '',
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         token_to: toToken?.symbol ?? '',
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         is_hardware_wallet: hardwareWalletUsed,
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         hardware_wallet_type: hardwareWalletType ?? '',
       },
       sensitiveProperties: {
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         token_from_amount: activeQuote?.quote?.srcTokenAmount ?? '',
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         token_to_amount: activeQuote?.quote?.destTokenAmount ?? '',
       },
     });

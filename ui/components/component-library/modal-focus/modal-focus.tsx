@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import ReactFocusLock from 'react-focus-lock';
+
 import type { ModalFocusProps } from './modal-focus.types';
 
 /**
@@ -8,7 +9,7 @@ import type { ModalFocusProps } from './modal-focus.types';
  */
 
 const FocusTrap: typeof ReactFocusLock =
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+  // TODO: Replace `any` with type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (ReactFocusLock as any).default ?? ReactFocusLock;
 

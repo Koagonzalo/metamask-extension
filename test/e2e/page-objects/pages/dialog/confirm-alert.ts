@@ -1,17 +1,17 @@
-import { Driver } from '../../../webdriver/driver';
+import type { Driver } from '../../../webdriver/driver';
 
 class ConfirmAlertModal {
   protected driver: Driver;
 
-  private alertModalAcknowledgeCheckBox =
+  private readonly alertModalAcknowledgeCheckBox =
     '[data-testid="alert-modal-acknowledge-checkbox"]';
 
-  private alertModalButton = '[data-testid="alert-modal-button"]';
+  private readonly alertModalButton = '[data-testid="alert-modal-button"]';
 
-  private alertModalSubmitButton =
+  private readonly alertModalSubmitButton =
     '[data-testid="confirm-alert-modal-submit-button"]';
 
-  private alertModalCancelButton =
+  private readonly alertModalCancelButton =
     '[data-testid="confirm-alert-modal-cancel-button"]';
 
   constructor(driver: Driver) {

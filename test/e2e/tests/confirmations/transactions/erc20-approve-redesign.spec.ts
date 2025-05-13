@@ -1,20 +1,21 @@
 /* eslint-disable @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires */
-import { MockttpServer } from 'mockttp';
+import type { MockttpServer } from 'mockttp';
+
 import { tinyDelayMs, veryLargeDelayMs, WINDOW_TITLES } from '../../../helpers';
-import { Driver } from '../../../webdriver/driver';
+import type { Driver } from '../../../webdriver/driver';
+import { scrollAndConfirmAndAssertConfirm } from '../helpers';
+import type { TestSuiteArguments } from './shared';
 import {
-  confirmApproveTransaction,
   mocked4BytesApprove,
   openDAppWithContract,
-  TestSuiteArguments,
   toggleAdvancedDetails,
 } from './shared';
 
+const FixtureBuilder = require('../../../fixture-builder');
 const {
-  defaultOptionsForType2Transactions,
+  defaultGanacheOptionsForType2Transactions,
   withFixtures,
 } = require('../../../helpers');
-const FixtureBuilder = require('../../../fixture-builder');
 const { SMART_CONTRACTS } = require('../../../seeder/smart-contracts');
 
 describe('Confirmation Redesign ERC20 Approve Component', function () {
@@ -53,7 +54,7 @@ describe('Confirmation Redesign ERC20 Approve Component', function () {
           fixtures: new FixtureBuilder()
             .withPermissionControllerConnectedToTestDapp()
             .build(),
-          localNodeOptions: defaultOptionsForType2Transactions,
+          localNodeOptions: defaultGanacheOptionsForType2Transactions,
           smartContract,
           testSpecificMock: mocks,
           title: this.test?.fullTitle(),
@@ -78,7 +79,7 @@ async function mocks(server: MockttpServer) {
   return [await mocked4BytesApprove(server)];
 }
 
-async function importTST(driver: Driver) {
+export async function importTST(driver: Driver) {
   await driver.switchToWindowWithTitle(WINDOW_TITLES.ExtensionInFullScreenView);
   await driver.clickElement('[data-testid="import-token-button"]');
   await driver.clickElement('[data-testid="importTokens"]');
@@ -116,7 +117,7 @@ async function importTST(driver: Driver) {
   });
 }
 
-async function createERC20ApproveTransaction(driver: Driver) {
+export async function createERC20ApproveTransaction(driver: Driver) {
   await driver.switchToWindowWithTitle(WINDOW_TITLES.TestDApp);
   await driver.clickElement('#approveTokens');
 }
@@ -177,4 +178,18 @@ async function assertApproveDetails(driver: Driver) {
     css: 'p',
     text: 'Spending cap',
   });
+}
+
+export async function confirmApproveTransaction(driver: Driver) {
+  await driver.switchToWindowWithTitle(WINDOW_TITLES.Dialog);
+  await scrollAndConfirmAndAssertConfirm(driver);
+
+  await driver.delay(veryLargeDelayMs);
+  await driver.waitUntilXWindowHandles(2);
+  await driver.switchToWindowWithTitle(WINDOW_TITLES.ExtensionInFullScreenView);
+
+  await driver.clickElement({ text: 'Activity', tag: 'button' });
+  await driver.waitForSelector(
+    '.transaction-list__completed-transactions .activity-list-item:nth-of-type(1)',
+  );
 }

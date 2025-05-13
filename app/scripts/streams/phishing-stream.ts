@@ -1,13 +1,14 @@
-import { WindowPostMessageStream } from '@metamask/post-message-stream';
 import ObjectMultiplex from '@metamask/object-multiplex';
-import { Substream } from '@metamask/object-multiplex/dist/Substream';
+import type { Substream } from '@metamask/object-multiplex/dist/Substream';
+import { WindowPostMessageStream } from '@metamask/post-message-stream';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error types/readable-stream.d.ts does not get picked up by ts-node
+import PortStream from 'extension-port-stream';
 import { pipeline } from 'readable-stream';
 import browser from 'webextension-polyfill';
-import PortStream from 'extension-port-stream';
-import { checkForLastError } from '../../../shared/modules/browser-runtime.utils';
+
 import { EXTENSION_MESSAGES } from '../../../shared/constants/app';
+import { checkForLastError } from '../../../shared/modules/browser-runtime.utils';
 import {
   CONTENT_SCRIPT,
   LEGACY_PROVIDER,
@@ -19,7 +20,8 @@ import {
   PHISHING_STREAM,
   PHISHING_WARNING_PAGE,
 } from '../constants/stream';
-import { logStreamDisconnectWarning, MessageType } from './stream-utils';
+import type { MessageType } from './stream-utils';
+import { logStreamDisconnectWarning } from './stream-utils';
 
 const phishingPageUrl = new URL(
   process.env.PHISHING_WARNING_PAGE_URL as string,

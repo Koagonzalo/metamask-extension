@@ -1,9 +1,9 @@
-import mockState from '../../../../../../test/data/mock-state.json';
 import { getMockPersonalSignConfirmStateForRequest } from '../../../../../../test/data/confirmations/helper';
-import { renderHookWithConfirmContextProvider } from '../../../../../../test/lib/confirmations/render-helpers';
 import { signatureRequestSIWE } from '../../../../../../test/data/confirmations/personal_sign';
+import mockState from '../../../../../../test/data/mock-state.json';
+import { renderHookWithConfirmContextProvider } from '../../../../../../test/lib/confirmations/render-helpers';
 import { Severity } from '../../../../../helpers/constants/design-system';
-import { SignatureRequestType } from '../../../types/confirm';
+import type { SignatureRequestType } from '../../../types/confirm';
 import useAccountMismatchAlerts from './useAccountMismatchAlerts';
 
 const mockExpectedState =

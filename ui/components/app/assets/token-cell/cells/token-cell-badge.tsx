@@ -1,20 +1,21 @@
+import type { Hex } from '@metamask/utils';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Hex } from '@metamask/utils';
+
+import { getNetworkConfigurationsByChainId } from '../../../../../../shared/modules/selectors/networks';
 import { BackgroundColor } from '../../../../../helpers/constants/design-system';
+import { getNativeCurrencyForChain } from '../../../../../selectors';
+import {
+  getImageForChainId,
+  getMultichainIsEvm,
+} from '../../../../../selectors/multichain';
 import {
   AvatarNetwork,
   AvatarNetworkSize,
   AvatarToken,
   BadgeWrapper,
 } from '../../../../component-library';
-import { getNativeCurrencyForChain } from '../../../../../selectors';
-import {
-  getImageForChainId,
-  getMultichainIsEvm,
-} from '../../../../../selectors/multichain';
-import { getNetworkConfigurationsByChainId } from '../../../../../../shared/modules/selectors/networks';
-import { TokenFiatDisplayInfo } from '../../types';
+import type { TokenFiatDisplayInfo } from '../../types';
 
 type TokenCellBadgeProps = {
   token: TokenFiatDisplayInfo;
@@ -31,8 +32,6 @@ export const TokenCellBadge = React.memo(
           <AvatarNetwork
             size={AvatarNetworkSize.Xs}
             name={allNetworks?.[token.chainId as Hex]?.name}
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
             src={getImageForChainId(token.chainId) || undefined}
             backgroundColor={BackgroundColor.backgroundMuted}
             borderWidth={2}

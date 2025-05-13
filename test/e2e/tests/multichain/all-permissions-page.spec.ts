@@ -1,13 +1,13 @@
 import { DEFAULT_FIXTURE_ACCOUNT, DAPP_HOST_ADDRESS } from '../../constants';
-import { withFixtures, WINDOW_TITLES } from '../../helpers';
 import FixtureBuilder from '../../fixture-builder';
-import ExperimentalSettings from '../../page-objects/pages/settings/experimental-settings';
+import { withFixtures, WINDOW_TITLES } from '../../helpers';
+import { loginWithoutBalanceValidation } from '../../page-objects/flows/login.flow';
 import HeaderNavbar from '../../page-objects/pages/header-navbar';
 import Homepage from '../../page-objects/pages/home/homepage';
 import PermissionListPage from '../../page-objects/pages/permission/permission-list-page';
+import ExperimentalSettings from '../../page-objects/pages/settings/experimental-settings';
 import SettingsPage from '../../page-objects/pages/settings/settings-page';
 import TestDapp from '../../page-objects/pages/test-dapp';
-import { loginWithoutBalanceValidation } from '../../page-objects/flows/login.flow';
 
 describe('Permissions Page', function () {
   it('should show connected site permissions when a single dapp is connected', async function () {

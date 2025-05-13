@@ -1,33 +1,35 @@
 /* eslint-disable @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires */
-import { Mockttp } from 'mockttp';
+import type { Mockttp } from 'mockttp';
+
 import { openDapp, unlockWallet } from '../../../helpers';
+import type { MockedEndpoint } from '../../../mock-e2e';
 import { createDappTransaction } from '../../../page-objects/flows/transaction';
-import ContractAddressRegistry from '../../../seeder/contract-address-registry';
-import { Driver } from '../../../webdriver/driver';
-import { MockedEndpoint } from '../../../mock-e2e';
+import type ContractAddressRegistry from '../../../seeder/contract-address-registry';
+import type { Driver } from '../../../webdriver/driver';
+import type { TestSuiteArguments } from './shared';
 import {
   assertAdvancedGasDetails,
   confirmDepositTransaction,
   confirmDepositTransactionWithCustomNonce,
   createDepositTransaction,
   openDAppWithContract,
-  TestSuiteArguments,
   toggleAdvancedDetails,
   toggleOnHexData,
 } from './shared';
 
 const { hexToNumber } = require('@metamask/utils');
-const {
-  defaultOptionsForType2Transactions,
-  WINDOW_TITLES,
-  withFixtures,
-} = require('../../../helpers');
+
+const { CHAIN_IDS } = require('../../../../../shared/constants/network');
 const {
   KNOWN_PUBLIC_KEY_ADDRESSES,
 } = require('../../../../stub/keyring-bridge');
 const FixtureBuilder = require('../../../fixture-builder');
+const {
+  defaultGanacheOptionsForType2Transactions,
+  WINDOW_TITLES,
+  withFixtures,
+} = require('../../../helpers');
 const { SMART_CONTRACTS } = require('../../../seeder/smart-contracts');
-const { CHAIN_IDS } = require('../../../../../shared/constants/network');
 
 describe('Confirmation Redesign Contract Interaction Component', function () {
   const smartContract = SMART_CONTRACTS.PIGGYBANK;
@@ -59,7 +61,7 @@ describe('Confirmation Redesign Contract Interaction Component', function () {
           fixtures: new FixtureBuilder()
             .withPermissionControllerConnectedToTestDapp()
             .build(),
-          localNodeOptions: defaultOptionsForType2Transactions,
+          localNodeOptions: defaultGanacheOptionsForType2Transactions,
           smartContract,
           title: this.test?.fullTitle(),
         },
@@ -128,7 +130,7 @@ describe('Confirmation Redesign Contract Interaction Component', function () {
             .withNetworkControllerOnOptimism()
             .build(),
           localNodeOptions: {
-            ...defaultOptionsForType2Transactions,
+            ...defaultGanacheOptionsForType2Transactions,
             chainId: hexToNumber(CHAIN_IDS.OPTIMISM),
           },
           smartContract,
@@ -163,7 +165,7 @@ describe('Confirmation Redesign Contract Interaction Component', function () {
           fixtures: new FixtureBuilder()
             .withPermissionControllerConnectedToTestDapp()
             .build(),
-          localNodeOptions: defaultOptionsForType2Transactions,
+          localNodeOptions: defaultGanacheOptionsForType2Transactions,
           smartContract,
           title: this.test?.fullTitle(),
         },
@@ -184,7 +186,7 @@ describe('Confirmation Redesign Contract Interaction Component', function () {
           fixtures: new FixtureBuilder()
             .withPermissionControllerConnectedToTestDapp()
             .build(),
-          localNodeOptions: defaultOptionsForType2Transactions,
+          localNodeOptions: defaultGanacheOptionsForType2Transactions,
           smartContract,
           title: this.test?.fullTitle(),
         },
@@ -213,7 +215,7 @@ describe('Confirmation Redesign Contract Interaction Component', function () {
           fixtures: new FixtureBuilder()
             .withPermissionControllerConnectedToTestDapp()
             .build(),
-          localNodeOptions: defaultOptionsForType2Transactions,
+          localNodeOptions: defaultGanacheOptionsForType2Transactions,
           smartContract,
           title: this.test?.fullTitle(),
         },
@@ -238,7 +240,7 @@ describe('Confirmation Redesign Contract Interaction Component', function () {
           fixtures: new FixtureBuilder()
             .withPermissionControllerConnectedToTestDapp()
             .build(),
-          localNodeOptions: defaultOptionsForType2Transactions,
+          localNodeOptions: defaultGanacheOptionsForType2Transactions,
           smartContract,
           title: this.test?.fullTitle(),
         },

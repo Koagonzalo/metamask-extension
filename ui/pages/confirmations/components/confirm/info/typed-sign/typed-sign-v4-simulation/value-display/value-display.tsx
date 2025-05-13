@@ -1,7 +1,8 @@
 import { NameType } from '@metamask/name-controller';
-import { Hex } from '@metamask/utils';
+import type { Hex } from '@metamask/utils';
 import { captureException } from '@sentry/browser';
 import React, { useMemo } from 'react';
+
 import { MetaMetricsEventLocation } from '../../../../../../../../../shared/constants/metametrics';
 import { calcTokenAmount } from '../../../../../../../../../shared/lib/transactions-controller-utils';
 import useTokenExchangeRate from '../../../../../../../../components/app/currency-input/hooks/useTokenExchangeRate';
@@ -22,7 +23,7 @@ import { shortenString } from '../../../../../../../../helpers/utils/util';
 import { useI18nContext } from '../../../../../../../../hooks/useI18nContext';
 import { useGetTokenStandardAndDetails } from '../../../../../../hooks/useGetTokenStandardAndDetails';
 import useTrackERC20WithoutDecimalInformation from '../../../../../../hooks/useTrackERC20WithoutDecimalInformation';
-import { TokenDetailsERC20 } from '../../../../../../utils/token';
+import type { TokenDetailsERC20 } from '../../../../../../utils/token';
 import { IndividualFiatDisplay } from '../../../../../simulation-details/fiat-display';
 import {
   formatAmount,

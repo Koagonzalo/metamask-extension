@@ -1,11 +1,10 @@
 import { MultichainAssetsRatesController } from '@metamask/assets-controllers';
 import { Messenger } from '@metamask/base-controller';
+
+import type { MultichainAssetsRatesControllerMessenger } from '../messengers/multichain';
+import { getMultichainAssetsRatesControllerMessenger } from '../messengers/multichain';
 import { buildControllerInitRequestMock } from '../test/utils';
-import { ControllerInitRequest } from '../types';
-import {
-  getMultichainAssetsRatesControllerMessenger,
-  MultichainAssetsRatesControllerMessenger,
-} from '../messengers/multichain';
+import type { ControllerInitRequest } from '../types';
 import { MultichainAssetsRatesControllerInit } from './multichain-rates-assets-controller-init';
 
 jest.mock('@metamask/assets-controllers');

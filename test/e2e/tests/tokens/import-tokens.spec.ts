@@ -1,9 +1,8 @@
+import FixtureBuilder from '../../fixture-builder';
+import { withFixtures, unlockWallet } from '../../helpers';
+import type { Mockttp } from '../../mock-e2e';
 import AssetListPage from '../../page-objects/pages/home/asset-list';
 import HomePage from '../../page-objects/pages/home/homepage';
-
-import { withFixtures, unlockWallet } from '../../helpers';
-import FixtureBuilder from '../../fixture-builder';
-import { Mockttp } from '../../mock-e2e';
 
 describe('Import flow', function () {
   async function mockPriceFetch(mockServer: Mockttp) {

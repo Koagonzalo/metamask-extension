@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+
 import { useAccountSyncing } from '../../hooks/identity/useAccountSyncing';
 import {
   useAutoSignIn,
@@ -12,7 +13,7 @@ export const MetamaskIdentityProvider: React.FC = ({ children }) => {
   const { autoSignOut, shouldAutoSignOut } = useAutoSignOut();
 
   /**
-   * Backup and sync effects
+   * Profile syncing effects
    */
   useEffect(() => {
     if (shouldDispatchAccountSyncing) {

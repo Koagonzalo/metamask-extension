@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
+
+import type {
+  PolymorphicRef,
+  PopoverProps,
+} from '../../../components/component-library';
 import {
   Box,
   Icon,
   IconName,
   IconSize,
-  PolymorphicRef,
   Popover,
   PopoverHeader,
   PopoverPosition,
-  PopoverProps,
   Text,
 } from '../../../components/component-library';
 import {

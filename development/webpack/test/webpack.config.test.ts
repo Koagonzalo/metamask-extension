@@ -1,18 +1,15 @@
-import fs from 'node:fs';
-import { describe, it, afterEach, before, after, mock } from 'node:test';
 import assert from 'node:assert';
-import process from 'node:process';
+import fs from 'node:fs';
 import { resolve } from 'node:path';
-import {
-  type Configuration,
-  webpack,
-  Compiler,
-  WebpackPluginInstance,
-} from 'webpack';
-import { noop } from '../utils/helpers';
-import { ManifestPlugin } from '../utils/plugins/ManifestPlugin';
+import process from 'node:process';
+import { describe, it, afterEach, before, after, mock } from 'node:test';
+import type { Compiler, WebpackPluginInstance } from 'webpack';
+import { type Configuration, webpack } from 'webpack';
+
 import { getLatestCommit } from '../utils/git';
-import { ManifestPluginOptions } from '../utils/plugins/ManifestPlugin/types';
+import { noop } from '../utils/helpers';
+import type { ManifestPlugin } from '../utils/plugins/ManifestPlugin';
+import type { ManifestPluginOptions } from '../utils/plugins/ManifestPlugin/types';
 
 function getWebpackInstance(config: Configuration) {
   // webpack logs a warning if we pass config.watch to it without a callback
@@ -143,13 +140,9 @@ ${Object.entries(env)
     assert.deepStrictEqual(
       manifestPlugin.options.transform(
         {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           manifest_version: 3,
           name: 'name',
           version: '1.2.3',
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           content_scripts: [
             {
               js: [
@@ -164,13 +157,9 @@ ${Object.entries(env)
         'brave',
       ),
       {
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         manifest_version: 3,
         name: 'name',
         version: '1.2.3',
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         content_scripts: [
           {
             js: ['scripts/contentscript.js', 'scripts/inpage.js'],
@@ -292,8 +281,6 @@ ${Object.entries(env)
 
   it('should enable ReactRefreshPlugin in a development env when `--watch` is specified', () => {
     const config: Configuration = getWebpackConfig(['--watch'], {
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       __HMR_READY__: 'true',
     });
     delete config.watch;

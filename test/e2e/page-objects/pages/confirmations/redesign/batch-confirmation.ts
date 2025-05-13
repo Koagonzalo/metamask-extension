@@ -1,4 +1,4 @@
-import { Driver } from '../../../../webdriver/driver';
+import type { Driver } from '../../../../webdriver/driver';
 import TransactionConfirmation from './transaction-confirmation';
 
 export default class Eip7702AndSendCalls extends TransactionConfirmation {
@@ -12,29 +12,17 @@ export default class Eip7702AndSendCalls extends TransactionConfirmation {
 
   private readonly batchTxList = '[data-testid="batch-txs=]';
 
-  private readonly confirmUpgradeButton = {
-    tag: 'button',
-    text: 'Use smart account',
-  };
+  private readonly confirmUpgradeButton = 'Use smart account';
 
   private readonly interactingWith =
     '[data-testid="transaction-details-section"]';
 
-  private readonly rejectUpgradeButton = {
-    tag: 'button',
-    text: 'Don’t use smart account',
-  };
-
   private readonly txType = '[data-testid="tx-type"]';
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_batchTxListIsPresent(): Promise<void> {
     await this.driver.isElementPresent(this.batchTxList);
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_expectedInteractingWithIsDisplayed(
     account: string,
   ): Promise<void> {
@@ -44,8 +32,6 @@ export default class Eip7702AndSendCalls extends TransactionConfirmation {
     });
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_expectedTxTypeIsDisplayed(txType: string): Promise<void> {
     await this.driver.isElementPresent({
       css: this.txType,
@@ -53,13 +39,10 @@ export default class Eip7702AndSendCalls extends TransactionConfirmation {
     });
   }
 
-  async clickUseSmartAccountButton(): Promise<void> {
-    await this.driver.clickElement(this.confirmUpgradeButton);
-  }
-
-  async clickDontUseSmartAccountButton(): Promise<void> {
-    await this.driver.clickElementAndWaitForWindowToClose(
-      this.rejectUpgradeButton,
-    );
+  async tickSplashUpgradeButton(): Promise<void> {
+    await this.driver.clickElement({
+      text: this.confirmUpgradeButton,
+      tag: 'button',
+    });
   }
 }

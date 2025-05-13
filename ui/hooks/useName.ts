@@ -1,10 +1,8 @@
-import {
-  FALLBACK_VARIATION,
-  NameEntry,
-  NameType,
-} from '@metamask/name-controller';
-import { useSelector } from 'react-redux';
+import type { NameEntry } from '@metamask/name-controller';
+import { FALLBACK_VARIATION, NameType } from '@metamask/name-controller';
 import { isEqual } from 'lodash';
+import { useSelector } from 'react-redux';
+
 import { getNames } from '../selectors';
 
 export type UseNameRequest = {

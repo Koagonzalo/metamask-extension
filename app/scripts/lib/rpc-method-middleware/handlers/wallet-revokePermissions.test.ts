@@ -1,8 +1,13 @@
-import { invalidParams } from '@metamask/permission-controller';
 import { Caip25EndowmentPermissionName } from '@metamask/chain-agnostic-permission';
-import { Json, JsonRpcRequest, PendingJsonRpcResponse } from '@metamask/utils';
-import { PermissionNames } from '../../../controllers/permissions';
+import { invalidParams } from '@metamask/permission-controller';
+import type {
+  Json,
+  JsonRpcRequest,
+  PendingJsonRpcResponse,
+} from '@metamask/utils';
+
 import { RestrictedMethods } from '../../../../../shared/constants/permissions';
+import { PermissionNames } from '../../../controllers/permissions';
 import { revokePermissionsHandler } from './wallet-revokePermissions';
 
 const baseRequest = {
@@ -23,7 +28,7 @@ const createMockedHandler = () => {
   const revokePermissionsForOrigin = jest.fn();
   const rejectApprovalRequestsForOrigin = jest.fn();
 
-  const response: PendingJsonRpcResponse<Json> = {
+  const response: PendingJsonRpcResponse = {
     jsonrpc: '2.0' as const,
     id: 0,
   };
@@ -87,7 +92,6 @@ describe('revokePermissionsHandler', () => {
     );
   });
 
-  // @ts-expect-error This is missing from the Mocha type definitions
   describe.each([
     [RestrictedMethods.eth_accounts],
     [PermissionNames.permittedChains],

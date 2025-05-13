@@ -1,15 +1,16 @@
-import React, { useContext } from 'react';
 import type { NotificationServicesController } from '@metamask/notification-services-controller';
 import { TRIGGER_TYPES } from '@metamask/notification-services-controller/notification-services';
-import { MetaMetricsContext } from '../../contexts/metametrics';
+import React, { useContext } from 'react';
+
 import {
   MetaMetricsEventCategory,
   MetaMetricsEventName,
 } from '../../../shared/constants/metametrics';
-import { useI18nContext } from '../../hooks/useI18nContext';
-import { useMarkNotificationAsRead } from '../../hooks/metamask-notifications/useNotifications';
 import { Box, Button, ButtonVariant } from '../../components/component-library';
+import { MetaMetricsContext } from '../../contexts/metametrics';
 import { BlockSize } from '../../helpers/constants/design-system';
+import { useMarkNotificationAsRead } from '../../hooks/metamask-notifications/useNotifications';
+import { useI18nContext } from '../../hooks/useI18nContext';
 import { useSnapNotificationTimeouts } from '../../hooks/useNotificationTimeouts';
 
 type Notification = NotificationServicesController.Types.INotification;
@@ -34,8 +35,8 @@ export const NotificationsListReadAllButton = ({
     if (notifications && notifications.length > 0) {
       notificationsRead = notifications
         .filter(
-          (notification) =>
-            notification?.id !== undefined && !notification.isRead,
+          (notification): notification is Notification =>
+            notification.id !== undefined,
         )
         .map((notification: Notification) => ({
           id: notification.id,

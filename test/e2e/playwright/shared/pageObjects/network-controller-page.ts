@@ -1,6 +1,7 @@
 import { toEvmCaipChainId } from '@metamask/multichain-network-controller';
 import type { Hex } from '@metamask/utils';
 import { type Locator, type Page } from '@playwright/test';
+
 import { Tenderly } from '../../swap/tenderly-network';
 
 export class NetworkController {

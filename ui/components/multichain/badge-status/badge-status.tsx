@@ -1,6 +1,7 @@
-import React, { useMemo } from 'react';
 import classNames from 'classnames';
+import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
+
 import {
   AlignItems,
   BackgroundColor,
@@ -9,18 +10,17 @@ import {
   Display,
   JustifyContent,
 } from '../../../helpers/constants/design-system';
+import { getUseBlockie } from '../../../selectors';
+import type { BoxProps } from '../../component-library';
 import {
   AvatarAccount,
   AvatarAccountSize,
   AvatarAccountVariant,
   BadgeWrapper,
   Box,
-  BoxProps,
 } from '../../component-library';
-import { getUseBlockie } from '../../../selectors';
 import Tooltip from '../../ui/tooltip';
-
-import { BadgeStatusProps } from './badge-status.types';
+import type { BadgeStatusProps } from './badge-status.types';
 
 const TooltipStyle = { display: 'flex' };
 
@@ -30,35 +30,30 @@ export const BadgeStatus: React.FC<BadgeStatusProps> = ({
   badgeBorderColor = BorderColor.borderMuted,
   address,
   isConnectedAndNotActive = false,
-  showConnectedStatus = true,
   text,
   ...props
 }): JSX.Element => {
   const useBlockie = useSelector(getUseBlockie);
-  const tooltipContents = useMemo(() => {
-    let positionObj;
-    if (showConnectedStatus) {
-      positionObj = isConnectedAndNotActive
-        ? { bottom: 2, right: 5 }
-        : { bottom: -1, right: 2 };
-    }
 
+  const tooltipContents = useMemo(() => {
     return (
       <BadgeWrapper
-        positionObj={positionObj}
+        positionObj={
+          isConnectedAndNotActive
+            ? { bottom: 2, right: 5 }
+            : { bottom: -1, right: 2 }
+        }
         badge={
-          showConnectedStatus && (
-            <Box
-              className={classNames('multichain-badge-status__badge', {
-                'multichain-badge-status__badge-not-connected':
-                  isConnectedAndNotActive,
-              })}
-              backgroundColor={badgeBackgroundColor}
-              borderRadius={BorderRadius.full}
-              borderColor={badgeBorderColor}
-              borderWidth={2}
-            />
-          )
+          <Box
+            className={classNames('multichain-badge-status__badge', {
+              'multichain-badge-status__badge-not-connected':
+                isConnectedAndNotActive,
+            })}
+            backgroundColor={badgeBackgroundColor}
+            borderRadius={BorderRadius.full}
+            borderColor={badgeBorderColor}
+            borderWidth={2}
+          />
         }
       >
         {
@@ -84,7 +79,6 @@ export const BadgeStatus: React.FC<BadgeStatusProps> = ({
     badgeBorderColor,
     isConnectedAndNotActive,
     useBlockie,
-    showConnectedStatus,
   ]);
 
   return (
@@ -98,18 +92,14 @@ export const BadgeStatus: React.FC<BadgeStatusProps> = ({
       backgroundColor={BackgroundColor.transparent}
       {...(props as BoxProps<'div'>)}
     >
-      {showConnectedStatus ? (
-        <Tooltip
-          style={TooltipStyle}
-          title={text}
-          data-testid="multichain-badge-status__tooltip"
-          position="bottom"
-        >
-          {tooltipContents}
-        </Tooltip>
-      ) : (
-        tooltipContents
-      )}
+      <Tooltip
+        style={TooltipStyle}
+        title={text}
+        data-testid="multichain-badge-status__tooltip"
+        position="bottom"
+      >
+        {tooltipContents}
+      </Tooltip>
     </Box>
   );
 };

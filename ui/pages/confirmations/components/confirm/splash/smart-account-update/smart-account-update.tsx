@@ -1,14 +1,12 @@
-import React, { ReactElement, useState } from 'react';
 import { NameType } from '@metamask/name-controller';
-import { TransactionMeta } from '@metamask/transaction-controller';
+import type { TransactionMeta } from '@metamask/transaction-controller';
+import React, { useState } from 'react';
 
-import { ORIGIN_METAMASK } from '../../../../../../../shared/constants/app';
-import ZENDESK_URLS from '../../../../../../helpers/constants/zendesk-url';
+import { SMART_ACCOUNT_INFO_LINK } from '../../../../../../../shared/lib/ui-utils';
+import Name from '../../../../../../components/app/name';
 import {
   Box,
   Button,
-  ButtonLink,
-  ButtonLinkSize,
   ButtonSize,
   ButtonVariant,
   Text,
@@ -26,56 +24,20 @@ import {
   TextVariant,
 } from '../../../../../../helpers/constants/design-system';
 import { useI18nContext } from '../../../../../../hooks/useI18nContext';
-import Name from '../../../../../../components/app/name';
 import { useConfirmContext } from '../../../../context/confirm';
 import { useSmartAccountActions } from '../../../../hooks/useSmartAccountActions';
 
-const ListItem = ({
-  imgSrc,
-  title,
-  description,
-}: {
-  imgSrc: string;
-  title: string;
-  description: ReactElement;
-}) => (
-  <Box display={Display.Flex} alignItems={AlignItems.flexStart}>
-    <img width="24px" src={imgSrc} />
-    <Box
-      display={Display.Flex}
-      flexDirection={FlexDirection.Column}
-      marginInlineStart={2}
-    >
-      <Text
-        color={TextColor.textDefault}
-        variant={TextVariant.bodyMd}
-        fontWeight={FontWeight.Medium}
-      >
-        {title}
-      </Text>
-      <Text
-        color={TextColor.textAlternative}
-        variant={TextVariant.bodyMd}
-        fontWeight={FontWeight.Normal}
-      >
-        {description}
-      </Text>
-    </Box>
-  </Box>
-);
-
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export function SmartAccountUpdate() {
   const [acknowledged, setAcknowledged] = useState(false);
+
   const t = useI18nContext();
   const { currentConfirmation } = useConfirmContext<TransactionMeta>();
-  const { handleRejectUpgrade } = useSmartAccountActions();
-
-  const { chainId, txParams, origin } = currentConfirmation ?? {};
+  const { chainId, txParams } = currentConfirmation ?? {};
   const { from } = txParams;
 
-  if (!currentConfirmation || acknowledged || origin === ORIGIN_METAMASK) {
+  const { handleRejectUpgrade } = useSmartAccountActions();
+
+  if (!currentConfirmation || acknowledged) {
     return null;
   }
 
@@ -119,38 +81,83 @@ export function SmartAccountUpdate() {
             variation={chainId}
           />
         </Box>
-        <ListItem
-          imgSrc="./images/speedometer.svg"
-          title={t('smartAccountBetterTransaction')}
-          description={t('smartAccountBetterTransactionDescription')}
-        />
-        <ListItem
-          imgSrc="./images/petrol-pump.svg"
-          title={t('smartAccountPayToken')}
-          description={t('smartAccountPayTokenDescription')}
-        />
-        <ListItem
-          imgSrc="./images/sparkle.svg"
-          title={t('smartAccountSameAccount')}
-          description={
-            <>
-              <Text
-                color={TextColor.textAlternative}
-                variant={TextVariant.bodyMd}
-                fontWeight={FontWeight.Normal}
+        <Box display={Display.Flex} alignItems={AlignItems.flexStart}>
+          <img width="24px" src="./images/speedometer.svg" />
+          <Box
+            display={Display.Flex}
+            flexDirection={FlexDirection.Column}
+            marginInlineStart={2}
+          >
+            <Text
+              color={TextColor.textDefault}
+              variant={TextVariant.bodyMd}
+              fontWeight={FontWeight.Medium}
+            >
+              {t('smartAccountBetterTransaction')}
+            </Text>
+            <Text
+              color={TextColor.textAlternative}
+              variant={TextVariant.bodyMd}
+              fontWeight={FontWeight.Normal}
+            >
+              {t('smartAccountBetterTransactionDescription')}
+            </Text>
+          </Box>
+        </Box>
+        <Box display={Display.Flex} alignItems={AlignItems.flexStart}>
+          <img width="24px" src="./images/petrol-pump.svg" />
+          <Box
+            display={Display.Flex}
+            flexDirection={FlexDirection.Column}
+            marginInlineStart={2}
+          >
+            <Text
+              color={TextColor.textDefault}
+              variant={TextVariant.bodyMd}
+              fontWeight={FontWeight.Medium}
+            >
+              {t('smartAccountPayToken')}
+            </Text>
+            <Text
+              color={TextColor.textAlternative}
+              variant={TextVariant.bodyMd}
+              fontWeight={FontWeight.Normal}
+            >
+              {t('smartAccountPayTokenDescription')}
+            </Text>
+          </Box>
+        </Box>
+        <Box display={Display.Flex} alignItems={AlignItems.flexStart}>
+          <img width="24px" src="./images/sparkle.svg" />
+          <Box
+            display={Display.Flex}
+            flexDirection={FlexDirection.Column}
+            marginInlineStart={2}
+          >
+            <Text
+              color={TextColor.textDefault}
+              variant={TextVariant.bodyMd}
+              fontWeight={FontWeight.Medium}
+            >
+              {t('smartAccountFeatures')}
+            </Text>
+            <Text
+              color={TextColor.textAlternative}
+              variant={TextVariant.bodyMd}
+              fontWeight={FontWeight.Normal}
+            >
+              {t('smartAccountFeaturesDescription')}{' '}
+              <a
+                key="learn_more_link"
+                href={SMART_ACCOUNT_INFO_LINK}
+                rel="noopener noreferrer"
+                target="_blank"
               >
-                {t('smartAccountFeaturesDescription')}{' '}
-                <ButtonLink
-                  size={ButtonLinkSize.Inherit}
-                  href={ZENDESK_URLS.ACCOUNT_UPGRADE}
-                  externalLink
-                >
-                  {t('learnMoreUpperCaseWithDot')}
-                </ButtonLink>
-              </Text>
-            </>
-          }
-        />
+                {t('learnMoreUpperCaseWithDot')}
+              </a>
+            </Text>
+          </Box>
+        </Box>
         <Button
           variant={ButtonVariant.Secondary}
           size={ButtonSize.Lg}

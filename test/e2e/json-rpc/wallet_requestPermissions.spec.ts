@@ -1,10 +1,11 @@
+import type { PermissionConstraint } from '@metamask/permission-controller';
 import { strict as assert } from 'assert';
-import { PermissionConstraint } from '@metamask/permission-controller';
-import { withFixtures } from '../helpers';
+
 import FixtureBuilder from '../fixture-builder';
+import { withFixtures } from '../helpers';
 import { loginWithBalanceValidation } from '../page-objects/flows/login.flow';
 import TestDapp from '../page-objects/pages/test-dapp';
-import { Driver } from '../webdriver/driver';
+import type { Driver } from '../webdriver/driver';
 
 describe('wallet_requestPermissions', function () {
   it('executes a request permissions on eth_accounts event', async function () {
@@ -23,8 +24,6 @@ describe('wallet_requestPermissions', function () {
         const requestPermissionsRequest = JSON.stringify({
           jsonrpc: '2.0',
           method: 'wallet_requestPermissions',
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           params: [{ eth_accounts: {} }],
         });
         await driver.executeScript(

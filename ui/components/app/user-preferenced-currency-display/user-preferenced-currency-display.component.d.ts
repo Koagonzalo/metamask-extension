@@ -1,6 +1,7 @@
-import { InternalAccount } from '@metamask/keyring-internal-api';
-import type { CurrencyDisplayProps } from '../../ui/currency-display/currency-display.component';
+import type { InternalAccount } from '@metamask/keyring-internal-api';
+
 import type { PRIMARY, SECONDARY } from '../../../helpers/constants/common';
+import type { CurrencyDisplayProps } from '../../ui/currency-display/currency-display.component';
 
 export type UserPrefrencedCurrencyDisplayProps = OverridingUnion<
   CurrencyDisplayProps,

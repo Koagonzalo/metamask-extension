@@ -1,12 +1,13 @@
 import { rpcErrors } from '@metamask/rpc-errors';
-import {
+import type {
   JsonRpcParams,
   JsonRpcRequest,
   PendingJsonRpcResponse,
 } from '@metamask/utils';
+
+import { flushPromises } from '../../../../../test/lib/timer-helpers';
 import { deferredPromise } from '../../util';
 import * as Util from '../../util';
-import { flushPromises } from '../../../../../test/lib/timer-helpers';
 import requestEthereumAccounts from './request-accounts';
 
 jest.mock('../../util', () => ({
@@ -48,9 +49,7 @@ const createMockedHandler = () => {
     id: 0,
     result: undefined,
   };
-  const handler = (
-    request: JsonRpcRequest<JsonRpcParams> & { origin: string },
-  ) =>
+  const handler = async (request: JsonRpcRequest & { origin: string }) =>
     requestEthereumAccounts.implementation(request, response, next, end, {
       getAccounts,
       getUnlockPromise,
@@ -192,14 +191,8 @@ describe('requestEthereumAccountsHandler', () => {
           category: 'inpage_provider',
           event: 'Dapp Viewed',
           properties: {
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             is_first_visit: true,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             number_of_accounts: 3,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             number_of_accounts_connected: 2,
           },
           referrer: {

@@ -1,7 +1,7 @@
-import { ApprovalRequest } from '@metamask/approval-controller';
+import type { ApprovalRequest } from '@metamask/approval-controller';
 
-import mockState from '../../../../../test/data/mock-state.json';
 import { getMockPersonalSignConfirmState } from '../../../../../test/data/confirmations/helper';
+import mockState from '../../../../../test/data/mock-state.json';
 import { renderHookWithProvider } from '../../../../../test/lib/render-helpers';
 import { AlertActionKey } from '../../../../components/app/confirm/info/row/constants';
 import * as ConfirmationNavigation from '../../hooks/useConfirmationNavigation';
@@ -16,8 +16,7 @@ const PENDING_APPROVAL_MOCK = {
   id: 'testApprovalId',
   origin: 'https://metamask.github.io',
   requestData: { testProperty: 'testValue' },
-
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+  // TODO: Replace `any` with type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 } as ApprovalRequest<any>;
 
@@ -38,8 +37,6 @@ describe('useAlertActions', () => {
       .mockReturnValue({
         getIndex: jest.fn(),
         navigateToIndex: mockNavigateToIndex,
-
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any);
     const { result } = renderHookWithProvider(

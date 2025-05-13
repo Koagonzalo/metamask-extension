@@ -1,6 +1,7 @@
-import { TransactionMeta } from '@metamask/transaction-controller';
+import type { TransactionDescription } from '@ethersproject/abi';
 import { toHex } from '@metamask/controller-utils';
-import { TransactionDescription } from '@ethersproject/abi';
+import type { TransactionMeta } from '@metamask/transaction-controller';
+
 import {
   getIsRevokeSetApprovalForAll,
   hasValueAndNativeBalanceMismatch,
@@ -22,8 +23,6 @@ describe('getIsRevokeSetApprovalForAll', () => {
     const testValue = {
       name: 'setApprovalForAll',
       args: {
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         _approved: false,
       },
     } as unknown as TransactionDescription;

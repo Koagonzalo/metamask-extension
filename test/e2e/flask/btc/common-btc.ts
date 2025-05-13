@@ -1,6 +1,6 @@
-import { Mockttp } from 'mockttp';
-import FixtureBuilder from '../../fixture-builder';
-import { withFixtures } from '../../helpers';
+import type { Mockttp } from 'mockttp';
+
+import { MultichainNetworks } from '../../../../shared/constants/multichain/networks';
 import {
   ACCOUNT_TYPE,
   DEFAULT_BTC_ACCOUNT,
@@ -11,11 +11,12 @@ import {
   DEFAULT_BTC_BLOCK_NUMBER,
   SATS_IN_1_BTC,
 } from '../../constants';
-import { MultichainNetworks } from '../../../../shared/constants/multichain/networks';
-import { Driver } from '../../webdriver/driver';
+import FixtureBuilder from '../../fixture-builder';
+import { withFixtures } from '../../helpers';
 import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
 import AccountListPage from '../../page-objects/pages/account-list-page';
 import HeaderNavbar from '../../page-objects/pages/header-navbar';
+import type { Driver } from '../../webdriver/driver';
 
 const SIMPLEHASH_URL = 'https://api.simplehash.com';
 const QUICKNODE_URL_REGEX = /^https:\/\/.*\.btc.*\.quiknode\.pro(\/|$)/u;
@@ -86,8 +87,6 @@ export async function mockMempoolInfo(mockServer: Mockttp) {
             size: 165194,
             bytes: 93042828,
             usage: 550175264,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             total_fee: 1.60127931,
             maxmempool: 2048000000,
             mempoolminfee: DEFAULT_BTC_FEES_RATE,
@@ -191,8 +190,6 @@ export async function mockBtcSatProtectionService(
     {
       output: `${DEFAULT_BTC_TRANSACTION_ID}:0`,
       value: btcToSats(DEFAULT_BTC_BALANCE),
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       block_number: DEFAULT_BTC_BLOCK_NUMBER,
     },
   ];
@@ -200,8 +197,6 @@ export async function mockBtcSatProtectionService(
   return await mockServer
     .forGet(`${SIMPLEHASH_URL}/api/v0/custom/wallet_assets_by_utxo/${address}`)
     .withQuery({
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       without_inscriptions_runes_raresats: '1',
     })
     .thenCallback(() => {
@@ -262,7 +257,7 @@ export async function getQuickNodeSeenRequests(mockServer: Mockttp) {
   const seenRequests = await Promise.all(
     (
       await mockServer.getMockedEndpoints()
-    ).map((mockedEndpoint) => mockedEndpoint.getSeenRequests()),
+    ).map(async (mockedEndpoint) => mockedEndpoint.getSeenRequests()),
   );
   return seenRequests
     .flat()

@@ -1,7 +1,9 @@
-import React, { useContext, useEffect, useMemo } from 'react';
+import type { Hex } from '@metamask/utils';
+import React, { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { Hex } from '@metamask/utils';
-import TokenCell from '../token-cell';
+
+import { endTrace, TraceName } from '../../../../../shared/lib/trace';
+import { useTokenBalances as pollAndUpdateEvmBalances } from '../../../../hooks/useTokenBalances';
 import {
   getChainIdsToPoll,
   getNewTokensImported,
@@ -9,30 +11,22 @@ import {
   getSelectedAccount,
   getTokenSortConfig,
 } from '../../../../selectors';
-import { endTrace, TraceName } from '../../../../../shared/lib/trace';
-import { useTokenBalances as pollAndUpdateEvmBalances } from '../../../../hooks/useTokenBalances';
-import { useNetworkFilter } from '../hooks';
-import { TokenWithFiatAmount } from '../types';
-import { filterAssets } from '../util/filter';
-import { sortAssets } from '../util/sort';
-import useMultiChainAssets from '../hooks/useMultichainAssets';
+import { getTokenBalancesEvm } from '../../../../selectors/assets';
 import {
   getSelectedMultichainNetworkConfiguration,
   getIsEvmMultichainNetworkSelected,
 } from '../../../../selectors/multichain/networks';
-import { getTokenBalancesEvm } from '../../../../selectors/assets';
-import {
-  MetaMetricsEventCategory,
-  MetaMetricsEventName,
-} from '../../../../../shared/constants/metametrics';
-import { MetaMetricsContext } from '../../../../contexts/metametrics';
+import { useNetworkFilter } from '../hooks';
+import useMultiChainAssets from '../hooks/useMultichainAssets';
+import TokenCell from '../token-cell';
+import type { TokenWithFiatAmount } from '../types';
+import { filterAssets } from '../util/filter';
+import { sortAssets } from '../util/sort';
 
 type TokenListProps = {
   onTokenClick: (chainId: string, address: string) => void;
 };
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function TokenList({ onTokenClick }: TokenListProps) {
   const isEvm = useSelector(getIsEvmMultichainNetworkSelected);
   const chainIdsToPoll = useSelector(getChainIdsToPoll);
@@ -44,7 +38,6 @@ function TokenList({ onTokenClick }: TokenListProps) {
   const evmBalances = useSelector((state) =>
     getTokenBalancesEvm(state, selectedAccount.address),
   );
-  const trackEvent = useContext(MetaMetricsContext);
   // EVM specific tokenBalance polling, updates state via polling loop per chainId
   pollAndUpdateEvmBalances({
     chainIds: chainIdsToPoll as Hex[],
@@ -86,30 +79,6 @@ function TokenList({ onTokenClick }: TokenListProps) {
     }
   }, [sortedFilteredTokens]);
 
-  const handleTokenClick = (token: TokenWithFiatAmount) => () => {
-    // Ensure token has a valid chainId before proceeding
-    if (!token.chainId) {
-      return;
-    }
-
-    onTokenClick(token.chainId, token.address);
-
-    // Track event: token details
-    trackEvent({
-      category: MetaMetricsEventCategory.Tokens,
-      event: MetaMetricsEventName.TokenDetailsOpened,
-      properties: {
-        location: 'Home',
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        token_symbol: token.symbol ?? 'unknown',
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        chain_id: token.chainId,
-      },
-    });
-  };
-
   return (
     <>
       {sortedFilteredTokens.map((token: TokenWithFiatAmount) => (
@@ -117,7 +86,7 @@ function TokenList({ onTokenClick }: TokenListProps) {
           key={`${token.chainId}-${token.symbol}-${token.address}`}
           token={token}
           privacyMode={privacyMode}
-          onClick={handleTokenClick(token)}
+          onClick={onTokenClick}
         />
       ))}
     </>

@@ -1,5 +1,5 @@
-import React from 'react';
 import classnames from 'classnames';
+import React from 'react';
 
 import {
   BackgroundColor,
@@ -11,19 +11,13 @@ import {
   TextVariant,
   TextTransform,
 } from '../../../helpers/constants/design-system';
-
 import type { PolymorphicRef } from '../box';
 import { Text } from '../text';
 import type { TextProps } from '../text';
-import {
-  AvatarBaseComponent,
-  AvatarBaseProps,
-  AvatarBaseSize,
-} from './avatar-base.types';
+import type { AvatarBaseComponent, AvatarBaseProps } from './avatar-base.types';
+import { AvatarBaseSize } from './avatar-base.types';
 
 export const AvatarBase: AvatarBaseComponent = React.forwardRef(
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   <C extends React.ElementType = 'div'>(
     {
       size = AvatarBaseSize.Md,

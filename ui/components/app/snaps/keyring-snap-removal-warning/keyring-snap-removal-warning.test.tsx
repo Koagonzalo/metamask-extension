@@ -1,14 +1,15 @@
-import React from 'react';
+import type { Snap } from '@metamask/snaps-utils';
 import { waitFor, fireEvent } from '@testing-library/react';
-import configureMockStore from 'redux-mock-store';
-import { Snap } from '@metamask/snaps-utils';
 import userEvent from '@testing-library/user-event';
+import React from 'react';
+import configureMockStore from 'redux-mock-store';
+
+import messages from '../../../../../app/_locales/en/messages.json';
+import { toChecksumHexAddress } from '../../../../../shared/modules/hexstring-utils';
 import mockStore from '../../../../../test/data/mock-state.json';
 import { renderWithProvider } from '../../../../../test/jest';
-import { toChecksumHexAddress } from '../../../../../shared/modules/hexstring-utils';
 // TODO: Remove restricted import
 // eslint-disable-next-line import/no-restricted-paths
-import messages from '../../../../../app/_locales/en/messages.json';
 import KeyringSnapRemovalWarning from './keyring-snap-removal-warning';
 
 const mockOnClose = jest.fn();
@@ -43,7 +44,7 @@ const defaultArgs = {
 };
 
 describe('Keyring Snap Remove Warning', () => {
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+  // TODO: Replace `any` with type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let store: any;
   beforeAll(() => {
@@ -84,9 +85,7 @@ describe('Keyring Snap Remove Warning', () => {
     await waitFor(() => {
       // translation is broken into three pieces
       expect(getByText(/Type/u)).toBeInTheDocument();
-      expect(
-        getByText(mockSnap.manifest?.proposedName as string),
-      ).toBeInTheDocument();
+      expect(getByText(mockSnap.manifest?.proposedName)).toBeInTheDocument();
       expect(
         getByText(/to confirm you want to remove this snap:/u),
       ).toBeInTheDocument();

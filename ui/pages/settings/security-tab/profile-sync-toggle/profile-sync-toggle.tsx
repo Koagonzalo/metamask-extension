@@ -1,21 +1,15 @@
+import { BACKUPANDSYNC_FEATURES } from '@metamask/profile-sync-controller/user-storage';
 import React, { useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { BACKUPANDSYNC_FEATURES } from '@metamask/profile-sync-controller/user-storage';
-import { useI18nContext } from '../../../../hooks/useI18nContext';
-import { MetaMetricsContext } from '../../../../contexts/metametrics';
-import { useBackupAndSync } from '../../../../hooks/identity/useBackupAndSync';
+
 import {
   MetaMetricsEventCategory,
   MetaMetricsEventName,
 } from '../../../../../shared/constants/metametrics';
-import {
-  selectIsBackupAndSyncEnabled,
-  selectIsBackupAndSyncUpdateLoading,
-} from '../../../../selectors/identity/backup-and-sync';
-import { selectIsMetamaskNotificationsEnabled } from '../../../../selectors/metamask-notifications/metamask-notifications';
-import { showModal } from '../../../../store/actions';
 import { Box, Text } from '../../../../components/component-library';
+import Preloader from '../../../../components/ui/icon/preloader/preloader-icon.component';
 import ToggleButton from '../../../../components/ui/toggle-button';
+import { MetaMetricsContext } from '../../../../contexts/metametrics';
 import {
   Display,
   FlexDirection,
@@ -23,8 +17,15 @@ import {
   TextColor,
   TextVariant,
 } from '../../../../helpers/constants/design-system';
-import Preloader from '../../../../components/ui/icon/preloader/preloader-icon.component';
+import { useBackupAndSync } from '../../../../hooks/identity/useBackupAndSync';
+import { useI18nContext } from '../../../../hooks/useI18nContext';
 import { getUseExternalServices } from '../../../../selectors';
+import {
+  selectIsBackupAndSyncEnabled,
+  selectIsBackupAndSyncUpdateLoading,
+} from '../../../../selectors/identity/backup-and-sync';
+import { selectIsMetamaskNotificationsEnabled } from '../../../../selectors/metamask-notifications/metamask-notifications';
+import { showModal } from '../../../../store/actions';
 
 const ProfileSyncToggle = () => {
   const trackEvent = useContext(MetaMetricsContext);
@@ -43,7 +44,7 @@ const ProfileSyncToggle = () => {
   );
 
   useEffect(() => {
-    if (basicFunctionality === false) {
+    if (!basicFunctionality) {
       setIsBackupAndSyncFeatureEnabled(BACKUPANDSYNC_FEATURES.main, false);
     }
   }, [basicFunctionality, setIsBackupAndSyncFeatureEnabled]);

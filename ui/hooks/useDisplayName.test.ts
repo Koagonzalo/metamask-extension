@@ -1,7 +1,8 @@
 import { NameType } from '@metamask/name-controller';
 import { CHAIN_IDS } from '@metamask/transaction-controller';
-import { Hex } from '@metamask/utils';
+import type { Hex } from '@metamask/utils';
 import { cloneDeep } from 'lodash';
+
 import {
   EXPERIENCES_TYPE,
   FIRST_PARTY_CONTRACT_NAMES,
@@ -37,7 +38,6 @@ describe('useDisplayName', () => {
   const useNftCollectionsMetadataMock = jest.mocked(useNftCollectionsMetadata);
   const domainResolutionsMock = jest.mocked(getDomainResolutions);
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let state: any;
 

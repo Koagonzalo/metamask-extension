@@ -1,19 +1,19 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { Hex } from '@metamask/utils';
 import { RpcEndpointType } from '@metamask/network-controller';
-import { AssetType } from '../../../../../shared/constants/transaction';
-import mockSendState from '../../../../../test/data/mock-send-state.json';
-import configureStore from '../../../../store/store';
+import type { Hex } from '@metamask/utils';
+import { render } from '@testing-library/react';
+import React from 'react';
+import { Provider } from 'react-redux';
+
 import {
   CHAIN_IDS,
   CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP,
   CHAIN_ID_TOKEN_IMAGE_MAP,
 } from '../../../../../shared/constants/network';
+import { AssetType } from '../../../../../shared/constants/transaction';
+import mockSendState from '../../../../../test/data/mock-send-state.json';
 import { mockNetworkState } from '../../../../../test/stub/networks';
-
-import { ERC20Asset, NativeAsset, NFT } from '../asset-picker-modal/types';
+import configureStore from '../../../../store/store';
+import type { ERC20Asset, NativeAsset, NFT } from '../asset-picker-modal/types';
 import { AssetPicker } from './asset-picker';
 
 const unknownChainId = '0x2489078';
@@ -27,8 +27,7 @@ jest.mock('react-router-dom', () => ({
 const NATIVE_TICKER = 'NATIVE TICKER';
 const store = (
   nativeTicker = NATIVE_TICKER,
-
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+  // TODO: Replace `any` with type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   tokenList = {} as any,
   chainId: Hex = CHAIN_IDS.MAINNET,

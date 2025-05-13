@@ -1,11 +1,11 @@
-import { Driver } from '../webdriver/driver';
+import FixtureBuilder from '../fixture-builder';
+import { withFixtures, WINDOW_TITLES } from '../helpers';
+import { openTestSnapClickButtonAndInstall } from '../page-objects/flows/install-test-snap.flow';
+import { loginWithoutBalanceValidation } from '../page-objects/flows/login.flow';
 import { switchToNetworkFlow } from '../page-objects/flows/network.flow';
 import HomePage from '../page-objects/pages/home/homepage';
 import SendTokenPage from '../page-objects/pages/send/send-token-page';
-import FixtureBuilder from '../fixture-builder';
-import { loginWithoutBalanceValidation } from '../page-objects/flows/login.flow';
-import { withFixtures, WINDOW_TITLES } from '../helpers';
-import { openTestSnapClickButtonAndInstall } from '../page-objects/flows/install-test-snap.flow';
+import type { Driver } from '../webdriver/driver';
 
 describe('Name lookup', function () {
   it('validate the recipient address appears in the send flow', async function () {

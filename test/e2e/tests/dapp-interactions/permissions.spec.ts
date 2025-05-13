@@ -1,11 +1,12 @@
-import { Suite } from 'mocha';
-import { withFixtures } from '../../helpers';
-import FixtureBuilder from '../../fixture-builder';
+import type { Suite } from 'mocha';
+
 import { DAPP_HOST_ADDRESS } from '../../constants';
+import FixtureBuilder from '../../fixture-builder';
+import { withFixtures } from '../../helpers';
+import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
 import HeaderNavbar from '../../page-objects/pages/header-navbar';
 import PermissionListPage from '../../page-objects/pages/permission/permission-list-page';
 import TestDapp from '../../page-objects/pages/test-dapp';
-import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
 
 describe('Permissions', function (this: Suite) {
   it('sets permissions and connect to Dapp', async function () {

@@ -1,6 +1,9 @@
+import { BRIDGE_DEFAULT_SLIPPAGE } from '@metamask/bridge-controller';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { BRIDGE_DEFAULT_SLIPPAGE } from '@metamask/bridge-controller';
+
+import { MetaMetricsEventName } from '../../../../shared/constants/metametrics';
+import type { BannerAlertSeverity } from '../../../components/component-library';
 import {
   Button,
   ButtonPrimary,
@@ -18,10 +21,10 @@ import {
   TextField,
   TextFieldType,
   BannerAlert,
-  BannerAlertSeverity,
   Box,
 } from '../../../components/component-library';
-import { useI18nContext } from '../../../hooks/useI18nContext';
+import { setSlippage } from '../../../ducks/bridge/actions';
+import { getSlippage } from '../../../ducks/bridge/selectors';
 import {
   BackgroundColor,
   BlockSize,
@@ -32,10 +35,8 @@ import {
   TextVariant,
   SEVERITIES,
 } from '../../../helpers/constants/design-system';
-import { getSlippage } from '../../../ducks/bridge/selectors';
-import { setSlippage } from '../../../ducks/bridge/actions';
 import { useCrossChainSwapsEventTracker } from '../../../hooks/bridge/useCrossChainSwapsEventTracker';
-import { MetaMetricsEventName } from '../../../../shared/constants/metametrics';
+import { useI18nContext } from '../../../hooks/useI18nContext';
 import { Column, Row, Tooltip } from '../layout';
 
 const HARDCODED_SLIPPAGE_OPTIONS = [BRIDGE_DEFAULT_SLIPPAGE, 3];

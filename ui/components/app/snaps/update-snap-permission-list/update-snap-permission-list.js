@@ -1,28 +1,28 @@
+import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
-import { useI18nContext } from '../../../../hooks/useI18nContext';
-import { Box, ButtonLink } from '../../../component-library';
-import {
-  getMultipleTargetsSubjectMetadata,
-  getSnapMetadata,
-  getSnapsMetadata,
-} from '../../../../selectors';
-import SnapPermissionAdapter from '../snap-permission-adapter';
-import {
-  BlockSize,
-  Display,
-  JustifyContent,
-} from '../../../../helpers/constants/design-system';
+
 import {
   MinPermissionAbstractionDisplayCount,
   PermissionWeightThreshold,
 } from '../../../../../shared/constants/permissions';
 import {
+  Display,
+  JustifyContent,
+} from '../../../../helpers/constants/design-system';
+import { getWeightedPermissions } from '../../../../helpers/utils/permission';
+import {
   getFilteredSnapPermissions,
   getSnapName,
 } from '../../../../helpers/utils/util';
-import { getWeightedPermissions } from '../../../../helpers/utils/permission';
+import { useI18nContext } from '../../../../hooks/useI18nContext';
+import {
+  getMultipleTargetsSubjectMetadata,
+  getSnapMetadata,
+  getSnapsMetadata,
+} from '../../../../selectors';
+import { Box, ButtonLink } from '../../../component-library';
+import SnapPermissionAdapter from '../snap-permission-adapter';
 
 export default function UpdateSnapPermissionList({
   approvedPermissions,
@@ -87,6 +87,10 @@ export default function UpdateSnapPermissionList({
     getSubjectName: getSnapName(snapsMetadata),
   });
 
+  const [showAll, setShowAll] = useState(
+    Object.keys(approvedWeightedPermissions).length < 1,
+  );
+
   // Because approved permissions are sometimes hidden following the abstraction logic,
   // it is needed sometimes to fill the gap in permission display, in certain edge cases
   // when there is not enough new and revoked permissions to be shown.
@@ -103,17 +107,13 @@ export default function UpdateSnapPermissionList({
     minApprovedPermissionsToShow,
   );
 
-  const [showAll, setShowAll] = useState(
-    approvedWeightedPermissions.length <= minApprovedPermissionsToShow,
-  );
-
   const onShowAllPermissions = () => {
     showAllPermissions();
     setShowAll(true);
   };
 
   return (
-    <Box width={BlockSize.Full}>
+    <Box>
       <SnapPermissionAdapter
         permissions={newWeightedPermissions}
         snapId={snapId}

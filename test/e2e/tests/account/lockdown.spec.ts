@@ -1,13 +1,15 @@
 import { strict as assert } from 'assert';
 import { Browser } from 'selenium-webdriver';
+
+import { isManifestV3 } from '../../../../shared/modules/mv3.utils';
 import {
   getGlobalProperties,
   testIntrinsic,
 } from '../../../helpers/protect-intrinsics-helpers';
-import { withFixtures } from '../../helpers';
-import { PAGES, Driver } from '../../webdriver/driver';
 import FixtureBuilder from '../../fixture-builder';
-import { isManifestV3 } from '../../../../shared/modules/mv3.utils';
+import { withFixtures } from '../../helpers';
+import type { Driver } from '../../webdriver/driver';
+import { PAGES } from '../../webdriver/driver';
 
 const isFirefox = process.env.SELENIUM_BROWSER === Browser.FIREFOX;
 

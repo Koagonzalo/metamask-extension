@@ -1,14 +1,15 @@
 import { strict as assert } from 'assert';
-import { Suite } from 'mocha';
+import type { Suite } from 'mocha';
+
+import { ACCOUNT_TYPE } from '../../constants';
 import { WALLET_PASSWORD } from '../../helpers';
-import AccountDetailsModal from '../../page-objects/pages/dialog/account-details-modal';
 import AccountListPage from '../../page-objects/pages/account-list-page';
+import AccountDetailsModal from '../../page-objects/pages/dialog/account-details-modal';
 import HeaderNavbar from '../../page-objects/pages/header-navbar';
 import LoginPage from '../../page-objects/pages/login-page';
-import PrivacySettings from '../../page-objects/pages/settings/privacy-settings';
 import ResetPasswordPage from '../../page-objects/pages/reset-password-page';
+import PrivacySettings from '../../page-objects/pages/settings/privacy-settings';
 import SettingsPage from '../../page-objects/pages/settings/settings-page';
-import { ACCOUNT_TYPE } from '../../constants';
 import { withBtcAccountSnap } from './common-btc';
 
 describe('Create BTC Account', function (this: Suite) {

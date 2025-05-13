@@ -1,19 +1,9 @@
+import type { NetworkConfiguration } from '@metamask/network-controller';
+import { RpcEndpointType } from '@metamask/network-controller';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import {
-  NetworkConfiguration,
-  RpcEndpointType,
-} from '@metamask/network-controller';
-import {
-  Box,
-  Text,
-  AvatarNetwork,
-  AvatarNetworkSize,
-  Button,
-  Popover,
-  PopoverPosition,
-  ButtonVariant,
-} from '../../../component-library';
+
+import { CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP } from '../../../../../shared/constants/network';
 import {
   AlignItems,
   BackgroundColor,
@@ -27,7 +17,16 @@ import {
 } from '../../../../helpers/constants/design-system';
 import { useI18nContext } from '../../../../hooks/useI18nContext';
 import { setEditedNetwork, toggleNetworkMenu } from '../../../../store/actions';
-import { CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP } from '../../../../../shared/constants/network';
+import {
+  Box,
+  Text,
+  AvatarNetwork,
+  AvatarNetworkSize,
+  Button,
+  Popover,
+  PopoverPosition,
+  ButtonVariant,
+} from '../../../component-library';
 
 const NetworkListItem = ({
   networkConfiguration,

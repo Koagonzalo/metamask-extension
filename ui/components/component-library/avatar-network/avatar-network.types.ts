@@ -1,5 +1,5 @@
-import type { PolymorphicComponentPropWithRef } from '../box';
 import type { AvatarBaseStyleUtilityProps } from '../avatar-base/avatar-base.types';
+import type { PolymorphicComponentPropWithRef } from '../box';
 
 export enum AvatarNetworkSize {
   Xs = 'xs',
@@ -36,13 +36,9 @@ export interface AvatarNetworkStyleUtilityProps
   size?: AvatarNetworkSize;
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export type AvatarNetworkProps<C extends React.ElementType> =
   PolymorphicComponentPropWithRef<C, AvatarNetworkStyleUtilityProps>;
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export type AvatarNetworkComponent = <C extends React.ElementType = 'span'>(
   props: AvatarNetworkProps<C>,
 ) => React.ReactElement | null;

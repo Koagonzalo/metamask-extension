@@ -1,6 +1,15 @@
-import log from 'loglevel';
-import {
-  EncryptionPublicKeyManager,
+import type {
+  AcceptRequest,
+  AddApprovalRequest,
+  RejectRequest,
+} from '@metamask/approval-controller';
+import type { RestrictedMessenger } from '@metamask/base-controller';
+import { BaseController } from '@metamask/base-controller';
+import { EncryptionPublicKeyManager } from '@metamask/message-manager';
+import type {
+  EncryptionPublicKeyManagerMessenger,
+  EncryptionPublicKeyManagerState,
+  EncryptionPublicKeyManagerUnapprovedMessageAddedEvent,
   EncryptionPublicKeyParamsMetamask,
   AbstractMessage,
   MessageManagerState,
@@ -8,21 +17,12 @@ import {
   AbstractMessageParamsMetamask,
   OriginalRequest,
 } from '@metamask/message-manager';
-import type {
-  EncryptionPublicKeyManagerMessenger,
-  EncryptionPublicKeyManagerState,
-  EncryptionPublicKeyManagerUnapprovedMessageAddedEvent,
-} from '@metamask/message-manager';
-import { BaseController, RestrictedMessenger } from '@metamask/base-controller';
-import { Patch } from 'immer';
-import {
-  AcceptRequest,
-  AddApprovalRequest,
-  RejectRequest,
-} from '@metamask/approval-controller';
-import { MetaMetricsEventCategory } from '../../../shared/constants/metametrics';
-import { KeyringType } from '../../../shared/constants/keyring';
+import type { Patch } from 'immer';
+import log from 'loglevel';
+
 import { ORIGIN_METAMASK } from '../../../shared/constants/app';
+import { KeyringType } from '../../../shared/constants/keyring';
+import { MetaMetricsEventCategory } from '../../../shared/constants/metametrics';
 
 const controllerName = 'EncryptionPublicKeyController';
 const managerName = 'EncryptionPublicKeyManager';
@@ -114,19 +114,21 @@ export default class EncryptionPublicKeyController extends BaseController<
   EncryptionPublicKeyControllerState,
   EncryptionPublicKeyControllerMessenger
 > {
-  private _getEncryptionPublicKey: (address: string) => Promise<string>;
+  private readonly _getEncryptionPublicKey: (
+    address: string,
+  ) => Promise<string>;
 
-  private _getAccountKeyringType: (account: string) => Promise<string>;
-
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private _getState: () => any;
-
-  private _encryptionPublicKeyManager: EncryptionPublicKeyManager;
+  private readonly _getAccountKeyringType: (account: string) => Promise<string>;
 
   // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private _metricsEvent: (payload: any, options?: any) => void;
+  private readonly _getState: () => any;
+
+  private readonly _encryptionPublicKeyManager: EncryptionPublicKeyManager;
+
+  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private readonly _metricsEvent: (payload: any, options?: any) => void;
 
   /**
    * Construct a EncryptionPublicKey controller.

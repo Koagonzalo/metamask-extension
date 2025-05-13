@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+
 import { GasEstimateTypes } from '../../../../../shared/constants/gas';
 import { Box, Text } from '../../../../components/component-library';
 import { useGasFeeContext } from '../../../../contexts/gasFee';
@@ -131,10 +132,12 @@ export default function GasTiming({
   const estimateToUse =
     estimateUsed || transactionData.userFeeLevel || 'medium';
   const estimateEmoji = PRIORITY_LEVEL_ICON_MAP[estimateToUse];
-
-  const textTKey = estimateToUse === 'low' ? 'gasTimingLow' : estimateToUse;
-  let text = estimateEmoji ? `${estimateEmoji} ${t(textTKey)}` : t(textTKey);
+  let text = `${estimateEmoji} ${t(estimateToUse)}`;
   let time = '';
+
+  if (estimateToUse === 'low') {
+    text = `${estimateEmoji} ${t('gasTimingLow')}`;
+  }
 
   // Anything medium or faster is positive
   if (

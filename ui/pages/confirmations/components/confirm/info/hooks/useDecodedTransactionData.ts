@@ -1,13 +1,14 @@
-import { Hex } from '@metamask/utils';
-import { TransactionMeta } from '@metamask/transaction-controller';
-
+import type { TransactionMeta } from '@metamask/transaction-controller';
+import type { Hex } from '@metamask/utils';
 import { useSelector } from 'react-redux';
-import { AsyncResult, useAsyncResult } from '../../../../../../hooks/useAsync';
-import { decodeTransactionData } from '../../../../../../store/actions';
-import { DecodedTransactionDataResponse } from '../../../../../../../shared/types/transaction-decode';
-import { useConfirmContext } from '../../../../context/confirm';
+
 import { hasTransactionData } from '../../../../../../../shared/modules/transaction.utils';
+import type { DecodedTransactionDataResponse } from '../../../../../../../shared/types/transaction-decode';
+import type { AsyncResult } from '../../../../../../hooks/useAsync';
+import { useAsyncResult } from '../../../../../../hooks/useAsync';
 import { use4ByteResolutionSelector } from '../../../../../../selectors';
+import { decodeTransactionData } from '../../../../../../store/actions';
+import { useConfirmContext } from '../../../../context/confirm';
 
 export function useDecodedTransactionData({
   data,
@@ -22,7 +23,7 @@ export function useDecodedTransactionData({
   const isDecodeEnabled = useSelector(use4ByteResolutionSelector);
 
   const currentTransactionType = currentConfirmation?.type;
-  const chainId = currentConfirmation?.chainId as Hex;
+  const chainId = currentConfirmation?.chainId;
   const currentTransactionData = currentConfirmation?.txParams?.data as Hex;
   const currentTransactionTo = currentConfirmation?.txParams?.to as Hex;
   const transactionData = data ?? currentTransactionData;

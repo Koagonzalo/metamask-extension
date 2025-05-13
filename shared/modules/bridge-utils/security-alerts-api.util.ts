@@ -1,12 +1,13 @@
 import { CHAIN_IDS } from '@metamask/transaction-controller';
-import { AllowedBridgeChainIds } from '../../constants/bridge';
-import {
+
+import type { AllowedBridgeChainIds } from '../../constants/bridge';
+import { MultichainNetworks } from '../../constants/multichain/networks';
+import type {
   ScanTokenRequest,
   TokenFeature,
-  TokenFeatureType,
   TokenAlertWithLabelIds,
 } from '../../types/security-alerts-api';
-import { MultichainNetworks } from '../../constants/multichain/networks';
+import { TokenFeatureType } from '../../types/security-alerts-api';
 
 const DOMAIN = 'https://metamask.io';
 

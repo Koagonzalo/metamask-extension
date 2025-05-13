@@ -1,7 +1,8 @@
 import log from 'loglevel';
+
+import type { I18NMessageDict } from './i18n';
 import {
   FALLBACK_LOCALE,
-  I18NMessageDict,
   clearCaches,
   fetchLocale,
   getMessage,
@@ -16,7 +17,7 @@ const errorMock = 'TestError';
 jest.mock('loglevel');
 
 jest.mock('./fetch-with-timeout', () =>
-  jest.fn(() => (url: string) => {
+  jest.fn(() => async (url: string) => {
     return Promise.resolve({
       json: () => {
         if (url.includes(errorLocaleMock)) {
@@ -319,8 +320,6 @@ describe('I18N Module', () => {
 
       global.Intl = {
         RelativeTimeFormat: {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           __addLocaleData: addMock,
         },
         // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
@@ -340,8 +339,6 @@ describe('I18N Module', () => {
 
       global.Intl = {
         RelativeTimeFormat: {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           __addLocaleData: addMock,
         },
         // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973

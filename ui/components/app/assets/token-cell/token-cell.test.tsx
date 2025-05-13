@@ -1,12 +1,16 @@
-import React from 'react';
-import thunk from 'redux-thunk';
-import configureMockStore from 'redux-mock-store';
+import type { Hex } from '@metamask/utils';
 import { fireEvent } from '@testing-library/react';
+import React from 'react';
 import { useSelector } from 'react-redux';
-import { Hex } from '@metamask/utils';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
+import TokenCell from '.';
 import { renderWithProvider } from '../../../../../test/lib/render-helpers';
-import { useTokenFiatAmount } from '../../../../hooks/useTokenFiatAmount';
+import { getIntlLocale } from '../../../../ducks/locale/locale';
 import { getCurrentCurrency } from '../../../../ducks/metamask/metamask';
+import { useIsOriginalTokenSymbol } from '../../../../hooks/useIsOriginalTokenSymbol';
+import { useTokenFiatAmount } from '../../../../hooks/useTokenFiatAmount';
 import {
   getTokenList,
   getPreferences,
@@ -16,12 +20,8 @@ import {
   getMultichainCurrentChainId,
   getMultichainIsEvm,
 } from '../../../../selectors/multichain';
-
-import { useIsOriginalTokenSymbol } from '../../../../hooks/useIsOriginalTokenSymbol';
-import { getIntlLocale } from '../../../../ducks/locale/locale';
-import { TokenWithFiatAmount } from '../types';
-import { TokenCellProps } from './token-cell';
-import TokenCell from '.';
+import type { TokenWithFiatAmount } from '../types';
+import type { TokenCellProps } from './token-cell';
 
 jest.mock('react-redux', () => {
   const actual = jest.requireActual('react-redux');

@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  SelectButtonProps,
-  SelectButtonSize,
-} from '../../../../components/component-library/select-button/select-button.types';
+
 import {
   AvatarNetwork,
   AvatarNetworkSize,
@@ -12,6 +9,9 @@ import {
   SelectButton,
   Text,
 } from '../../../../components/component-library';
+import type { SelectButtonProps } from '../../../../components/component-library/select-button/select-button.types';
+import { SelectButtonSize } from '../../../../components/component-library/select-button/select-button.types';
+import type { AssetPicker } from '../../../../components/multichain/asset-picker-amount/asset-picker';
 import {
   AlignItems,
   BackgroundColor,
@@ -21,9 +21,8 @@ import {
   OverflowWrap,
   TextVariant,
 } from '../../../../helpers/constants/design-system';
-import { useI18nContext } from '../../../../hooks/useI18nContext';
-import { AssetPicker } from '../../../../components/multichain/asset-picker-amount/asset-picker';
 import { getNftImage } from '../../../../helpers/utils/nfts';
+import { useI18nContext } from '../../../../hooks/useI18nContext';
 
 export const BridgeAssetPickerButton = ({
   asset,
@@ -80,8 +79,6 @@ export const BridgeAssetPickerButton = ({
           >
             {asset ? (
               <AvatarToken
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-                // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
                 src={getNftImage(asset.image) || undefined}
                 backgroundColor={BackgroundColor.backgroundHover}
                 name={asset.symbol}

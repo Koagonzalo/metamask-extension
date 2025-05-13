@@ -1,12 +1,11 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
+import React from 'react';
 import { Provider } from 'react-redux';
+import type { Store } from 'redux';
 import configureStore from 'redux-mock-store';
-import { Store } from 'redux';
-import {
-  NotificationDetailCollection,
-  NotificationDetailCollectionProps,
-} from './notification-detail-collection';
+
+import type { NotificationDetailCollectionProps } from './notification-detail-collection';
+import { NotificationDetailCollection } from './notification-detail-collection';
 
 const mockStore = configureStore([]);
 

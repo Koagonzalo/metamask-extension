@@ -1,5 +1,6 @@
-import React from 'react';
 import classnames from 'classnames';
+import React from 'react';
+
 import {
   AlignItems,
   BorderRadius,
@@ -8,19 +9,18 @@ import {
   BackgroundColor,
   Display,
 } from '../../../helpers/constants/design-system';
-import { Text } from '../text';
-import { Box, BoxProps, PolymorphicRef } from '../box';
 import { AvatarGroup } from '../../multichain/avatar-group';
 import { AvatarNetwork, AvatarNetworkSize } from '../avatar-network';
+import type { BoxProps, PolymorphicRef } from '../box';
+import { Box } from '../box';
 import { Icon, IconName, IconSize } from '../icon';
-import {
+import { Text } from '../text';
+import type {
   PickerNetworkComponent,
   PickerNetworkProps,
 } from './picker-network.types';
 
 export const PickerNetwork: PickerNetworkComponent = React.forwardRef(
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   <C extends React.ElementType = 'button'>(
     {
       className = '',

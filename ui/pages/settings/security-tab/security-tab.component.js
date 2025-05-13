@@ -1,6 +1,7 @@
 import { startCase } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
+
 import {
   addUrlProtocolPrefix,
   getEnvironmentType,
@@ -33,9 +34,9 @@ import {
   Box,
   Text,
 } from '../../../components/component-library';
+import Popover from '../../../components/ui/popover';
 import TextField from '../../../components/ui/text-field';
 import ToggleButton from '../../../components/ui/toggle-button';
-import Popover from '../../../components/ui/popover';
 import {
   Display,
   BlockSize,
@@ -50,15 +51,14 @@ import {
   ADD_POPULAR_CUSTOM_NETWORK,
   REVEAL_SRP_LIST_ROUTE,
 } from '../../../helpers/constants/routes';
+import ZENDESK_URLS from '../../../helpers/constants/zendesk-url';
 import {
   getNumberOfSettingRoutesInTab,
   handleSettingsRefs,
 } from '../../../helpers/utils/settings-search';
-
 import { updateDataDeletionTaskStatus } from '../../../store/actions';
-import ZENDESK_URLS from '../../../helpers/constants/zendesk-url';
-import MetametricsToggle from './metametrics-toggle';
 import DeleteMetametricsDataButton from './delete-metametrics-data-button';
+import MetametricsToggle from './metametrics-toggle';
 
 export default class SecurityTab extends PureComponent {
   static contextTypes = {

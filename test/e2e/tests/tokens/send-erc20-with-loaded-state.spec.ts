@@ -1,12 +1,12 @@
-import { withFixtures } from '../../helpers';
 import FixtureBuilder from '../../fixture-builder';
+import { withFixtures } from '../../helpers';
+import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
+import TokenTransferTransactionConfirmation from '../../page-objects/pages/confirmations/redesign/token-transfer-confirmation';
 import ActivityListPage from '../../page-objects/pages/home/activity-list';
 import AssetListPage from '../../page-objects/pages/home/asset-list';
 import HomePage from '../../page-objects/pages/home/homepage';
 import SendTokenPage from '../../page-objects/pages/send/send-token-page';
 import TokenOverviewPage from '../../page-objects/pages/token-overview-page';
-import TokenTransferTransactionConfirmation from '../../page-objects/pages/confirmations/redesign/token-transfer-confirmation';
-import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
 
 describe('Send ERC20', function () {
   it('should send DAI', async function () {

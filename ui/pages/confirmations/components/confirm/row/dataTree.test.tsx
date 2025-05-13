@@ -7,7 +7,6 @@ import {
 import mockState from '../../../../../../test/data/mock-state.json';
 import { renderWithProvider } from '../../../../../../test/lib/render-helpers';
 import configureStore from '../../../../../store/store';
-
 import { DataTree } from './dataTree';
 
 const CHAIN_ID_MOCK = '0x123';
@@ -102,7 +101,7 @@ describe('DataTree', () => {
   it('should match snapshot for order signature type', () => {
     const { container } = renderWithProvider(
       <DataTree
-        data={JSON.parse(orderSignatureMsg.msgParams?.data as string)}
+        data={JSON.parse(orderSignatureMsg.msgParams?.data)}
         chainId={CHAIN_ID_MOCK}
       />,
       store,

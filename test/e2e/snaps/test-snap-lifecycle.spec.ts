@@ -1,10 +1,10 @@
-import { Driver } from '../webdriver/driver';
-import { TestSnaps } from '../page-objects/pages/test-snaps';
-import SnapInstall from '../page-objects/pages/dialog/snap-install';
 import FixtureBuilder from '../fixture-builder';
-import { loginWithoutBalanceValidation } from '../page-objects/flows/login.flow';
 import { withFixtures, WINDOW_TITLES } from '../helpers';
 import { openTestSnapClickButtonAndInstall } from '../page-objects/flows/install-test-snap.flow';
+import { loginWithoutBalanceValidation } from '../page-objects/flows/login.flow';
+import SnapInstall from '../page-objects/pages/dialog/snap-install';
+import { TestSnaps } from '../page-objects/pages/test-snaps';
+import type { Driver } from '../webdriver/driver';
 
 describe('Test Snap Lifecycle Hooks', function () {
   it('can run lifecycle hook on connect', async function () {
@@ -23,7 +23,6 @@ describe('Test Snap Lifecycle Hooks', function () {
         await openTestSnapClickButtonAndInstall(
           driver,
           'connectLifeCycleButton',
-          { withExtraScreen: true },
         );
         // Check installation success
         await testSnaps.check_installationComplete(

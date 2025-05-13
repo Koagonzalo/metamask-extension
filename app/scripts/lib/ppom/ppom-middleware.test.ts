@@ -1,20 +1,21 @@
+import type { SIWEMessage } from '@metamask/controller-utils';
+import { detectSIWE } from '@metamask/controller-utils';
 import { type Hex, JsonRpcResponseStruct } from '@metamask/utils';
-import { detectSIWE, SIWEMessage } from '@metamask/controller-utils';
 
 import { CHAIN_IDS } from '../../../../shared/constants/network';
-
 import {
   BlockaidReason,
   BlockaidResultType,
 } from '../../../../shared/constants/security-provider';
 import { mockNetworkState } from '../../../../test/stub/networks';
-import { createPPOMMiddleware, PPOMMiddlewareRequest } from './ppom-middleware';
+import type { PPOMMiddlewareRequest } from './ppom-middleware';
+import { createPPOMMiddleware } from './ppom-middleware';
 import {
   generateSecurityAlertId,
   handlePPOMError,
   validateRequestWithPPOM,
 } from './ppom-util';
-import { SecurityAlertResponse } from './types';
+import type { SecurityAlertResponse } from './types';
 
 jest.mock('./ppom-util');
 jest.mock('@metamask/controller-utils', () => ({
@@ -27,8 +28,6 @@ const INTERNAL_ACCOUNT_ADDRESS = '0xec1adf982415d2ef5ec55899b9bfb8bc0f29251b';
 
 const SECURITY_ALERT_RESPONSE_MOCK: SecurityAlertResponse = {
   securityAlertId: SECURITY_ALERT_ID_MOCK,
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   result_type: BlockaidResultType.Malicious,
   reason: BlockaidReason.permitFarming,
 };

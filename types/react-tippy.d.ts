@@ -47,14 +47,12 @@ declare module 'react-tippy' {
     followCursor?: boolean;
     inertia?: boolean;
     transitionFlip?: boolean;
-
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+    // TODO: Replace `any` with type
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     popperOptions?: any;
-
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+    // TODO: Replace `any` with type
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    html?: React.ReactElement<any>;
+    html?: React.ReactElement;
     unmountHTMLWhenHide?: boolean;
     size?: Size;
     sticky?: boolean;
@@ -70,8 +68,6 @@ declare module 'react-tippy' {
 
   export class Tooltip extends React.Component<TooltipProps> {}
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   export function withTooltip<P>(
     component: React.ComponentType<P>,
     options: TooltipProps,

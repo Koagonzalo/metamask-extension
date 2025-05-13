@@ -1,17 +1,14 @@
-import {
-  CaipAssetType,
-  CaipAssetTypeStruct,
-  CaipChainId,
-  Hex,
-} from '@metamask/utils';
+import { getNativeAssetForChainId } from '@metamask/bridge-controller';
+import { toHex } from '@metamask/controller-utils';
 import { toEvmCaipChainId } from '@metamask/multichain-network-controller';
 import { MultichainNetwork } from '@metamask/multichain-transactions-controller';
-import { toHex } from '@metamask/controller-utils';
-import { getNativeAssetForChainId } from '@metamask/bridge-controller';
-import { MINUTE } from '../constants/time';
+import type { CaipAssetType, CaipChainId, Hex } from '@metamask/utils';
+import { CaipAssetTypeStruct } from '@metamask/utils';
+
 import { MultichainNetworks } from '../constants/multichain/networks';
-import fetchWithCache from './fetch-with-cache';
+import { MINUTE } from '../constants/time';
 import { getAssetImageUrl, fetchAssetMetadata, toAssetId } from './asset-utils';
+import fetchWithCache from './fetch-with-cache';
 
 jest.mock('./fetch-with-cache');
 jest.mock('@metamask/multichain-network-controller');

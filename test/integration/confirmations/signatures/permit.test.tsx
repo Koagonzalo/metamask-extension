@@ -1,5 +1,6 @@
 import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import nock from 'nock';
+
 import { MESSAGE_TYPE } from '../../../../shared/constants/app';
 import {
   MetaMetricsEventCategory,
@@ -8,10 +9,10 @@ import {
 } from '../../../../shared/constants/metametrics';
 import { useAssetDetails } from '../../../../ui/pages/confirmations/hooks/useAssetDetails';
 import * as backgroundConnection from '../../../../ui/store/background-connection';
+import { tEn } from '../../../lib/i18n-helpers';
 import { integrationTestRender } from '../../../lib/render-helpers';
 import mockMetaMaskState from '../../data/integration-init-state.json';
 import { createMockImplementation } from '../../helpers';
-import { tEn } from '../../../lib/i18n-helpers';
 import {
   getMetamaskStateWithMaliciousPermit,
   getMetaMaskStateWithUnapprovedPermitSign,
@@ -46,7 +47,6 @@ describe('Permit Confirmation', () => {
       }),
     );
     mockedAssetDetails.mockImplementation(() => ({
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       decimals: '4' as any,
     }));
@@ -124,11 +124,7 @@ describe('Permit Confirmation', () => {
           properties: {
             action: 'Confirm Screen',
             location: MetaMetricsEventLocation.SignatureConfirmation,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             signature_type: MESSAGE_TYPE.ETH_SIGN_TYPED_DATA_V4,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             hd_entropy_index: 0,
           },
         }),
@@ -319,8 +315,6 @@ describe('Permit Confirmation', () => {
       expect.arrayContaining([
         expect.objectContaining({
           properties: expect.objectContaining({
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             external_link_clicked: 'security_alert_support_link',
           }),
         }),

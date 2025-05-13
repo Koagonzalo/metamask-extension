@@ -1,15 +1,19 @@
 import { getNativeTokenAddress } from '@metamask/assets-controllers';
 import { EthMethod, SolMethod } from '@metamask/keyring-api';
-import { CaipAssetType, Hex, parseCaipAssetType } from '@metamask/utils';
+import type { CaipAssetType, Hex } from '@metamask/utils';
+import { parseCaipAssetType } from '@metamask/utils';
 import { isEqual } from 'lodash';
-import React, { ReactNode, useEffect, useMemo } from 'react';
+import type { ReactNode } from 'react';
+import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+
 import { AssetType } from '../../../../shared/constants/transaction';
 import { hexToDecimal } from '../../../../shared/modules/conversion.utils';
 import { toChecksumHexAddress } from '../../../../shared/modules/hexstring-utils';
 import useMultiChainAssets from '../../../components/app/assets/hooks/useMultichainAssets';
 import TokenCell from '../../../components/app/assets/token-cell';
+import type { TokenWithFiatAmount } from '../../../components/app/assets/types';
 import { calculateTokenBalance } from '../../../components/app/assets/util/calculateTokenBalance';
 import TransactionList from '../../../components/app/transaction-list';
 import CoinButtons from '../../../components/app/wallet-overview/coin-buttons';
@@ -36,14 +40,17 @@ import {
   TextVariant,
 } from '../../../helpers/constants/design-system';
 import { DEFAULT_ROUTE } from '../../../helpers/constants/routes';
+import { formatCurrency } from '../../../helpers/utils/confirm-tx.util';
 import { getPortfolioUrl } from '../../../helpers/utils/portfolio';
 import { useI18nContext } from '../../../hooks/useI18nContext';
 import { useMultichainSelector } from '../../../hooks/useMultichainSelector';
 import { useTokenBalances } from '../../../hooks/useTokenBalances';
 import {
+  getCurrencyRates,
   getDataCollectionForMarketing,
   getIsBridgeChain,
   getIsSwapsChain,
+  getMarketData,
   getMetaMetricsId,
   getParticipateInMetaMetrics,
   getSelectedAccount,
@@ -54,19 +61,46 @@ import {
 } from '../../../selectors';
 import {
   getImageForChainId,
+  getMultichainConversionRate,
   getMultichainIsEvm,
   getMultichainIsTestnet,
   getMultichainNetworkConfigurationsByChainId,
   getMultichainShouldShowFiat,
 } from '../../../selectors/multichain';
-import { TokenWithFiatAmount } from '../../../components/app/assets/types';
-import { endTrace, TraceName } from '../../../../shared/lib/trace';
-import { Asset } from '../types/asset';
-import { useCurrentPrice } from '../hooks/useCurrentPrice';
-import { getMultichainNativeAssetType } from '../../../selectors/assets';
+import { getPricePrecision, localizeLargeNumber } from '../util';
 import AssetChart from './chart/asset-chart';
 import TokenButtons from './token-buttons';
-import { AssetMarketDetails } from './asset-market-details';
+
+/** Information about a native or token asset */
+export type Asset = (
+  | {
+      type: AssetType.native;
+      /** Whether the symbol has been verified to match the chain */
+      isOriginalNativeSymbol: boolean;
+      decimals: number;
+    }
+  | {
+      type: AssetType.token;
+      /** The token's contract address */
+      address: string;
+      /** The number of decimal places to move left when displaying balances */
+      decimals: number;
+      /** An array of token list sources the asset appears in, e.g. [1inch,Sushiswap]  */
+      aggregators?: string[];
+    }
+) & {
+  /** The hexadecimal chain id */
+  chainId: Hex;
+  /** The asset's symbol, e.g. 'ETH' */
+  symbol: string;
+  /** The asset's name, e.g. 'Ethereum' */
+  name?: string;
+  /** A URL to the asset's image */
+  image: string;
+  /** True if the asset implements ERC721 */
+  isERC721?: boolean;
+  balance?: { value: string; display: string; fiat: string };
+};
 
 // A page representing a native or token asset
 const AssetPage = ({
@@ -80,13 +114,9 @@ const AssetPage = ({
   const history = useHistory();
   const selectedAccount = useSelector(getSelectedAccount);
   const currency = useSelector(getCurrentCurrency);
+  const conversionRate = useMultichainSelector(getMultichainConversionRate);
   const isBuyableChain = useSelector(getIsNativeTokenBuyable);
   const isEvm = useMultichainSelector(getMultichainIsEvm);
-  const nativeAssetType = useSelector(getMultichainNativeAssetType);
-
-  useEffect(() => {
-    endTrace({ name: TraceName.AssetDetails });
-  }, []);
 
   const { chainId, type, symbol, name, image, decimals } = asset;
 
@@ -107,6 +137,9 @@ const AssetPage = ({
     account.methods.includes(EthMethod.SignTransaction) ||
     account.methods.includes(EthMethod.SignUserOperation) ||
     account.methods.includes(SolMethod.SignTransaction);
+
+  const marketData = useSelector(getMarketData);
+  const currencyRates = useSelector(getCurrencyRates);
 
   const isTestnet = useMultichainSelector(getMultichainIsTestnet);
   const shouldShowFiat = useMultichainSelector(getMultichainShouldShowFiat);
@@ -147,12 +180,8 @@ const AssetPage = ({
     if (type === AssetType.token) {
       return isEvm ? toChecksumHexAddress(asset.address) : asset.address;
     }
-    return isEvm ? getNativeTokenAddress(chainId) : nativeAssetType;
+    return getNativeTokenAddress(chainId);
   })();
-
-  if (!address) {
-    throw new Error('Could not determine address for asset');
-  }
 
   const shouldShowContractAddress = type === AssetType.token;
   const contractAddress = (() => {
@@ -176,13 +205,35 @@ const AssetPage = ({
     selectedAccountTokenBalancesAcrossChains,
   });
 
-  const { currentPrice } = useCurrentPrice(asset);
+  // Market and conversion rate data
+  const baseCurrency = marketData[chainId]?.[address]?.currency;
+  const tokenMarketPrice = marketData[chainId]?.[address]?.price || undefined;
+  const tokenExchangeRate =
+    type === AssetType.native
+      ? currencyRates[symbol]?.conversionRate
+      : currencyRates[baseCurrency]?.conversionRate || 0;
 
-  const tokenFiatAmount = currentPrice
-    ? currentPrice * parseFloat(String(balance))
-    : 0;
+  // Calculate fiat amount
+  const tokenFiatAmount =
+    tokenMarketPrice * tokenExchangeRate * parseFloat(String(balance));
+
+  const currentPrice =
+    tokenExchangeRate !== undefined && tokenMarketPrice !== undefined
+      ? tokenExchangeRate * tokenMarketPrice
+      : undefined;
+
+  const tokenMarketDetails = marketData[chainId]?.[address];
+  const shouldDisplayMarketData =
+    conversionRate > 0 &&
+    tokenMarketDetails &&
+    (tokenMarketDetails.marketCap > 0 ||
+      tokenMarketDetails.totalVolume > 0 ||
+      tokenMarketDetails.circulatingSupply > 0 ||
+      tokenMarketDetails.allTimeHigh > 0 ||
+      tokenMarketDetails.allTimeLow > 0);
 
   // this is needed in order to assign the correct balances to TokenButtons before navigating to send/swap screens
+
   asset.balance = {
     value: hexToDecimal(tokenHexBalance),
     display: String(balance),
@@ -217,7 +268,7 @@ const AssetPage = ({
         symbol,
         image,
         title: name ?? symbol,
-        tokenFiatAmount: showFiat ? tokenFiatAmount : null,
+        tokenFiatAmount: showFiat && tokenMarketPrice ? tokenFiatAmount : null,
         string: balance ? balance.toString() : '',
         decimals: asset.decimals,
         aggregators:
@@ -393,7 +444,75 @@ const AssetPage = ({
               </Box>
             </Box>
           )}
-          <AssetMarketDetails asset={asset} address={address} />
+          {shouldDisplayMarketData && (
+            <Box paddingLeft={4} paddingRight={4}>
+              <Text variant={TextVariant.headingMd} paddingBottom={4}>
+                {t('marketDetails')}
+              </Text>
+              <Box
+                display={Display.Flex}
+                flexDirection={FlexDirection.Column}
+                gap={2}
+              >
+                {tokenMarketDetails.marketCap > 0 &&
+                  renderRow(
+                    t('marketCap'),
+                    <Text data-testid="asset-market-cap">
+                      {localizeLargeNumber(
+                        t,
+                        tokenExchangeRate * tokenMarketDetails.marketCap,
+                      )}
+                    </Text>,
+                  )}
+                {tokenMarketDetails.totalVolume > 0 &&
+                  renderRow(
+                    t('totalVolume'),
+                    <Text>
+                      {localizeLargeNumber(
+                        t,
+                        tokenExchangeRate * tokenMarketDetails.totalVolume,
+                      )}
+                    </Text>,
+                  )}
+                {tokenMarketDetails.circulatingSupply > 0 &&
+                  renderRow(
+                    t('circulatingSupply'),
+                    <Text>
+                      {localizeLargeNumber(
+                        t,
+                        tokenMarketDetails.circulatingSupply,
+                      )}
+                    </Text>,
+                  )}
+                {tokenMarketDetails.allTimeHigh > 0 &&
+                  renderRow(
+                    t('allTimeHigh'),
+                    <Text>
+                      {formatCurrency(
+                        `${tokenExchangeRate * tokenMarketDetails.allTimeHigh}`,
+                        currency,
+                        getPricePrecision(
+                          tokenExchangeRate * tokenMarketDetails.allTimeHigh,
+                        ),
+                      )}
+                    </Text>,
+                  )}
+                {tokenMarketDetails.allTimeLow > 0 &&
+                  renderRow(
+                    t('allTimeLow'),
+                    <Text>
+                      {formatCurrency(
+                        `${tokenExchangeRate * tokenMarketDetails.allTimeLow}`,
+                        currency,
+                        getPricePrecision(
+                          tokenExchangeRate * tokenMarketDetails.allTimeLow,
+                        ),
+                      )}
+                    </Text>,
+                  )}
+              </Box>
+            </Box>
+          )}
           <Box marginBottom={8}>
             <Text
               paddingLeft={4}

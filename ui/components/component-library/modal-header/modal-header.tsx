@@ -1,6 +1,6 @@
-import React from 'react';
 import classnames from 'classnames';
-import { Text } from '../text';
+import React from 'react';
+
 import {
   TextVariant,
   TextAlign,
@@ -8,9 +8,10 @@ import {
 } from '../../../helpers/constants/design-system';
 import { useI18nContext } from '../../../hooks/useI18nContext';
 import { ButtonIcon, ButtonIconSize } from '../button-icon';
-import { IconName } from '../icon';
 import { HeaderBase } from '../header-base';
-import { ModalHeaderProps } from './modal-header.types';
+import { IconName } from '../icon';
+import { Text } from '../text';
+import type { ModalHeaderProps } from './modal-header.types';
 
 export const ModalHeader: React.FC<ModalHeaderProps> = ({
   children,
@@ -35,8 +36,6 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({
         width: BlockSize.Full,
       }}
       startAccessory={
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         startAccessory ||
         (onBack && (
           <ButtonIcon
@@ -49,8 +48,6 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({
         ))
       }
       endAccessory={
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         endAccessory ||
         (onClose && (
           <ButtonIcon

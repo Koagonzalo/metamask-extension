@@ -1,19 +1,19 @@
-import { Messenger } from '@metamask/base-controller';
-import {
-  NetworkControllerGetStateAction,
-  NetworkControllerGetNetworkClientByIdAction,
-  NetworkControllerStateChangeEvent,
-} from '@metamask/network-controller';
-import {
+import type {
   AccountsControllerGetSelectedAccountAction,
   AccountsControllerGetAccountAction,
   AccountsControllerSelectedEvmAccountChangeEvent,
 } from '@metamask/accounts-controller';
-import { PreferencesControllerStateChangeEvent } from '@metamask/preferences-controller';
-import {
+import type {
   TokensControllerGetStateAction,
   TokensControllerStateChangeEvent,
 } from '@metamask/assets-controllers';
+import type { Messenger } from '@metamask/base-controller';
+import type {
+  NetworkControllerGetStateAction,
+  NetworkControllerGetNetworkClientByIdAction,
+  NetworkControllerStateChangeEvent,
+} from '@metamask/network-controller';
+import type { PreferencesControllerStateChangeEvent } from '@metamask/preferences-controller';
 
 type Actions =
   | TokensControllerGetStateAction

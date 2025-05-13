@@ -1,15 +1,16 @@
 import { strict as assert } from 'assert';
-import { Suite } from 'mocha';
-import { Driver } from '../../webdriver/driver';
-import { withFixtures } from '../../helpers';
+import type { Suite } from 'mocha';
+
 import FixtureBuilder from '../../fixture-builder';
-import AdvancedSettings from '../../page-objects/pages/settings/advanced-settings';
-import GeneralSettings from '../../page-objects/pages/settings/general-settings';
+import { withFixtures } from '../../helpers';
+import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
 import HeaderNavbar from '../../page-objects/pages/header-navbar';
 import Homepage from '../../page-objects/pages/home/homepage';
 import SendTokenPage from '../../page-objects/pages/send/send-token-page';
+import AdvancedSettings from '../../page-objects/pages/settings/advanced-settings';
+import GeneralSettings from '../../page-objects/pages/settings/general-settings';
 import SettingsPage from '../../page-objects/pages/settings/settings-page';
-import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
+import type { Driver } from '../../webdriver/driver';
 
 const selectors = {
   currentLanguageDansk: { tag: 'p', text: 'Nuværende sprog' },

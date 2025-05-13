@@ -1,9 +1,11 @@
 import { strict as assert } from 'assert';
-import { withFixtures } from '../helpers';
+
 import FixtureBuilder from '../fixture-builder';
-import { Driver, PAGES } from '../webdriver/driver';
+import { withFixtures, unlockWallet, WINDOW_TITLES } from '../helpers';
 import { loginWithBalanceValidation } from '../page-objects/flows/login.flow';
 import TestDapp from '../page-objects/pages/test-dapp';
+import type { Driver } from '../webdriver/driver';
+import { PAGES } from '../webdriver/driver';
 
 describe('Notification window closing', function () {
   it('closes the window when running in a popup', async function () {
@@ -22,8 +24,6 @@ describe('Notification window closing', function () {
         const requestPermissionsRequest = JSON.stringify({
           jsonrpc: '2.0',
           method: 'wallet_requestPermissions',
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           params: [{ eth_accounts: {} }],
         });
         await driver.executeScript(
@@ -31,11 +31,13 @@ describe('Notification window closing', function () {
         );
 
         // confirm connect account
-        await testDapp.confirmConnectAccountModal();
+        await driver.switchToWindowWithTitle(WINDOW_TITLES.Dialog);
+        await driver.clickElementAndWaitForWindowToClose(
+          '[data-testid="confirm-btn"]',
+        );
       },
     );
   });
-
   it('does not close the window when running in a tab', async function () {
     await withFixtures(
       {
@@ -44,7 +46,7 @@ describe('Notification window closing', function () {
         title: this.test?.fullTitle(),
       },
       async ({ driver }: { driver: Driver }) => {
-        await loginWithBalanceValidation(driver);
+        await unlockWallet(driver);
 
         // Ensure the window does not close
         // 1. Get the current window handle

@@ -1,13 +1,14 @@
-import { PPOMController } from '@metamask/ppom-validator';
-import {
+import type { PPOM } from '@blockaid/ppom_release';
+import type { PPOMController } from '@metamask/ppom-validator';
+import type { SignatureController } from '@metamask/signature-controller';
+import type {
   TransactionController,
   TransactionParams,
-  normalizeTransactionParams,
 } from '@metamask/transaction-controller';
-import { Hex, JsonRpcRequest } from '@metamask/utils';
+import { normalizeTransactionParams } from '@metamask/transaction-controller';
+import type { Hex, JsonRpcRequest } from '@metamask/utils';
 import { v4 as uuid } from 'uuid';
-import { PPOM } from '@blockaid/ppom_release';
-import { SignatureController } from '@metamask/signature-controller';
+
 import {
   BlockaidReason,
   BlockaidResultType,
@@ -15,15 +16,18 @@ import {
   SecurityAlertSource,
 } from '../../../../shared/constants/security-provider';
 import { SIGNING_METHODS } from '../../../../shared/constants/transaction';
-import { AppStateController } from '../../controllers/app-state-controller';
-import { sanitizeMessageRecursively } from '../../../../shared/modules/typed-signature';
 import { parseTypedDataMessage } from '../../../../shared/modules/transaction.utils';
-import { SecurityAlertResponse, UpdateSecurityAlertResponse } from './types';
+import { sanitizeMessageRecursively } from '../../../../shared/modules/typed-signature';
+import type { AppStateController } from '../../controllers/app-state-controller';
+import type { SecurityAlertsAPIRequest } from './security-alerts-api';
 import {
   isSecurityAlertsAPIEnabled,
-  SecurityAlertsAPIRequest,
   validateWithSecurityAlertsAPI,
 } from './security-alerts-api';
+import type {
+  SecurityAlertResponse,
+  UpdateSecurityAlertResponse,
+} from './types';
 
 const { sentry } = global;
 
@@ -32,8 +36,6 @@ export const METHOD_SIGN_TYPED_DATA_V3 = 'eth_signTypedData_v3';
 export const METHOD_SIGN_TYPED_DATA_V4 = 'eth_signTypedData_v4';
 
 const SECURITY_ALERT_RESPONSE_ERROR = {
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   result_type: BlockaidResultType.Errored,
   reason: BlockaidReason.errored,
 };
@@ -253,7 +255,7 @@ async function validateWithController(
 ): Promise<SecurityAlertResponse> {
   try {
     const response = (await ppomController.usePPOM(
-      (ppom: PPOM) => ppom.validateJsonRpc(request),
+      async (ppom: PPOM) => ppom.validateJsonRpc(request),
       chainId,
     )) as SecurityAlertResponse;
 

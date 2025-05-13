@@ -1,15 +1,14 @@
+import type { DeFiPositionsControllerMessenger } from '@metamask/assets-controllers';
+import { DeFiPositionsController } from '@metamask/assets-controllers';
 import { Messenger } from '@metamask/base-controller';
+
+import type { DeFiPositionsControllerInitMessenger } from '../messengers/defi-positions/defi-positions-controller-messenger';
 import {
-  DeFiPositionsControllerMessenger,
-  DeFiPositionsController,
-} from '@metamask/assets-controllers';
-import { buildControllerInitRequestMock } from '../test/utils';
-import { ControllerInitRequest } from '../types';
-import {
-  DeFiPositionsControllerInitMessenger,
   getDeFiPositionsControllerInitMessenger,
   getDeFiPositionsControllerMessenger,
 } from '../messengers/defi-positions/defi-positions-controller-messenger';
+import { buildControllerInitRequestMock } from '../test/utils';
+import type { ControllerInitRequest } from '../types';
 import { DeFiPositionsControllerInit } from './defi-positions-controller-init';
 
 jest.mock('@metamask/assets-controllers');

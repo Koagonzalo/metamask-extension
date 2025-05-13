@@ -1,4 +1,5 @@
-import { MockRequestResponse, SENDER_ADDRESS_MOCK } from './types';
+import type { MockRequestResponse } from './types';
+import { SENDER_ADDRESS_MOCK } from './types';
 
 export const MALFORMED_TRANSACTION_MOCK = {
   data: '0x0323498273498729872340897234087q',

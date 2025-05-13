@@ -1,10 +1,11 @@
 import { strict as assert } from 'assert';
-import { Suite } from 'mocha';
+import type { Suite } from 'mocha';
+
 import { DEFAULT_BTC_ACCOUNT, DEFAULT_BTC_BALANCE } from '../../constants';
 import ActivityListPage from '../../page-objects/pages/home/activity-list';
-import BitcoinSendPage from '../../page-objects/pages/send/bitcoin-send-page';
 import BitcoinHomepage from '../../page-objects/pages/home/bitcoin-homepage';
 import BitcoinReviewTxPage from '../../page-objects/pages/send/bitcoin-review-tx-page';
+import BitcoinSendPage from '../../page-objects/pages/send/bitcoin-send-page';
 import { getTransactionRequest, withBtcAccountSnap } from './common-btc';
 
 // Skipping btc test for now because btc snap is outdated and does not yet allow for new assets fetching logic.

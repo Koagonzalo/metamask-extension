@@ -1,5 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
+
+import { hideDataDeletionErrorModal } from '../../../ducks/app/app';
 import {
   Display,
   FlexDirection,
@@ -26,10 +28,7 @@ import {
   IconSize,
   ButtonSize,
 } from '../../component-library';
-import { hideDataDeletionErrorModal } from '../../../ducks/app/app';
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export default function DataDeletionErrorModal() {
   const t = useI18nContext();
   const dispatch = useDispatch();

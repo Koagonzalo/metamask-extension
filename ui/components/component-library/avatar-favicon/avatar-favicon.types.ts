@@ -1,7 +1,7 @@
-import { BorderColor } from '../../../helpers/constants/design-system';
+import type { BorderColor } from '../../../helpers/constants/design-system';
 import type { AvatarBaseStyleUtilityProps } from '../avatar-base/avatar-base.types';
-import { PolymorphicComponentPropWithRef } from '../box';
-import { IconProps } from '../icon';
+import type { PolymorphicComponentPropWithRef } from '../box';
+import type { IconProps } from '../icon';
 
 export enum AvatarFaviconSize {
   Xs = 'xs',
@@ -44,13 +44,9 @@ export interface AvatarFaviconStyleUtilityProps
   className?: string;
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export type AvatarFaviconProps<C extends React.ElementType> =
   PolymorphicComponentPropWithRef<C, AvatarFaviconStyleUtilityProps>;
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export type AvatarFaviconComponent = <C extends React.ElementType = 'span'>(
   props: AvatarFaviconProps<C>,
 ) => React.ReactElement | null;

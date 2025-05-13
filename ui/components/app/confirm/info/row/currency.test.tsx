@@ -3,10 +3,9 @@ import React from 'react';
 import mockState from '../../../../../../test/data/mock-state.json';
 import { renderWithProvider } from '../../../../../../test/lib/render-helpers';
 import configureStore from '../../../../../store/store';
-
 import { ConfirmInfoRowCurrency } from './currency';
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+// TODO: Replace `any` with type
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const render = (props: Record<string, any> = {}) => {
   const { metamask } = mockState;

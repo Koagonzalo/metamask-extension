@@ -1,27 +1,28 @@
-import { NetworkControllerGetNetworkClientByIdAction } from '@metamask/network-controller';
+import type { AccountsControllerGetSelectedAccountAction } from '@metamask/accounts-controller';
+import type { Messenger } from '@metamask/base-controller';
+import type {
+  GetCallsStatusResult,
+  GetCapabilitiesResult,
+  SendCalls,
+  SendCallsResult,
+} from '@metamask/eth-json-rpc-middleware';
+import { GetCallsStatusCode } from '@metamask/eth-json-rpc-middleware';
+import type { NetworkControllerGetNetworkClientByIdAction } from '@metamask/network-controller';
 import { JsonRpcError, rpcErrors } from '@metamask/rpc-errors';
-import {
+import type {
   IsAtomicBatchSupportedResultEntry,
   Log,
   TransactionController,
   TransactionControllerGetStateAction,
   TransactionMeta,
   TransactionReceipt,
-  TransactionStatus,
   ValidateSecurityRequest,
 } from '@metamask/transaction-controller';
-import { Hex, JsonRpcRequest } from '@metamask/utils';
-import { Messenger } from '@metamask/base-controller';
-import {
-  GetCallsStatusCode,
-  GetCallsStatusResult,
-  GetCapabilitiesResult,
-  SendCalls,
-  SendCallsResult,
-} from '@metamask/eth-json-rpc-middleware';
-import { AccountsControllerGetSelectedAccountAction } from '@metamask/accounts-controller';
-import { generateSecurityAlertId } from '../ppom/ppom-util';
+import { TransactionStatus } from '@metamask/transaction-controller';
+import type { Hex, JsonRpcRequest } from '@metamask/utils';
+
 import { EIP5792ErrorCode } from '../../../../shared/constants/transaction';
+import { generateSecurityAlertId } from '../ppom/ppom-util';
 
 type Actions =
   | AccountsControllerGetSelectedAccountAction
@@ -206,7 +207,7 @@ export async function getCapabilities(
         ? AtomicCapabilityStatus.Supported
         : AtomicCapabilityStatus.Ready;
 
-      acc[chainId as Hex] = {
+      acc[chainId] = {
         atomic: {
           status,
         },

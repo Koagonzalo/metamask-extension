@@ -1,15 +1,15 @@
 import { BrowserRuntimePostMessageStream } from '@metamask/post-message-stream';
 import { ProxySnapExecutor } from '@metamask/snaps-execution-environments';
 import { isObject } from '@metamask/utils';
+
 import {
   OFFSCREEN_LEDGER_INIT_TIMEOUT,
   OffscreenCommunicationEvents,
   OffscreenCommunicationTarget,
 } from '../../shared/constants/offscreen-communication';
-
+import initLattice from './lattice';
 import initLedger from './ledger';
 import initTrezor from './trezor';
-import initLattice from './lattice';
 
 /**
  * Initialize a post message stream with the parent window that is initialized
@@ -68,6 +68,6 @@ init().then(() => {
 
     // This message is being sent from the Offscreen Document to the Service Worker.
     // The Service Worker has no way to query `navigator.webdriver`, so we send it here.
-    webdriverPresent: navigator.webdriver === true,
+    webdriverPresent: navigator.webdriver,
   });
 });

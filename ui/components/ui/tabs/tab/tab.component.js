@@ -1,6 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import PropTypes from 'prop-types';
+import React from 'react';
+
 import {
   BlockSize,
   Display,
@@ -37,16 +38,13 @@ const Tab = (props) => {
       data-testid={dataTestId}
       onClick={(event) => {
         event.preventDefault();
-        if (!disabled) {
-          onClick(tabIndex);
-        }
+        onClick(tabIndex);
       }}
       key={tabKey}
       {...rest}
       className={classnames('tab', className, {
         'tab--single': isSingleTab,
         'tab--active': isActive,
-        'tab--disabled': disabled,
         [activeClassName]: activeClassName && isActive,
         ...rest?.className,
       })}

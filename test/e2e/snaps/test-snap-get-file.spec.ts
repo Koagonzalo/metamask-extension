@@ -1,9 +1,9 @@
-import { TestSnaps } from '../page-objects/pages/test-snaps';
-import { Driver } from '../webdriver/driver';
-import { loginWithoutBalanceValidation } from '../page-objects/flows/login.flow';
 import FixtureBuilder from '../fixture-builder';
 import { withFixtures } from '../helpers';
 import { openTestSnapClickButtonAndInstall } from '../page-objects/flows/install-test-snap.flow';
+import { loginWithoutBalanceValidation } from '../page-objects/flows/login.flow';
+import { TestSnaps } from '../page-objects/pages/test-snaps';
+import type { Driver } from '../webdriver/driver';
 
 const jsonTextValidation = '"foo": "bar"';
 const base64TextFile = '"ewogICJmb28iOiAiYmFyIgp9Cg=="';

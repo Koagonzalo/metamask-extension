@@ -1,12 +1,14 @@
+import { BridgeBackgroundAction } from '@metamask/bridge-controller';
 import { waitFor } from '@testing-library/react';
 import nock from 'nock';
-import mockMetaMaskState from '../data/onboarding-completion-route.json';
-import { integrationTestRender } from '../../lib/render-helpers';
-import * as backgroundConnection from '../../../ui/store/background-connection';
+
 import {
   MetaMetricsEventCategory,
   MetaMetricsEventName,
 } from '../../../shared/constants/metametrics';
+import * as backgroundConnection from '../../../ui/store/background-connection';
+import { integrationTestRender } from '../../lib/render-helpers';
+import mockMetaMaskState from '../data/onboarding-completion-route.json';
 import {
   clickElementById,
   createMockImplementation,
@@ -36,6 +38,7 @@ const setupSubmitRequestToBackgroundMocks = (
 ) => {
   mockedBackgroundConnection.submitRequestToBackground.mockImplementation(
     createMockImplementation({
+      [BridgeBackgroundAction.SET_FEATURE_FLAGS]: undefined,
       ...mockRequests,
     }),
   );
@@ -99,8 +102,6 @@ describe('Wallet Created Events', () => {
           event: MetaMetricsEventName.OnboardingWalletCreationComplete,
           properties: {
             method: mockMetaMaskState.firstTimeFlowType,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             hd_entropy_index: 0,
           },
         }),

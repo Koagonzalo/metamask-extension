@@ -1,4 +1,5 @@
-import { Suite } from 'mocha';
+import type { Suite } from 'mocha';
+
 import BitcoinHomepage from '../../page-objects/pages/home/bitcoin-homepage';
 import TestDapp from '../../page-objects/pages/test-dapp';
 import { withBtcAccountSnap } from './common-btc';

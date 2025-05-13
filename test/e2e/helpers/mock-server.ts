@@ -1,6 +1,7 @@
 import { strict as assert } from 'assert';
-import { Driver } from '../webdriver/driver';
-import { MockedEndpoint } from '../mock-e2e';
+
+import type { MockedEndpoint } from '../mock-e2e';
+import type { Driver } from '../webdriver/driver';
 
 const TIMEOUT_DEFAULT = 10 * 1000; // 10 Seconds
 
@@ -11,7 +12,7 @@ export async function expectMockRequest(
 ) {
   await driver.wait(async () => {
     const isPending = await mockedEndpoint.isPending();
-    return isPending === false;
+    return !isPending;
   }, timeout ?? TIMEOUT_DEFAULT);
 }
 

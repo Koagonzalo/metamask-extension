@@ -1,14 +1,15 @@
 import { Browser } from 'selenium-webdriver';
-import { Driver } from '../../webdriver/driver';
+
+import { E2E_SRP } from '../../default-fixture';
+import { WALLET_PASSWORD } from '../../helpers';
+import type { Driver } from '../../webdriver/driver';
+import OnboardingCompletePage from '../pages/onboarding/onboarding-complete-page';
 import OnboardingMetricsPage from '../pages/onboarding/onboarding-metrics-page';
 import OnboardingPasswordPage from '../pages/onboarding/onboarding-password-page';
-import OnboardingSrpPage from '../pages/onboarding/onboarding-srp-page';
-import StartOnboardingPage from '../pages/onboarding/start-onboarding-page';
-import SecureWalletPage from '../pages/onboarding/secure-wallet-page';
-import OnboardingCompletePage from '../pages/onboarding/onboarding-complete-page';
 import OnboardingPrivacySettingsPage from '../pages/onboarding/onboarding-privacy-settings-page';
-import { WALLET_PASSWORD } from '../../helpers';
-import { E2E_SRP } from '../../default-fixture';
+import OnboardingSrpPage from '../pages/onboarding/onboarding-srp-page';
+import SecureWalletPage from '../pages/onboarding/secure-wallet-page';
+import StartOnboardingPage from '../pages/onboarding/start-onboarding-page';
 
 /**
  * Create new wallet onboarding flow

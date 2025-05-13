@@ -1,5 +1,6 @@
-import type { Hex } from '@metamask/utils';
 import type { DelegationEntry } from '@metamask/delegation-controller';
+import type { Hex } from '@metamask/utils';
+
 import { isHexEqual } from '../../shared/lib/delegation/utils';
 
 type Address = Hex;

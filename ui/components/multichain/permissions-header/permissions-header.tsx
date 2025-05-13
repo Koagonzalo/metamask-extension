@@ -1,5 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+
 import {
   AlignItems,
   BackgroundColor,
@@ -9,6 +10,8 @@ import {
   TextAlign,
   TextVariant,
 } from '../../../helpers/constants/design-system';
+import { getURLHost } from '../../../helpers/utils/util';
+import { useI18nContext } from '../../../hooks/useI18nContext';
 import {
   AvatarFavicon,
   AvatarFaviconSize,
@@ -21,8 +24,6 @@ import {
   Text,
 } from '../../component-library';
 import { Header } from '../pages/page';
-import { getURLHost } from '../../../helpers/utils/util';
-import { useI18nContext } from '../../../hooks/useI18nContext';
 
 export const PermissionsHeader = ({
   securedOrigin,
@@ -43,7 +44,6 @@ export const PermissionsHeader = ({
           iconName={IconName.ArrowLeft}
           className="connections-header__start-accessory"
           color={IconColor.iconDefault}
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           onClick={() => (history as any).goBack()}
           size={ButtonIconSize.Sm}

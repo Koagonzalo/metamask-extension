@@ -1,4 +1,4 @@
-import { Hex } from '@metamask/utils';
+import type { Hex } from '@metamask/utils';
 import React, { memo } from 'react';
 
 import {
@@ -7,11 +7,6 @@ import {
   PRIMARY_TYPES_PERMIT,
 } from '../../../../../../shared/constants/signatures';
 import { isValidHexAddress } from '../../../../../../shared/modules/hexstring-utils';
-
-import { sanitizeString } from '../../../../../helpers/utils/util';
-import { Box } from '../../../../../components/component-library';
-import { BlockSize } from '../../../../../helpers/constants/design-system';
-import { useI18nContext } from '../../../../../hooks/useI18nContext';
 import {
   ConfirmInfoRow,
   ConfirmInfoRowAddress,
@@ -19,6 +14,10 @@ import {
   ConfirmInfoRowText,
   ConfirmInfoRowTextTokenUnits,
 } from '../../../../../components/app/confirm/info/row';
+import { Box } from '../../../../../components/component-library';
+import { BlockSize } from '../../../../../helpers/constants/design-system';
+import { sanitizeString } from '../../../../../helpers/utils/util';
+import { useI18nContext } from '../../../../../hooks/useI18nContext';
 import { useGetTokenStandardAndDetails } from '../../../hooks/useGetTokenStandardAndDetails';
 
 type ValueType = string | Record<string, TreeData> | TreeData[];
@@ -84,8 +83,7 @@ const getTokenContractInDataTree = (
     return undefined;
   }
 
-  const tokenContract = (dataTreeData as Record<string, TreeData>).token
-    ?.value as Hex;
+  const tokenContract = dataTreeData.token?.value as Hex;
   if (!tokenContract || !isValidHexAddress(tokenContract)) {
     return undefined;
   }
@@ -138,15 +136,11 @@ export const DataTree = ({
 };
 
 function isDateField(label: string, primaryType?: PrimaryType) {
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   return (FIELD_DATE_PRIMARY_TYPES[label] || [])?.includes(primaryType || '');
 }
 
 function isTokenUnitsField(label: string, primaryType?: PrimaryType) {
   return (FIELD_TOKEN_UTILS_PRIMARY_TYPES[label] || [])?.includes(
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     primaryType || '',
   );
 }

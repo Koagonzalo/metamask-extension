@@ -1,4 +1,5 @@
-import { NestedTransactionMetadata } from '@metamask/transaction-controller';
+import type { NestedTransactionMetadata } from '@metamask/transaction-controller';
+
 import { isBatchTransaction } from './transactions.utils';
 
 describe('Transactions utils', () => {

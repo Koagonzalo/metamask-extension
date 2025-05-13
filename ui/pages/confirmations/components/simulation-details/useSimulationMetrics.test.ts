@@ -1,29 +1,26 @@
-import { useContext, useEffect, useState } from 'react';
-import {
-  SimulationData,
-  SimulationErrorCode,
-} from '@metamask/transaction-controller';
-import { BigNumber } from 'bignumber.js';
+import type { SimulationData } from '@metamask/transaction-controller';
+import { SimulationErrorCode } from '@metamask/transaction-controller';
 import { renderHook } from '@testing-library/react-hooks';
-import { useTransactionEventFragment } from '../../hooks/useTransactionEventFragment';
-import { TokenStandard } from '../../../../../shared/constants/transaction';
-import {
-  UseDisplayNameResponse,
-  useDisplayNames,
-} from '../../../../hooks/useDisplayName';
+import { BigNumber } from 'bignumber.js';
+import { useContext, useEffect, useState } from 'react';
+
 import {
   MetaMetricsEventCategory,
   MetaMetricsEventName,
 } from '../../../../../shared/constants/metametrics';
-import { BalanceChange } from './types';
+import { TokenStandard } from '../../../../../shared/constants/transaction';
+import type { UseDisplayNameResponse } from '../../../../hooks/useDisplayName';
+import { useDisplayNames } from '../../../../hooks/useDisplayName';
+import { useTransactionEventFragment } from '../../hooks/useTransactionEventFragment';
+import type { BalanceChange } from './types';
+import { useLoadingTime } from './useLoadingTime';
+import type { UseSimulationMetricsProps } from './useSimulationMetrics';
 import {
   AssetType,
   FiatType,
   PetnameType,
-  UseSimulationMetricsProps,
   useSimulationMetrics,
 } from './useSimulationMetrics';
-import { useLoadingTime } from './useLoadingTime';
 
 jest.mock('react-redux', () => ({
   ...jest.requireActual('react-redux'),
@@ -79,11 +76,10 @@ describe('useSimulationMetrics', () => {
   const useLoadingTimeMock = jest.mocked(useLoadingTime);
   const setLoadingCompleteMock = jest.fn();
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+  // TODO: Replace `any` with type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let updateTransactionEventFragmentMock: jest.MockedFunction<any>;
-
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+  // TODO: Replace `any` with type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let trackEventMock: jest.MockedFunction<any>;
 
@@ -95,7 +91,7 @@ describe('useSimulationMetrics', () => {
       balanceChanges?: BalanceChange[];
       simulationData?: SimulationData | undefined;
     },
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+    // TODO: Replace `any` with type
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expected: any,
   ) {
@@ -124,12 +120,12 @@ describe('useSimulationMetrics', () => {
       updateTransactionEventFragment: updateTransactionEventFragmentMock,
     });
 
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+    // TODO: Replace `any` with type
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     useStateMock.mockImplementation(((initialValue: any) => [
       initialValue,
       jest.fn(),
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+      // TODO: Replace `any` with type
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ]) as any);
 
@@ -160,8 +156,6 @@ describe('useSimulationMetrics', () => {
       expect(updateTransactionEventFragmentMock).toHaveBeenCalledWith(
         expect.objectContaining({
           properties: expect.objectContaining({
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             simulation_latency: LOADING_TIME_MOCK,
           }),
         }),
@@ -170,22 +164,33 @@ describe('useSimulationMetrics', () => {
       jest.restoreAllMocks();
     });
 
-    // @ts-expect-error This is missing from the Mocha type definitions
     it.each([
       ['in progress', undefined, 'simulation_in_progress'],
       [
         'reverted',
-        { error: { code: SimulationErrorCode.Reverted } },
+        { error: { code: SimulationErrorCode.Reverted } } as SimulationData,
         'transaction_revert',
       ],
-      ['failed', { error: { message: 'testError' } }, 'failed'],
-      ['no changes', { tokenBalanceChanges: [] }, 'no_balance_change'],
-      ['changes', { tokenBalanceChanges: [{}] }, 'balance_change'],
+      [
+        'failed',
+        { error: { message: 'testError' } } as SimulationData,
+        'failed',
+      ],
+      [
+        'no changes',
+        { tokenBalanceChanges: [] } as SimulationData,
+        'no_balance_change',
+      ],
+      [
+        'changes',
+        { tokenBalanceChanges: [{}] } as SimulationData,
+        'balance_change',
+      ],
     ])(
       'with simulation response if %s',
       (
         _: string,
-        simulationData: Record<string, unknown>,
+        simulationData: SimulationData | undefined,
         simulationResponse: string,
       ) => {
         useDisplayNamesMock.mockReset();
@@ -197,8 +202,6 @@ describe('useSimulationMetrics', () => {
           },
           expect.objectContaining({
             properties: expect.objectContaining({
-              // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-              // eslint-disable-next-line @typescript-eslint/naming-convention
               simulation_response: simulationResponse,
             }),
           }),
@@ -206,7 +209,6 @@ describe('useSimulationMetrics', () => {
       },
     );
 
-    // @ts-expect-error This is missing from the Mocha type definitions
     it.each([
       ['receiving', false, 'simulation_receiving_assets_quantity'],
       ['sending', true, 'simulation_sending_assets_quantity'],
@@ -231,7 +233,6 @@ describe('useSimulationMetrics', () => {
       },
     );
 
-    // @ts-expect-error This is missing from the Mocha type definitions
     it.each([
       [
         'receiving ERC-20',
@@ -317,7 +318,6 @@ describe('useSimulationMetrics', () => {
       },
     );
 
-    // @ts-expect-error This is missing from the Mocha type definitions
     it.each([
       [
         'receiving and available',
@@ -375,7 +375,6 @@ describe('useSimulationMetrics', () => {
       },
     );
 
-    // @ts-expect-error This is missing from the Mocha type definitions
     it.each([
       [
         'receiving and native',
@@ -474,7 +473,6 @@ describe('useSimulationMetrics', () => {
       },
     );
 
-    // @ts-expect-error This is missing from the Mocha type definitions
     it.each([
       ['receiving', false, 'simulation_receiving_assets_total_value'],
       ['sending', true, 'simulation_sending_assets_total_value'],
@@ -521,20 +519,10 @@ describe('useSimulationMetrics', () => {
         category: MetaMetricsEventCategory.Transactions,
         event: MetaMetricsEventName.SimulationIncompleteAssetDisplayed,
         properties: {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           asset_address: ADDRESS_MOCK,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           asset_petname: PetnameType.Unknown,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           asset_symbol: undefined,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           asset_type: AssetType.ERC20,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           fiat_conversion_available: FiatType.Available,
           location: 'confirmation',
         },
@@ -558,20 +546,10 @@ describe('useSimulationMetrics', () => {
         category: MetaMetricsEventCategory.Transactions,
         event: MetaMetricsEventName.SimulationIncompleteAssetDisplayed,
         properties: {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           asset_address: ADDRESS_MOCK,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           asset_petname: PetnameType.Saved,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           asset_symbol: SYMBOL_MOCK,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           asset_type: AssetType.ERC20,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           fiat_conversion_available: FiatType.NotAvailable,
           location: 'confirmation',
         },
@@ -579,7 +557,6 @@ describe('useSimulationMetrics', () => {
     });
   });
 
-  // @ts-expect-error This is missing from the Mocha type definitions
   it.each([
     [
       'simulation disabled',

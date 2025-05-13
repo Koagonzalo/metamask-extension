@@ -1,11 +1,12 @@
-import { MockttpServer } from 'mockttp';
-import { withFixtures } from '../../../helpers';
-import { SMART_CONTRACTS } from '../../../seeder/smart-contracts';
+import type { MockttpServer } from 'mockttp';
+
 import FixtureBuilder from '../../../fixture-builder';
-import Homepage from '../../../page-objects/pages/home/homepage';
-import NFTDetailsPage from '../../../page-objects/pages/nft-details-page';
-import NftListPage from '../../../page-objects/pages/home/nft-list';
+import { withFixtures } from '../../../helpers';
 import { loginWithBalanceValidation } from '../../../page-objects/flows/login.flow';
+import Homepage from '../../../page-objects/pages/home/homepage';
+import NftListPage from '../../../page-objects/pages/home/nft-list';
+import NFTDetailsPage from '../../../page-objects/pages/nft-details-page';
+import { SMART_CONTRACTS } from '../../../seeder/smart-contracts';
 
 async function mockIPFSRequest(mockServer: MockttpServer) {
   return [

@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   LedgerTransportTypes,
   WebHIDConnectedStatuses,
@@ -20,13 +21,13 @@ import { permitSignatureMsg } from '../../../../../../test/data/confirmations/ty
 import mockState from '../../../../../../test/data/mock-state.json';
 import { fireEvent } from '../../../../../../test/jest';
 import { renderWithConfirmContextProvider } from '../../../../../../test/lib/confirmations/render-helpers';
-import { Alert } from '../../../../../ducks/confirm-alerts/confirm-alerts';
+import type { Alert } from '../../../../../ducks/confirm-alerts/confirm-alerts';
 import { Severity } from '../../../../../helpers/constants/design-system';
 import * as Actions from '../../../../../store/actions';
 import configureStore from '../../../../../store/store';
 import * as confirmContext from '../../../context/confirm';
-import { SignatureRequestType } from '../../../types/confirm';
 import { useOriginThrottling } from '../../../hooks/useOriginThrottling';
+import type { SignatureRequestType } from '../../../types/confirm';
 import Footer from './footer';
 
 jest.mock('react-redux', () => ({
@@ -133,17 +134,17 @@ describe('ConfirmFooter', () => {
     const cancelButton = getAllByRole('button')[0];
     const rejectSpy = jest
       .spyOn(Actions, 'rejectPendingApproval')
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+      // TODO: Replace `any` with type
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .mockImplementation(() => ({} as any));
     const updateCustomNonceSpy = jest
       .spyOn(Actions, 'updateCustomNonce')
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+      // TODO: Replace `any` with type
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .mockImplementation(() => ({} as any));
     const setNextNonceSpy = jest
       .spyOn(Actions, 'setNextNonce')
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+      // TODO: Replace `any` with type
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .mockImplementation(() => ({} as any));
     fireEvent.click(cancelButton);
@@ -157,17 +158,17 @@ describe('ConfirmFooter', () => {
     const submitButton = getAllByRole('button')[1];
     const resolveSpy = jest
       .spyOn(Actions, 'resolvePendingApproval')
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+      // TODO: Replace `any` with type
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .mockImplementation(() => ({} as any));
     const updateCustomNonceSpy = jest
       .spyOn(Actions, 'updateCustomNonce')
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+      // TODO: Replace `any` with type
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .mockImplementation(() => ({} as any));
     const setNextNonceSpy = jest
       .spyOn(Actions, 'setNextNonce')
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+      // TODO: Replace `any` with type
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .mockImplementation(() => ({} as any));
     fireEvent.click(submitButton);
@@ -197,8 +198,6 @@ describe('ConfirmFooter', () => {
           metamask: {
             signatureSecurityAlertResponses: {
               [mockSecurityAlertId]: {
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                // eslint-disable-next-line @typescript-eslint/naming-convention
                 result_type: BlockaidResultType.Malicious,
               },
             },

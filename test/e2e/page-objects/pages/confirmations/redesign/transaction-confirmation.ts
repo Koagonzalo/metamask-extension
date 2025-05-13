@@ -1,33 +1,24 @@
 import { strict as assert } from 'assert';
+
 import { tEn } from '../../../../../lib/i18n-helpers';
-import { Driver } from '../../../../webdriver/driver';
-import { RawLocator } from '../../../common';
+import type { Driver } from '../../../../webdriver/driver';
+import type { RawLocator } from '../../../common';
 import Confirmation from './confirmation';
 
 class TransactionConfirmation extends Confirmation {
-  private walletInitiatedHeadingTitle: RawLocator;
+  private readonly walletInitiatedHeadingTitle: RawLocator;
 
-  private dappInitiatedHeadingTitle: RawLocator;
+  private readonly dappInitiatedHeadingTitle: RawLocator;
 
-  private advancedDetailsButton: RawLocator;
+  private readonly advancedDetailsButton: RawLocator;
 
-  private advancedDetailsSection: RawLocator;
+  private readonly advancedDetailsSection: RawLocator;
 
-  private advancedDetailsDataFunction: RawLocator;
+  private readonly advancedDetailsDataFunction: RawLocator;
 
-  private advancedDetailsDataParam: RawLocator;
+  private readonly advancedDetailsDataParam: RawLocator;
 
-  private advancedDetailsHexData: RawLocator;
-
-  private gasFeeFiatText: RawLocator;
-
-  private gasFeeText: RawLocator;
-
-  private gasFeeTokenArrow: RawLocator;
-
-  private gasFeeTokenFeeText: RawLocator;
-
-  private gasFeeTokenPill: RawLocator;
+  private readonly advancedDetailsHexData: RawLocator;
 
   constructor(driver: Driver) {
     super(driver);
@@ -53,67 +44,18 @@ class TransactionConfirmation extends Confirmation {
       '[data-testid="advanced-details-data-param-0"]';
     this.advancedDetailsHexData =
       '[data-testid="advanced-details-transaction-hex"]';
-    this.gasFeeFiatText = '[data-testid="native-currency"]';
-    this.gasFeeText = '[data-testid="first-gas-field"]';
-    this.gasFeeTokenArrow = '[data-testid="selected-gas-fee-token-arrow"]';
-    this.gasFeeTokenFeeText = '[data-testid="gas-fee-token-fee"]';
-    this.gasFeeTokenPill = '[data-testid="selected-gas-fee-token"]';
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_walletInitiatedHeadingTitle() {
     await this.driver.waitForSelector(this.walletInitiatedHeadingTitle);
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_dappInitiatedHeadingTitle() {
     await this.driver.waitForSelector(this.dappInitiatedHeadingTitle);
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  async check_gasFee(amountToken: string) {
-    await this.driver.findElement({
-      css: this.gasFeeText,
-      text: amountToken,
-    });
-  }
-
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  async check_gasFeeFiat(amountFiat: string) {
-    await this.driver.findElement({
-      css: this.gasFeeFiatText,
-      text: amountFiat,
-    });
-  }
-
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  async check_gasFeeSymbol(symbol: string) {
-    await this.driver.waitForSelector({
-      css: this.gasFeeTokenPill,
-      text: symbol,
-    });
-  }
-
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  async check_gasFeeTokenFee(amountFiat: string) {
-    await this.driver.findElement({
-      css: this.gasFeeTokenFeeText,
-      text: amountFiat,
-    });
-  }
-
   async clickAdvancedDetailsButton() {
     await this.driver.clickElement(this.advancedDetailsButton);
-  }
-
-  async clickGasFeeTokenPill() {
-    await this.driver.clickElement(this.gasFeeTokenArrow);
   }
 
   async verifyAdvancedDetailsIsDisplayed(type: string) {

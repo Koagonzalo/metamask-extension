@@ -1,11 +1,24 @@
+import type { Nft } from '@metamask/assets-controllers';
+import { toHex } from '@metamask/controller-utils';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
-import { Nft } from '@metamask/assets-controllers';
-import { toHex } from '@metamask/controller-utils';
-import { getNftImage, getNftImageAlt } from '../../../../../helpers/utils/nfts';
-import { getIpfsGateway } from '../../../../../selectors';
 
+import { isWebUrl } from '../../../../../../app/scripts/lib/util';
+import { getNetworkConfigurationsByChainId } from '../../../../../../shared/modules/selectors/networks';
+import { isEqualCaseInsensitive } from '../../../../../../shared/modules/string-utils';
+import { getAllNfts } from '../../../../../ducks/metamask/metamask';
+import {
+  Display,
+  IconColor,
+  JustifyContent,
+} from '../../../../../helpers/constants/design-system';
+import { ASSET_ROUTE } from '../../../../../helpers/constants/routes';
+import { getNftImage, getNftImageAlt } from '../../../../../helpers/utils/nfts';
+import useFetchNftDetailsFromTokenURI from '../../../../../hooks/useFetchNftDetailsFromTokenURI';
+import useGetAssetImageUrl from '../../../../../hooks/useGetAssetImageUrl';
+import { useI18nContext } from '../../../../../hooks/useI18nContext';
+import { getIpfsGateway } from '../../../../../selectors';
 import {
   Box,
   ButtonIcon,
@@ -15,25 +28,10 @@ import {
 import { NftItem } from '../../../../multichain/nft-item';
 import { Content, Header, Page } from '../../../../multichain/pages/page';
 
-import { getAllNfts } from '../../../../../ducks/metamask/metamask';
-import { isEqualCaseInsensitive } from '../../../../../../shared/modules/string-utils';
-import {
-  Display,
-  IconColor,
-  JustifyContent,
-} from '../../../../../helpers/constants/design-system';
-import { useI18nContext } from '../../../../../hooks/useI18nContext';
-import { ASSET_ROUTE } from '../../../../../helpers/constants/routes';
-import useGetAssetImageUrl from '../../../../../hooks/useGetAssetImageUrl';
-import useFetchNftDetailsFromTokenURI from '../../../../../hooks/useFetchNftDetailsFromTokenURI';
 // TODO: Remove restricted import
 // eslint-disable-next-line import/no-restricted-paths
-import { isWebUrl } from '../../../../../../app/scripts/lib/util';
-import { getNetworkConfigurationsByChainId } from '../../../../../../shared/modules/selectors/networks';
 import { getImageForChainId } from '../../../../../selectors/multichain';
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export default function NftFullImage() {
   const t = useI18nContext();
   const { asset, id } = useParams<{ asset: string; id: string }>();
@@ -72,8 +70,6 @@ export default function NftFullImage() {
   const isIpfsURL = nftSrcUrl?.startsWith('ipfs:');
 
   const isImageHosted =
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     (image && isWebUrl(image)) ||
     (imageFromTokenURI && isWebUrl(imageFromTokenURI));
   const history = useHistory();
@@ -111,8 +107,6 @@ export default function NftFullImage() {
           >
             <Box>
               <NftItem
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-                // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
                 src={isImageHosted ? image || imageFromTokenURI : nftImageURL}
                 alt={nftImageAlt}
                 name={name ?? ''}

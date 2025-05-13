@@ -1,4 +1,6 @@
 import React from 'react';
+
+import SnapAuthorshipHeader from '../../components/app/snaps/snap-authorship-header';
 import {
   AvatarIcon,
   AvatarIconSize,
@@ -19,7 +21,6 @@ import {
   TextColor,
   TextVariant,
 } from '../../helpers/constants/design-system';
-import SnapAuthorshipHeader from '../../components/app/snaps/snap-authorship-header';
 import { useI18nContext } from '../../hooks/useI18nContext';
 
 export type CreateSnapAccountProps = {
@@ -51,7 +52,8 @@ const CreateSnapAccount = ({
         flexDirection={FlexDirection.Column}
         alignItems={AlignItems.center}
         justifyContent={JustifyContent.center}
-        padding={4}
+        paddingLeft={4}
+        paddingRight={4}
         style={{ flexGrow: 1 }}
       >
         <Box
@@ -59,7 +61,7 @@ const CreateSnapAccount = ({
           flexDirection={FlexDirection.Column}
           alignItems={AlignItems.center}
         >
-          <Box paddingBottom={6}>
+          <Box paddingBottom={4}>
             <AvatarIcon
               iconName={IconName.UserCircleAdd}
               size={AvatarIconSize.Xl}
@@ -69,7 +71,6 @@ const CreateSnapAccount = ({
             data-testid="create-snap-account-content-title"
             textAlign={TextAlign.Center}
             variant={TextVariant.headingLg}
-            paddingBottom={2}
           >
             {t('createSnapAccountTitle')}
           </Text>

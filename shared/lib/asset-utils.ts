@@ -1,22 +1,20 @@
 import {
-  CaipAssetType,
+  getNativeAssetForChainId,
+  isNativeAddress,
+} from '@metamask/bridge-controller';
+import { toHex } from '@metamask/controller-utils';
+import { toEvmCaipChainId } from '@metamask/multichain-network-controller';
+import { MultichainNetwork } from '@metamask/multichain-transactions-controller';
+import type { CaipAssetType, CaipChainId, Hex } from '@metamask/utils';
+import {
   parseCaipChainId,
   CaipAssetTypeStruct,
-  CaipChainId,
-  Hex,
   isCaipAssetType,
   isCaipChainId,
   isStrictHexString,
   parseCaipAssetType,
 } from '@metamask/utils';
 
-import { toEvmCaipChainId } from '@metamask/multichain-network-controller';
-import { MultichainNetwork } from '@metamask/multichain-transactions-controller';
-import { toHex } from '@metamask/controller-utils';
-import {
-  getNativeAssetForChainId,
-  isNativeAddress,
-} from '@metamask/bridge-controller';
 import { MINUTE } from '../constants/time';
 import { decimalToPrefixedHex } from '../modules/conversion.utils';
 import fetchWithCache from './fetch-with-cache';
@@ -32,7 +30,7 @@ export const toAssetId = (
     return address;
   }
   if (isNativeAddress(address)) {
-    return getNativeAssetForChainId(chainId)?.assetId as CaipAssetType;
+    return getNativeAssetForChainId(chainId)?.assetId;
   }
   if (chainId === MultichainNetwork.Solana) {
     return CaipAssetTypeStruct.create(`${chainId}/token:${address}`);

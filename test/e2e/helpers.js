@@ -1,30 +1,31 @@
-const path = require('path');
-const { promises: fs, writeFileSync, readFileSync } = require('fs');
 const BigNumber = require('bignumber.js');
-const mockttp = require('mockttp');
 const detectPort = require('detect-port');
+const { promises: fs, writeFileSync, readFileSync } = require('fs');
 const { difference } = require('lodash');
+const mockttp = require('mockttp');
+const path = require('path');
 const WebSocket = require('ws');
+
 const createStaticServer = require('../../development/create-static-server');
-const { setupMocking } = require('./mock-e2e');
-const { Anvil } = require('./seeder/anvil');
-const { Ganache } = require('./seeder/ganache');
-const FixtureServer = require('./fixture-server');
-const PhishingWarningPageServer = require('./phishing-warning-page-server');
-const { buildWebDriver } = require('./webdriver');
-const { PAGES } = require('./webdriver/driver');
-const AnvilSeeder = require('./seeder/anvil-seeder');
-const GanacheSeeder = require('./seeder/ganache-seeder');
+const {
+  getServerMochaToBackground,
+} = require('./background-socket/server-mocha-to-background');
 const { Bundler } = require('./bundler');
-const { SMART_CONTRACTS } = require('./seeder/smart-contracts');
-const { setManifestFlags } = require('./set-manifest-flags');
 const {
   DEFAULT_LOCAL_NODE_ETH_BALANCE_DEC,
   ERC_4337_ACCOUNT,
 } = require('./constants');
-const {
-  getServerMochaToBackground,
-} = require('./background-socket/server-mocha-to-background');
+const FixtureServer = require('./fixture-server');
+const { setupMocking } = require('./mock-e2e');
+const PhishingWarningPageServer = require('./phishing-warning-page-server');
+const { Anvil } = require('./seeder/anvil');
+const AnvilSeeder = require('./seeder/anvil-seeder');
+const { Ganache } = require('./seeder/ganache');
+const GanacheSeeder = require('./seeder/ganache-seeder');
+const { SMART_CONTRACTS } = require('./seeder/smart-contracts');
+const { setManifestFlags } = require('./set-manifest-flags');
+const { buildWebDriver } = require('./webdriver');
+const { PAGES } = require('./webdriver/driver');
 
 const tinyDelayMs = 200;
 const regularDelayMs = tinyDelayMs * 2;
@@ -544,7 +545,7 @@ const PRIVATE_KEY_TWO =
 const ACCOUNT_1 = '0x5cfe73b6021e818b776b421b1c4db2474086a7e1';
 const ACCOUNT_2 = '0x09781764c08de8ca82e156bbf156a3ca217c7950';
 
-const defaultOptionsForType2Transactions = {
+const defaultGanacheOptionsForType2Transactions = {
   // EVM version that supports type 2 transactions (EIP1559)
   hardfork: 'london',
 };
@@ -941,7 +942,7 @@ module.exports = {
   switchToOrOpenDapp,
   connectToDapp,
   multipleGanacheOptions,
-  defaultOptionsForType2Transactions,
+  defaultGanacheOptionsForType2Transactions,
   sendTransaction,
   sendScreenToConfirmScreen,
   unlockWallet,

@@ -1,14 +1,14 @@
-import { NetworkController } from '@metamask/network-controller';
-import { JsonRpcParams, jsonrpc2, Hex } from '@metamask/utils';
+import type { NetworkController } from '@metamask/network-controller';
+import type { JsonRpcParams, Hex } from '@metamask/utils';
+import { jsonrpc2 } from '@metamask/utils';
+
 import {
   EXPERIENCES_TYPE,
   FIRST_PARTY_CONTRACT_NAMES,
 } from '../../../../shared/constants/first-party-contracts';
 import { mockNetworkState } from '../../../../test/stub/networks';
-import {
-  createTxVerificationMiddleware,
-  TxParams,
-} from './tx-verification-middleware';
+import type { TxParams } from './tx-verification-middleware';
+import { createTxVerificationMiddleware } from './tx-verification-middleware';
 
 const getMockNetworkController = (chainId: `0x${string}` = '0x1') =>
   ({ state: mockNetworkState({ chainId }) } as NetworkController);
@@ -53,7 +53,6 @@ describe('tx verification middleware', () => {
     expect(end).not.toHaveBeenCalled();
   });
 
-  // @ts-expect-error Our test types are broken
   it.each([
     ['null', null],
     ['string', 'foo'],
@@ -75,29 +74,29 @@ describe('tx verification middleware', () => {
       'non-"0x"-prefixed "chainId"',
       [{ data: 'data', from: 'from', to: 'to', value: 'value', chainId: '1' }],
     ],
-  ])(
-    'ignores invalid params: %s',
-    (_: string, invalidParams: JsonRpcParams) => {
-      const middleware = createTxVerificationMiddleware(
-        getMockNetworkController(),
-        mockTrustedSigners,
-      );
+  ])('ignores invalid params: %s', (_: string, invalidParams) => {
+    const middleware = createTxVerificationMiddleware(
+      getMockNetworkController(),
+      mockTrustedSigners,
+    );
 
-      const { req, res, next, end } = getMiddlewareParams(
-        'eth_sendTransaction',
-        invalidParams,
-      );
-      middleware(req, res, next, end);
+    const { req, res, next, end } = getMiddlewareParams(
+      'eth_sendTransaction',
+      invalidParams as JsonRpcParams,
+    );
+    middleware(req, res, next, end);
 
-      expect(next).toHaveBeenCalledTimes(1);
-      expect(end).not.toHaveBeenCalled();
-    },
-  );
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(end).not.toHaveBeenCalled();
+  });
 
-  // @ts-expect-error Our test types are broken
-  it.each(Object.keys(FIRST_PARTY_CONTRACT_NAMES['MetaMask Bridge']))(
+  it.each(
+    Object.keys(
+      FIRST_PARTY_CONTRACT_NAMES[EXPERIENCES_TYPE.METAMASK_BRIDGE],
+    ) as Hex[],
+  )(
     'ignores transactions that are not addressed to the bridge contract for chain %s',
-    (chainId: `0x${string}`) => {
+    (chainId) => {
       const middleware = createTxVerificationMiddleware(
         getMockNetworkController(),
         mockTrustedSigners,
@@ -114,10 +113,9 @@ describe('tx verification middleware', () => {
     },
   );
 
-  // @ts-expect-error Our test types are broken
-  it.each(['0x11111', '0x111', '0x222222'])(
+  it.each(['0x11111', '0x111', '0x222222'] as Hex[])(
     'ignores transactions that do not have a bridge contract deployed for chain %s',
-    (chainId: `0x${string}`) => {
+    (chainId) => {
       const middleware = createTxVerificationMiddleware(
         getMockNetworkController(),
         mockTrustedSigners,

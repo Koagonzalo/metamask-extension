@@ -1,19 +1,20 @@
-import { Mockttp } from 'mockttp';
 import { USER_STORAGE_FEATURE_NAMES } from '@metamask/profile-sync-controller/user-storage';
-import { withFixtures } from '../../helpers';
+import type { Mockttp } from 'mockttp';
+
 import FixtureBuilder from '../../fixture-builder';
-import { mockIdentityServices } from '../identity/mocks';
+import { withFixtures } from '../../helpers';
+import { UserStorageMockttpController } from '../../helpers/identity/user-storage/userStorageMockttpController';
 import HeaderNavbar from '../../page-objects/pages/header-navbar';
 import HomePage from '../../page-objects/pages/home/homepage';
-import { completeOnboardFlowIdentity } from '../identity/flows';
-import { UserStorageMockttpController } from '../../helpers/identity/user-storage/userStorageMockttpController';
+import NotificationsListPage from '../../page-objects/pages/notifications-list-page';
+import NotificationsSettingsPage from '../../page-objects/pages/settings/notifications-settings-page';
+import SettingsPage from '../../page-objects/pages/settings/settings-page';
 import {
   getAccountsSyncMockResponse,
   accountsToMockForAccountsSync as unencryptedMockAccounts,
 } from '../identity/account-syncing/mock-data';
-import NotificationsListPage from '../../page-objects/pages/notifications-list-page';
-import NotificationsSettingsPage from '../../page-objects/pages/settings/notifications-settings-page';
-import SettingsPage from '../../page-objects/pages/settings/settings-page';
+import { completeOnboardFlowIdentity } from '../identity/flows';
+import { mockIdentityServices } from '../identity/mocks';
 import { mockNotificationServices } from './mocks';
 
 describe('Enable Notifications - With Accounts Syncing On', function () {

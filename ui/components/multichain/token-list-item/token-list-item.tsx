@@ -1,9 +1,22 @@
+import { getNativeTokenAddress } from '@metamask/assets-controllers';
+import { type Hex, isStrictHexString } from '@metamask/utils';
+import classnames from 'classnames';
 import React, { useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import classnames from 'classnames';
-import { getNativeTokenAddress } from '@metamask/assets-controllers';
-import { type Hex, isStrictHexString } from '@metamask/utils';
+
+import { NETWORK_TO_SHORT_NETWORK_NAME_MAP } from '../../../../shared/constants/bridge';
+import {
+  MetaMetricsEventCategory,
+  MetaMetricsEventName,
+} from '../../../../shared/constants/metametrics';
+import {
+  CURRENCY_SYMBOLS,
+  NON_EVM_CURRENCY_SYMBOLS,
+} from '../../../../shared/constants/network';
+import { hexToDecimal } from '../../../../shared/modules/conversion.utils';
+import { getNetworkConfigurationsByChainId } from '../../../../shared/modules/selectors/networks';
+import { MetaMetricsContext } from '../../../contexts/metametrics';
 import {
   BackgroundColor,
   BlockSize,
@@ -16,6 +29,13 @@ import {
   TextColor,
   TextVariant,
 } from '../../../helpers/constants/design-system';
+import { useI18nContext } from '../../../hooks/useI18nContext';
+import { NETWORKS_ROUTE } from '../../../helpers/constants/routes';
+import { setEditedNetwork } from '../../../store/actions';
+import type { SafeChain } from '../../../pages/settings/networks-tab/networks-form/use-safe-chains';
+import { useSafeChains } from '../../../pages/settings/networks-tab/networks-form/use-safe-chains';
+import { getMarketData, getCurrencyRates } from '../../../selectors';
+import { getMultichainIsEvm } from '../../../selectors/multichain';
 import {
   AvatarNetwork,
   AvatarNetworkSize,
@@ -36,28 +56,7 @@ import {
   SensitiveTextLength,
   Text,
 } from '../../component-library';
-import { getMarketData, getCurrencyRates } from '../../../selectors';
-import { getMultichainIsEvm } from '../../../selectors/multichain';
 import Tooltip from '../../ui/tooltip';
-import { useI18nContext } from '../../../hooks/useI18nContext';
-import { MetaMetricsContext } from '../../../contexts/metametrics';
-import {
-  MetaMetricsEventCategory,
-  MetaMetricsEventName,
-} from '../../../../shared/constants/metametrics';
-import {
-  CURRENCY_SYMBOLS,
-  NON_EVM_CURRENCY_SYMBOLS,
-} from '../../../../shared/constants/network';
-import { hexToDecimal } from '../../../../shared/modules/conversion.utils';
-import { NETWORKS_ROUTE } from '../../../helpers/constants/routes';
-import { setEditedNetwork } from '../../../store/actions';
-import {
-  SafeChain,
-  useSafeChains,
-} from '../../../pages/settings/networks-tab/networks-form/use-safe-chains';
-import { NETWORK_TO_SHORT_NETWORK_NAME_MAP } from '../../../../shared/constants/bridge';
-import { getNetworkConfigurationsByChainId } from '../../../../shared/modules/selectors/networks';
 import { PercentageChange } from './price/percentage-change/percentage-change';
 import { StakeableLink } from './stakeable-link';
 
@@ -167,8 +166,6 @@ export const TokenListItemComponent = ({
 
   return (
     <Box
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       className={classnames('multichain-token-list-item', className || {})}
       display={Display.Flex}
       flexDirection={FlexDirection.Row}
@@ -195,7 +192,7 @@ export const TokenListItemComponent = ({
         {...(onClick && {
           as: 'a',
           href: '#',
-          onClick: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+          onClick: (e: React.MouseEvent<HTMLAnchorElement>) => {
             e.preventDefault();
 
             if (showScamWarningModal) {
@@ -209,11 +206,7 @@ export const TokenListItemComponent = ({
               properties: {
                 location: 'Home',
                 // FIXME: This might not be a number for non-EVM accounts
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                // eslint-disable-next-line @typescript-eslint/naming-convention
                 chain_id: chainId,
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                // eslint-disable-next-line @typescript-eslint/naming-convention
                 token_symbol: tokenSymbol,
               },
             });
@@ -225,8 +218,6 @@ export const TokenListItemComponent = ({
             <AvatarNetwork
               size={AvatarNetworkSize.Xs}
               name={allNetworks?.[chainId as Hex]?.name}
-              // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
               src={tokenChainImage || undefined}
               backgroundColor={BackgroundColor.backgroundDefault}
               borderWidth={2}
@@ -286,9 +277,7 @@ export const TokenListItemComponent = ({
             {showScamWarning ? (
               <ButtonIcon
                 iconName={IconName.Danger}
-                onClick={(
-                  e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-                ) => {
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                   e.preventDefault();
                   e.stopPropagation();
                   setShowScamWarningModal(true);
@@ -381,8 +370,6 @@ export const TokenListItemComponent = ({
             <ModalBody marginTop={4} marginBottom={4}>
               {t('nativeTokenScamWarningDescription', [
                 tokenSymbol,
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-                // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
                 safeChainDetails?.nativeCurrency?.symbol ||
                   t('nativeTokenScamWarningDescriptionExpectedTokenFallback'), // never render "undefined" string value
               ])}

@@ -1,4 +1,5 @@
-import { Suite } from 'mocha';
+import type { Suite } from 'mocha';
+
 import { logInWithBalanceValidation, withFixtures } from '../../helpers';
 import { BridgePage, getBridgeFixtures } from './bridge-test-utils';
 

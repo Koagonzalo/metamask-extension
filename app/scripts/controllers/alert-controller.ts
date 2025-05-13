@@ -1,13 +1,14 @@
-import {
+import type {
   AccountsControllerGetSelectedAccountAction,
   AccountsControllerSelectedAccountChangeEvent,
 } from '@metamask/accounts-controller';
-import {
-  BaseController,
+import type {
   ControllerGetStateAction,
   ControllerStateChangeEvent,
   RestrictedMessenger,
 } from '@metamask/base-controller';
+import { BaseController } from '@metamask/base-controller';
+
 import {
   TOGGLEABLE_ALERT_TYPES,
   Web3ShimUsageAlertStates,

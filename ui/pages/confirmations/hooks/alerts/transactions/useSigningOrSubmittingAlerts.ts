@@ -1,13 +1,13 @@
-import { TransactionMeta } from '@metamask/transaction-controller';
+import type { TransactionMeta } from '@metamask/transaction-controller';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
-import { getApprovedAndSignedTransactions } from '../../../../../selectors';
+import { isCorrectDeveloperTransactionType } from '../../../../../../shared/lib/confirmation.utils';
+import type { Alert } from '../../../../../ducks/confirm-alerts/confirm-alerts';
 import { Severity } from '../../../../../helpers/constants/design-system';
 import { useI18nContext } from '../../../../../hooks/useI18nContext';
-import { Alert } from '../../../../../ducks/confirm-alerts/confirm-alerts';
+import { getApprovedAndSignedTransactions } from '../../../../../selectors';
 import { useConfirmContext } from '../../../context/confirm';
-import { isCorrectDeveloperTransactionType } from '../../../../../../shared/lib/confirmation.utils';
 
 export function useSigningOrSubmittingAlerts(): Alert[] {
   const t = useI18nContext();

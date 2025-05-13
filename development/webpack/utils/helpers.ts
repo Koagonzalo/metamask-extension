@@ -1,7 +1,7 @@
 import { readdirSync } from 'node:fs';
 import { parse, join, relative, sep } from 'node:path';
-import type { Chunk, EntryObject, Stats } from 'webpack';
 import type TerserPluginType from 'terser-webpack-plugin';
+import type { Chunk, EntryObject, Stats } from 'webpack';
 
 export type Manifest = chrome.runtime.Manifest;
 export type ManifestV2 = chrome.runtime.ManifestV2;
@@ -12,8 +12,6 @@ export type ManifestV3 = chrome.runtime.ManifestV3;
 // See: https://github.com/MetaMask/metamask-extension/issues/22450
 // TODO: remove this variable when HMR is ready. The env var is for tests and
 // must also be removed everywhere.
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const __HMR_READY__ = Boolean(process.env.__HMR_READY__) || false;
 
 /**

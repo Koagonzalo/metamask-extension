@@ -1,5 +1,6 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
+
 import { AddressListItem } from '../../../multichain';
 
 export default function RecipientGroup({ items, onSelect }) {
@@ -7,13 +8,12 @@ export default function RecipientGroup({ items, onSelect }) {
     return null;
   }
 
-  return items.map(({ address, name, isDuplicate, chainId }) => (
+  return items.map(({ address, name, isDuplicate }) => (
     <AddressListItem
       address={address}
       label={name}
       onClick={() => onSelect(address, name)}
       key={address}
-      chainId={chainId}
       isDuplicate={isDuplicate}
     />
   ));

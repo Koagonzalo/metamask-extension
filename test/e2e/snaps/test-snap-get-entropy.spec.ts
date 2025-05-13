@@ -1,11 +1,12 @@
-import { Suite } from 'mocha';
-import { Driver } from '../webdriver/driver';
-import { withFixtures } from '../helpers';
+import type { Suite } from 'mocha';
+
 import FixtureBuilder from '../fixture-builder';
-import { loginWithoutBalanceValidation } from '../page-objects/flows/login.flow';
-import { TestSnaps } from '../page-objects/pages/test-snaps';
-import { switchAndApproveDialogSwitchToTestSnap } from '../page-objects/flows/snap-permission.flow';
+import { withFixtures } from '../helpers';
 import { openTestSnapClickButtonAndInstall } from '../page-objects/flows/install-test-snap.flow';
+import { loginWithoutBalanceValidation } from '../page-objects/flows/login.flow';
+import { switchAndApproveDialogSwitchToTestSnap } from '../page-objects/flows/snap-permission.flow';
+import { TestSnaps } from '../page-objects/pages/test-snaps';
+import type { Driver } from '../webdriver/driver';
 
 const publicKeyGenerated =
   '"0x9341785782b512c86235612365f1076b16731ed9473beb4d0804c30b7fcc3a055aa7103b02dc64014d923220712dfbef023ddcf6327b313ea2dfd4d83dc5a53e1c5e7f4e10bce49830eded302294054df8a7a46e5b6cb3e50eec564ecba17941"';
@@ -30,6 +31,7 @@ describe('Test Snap getEntropy', function (this: Suite) {
         await openTestSnapClickButtonAndInstall(
           driver,
           'connectGetEntropyButton',
+          false,
         );
         await testSnaps.fillMessage('entropyMessageInput', '1234');
         await testSnaps.clickButton('signEntropyMessageButton');

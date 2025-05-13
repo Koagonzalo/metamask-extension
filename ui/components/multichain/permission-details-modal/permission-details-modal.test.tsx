@@ -1,11 +1,12 @@
+import { EthAccountType, EthMethod, EthScope } from '@metamask/keyring-api';
 import React from 'react';
 import configureStore from 'redux-mock-store';
-import { EthAccountType, EthMethod, EthScope } from '@metamask/keyring-api';
+
+import { PermissionDetailsModal } from '.';
+import { ETH_EOA_METHODS } from '../../../../shared/constants/eth-methods';
+import { CHAIN_IDS } from '../../../../shared/constants/network';
 import { fireEvent, renderWithProvider } from '../../../../test/jest';
 import { mockNetworkState } from '../../../../test/stub/networks';
-import { CHAIN_IDS } from '../../../../shared/constants/network';
-import { ETH_EOA_METHODS } from '../../../../shared/constants/eth-methods';
-import { PermissionDetailsModal } from '.';
 
 describe('PermissionDetailsModal', () => {
   const mockState = {
@@ -105,8 +106,6 @@ describe('PermissionDetailsModal', () => {
       },
       permissionHistory: {
         'https://remix.ethereum.org': {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           eth_accounts: {
             accounts: {
               '0x7250739de134d33ec7ab1ee592711e15098c9d2d': 1586359844192,

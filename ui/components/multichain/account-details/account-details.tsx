@@ -1,16 +1,20 @@
+import type {
+  KeyringMetadata,
+  KeyringObject,
+} from '@metamask/keyring-controller';
+import { KeyringTypes } from '@metamask/keyring-controller';
 import PropTypes from 'prop-types';
 import React, { useCallback, useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  KeyringMetadata,
-  KeyringObject,
-  KeyringTypes,
-} from '@metamask/keyring-controller';
+
+import { AttemptExportState } from '../../../../shared/constants/accounts';
 import {
   MetaMetricsEventCategory,
   MetaMetricsEventKeyType,
   MetaMetricsEventName,
 } from '../../../../shared/constants/metametrics';
+import { isMultichainWalletSnap } from '../../../../shared/lib/accounts';
+import { findKeyringId } from '../../../../shared/lib/keyring';
 import { MetaMetricsContext } from '../../../contexts/metametrics';
 import {
   AlignItems,
@@ -18,6 +22,7 @@ import {
   FlexDirection,
   TextVariant,
 } from '../../../helpers/constants/design-system';
+import { isAbleToRevealSrp } from '../../../helpers/utils/util';
 import { useI18nContext } from '../../../hooks/useI18nContext';
 import {
   getHDEntropyIndex,
@@ -33,6 +38,7 @@ import {
   setAccountDetailsAddress,
 } from '../../../store/actions';
 import HoldToRevealModal from '../../app/modals/hold-to-reveal-modal/hold-to-reveal-modal';
+import SRPQuiz from '../../app/srp-quiz-modal';
 import {
   AvatarAccount,
   AvatarAccountSize,
@@ -46,12 +52,6 @@ import {
   ModalBody,
 } from '../../component-library';
 import { AddressCopyButton } from '../address-copy-button';
-
-import SRPQuiz from '../../app/srp-quiz-modal';
-import { findKeyringId } from '../../../../shared/lib/keyring';
-import { isAbleToRevealSrp } from '../../../helpers/utils/util';
-import { isMultichainWalletSnap } from '../../../../shared/lib/accounts';
-import { AttemptExportState } from '../../../../shared/constants/accounts';
 import { AccountDetailsAuthenticate } from './account-details-authenticate';
 import { AccountDetailsDisplay } from './account-details-display';
 import { AccountDetailsKey } from './account-details-key';
@@ -166,6 +166,7 @@ export const AccountDetails = ({ address }: AccountDetailsProps) => {
                   }
                   setAttemptingExport(attemptExportMode);
                 }}
+                onClose={onClose}
               />
             )}
             {attemptingExport === AttemptExportState.PrivateKey && (
@@ -213,11 +214,7 @@ export const AccountDetails = ({ address }: AccountDetailsProps) => {
             category: MetaMetricsEventCategory.Keys,
             event: MetaMetricsEventName.KeyExportCanceled,
             properties: {
-              // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-              // eslint-disable-next-line @typescript-eslint/naming-convention
               key_type: MetaMetricsEventKeyType.Pkey,
-              // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-              // eslint-disable-next-line @typescript-eslint/naming-convention
               hd_entropy_index: hdEntropyIndex,
             },
           });

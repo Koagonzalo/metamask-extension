@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
 import classnames from 'classnames';
+import React, { useState, useEffect } from 'react';
+
 import {
   Display,
   AlignItems,
@@ -9,14 +10,16 @@ import {
   BorderColor,
   BorderRadius,
 } from '../../../helpers/constants/design-system';
+import type { AvatarBaseProps } from '../avatar-base';
+import { AvatarBase } from '../avatar-base';
 import type { PolymorphicRef } from '../box';
-import { AvatarBase, AvatarBaseProps } from '../avatar-base';
-import type { AvatarNetworkComponent } from './avatar-network.types';
-import { AvatarNetworkProps, AvatarNetworkSize } from './avatar-network.types';
+import type {
+  AvatarNetworkComponent,
+  AvatarNetworkProps,
+} from './avatar-network.types';
+import { AvatarNetworkSize } from './avatar-network.types';
 
 export const AvatarNetwork: AvatarNetworkComponent = React.forwardRef(
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   <C extends React.ElementType = 'div'>(
     {
       size = AvatarNetworkSize.Md,

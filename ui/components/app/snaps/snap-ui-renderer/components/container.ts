@@ -1,12 +1,13 @@
-import { ContainerElement, JSXElement } from '@metamask/snaps-sdk/jsx';
+import type { ContainerElement, JSXElement } from '@metamask/snaps-sdk/jsx';
 import { getJsxChildren } from '@metamask/snaps-utils';
-import { mapToTemplate } from '../utils';
+
 import {
   Display,
   FlexDirection,
 } from '../../../../../helpers/constants/design-system';
-import { UIComponentFactory } from './types';
+import { mapToTemplate } from '../utils';
 import { DEFAULT_FOOTER } from './footer';
+import type { UIComponentFactory } from './types';
 
 export const container: UIComponentFactory<ContainerElement> = ({
   element,
@@ -57,7 +58,7 @@ export const container: UIComponentFactory<ContainerElement> = ({
       ...DEFAULT_FOOTER,
       props: {
         ...DEFAULT_FOOTER.props,
-        className: 'snap-ui-renderer__footer snap-ui-renderer__footer-centered',
+        className: 'snap-ui-renderer__footer-centered',
       },
       children: {
         element: 'SnapUIFooterButton',

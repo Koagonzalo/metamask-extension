@@ -1,9 +1,11 @@
 import React from 'react';
-import { Severity } from '../../../../helpers/constants/design-system';
+
 import { SecurityProvider } from '../../../../../shared/constants/security-provider';
-import { Text } from '../../../component-library';
 import { renderWithProvider } from '../../../../../test/lib/render-helpers';
-import GeneralAlert, { GeneralAlertProps } from './general-alert';
+import { Severity } from '../../../../helpers/constants/design-system';
+import { Text } from '../../../component-library';
+import type { GeneralAlertProps } from './general-alert';
+import GeneralAlert from './general-alert';
 
 describe('GeneralAlert', () => {
   const mockProps: GeneralAlertProps = {

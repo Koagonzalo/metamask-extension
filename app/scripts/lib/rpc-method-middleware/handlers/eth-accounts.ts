@@ -7,8 +7,9 @@ import type {
   JsonRpcParams,
   PendingJsonRpcResponse,
 } from '@metamask/utils';
+
 import { MESSAGE_TYPE } from '../../../../../shared/constants/app';
-import { HandlerWrapper } from './types';
+import type { HandlerWrapper } from './types';
 
 type EthAccountsHandlerOptions = {
   getAccounts: () => string[];

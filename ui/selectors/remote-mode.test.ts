@@ -1,12 +1,13 @@
-import { FeatureFlags } from '@metamask/remote-feature-flag-controller';
-import type { Json } from '@metamask/utils';
 import type { DelegationEntry } from '@metamask/delegation-controller';
+import type { FeatureFlags } from '@metamask/remote-feature-flag-controller';
+import type { Json } from '@metamask/utils';
+
+import type { RemoteModeState } from './remote-mode';
 import {
   getIsRemoteModeEnabled,
   getEIP7702ContractAddresses,
   getRemoteModeConfig,
   getRemoteModeDelegationEntries,
-  RemoteModeState,
 } from './remote-mode';
 
 function getMockState(vaultRemoteMode?: boolean): RemoteModeState {

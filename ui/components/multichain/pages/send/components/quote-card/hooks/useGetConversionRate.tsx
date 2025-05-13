@@ -1,14 +1,15 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
+
+import { AssetType } from '../../../../../../../../shared/constants/transaction';
+import { calcTokenAmount } from '../../../../../../../../shared/lib/transactions-controller-utils';
+import { Numeric } from '../../../../../../../../shared/modules/Numeric';
+import { getNativeCurrency } from '../../../../../../../ducks/metamask/metamask';
 import {
   getBestQuote,
   getCurrentDraftTransaction,
 } from '../../../../../../../ducks/send';
-import { AssetType } from '../../../../../../../../shared/constants/transaction';
-import { calcTokenAmount } from '../../../../../../../../shared/lib/transactions-controller-utils';
-import { Numeric } from '../../../../../../../../shared/modules/Numeric';
-import { Quote } from '../../../../../../../ducks/send/swap-and-send-utils';
-import { getNativeCurrency } from '../../../../../../../ducks/metamask/metamask';
+import type { Quote } from '../../../../../../../ducks/send/swap-and-send-utils';
 
 const NATIVE_CURRENCY_DECIMALS = 18;
 
@@ -32,14 +33,10 @@ export default function useGetConversionRate() {
     if (bestQuote && sendAsset && receiveAsset) {
       const primaryTokenAmount = calcTokenAmount(
         bestQuote.sourceAmount,
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         sendAsset.details?.decimals || NATIVE_CURRENCY_DECIMALS,
       );
       const secondaryTokenAmount = calcTokenAmount(
         bestQuote.destinationAmount,
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         receiveAsset.details?.decimals || NATIVE_CURRENCY_DECIMALS,
       );
 

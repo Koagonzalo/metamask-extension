@@ -1,38 +1,16 @@
 import React, { useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+
 // eslint-disable-next-line import/no-restricted-paths
 import { getPlatform } from '../../../../app/scripts/lib/util';
-import {
-  Display,
-  FlexDirection,
-  TextVariant,
-  FontWeight,
-  TextAlign,
-  TextColor,
-  IconColor,
-  BlockSize,
-} from '../../../helpers/constants/design-system';
-import { useI18nContext } from '../../../hooks/useI18nContext';
-import {
-  setParticipateInMetaMetrics,
-  setDataCollectionForMarketing,
-} from '../../../store/actions';
-import {
-  getDataCollectionForMarketing,
-  getFirstTimeFlowType,
-  getFirstTimeFlowTypeRouteAfterMetaMetricsOptIn,
-} from '../../../selectors';
-
+import { PLATFORM_FIREFOX } from '../../../../shared/constants/app';
 import {
   MetaMetricsEventAccountType,
   MetaMetricsEventCategory,
   MetaMetricsEventName,
 } from '../../../../shared/constants/metametrics';
-import { PLATFORM_FIREFOX } from '../../../../shared/constants/app';
-import { ONBOARDING_WELCOME_ROUTE } from '../../../helpers/constants/routes';
-
-import { MetaMetricsContext } from '../../../contexts/metametrics';
+import { FirstTimeFlowType } from '../../../../shared/constants/onboarding';
 import {
   Box,
   Checkbox,
@@ -44,8 +22,28 @@ import {
   ButtonVariant,
   ButtonSize,
 } from '../../../components/component-library';
-
-import { FirstTimeFlowType } from '../../../../shared/constants/onboarding';
+import { MetaMetricsContext } from '../../../contexts/metametrics';
+import {
+  Display,
+  FlexDirection,
+  TextVariant,
+  FontWeight,
+  TextAlign,
+  TextColor,
+  IconColor,
+  BlockSize,
+} from '../../../helpers/constants/design-system';
+import { ONBOARDING_WELCOME_ROUTE } from '../../../helpers/constants/routes';
+import { useI18nContext } from '../../../hooks/useI18nContext';
+import {
+  getDataCollectionForMarketing,
+  getFirstTimeFlowType,
+  getFirstTimeFlowTypeRouteAfterMetaMetricsOptIn,
+} from '../../../selectors';
+import {
+  setParticipateInMetaMetrics,
+  setDataCollectionForMarketing,
+} from '../../../store/actions';
 
 const isFirefox = getPlatform() === PLATFORM_FIREFOX;
 

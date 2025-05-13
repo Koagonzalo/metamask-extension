@@ -1,20 +1,21 @@
 /**
  * @jest-environment node
  */
-import { Messenger } from '@metamask/base-controller';
 import { AccountsController } from '@metamask/accounts-controller';
-import { Hex } from '@metamask/utils';
-import { KeyringControllerStateChangeEvent } from '@metamask/keyring-controller';
-import type { MultichainNetworkControllerNetworkDidChangeEvent } from '@metamask/multichain-network-controller';
-import { SnapControllerStateChangeEvent } from '@metamask/snaps-controllers';
-import {
+import { Messenger } from '@metamask/base-controller';
+import type {
   SnapKeyringAccountAssetListUpdatedEvent,
   SnapKeyringAccountBalancesUpdatedEvent,
   SnapKeyringAccountTransactionsUpdatedEvent,
 } from '@metamask/eth-snap-keyring';
+import type { KeyringControllerStateChangeEvent } from '@metamask/keyring-controller';
+import type { MultichainNetworkControllerNetworkDidChangeEvent } from '@metamask/multichain-network-controller';
+import type { SnapControllerStateChangeEvent } from '@metamask/snaps-controllers';
+import type { Hex } from '@metamask/utils';
+
 import { CHAIN_IDS } from '../../../shared/constants/network';
-import { mockNetworkState } from '../../../test/stub/networks';
 import { ThemeType } from '../../../shared/constants/preferences';
+import { mockNetworkState } from '../../../test/stub/networks';
 import type {
   AllowedActions,
   AllowedEvents,

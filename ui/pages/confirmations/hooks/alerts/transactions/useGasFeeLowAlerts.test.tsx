@@ -1,17 +1,18 @@
-import React, { ReactChildren } from 'react';
 import { ApprovalType } from '@metamask/controller-utils';
-import { TransactionMeta } from '@metamask/transaction-controller';
+import type { TransactionMeta } from '@metamask/transaction-controller';
+import type { ReactChildren } from 'react';
+import React from 'react';
 
 import { PriorityLevels } from '../../../../../../shared/constants/gas';
-import { getMockConfirmState } from '../../../../../../test/data/confirmations/helper';
 import { genUnapprovedContractInteractionConfirmation } from '../../../../../../test/data/confirmations/contract-interaction';
+import { getMockConfirmState } from '../../../../../../test/data/confirmations/helper';
 import { renderHookWithConfirmContextProvider } from '../../../../../../test/lib/confirmations/render-helpers';
-import { Severity } from '../../../../../helpers/constants/design-system';
 import {
   AlertActionKey,
   RowAlertKey,
 } from '../../../../../components/app/confirm/info/row/constants';
 import { GasFeeContextProvider } from '../../../../../contexts/gasFee';
+import { Severity } from '../../../../../helpers/constants/design-system';
 import { useGasFeeLowAlerts } from './useGasFeeLowAlerts';
 
 const TRANSACTION_ID_MOCK = '123-456';
@@ -34,7 +35,7 @@ function buildState({
   let pendingApprovals = {};
   if (currentConfirmation) {
     pendingApprovals = {
-      [currentConfirmation.id as string]: {
+      [currentConfirmation.id]: {
         id: currentConfirmation.id,
         type: ApprovalType.Transaction,
       },
@@ -89,7 +90,6 @@ describe('useGasFeeLowAlerts', () => {
     ).toEqual([]);
   });
 
-  // @ts-expect-error This is missing from the Mocha type definitions
   it.each(
     Object.values(PriorityLevels).filter(
       (level) => level !== PriorityLevels.low,

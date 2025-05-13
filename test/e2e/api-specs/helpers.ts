@@ -1,16 +1,12 @@
+import type { InternalScopeString } from '@metamask/chain-agnostic-permission';
+import type { Json, JsonRpcFailure, JsonRpcResponse } from '@metamask/utils';
+import type { ErrorObject } from '@open-rpc/meta-schema';
 import { v4 as uuid } from 'uuid';
-import { ErrorObject } from '@open-rpc/meta-schema';
-import { Json, JsonRpcFailure, JsonRpcResponse } from '@metamask/utils';
-import { InternalScopeString } from '@metamask/chain-agnostic-permission';
-import { Driver } from '../webdriver/driver';
+
+import type { Driver } from '../webdriver/driver';
 
 // eslint-disable-next-line @typescript-eslint/no-shadow
-declare let window: Window & {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ethereum: any;
-};
+declare let window: any;
 
 type QueueItem = {
   task: () => Promise<unknown>;
@@ -44,7 +40,12 @@ export const processQueue = async () => {
   }
 };
 
-export const addToQueue = ({ task, resolve, reject, name }: QueueItem) => {
+export const addToQueue = async ({
+  task,
+  resolve,
+  reject,
+  name,
+}: QueueItem) => {
   taskQueue.push({ task, resolve, reject, name });
   return processQueue();
 };
@@ -89,8 +90,6 @@ export const createCaip27DriverTransport = (
   // use externally_connectable to communicate with the extension
   // https://developer.chrome.com/docs/extensions/mv3/messaging/
   return async (
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     __: string,
     method: string,
     params: unknown[] | Record<string, unknown>,
@@ -124,7 +123,7 @@ export const createCaip27DriverTransport = (
               data,
             }: {
               type: string;
-              data: JsonRpcResponse<Json>;
+              data: JsonRpcResponse;
             }) => {
               if (type !== 'caip-348') {
                 return;
@@ -176,8 +175,6 @@ export const createMultichainDriverTransport = (
   // use externally_connectable to communicate with the extension
   // https://developer.chrome.com/docs/extensions/mv3/messaging/
   return async (
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     __: string,
     method: string,
     params: unknown[] | Record<string, unknown>,
@@ -210,7 +207,7 @@ export const createMultichainDriverTransport = (
               data,
             }: {
               type: string;
-              data: JsonRpcResponse<Json>;
+              data: JsonRpcResponse;
             }) => {
               if (type !== 'caip-348') {
                 return;
@@ -250,8 +247,6 @@ export const createMultichainDriverTransport = (
 
 export const createDriverTransport = (driver: Driver) => {
   return async (
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     __: string,
     method: string,
     params: unknown[] | Record<string, unknown>,

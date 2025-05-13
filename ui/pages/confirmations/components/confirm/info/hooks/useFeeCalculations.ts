@@ -1,8 +1,10 @@
-import { GasFeeEstimates } from '@metamask/gas-fee-controller';
-import { TransactionMeta } from '@metamask/transaction-controller';
-import { Hex, add0x } from '@metamask/utils';
+import type { GasFeeEstimates } from '@metamask/gas-fee-controller';
+import type { TransactionMeta } from '@metamask/transaction-controller';
+import type { Hex } from '@metamask/utils';
+import { add0x } from '@metamask/utils';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
+
 import { EtherDenomination } from '../../../../../../../shared/constants/common';
 import {
   addHexes,
@@ -12,9 +14,9 @@ import {
   multiplyHexes,
 } from '../../../../../../../shared/modules/conversion.utils';
 import { Numeric } from '../../../../../../../shared/modules/Numeric';
+import { getCurrentCurrency } from '../../../../../../ducks/metamask/metamask';
 import { useFiatFormatter } from '../../../../../../hooks/useFiatFormatter';
 import { useGasFeeEstimates } from '../../../../../../hooks/useGasFeeEstimates';
-import { getCurrentCurrency } from '../../../../../../ducks/metamask/metamask';
 import { selectConversionRateByChainId } from '../../../../../../selectors';
 import { HEX_ZERO } from '../shared/constants';
 import { useEIP1559TxFees } from './useEIP1559TxFees';
@@ -112,11 +114,7 @@ export function useFeeCalculations(transactionMeta: TransactionMeta) {
   );
 
   // Max fee
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const gasLimit = transactionMeta?.txParams?.gas || HEX_ZERO;
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const gasPrice = transactionMeta?.txParams?.gasPrice || HEX_ZERO;
 
   const maxFee = useMemo(() => {
@@ -161,8 +159,6 @@ export function useFeeCalculations(transactionMeta: TransactionMeta) {
       minimumFeePerGas = decimalToHex(maxFeePerGas);
     }
 
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     const gasLimitNoBuffer = transactionMeta.gasLimitNoBuffer || HEX_ZERO;
     const estimatedFee = multiplyHexes(
       supportsEIP1559 ? (minimumFeePerGas as Hex) : (gasPrice as Hex),

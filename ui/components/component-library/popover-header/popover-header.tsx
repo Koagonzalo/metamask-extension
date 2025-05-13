@@ -1,6 +1,6 @@
-import React from 'react';
 import classnames from 'classnames';
-import { Text } from '../text';
+import React from 'react';
+
 import {
   IconColor,
   TextVariant,
@@ -8,9 +8,10 @@ import {
   TextColor,
 } from '../../../helpers/constants/design-system';
 import { useI18nContext } from '../../../hooks/useI18nContext';
-import { HeaderBase } from '../header-base';
 import { ButtonIcon, ButtonIconSize } from '../button-icon';
+import { HeaderBase } from '../header-base';
 import { IconName } from '../icon';
+import { Text } from '../text';
 import type { PopoverHeaderProps } from './popover-header.types';
 
 export const PopoverHeader: React.FC<PopoverHeaderProps> = ({
@@ -29,8 +30,6 @@ export const PopoverHeader: React.FC<PopoverHeaderProps> = ({
     <HeaderBase
       className={classnames('mm-popover-header', className)}
       startAccessory={
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         startAccessory ||
         (onBack && (
           <ButtonIcon
@@ -44,8 +43,6 @@ export const PopoverHeader: React.FC<PopoverHeaderProps> = ({
         ))
       }
       endAccessory={
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         endAccessory ||
         (onClose && (
           <ButtonIcon

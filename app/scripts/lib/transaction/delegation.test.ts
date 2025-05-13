@@ -1,12 +1,10 @@
-import {
-  KeyringControllerSignTypedMessageAction,
-  SignTypedDataVersion,
-} from '@metamask/keyring-controller';
 import { Messenger } from '@metamask/base-controller';
-import { TransactionControllerInitMessenger } from '../../controller-init/messengers/transaction-controller-messenger';
+import type { KeyringControllerSignTypedMessageAction } from '@metamask/keyring-controller';
+import { SignTypedDataVersion } from '@metamask/keyring-controller';
+
+import type { TransactionControllerInitMessenger } from '../../controller-init/messengers/transaction-controller-messenger';
+import type { Delegation, Execution } from './delegation';
 import {
-  Delegation,
-  Execution,
   ExecutionMode,
   encodeRedeemDelegations,
   signDelegation,

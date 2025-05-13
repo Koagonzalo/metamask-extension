@@ -4,7 +4,7 @@ import {
   TransactionType,
 } from '@metamask/transaction-controller';
 
-import { Confirmation } from '../../../ui/pages/confirmations/types/confirm';
+import type { Confirmation } from '../../../ui/pages/confirmations/types/confirm';
 
 export const upgradeAccountConfirmation = {
   batchId: '0x6046131032d748a6bfac42fd5117479f',
@@ -27,8 +27,6 @@ export const upgradeAccountConfirmation = {
   networkClientId: 'sepolia',
   securityAlertResponse: {
     block: 8082431,
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     result_type: 'Benign',
     reason: '',
     description: '',

@@ -1,7 +1,8 @@
 import { strict as assert } from 'assert';
+
 import { DAPP_URL } from '../../constants';
 import { WINDOW_TITLES } from '../../helpers';
-import { Driver } from '../../webdriver/driver';
+import type { Driver } from '../../webdriver/driver';
 
 class TestDapp {
   private readonly driver: Driver;
@@ -47,8 +48,6 @@ class TestDapp {
   private readonly decryptedMessage = '#cleartextDisplay';
 
   private readonly depositPiggyBankContractButton = '#depositButton';
-
-  private readonly eip5792SendCallsError = '#eip5792SendCallsError';
 
   private readonly eip747ContractAddressInput = '#eip747ContractAddress';
 
@@ -105,7 +104,8 @@ class TestDapp {
 
   private readonly mmlogo = '#mm-logo';
 
-  private maliciousERC20TransferButton = '#maliciousERC20TransferButton';
+  private readonly maliciousERC20TransferButton =
+    '#maliciousERC20TransferButton';
 
   private readonly personalSignButton = '#personalSign';
 
@@ -113,7 +113,7 @@ class TestDapp {
 
   private readonly personalSignVerifyButton = '#personalSignVerify';
 
-  private personalSignSigUtilResultSelector =
+  private readonly personalSignSigUtilResultSelector =
     '#personalSignVerifySigUtilResult';
 
   private readonly revokePermissionButton = '#revokeAccountsPermission';
@@ -122,17 +122,17 @@ class TestDapp {
 
   private readonly sendCallsButton = '#eip5792SendCallsButton';
 
-  private sign721PermitResult = '#sign721PermitResult';
+  private readonly sign721PermitResult = '#sign721PermitResult';
 
-  private sign721PermitResultR = '#sign721PermitResultR';
+  private readonly sign721PermitResultR = '#sign721PermitResultR';
 
-  private sign721PermitResultS = '#sign721PermitResultS';
+  private readonly sign721PermitResultS = '#sign721PermitResultS';
 
-  private sign721PermitResultV = '#sign721PermitResultV';
+  private readonly sign721PermitResultV = '#sign721PermitResultV';
 
-  private sign721PermitVerifyButton = '#sign721PermitVerify';
+  private readonly sign721PermitVerifyButton = '#sign721PermitVerify';
 
-  private sign721PermitVerifyResult = '#sign721PermitVerifyResult';
+  private readonly sign721PermitVerifyResult = '#sign721PermitVerifyResult';
 
   private readonly signPermitButton = '#signPermit';
 
@@ -200,9 +200,9 @@ class TestDapp {
     tag: 'h2',
   };
 
-  private transferTokensButton = '#transferTokens';
+  private readonly transferTokensButton = '#transferTokens';
 
-  private transferTokensWithoutGasButton = '#transferTokensWithoutGas';
+  private readonly transferTokensWithoutGasButton = '#transferTokensWithoutGas';
 
   private readonly userRejectedRequestMessage = {
     tag: 'span',
@@ -214,35 +214,11 @@ class TestDapp {
   }
 
   /**
-   * Sends a JSON-RPC request to the connected wallet using window.ethereum.
-   *
-   * @param method - The RPC method name.
-   * @param params - The parameters for the RPC method.
-   * @returns The result of the RPC call.
-   */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  async request<T>(method: string, params?: unknown[] | object): Promise<T> {
-    console.log(`Sending request: ${method}`, params);
-    return await this.driver.executeScript(
-      'return window.ethereum.request(arguments[0])',
-      [
-        {
-          method,
-          params,
-        },
-      ],
-    );
-  }
-
-  /**
    * Verifies the accounts connected to the test dapp.
    *
    * @param connectedAccounts - Account addresses to check if connected to test dapp, separated by a comma.
    * @param shouldBeConnected - Whether the accounts should be connected to test dapp. Defaults to true.
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_connectedAccounts(
     connectedAccounts: string,
     shouldBeConnected: boolean = true,
@@ -267,8 +243,6 @@ class TestDapp {
    *
    * @param message - The decrypted message to verify.
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_decryptedMessage(message: string) {
     console.log('Verify decrypted message on test dapp');
     await this.driver.waitForSelector({
@@ -278,25 +252,11 @@ class TestDapp {
   }
 
   /**
-   * Verify the EIP-5792 send calls error message on the test dapp.
-   *
-   * @param expectedMessage - The expected error message to verify.
-   */
-  async checkEip5792SendCallsError(expectedMessage: string) {
-    await this.driver.waitForSelector({
-      css: this.eip5792SendCallsError,
-      text: expectedMessage,
-    });
-  }
-
-  /**
    * Verifies the eth_subscribe response.
    *
    * @param shouldBePresent - Whether the eth_subscribe response should be present, defaults to true.
    * @param guardTime - Time to wait to check if the eth_subscribe response is present, defaults to 1000ms.
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_ethSubscribeResponse(
     shouldBePresent: boolean = true,
     guardTime: number = 1000,
@@ -317,8 +277,6 @@ class TestDapp {
    *
    * @param expectedFailedMessage - The expected failed message.
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_failedPersonalSign(expectedFailedMessage: string) {
     console.log('Verify failed personal sign signature');
     await this.driver.switchToWindowWithTitle(WINDOW_TITLES.TestDApp);
@@ -333,8 +291,6 @@ class TestDapp {
    *
    * @param expectedFailedMessage - The expected failed message.
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_failedSignPermit(expectedFailedMessage: string) {
     console.log('Verify failed signPermit signature');
     await this.driver.switchToWindowWithTitle(WINDOW_TITLES.TestDApp);
@@ -349,8 +305,6 @@ class TestDapp {
    *
    * @param expectedFailedMessage - The expected failed message.
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_failedSignTypedData(expectedFailedMessage: string) {
     console.log('Verify failed signTypedData signature');
     await this.driver.switchToWindowWithTitle(WINDOW_TITLES.TestDApp);
@@ -365,8 +319,6 @@ class TestDapp {
    *
    * @param expectedFailedMessage - The expected failed message.
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_failedSignTypedDataV3(expectedFailedMessage: string) {
     console.log('Verify failed signTypedDataV3 signature');
     await this.driver.switchToWindowWithTitle(WINDOW_TITLES.TestDApp);
@@ -381,8 +333,6 @@ class TestDapp {
    *
    * @param expectedFailedMessage - The expected failed message.
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_failedSignTypedDataV4(expectedFailedMessage: string) {
     console.log('Verify failed signTypedDataV4 signature');
     await this.driver.switchToWindowWithTitle(WINDOW_TITLES.TestDApp);
@@ -397,8 +347,6 @@ class TestDapp {
    *
    * @param expectedResult - The expected account address.
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_getAccountsResult(expectedResult: string) {
     console.log(
       'Verify get connected accounts result contains:',
@@ -416,8 +364,6 @@ class TestDapp {
    *
    * @param encryptionKey - The encryption key to display.
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_getEncryptionKeyResult(encryptionKey: string) {
     console.log(
       'Verify get encryption key result on test dapp: ',
@@ -434,8 +380,6 @@ class TestDapp {
    *
    * @param expectedPermission - The expected displayed permission.
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_getPermissionsResult(expectedPermission: string) {
     console.log('Verify get permissions result contains:', expectedPermission);
     await this.driver.waitForElementToStopMoving(this.getPermissionsButton);
@@ -446,8 +390,6 @@ class TestDapp {
     });
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_pageIsLoaded(): Promise<void> {
     try {
       await this.driver.waitForSelector(this.mmlogo);
@@ -463,8 +405,6 @@ class TestDapp {
    *
    * @param publicKey - The public key to verify the signature with.
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_successPersonalSign(publicKey: string) {
     console.log('Verify successful personal sign signature');
     await this.driver.switchToWindowWithTitle(WINDOW_TITLES.TestDApp);
@@ -475,8 +415,6 @@ class TestDapp {
     });
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_successSign721Permit(publicKey: string) {
     console.log('Verify successful signPermit signature');
     await this.driver.switchToWindowWithTitle(WINDOW_TITLES.TestDApp);
@@ -492,8 +430,6 @@ class TestDapp {
    *
    * @param publicKey - The public key to verify the signature with.
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_successSignPermit(publicKey: string) {
     console.log('Verify successful signPermit signature');
     await this.driver.switchToWindowWithTitle(WINDOW_TITLES.TestDApp);
@@ -509,8 +445,6 @@ class TestDapp {
    *
    * @param publicKey - The public key to verify the signature with.
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_successSignTypedData(publicKey: string) {
     console.log('Verify successful signTypedData signature');
     await this.driver.switchToWindowWithTitle(WINDOW_TITLES.TestDApp);
@@ -526,8 +460,6 @@ class TestDapp {
    *
    * @param publicKey - The public key to verify the signature with.
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_successSignTypedDataV3(publicKey: string) {
     console.log('Verify successful signTypedDataV3 signature');
     await this.driver.switchToWindowWithTitle(WINDOW_TITLES.TestDApp);
@@ -543,8 +475,6 @@ class TestDapp {
    *
    * @param publicKey - The public key to verify the signature with.
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_successSignTypedDataV4(publicKey: string) {
     console.log('Verify successful signTypedDataV4 signature');
     await this.driver.switchToWindowWithTitle(WINDOW_TITLES.TestDApp);
@@ -555,8 +485,6 @@ class TestDapp {
     });
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_successSiwe(result: string) {
     console.log('Verify successful SIWE signature');
     await this.driver.waitForSelector({
@@ -570,8 +498,6 @@ class TestDapp {
    *
    * @param expectedCount - The expected count of token addresses.
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_TokenAddressesCount(expectedCount: number) {
     console.log(`checking token addresses count: ${expectedCount}`);
     await this.driver.wait(async () => {
@@ -585,8 +511,6 @@ class TestDapp {
     }, 10000);
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async verify_successSignTypedDataResult(result: string) {
     await this.driver.waitForSelector({
       css: this.signTypedDataResult,
@@ -594,8 +518,6 @@ class TestDapp {
     });
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async verify_successSignTypedDataV3Result(result: string) {
     await this.driver.waitForSelector({
       css: this.signTypedDataV3Result,
@@ -603,8 +525,6 @@ class TestDapp {
     });
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async verify_successSignTypedDataV4Result(result: string) {
     await this.driver.waitForSelector({
       css: this.signTypedDataV4Result,
@@ -981,6 +901,22 @@ class TestDapp {
     console.log('Sign message with signTypedData');
     await this.clickSignTypedData();
     await this.driver.switchToWindowWithTitle(WINDOW_TITLES.Dialog);
+    await this.driver.clickElementAndWaitForWindowToClose(
+      this.confirmSignatureButtonRedesign,
+    );
+  }
+
+  /**
+   * Sign a message with the signTypedDataV3 method.
+   */
+  async signTypedDataV3() {
+    console.log('Sign message with signTypedDataV3');
+    await this.clickSignTypedDatav3();
+    await this.driver.switchToWindowWithTitle(WINDOW_TITLES.Dialog);
+    await this.driver.waitForSelector(
+      this.signTypedDataV3V4SignatureRequestMessage,
+    );
+    await this.driver.clickElementSafe(this.confirmDialogScrollButton, 200);
     await this.driver.clickElementAndWaitForWindowToClose(
       this.confirmSignatureButtonRedesign,
     );

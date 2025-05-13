@@ -1,9 +1,10 @@
-import { Reducer, StoreEnhancer } from 'redux';
 import { configureStore as baseConfigureStore } from '@reduxjs/toolkit';
+import type { Reducer, StoreEnhancer } from 'redux';
 import devtoolsEnhancer from 'remote-redux-devtools';
+
+import type { FlattenedBackgroundStateProxy } from '../../shared/types/background';
 import rootReducer from '../ducks';
 import type { AppSliceState } from '../ducks/app/app';
-import type { FlattenedBackgroundStateProxy } from '../../shared/types/background';
 
 /**
  * This interface is temporary and is copied from the message-manager.js file
@@ -57,7 +58,7 @@ export default function configureStore(preloadedState: any) {
         hostname: 'localhost',
         port: 8000,
         realtime: true,
-      }) as StoreEnhancer,
+      }),
     );
   }
 

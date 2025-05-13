@@ -1,7 +1,8 @@
 import { EthAccountType, EthScope } from '@metamask/keyring-api';
-import { CHAIN_IDS, CURRENCY_SYMBOLS } from '../../shared/constants/network';
-import { KeyringType } from '../../shared/constants/keyring';
+
 import { ETH_EOA_METHODS } from '../../shared/constants/eth-methods';
+import { KeyringType } from '../../shared/constants/keyring';
+import { CHAIN_IDS, CURRENCY_SYMBOLS } from '../../shared/constants/network';
 import { mockNetworkState } from '../stub/networks';
 
 export const createGetSmartTransactionFeesApiResponse = () => {
@@ -135,11 +136,6 @@ export const createSwapsMockStore = () => {
       swapsSTXLoading: false,
     },
     metamask: {
-      remoteFeatureFlags: {
-        bridgeConfig: {
-          support: false,
-        },
-      },
       preferences: {
         showFiatInTestnets: true,
         smartTransactionsOptInStatus: true,

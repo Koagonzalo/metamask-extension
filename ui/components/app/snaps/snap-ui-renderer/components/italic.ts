@@ -1,13 +1,14 @@
-import { ItalicElement, JSXElement } from '@metamask/snaps-sdk/jsx';
+import type { ItalicElement, JSXElement } from '@metamask/snaps-sdk/jsx';
 import { getJsxChildren } from '@metamask/snaps-utils';
-import { NonEmptyArray } from '@metamask/utils';
-import { mapTextToTemplate } from '../utils';
+import type { NonEmptyArray } from '@metamask/utils';
+
 import {
   TextVariant,
   OverflowWrap,
   TextColor,
 } from '../../../../../helpers/constants/design-system';
-import { UIComponentFactory } from './types';
+import { mapTextToTemplate } from '../utils';
+import type { UIComponentFactory } from './types';
 
 export const italic: UIComponentFactory<ItalicElement> = ({
   element,

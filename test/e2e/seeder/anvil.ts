@@ -1,6 +1,8 @@
-import { delimiter, join } from 'path';
+import type { Anvil as AnvilType } from '@viem/anvil';
+import { createAnvil } from '@viem/anvil';
 import { execSync } from 'child_process';
-import { createAnvil, Anvil as AnvilType } from '@viem/anvil';
+import { delimiter, join } from 'path';
+
 import { createAnvilClients } from './anvil-clients';
 
 type Hardfork =
@@ -135,7 +137,7 @@ export class Anvil {
 
     if (!provider) {
       console.log('No provider found');
-      return undefined;
+      return;
     }
     const { publicClient } = provider;
 

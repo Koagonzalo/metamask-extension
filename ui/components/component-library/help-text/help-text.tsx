@@ -1,11 +1,12 @@
-import React, { forwardRef } from 'react';
 import classnames from 'classnames';
+import React, { forwardRef } from 'react';
+
 import {
   TextVariant,
   TextColor,
 } from '../../../helpers/constants/design-system';
-import { Text } from '../text';
 import type { PolymorphicRef } from '../box';
+import { Text } from '../text';
 import type { TextProps } from '../text';
 import {
   type HelpTextProps,
@@ -14,8 +15,6 @@ import {
 } from './help-text.types';
 
 export const HelpText: HelpTextComponent = forwardRef(
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   <C extends React.ElementType = 'p'>(
     {
       severity,

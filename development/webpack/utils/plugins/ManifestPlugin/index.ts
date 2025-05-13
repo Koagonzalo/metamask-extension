@@ -1,5 +1,12 @@
-import { extname, join } from 'node:path/posix';
+import {
+  type DeflateOptions,
+  Zip,
+  AsyncZipDeflate,
+  ZipPassThrough,
+} from 'fflate';
 import { readFileSync } from 'node:fs';
+import { extname, join } from 'node:path/posix';
+import { validate } from 'schema-utils';
 import {
   sources,
   ProgressPlugin,
@@ -7,14 +14,9 @@ import {
   type Compiler,
   type Asset,
 } from 'webpack';
-import { validate } from 'schema-utils';
-import {
-  type DeflateOptions,
-  Zip,
-  AsyncZipDeflate,
-  ZipPassThrough,
-} from 'fflate';
-import { noop, type Manifest, Browser } from '../../helpers';
+
+import type { Browser } from '../../helpers';
+import { noop, type Manifest } from '../../helpers';
 import { schema } from './schema';
 import type { ManifestPluginOptions } from './types';
 
@@ -72,8 +74,6 @@ function addAssetToZip(
  * this.options.transform function to modify the manifest before collecting the
  * entry points.
  */
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export class ManifestPlugin<Z extends boolean> {
   /**
    * File types that can be compressed well using DEFLATE compression, used when

@@ -1,22 +1,21 @@
-import React from 'react';
 import classnames from 'classnames';
+import React from 'react';
 
 import {
   BackgroundColor,
   IconColor,
 } from '../../../helpers/constants/design-system';
-import { PolymorphicRef } from '../box';
-import { BannerBase, BannerBaseProps } from '../banner-base';
+import type { BannerBaseProps } from '../banner-base';
+import { BannerBase } from '../banner-base';
+import type { PolymorphicRef } from '../box';
 import { Icon, IconName, IconSize } from '../icon';
-import {
+import type {
   BannerAlertComponent,
   BannerAlertProps,
-  BannerAlertSeverity,
 } from './banner-alert.types';
+import { BannerAlertSeverity } from './banner-alert.types';
 
 export const BannerAlert: BannerAlertComponent = React.forwardRef(
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   <C extends React.ElementType = 'div'>(
     {
       children,

@@ -1,18 +1,21 @@
 import { BigNumber } from '@ethersproject/bignumber';
-import { ChainId, InfuraNetworkType } from '@metamask/controller-utils';
+import * as ethersProviders from '@ethersproject/providers';
+import type { ChainId } from '@metamask/controller-utils';
+import { InfuraNetworkType } from '@metamask/controller-utils';
+import type { SafeEventEmitterProvider } from '@metamask/eth-json-rpc-provider';
+import type { NetworkClientId } from '@metamask/network-controller';
+import type { Hex } from '@metamask/utils';
 import BigNumberjs from 'bignumber.js';
 import { mapValues } from 'lodash';
-import * as ethersProviders from '@ethersproject/providers';
-import { Hex } from '@metamask/utils';
-import { SafeEventEmitterProvider } from '@metamask/eth-json-rpc-provider';
-import { NetworkClientId } from '@metamask/network-controller';
+
+import SwapsController from '.';
 import { GasEstimateTypes } from '../../../../shared/constants/gas';
 import { CHAIN_IDS } from '../../../../shared/constants/network';
 import { ETH_SWAPS_TOKEN_OBJECT } from '../../../../shared/constants/swaps';
-import { createTestProviderTools } from '../../../../test/stub/provider';
 import * as fetchWithCacheModule from '../../../../shared/lib/fetch-with-cache';
+import { createTestProviderTools } from '../../../../test/stub/provider';
 import { getDefaultSwapsControllerState } from './swaps.constants';
-import {
+import type {
   FetchTradesInfoParams,
   FetchTradesInfoParamsMetadata,
   Quote,
@@ -21,7 +24,6 @@ import {
   SwapsControllerState,
 } from './swaps.types';
 import { getMedianEthValueQuote } from './swaps.utils';
-import SwapsController from '.';
 
 const MOCK_FETCH_PARAMS: FetchTradesInfoParams = {
   slippage: 3,
@@ -46,12 +48,8 @@ const TEST_AGG_ID_APPROVAL = 'TEST_AGG_APPROVAL';
 
 const MOCK_PROVIDER_RESULT_STUB = {
   // 1 gwei
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   eth_gasPrice: '0x0de0b6b3a7640000',
   // by default, all accounts are external accounts (not contracts)
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   eth_getCode: '0x',
 };
 
@@ -752,12 +750,8 @@ describe('SwapsController', function () {
         const { provider } = createTestProviderTools({
           scaffold: {
             // 1 gwei
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             eth_gasPrice: '0x0de0b6b3a7640000',
             // by default, all accounts are external accounts (not contracts)
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             eth_getCode: '0x',
           },
           networkId: 1,
@@ -840,15 +834,9 @@ describe('SwapsController', function () {
         const { provider } = createTestProviderTools({
           scaffold: {
             // 1 gwei
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             eth_gasPrice: '0x0de0b6b3a7640000',
             // by default, all accounts are external accounts (not contracts)
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             eth_getCode: '0x',
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             eth_call:
               '0x000000000000000000000000000000000000000000000000000103c18816d4e8',
           },
@@ -933,15 +921,9 @@ describe('SwapsController', function () {
         const { provider } = createTestProviderTools({
           scaffold: {
             // 1 gwei
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             eth_gasPrice: '0x0de0b6b3a7640000',
             // by default, all accounts are external accounts (not contracts)
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             eth_getCode: '0x',
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             eth_call:
               '0x000000000000000000000000000000000000000000000000000103c18816d4e8',
           },
@@ -1020,17 +1002,13 @@ describe('SwapsController', function () {
       });
 
       it('copies network config from the Swaps API into state', async () => {
-        const chainId = '0x64' as const; // Gnosis
+        const chainId = '0x64'; // Gnosis
         const networkClientId = InfuraNetworkType.mainnet;
         const { provider } = createTestProviderTools({
           scaffold: {
             // 1 gwei
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             eth_gasPrice: '0x0de0b6b3a7640000',
             // by default, all accounts are external accounts (not contracts)
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             eth_getCode: '0x',
           },
           networkId: 100,

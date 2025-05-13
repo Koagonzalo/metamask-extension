@@ -2,6 +2,7 @@ import { act } from '@testing-library/react';
 import React from 'react';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+
 import {
   getMockPersonalSignConfirmState,
   getMockTypedSignConfirmState,
@@ -17,7 +18,7 @@ import mockState from '../../../../test/data/mock-state.json';
 import { renderWithConfirmContextProvider } from '../../../../test/lib/confirmations/render-helpers';
 import * as actions from '../../../store/actions';
 import { useAssetDetails } from '../hooks/useAssetDetails';
-import { SignatureRequestType } from '../types/confirm';
+import type { SignatureRequestType } from '../types/confirm';
 import { memoizedGetTokenStandardAndDetails } from '../utils/token';
 import Confirm from './confirm';
 
@@ -48,7 +49,6 @@ describe('Confirm', () => {
 
   beforeEach(() => {
     mockedAssetDetails.mockImplementation(() => ({
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       decimals: '4' as any,
     }));

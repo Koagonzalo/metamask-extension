@@ -1,39 +1,8 @@
+import { TransactionStatus } from '@metamask/transaction-controller';
+import { capitalize } from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { capitalize } from 'lodash';
-import { TransactionStatus } from '@metamask/transaction-controller';
-import { StatusTypes } from '@metamask/bridge-controller';
-import {
-  getBridgeStatusKey,
-  isBridgeComplete,
-  isBridgeFailed,
-} from '../../../../shared/lib/bridge-status/utils';
-import { useI18nContext } from '../../../hooks/useI18nContext';
-import { isSelectedInternalAccountSolana } from '../../../selectors/accounts';
-import { KEYRING_TRANSACTION_STATUS_KEY } from '../../../hooks/useMultichainTransactionDisplay';
-import { formatTimestamp } from '../multichain-transaction-details-modal/helpers';
-import TransactionIcon from '../transaction-icon';
-import TransactionStatusLabel from '../transaction-status-label/transaction-status-label';
-import { ActivityListItem } from '../../multichain/activity-list-item/activity-list-item';
-import Segment from '../../../pages/bridge/transaction-details/segment';
-import {
-  Display,
-  FlexDirection,
-  BlockSize,
-  TextColor,
-  FontWeight,
-  TextAlign,
-  TextVariant,
-  BorderColor,
-} from '../../../helpers/constants/design-system';
-import {
-  Box,
-  Text,
-  BadgeWrapper,
-  AvatarNetwork,
-  BadgeWrapperAnchorElementShape,
-  AvatarNetworkSize,
-} from '../../component-library';
+
 import {
   MULTICHAIN_PROVIDER_CONFIGS,
   MultichainNetworks,
@@ -44,10 +13,42 @@ import {
   TransactionGroupCategory,
   TransactionGroupStatus,
 } from '../../../../shared/constants/transaction';
+import {
+  getBridgeStatusKey,
+  isBridgeComplete,
+  isBridgeFailed,
+} from '../../../../shared/lib/bridge-status/utils';
+import { StatusTypes } from '../../../../shared/types/bridge-status';
+import {
+  Display,
+  FlexDirection,
+  BlockSize,
+  TextColor,
+  FontWeight,
+  TextAlign,
+  TextVariant,
+  BorderColor,
+} from '../../../helpers/constants/design-system';
 import type {
   ExtendedTransaction,
   BridgeOriginatedItem,
 } from '../../../hooks/bridge/useSolanaBridgeTransactionMapping';
+import { useI18nContext } from '../../../hooks/useI18nContext';
+import { KEYRING_TRANSACTION_STATUS_KEY } from '../../../hooks/useMultichainTransactionDisplay';
+import Segment from '../../../pages/bridge/transaction-details/segment';
+import { isSelectedInternalAccountSolana } from '../../../selectors/accounts';
+import {
+  Box,
+  Text,
+  BadgeWrapper,
+  AvatarNetwork,
+  BadgeWrapperAnchorElementShape,
+  AvatarNetworkSize,
+} from '../../component-library';
+import { ActivityListItem } from '../../multichain/activity-list-item/activity-list-item';
+import { formatTimestamp } from '../multichain-transaction-details-modal/helpers';
+import TransactionIcon from '../transaction-icon';
+import TransactionStatusLabel from '../transaction-status-label/transaction-status-label';
 
 type MultichainBridgeTransactionListItemProps = {
   transaction: ExtendedTransaction | BridgeOriginatedItem;
@@ -76,7 +77,7 @@ const MultichainBridgeTransactionListItem: React.FC<
 
   const sourceTxRawStatus = isBridgeOriginated
     ? TransactionStatus.submitted
-    : (transaction as ExtendedTransaction).status;
+    : transaction.status;
   const sourceTxStatusKey = KEYRING_TRANSACTION_STATUS_KEY[sourceTxRawStatus];
 
   const finalDisplayStatusKey = getBridgeStatusKey(
@@ -118,8 +119,6 @@ const MultichainBridgeTransactionListItem: React.FC<
   let title = capitalize(type);
   if (transaction.isBridgeTx && bridgeInfo) {
     const { destChainName, provider, destChainId } = bridgeInfo;
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     const displayChainName = destChainName || destChainId;
     title = `${t('bridge')} ${t('to')} ${displayChainName}`;
     if (provider) {

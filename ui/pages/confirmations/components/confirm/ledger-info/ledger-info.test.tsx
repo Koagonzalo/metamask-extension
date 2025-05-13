@@ -1,7 +1,6 @@
 import React from 'react';
 import configureMockStore from 'redux-mock-store';
 
-import mockState from '../../../../../../test/data/mock-state.json';
 import {
   HardwareTransportStates,
   LedgerTransportTypes,
@@ -12,8 +11,9 @@ import {
   getMockPersonalSignConfirmStateForRequest,
 } from '../../../../../../test/data/confirmations/helper';
 import { unapprovedPersonalSignMsg } from '../../../../../../test/data/confirmations/personal_sign';
+import mockState from '../../../../../../test/data/mock-state.json';
 import { renderWithConfirmContextProvider } from '../../../../../../test/lib/confirmations/render-helpers';
-import { SignatureRequestType } from '../../../types/confirm';
+import type { SignatureRequestType } from '../../../types/confirm';
 import LedgerInfo from './ledger-info';
 
 describe('LedgerInfo', () => {

@@ -1,22 +1,42 @@
+import { isEvmAccountType } from '@metamask/keyring-api';
+import type { CaipAssetType } from '@metamask/utils';
+import { isEqual } from 'lodash';
 import React, { useCallback, useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 ///: BEGIN:ONLY_INCLUDE_IF(multichain)
-import { isEvmAccountType } from '@metamask/keyring-api';
-import { CaipAssetType } from '@metamask/utils';
 ///: END:ONLY_INCLUDE_IF
-import { isEqual } from 'lodash';
+
+import {
+  MetaMetricsEventCategory,
+  MetaMetricsEventName,
+  MetaMetricsSwapsEventSource,
+} from '../../../../shared/constants/metametrics';
+import { MultichainNetworks } from '../../../../shared/constants/multichain/networks';
+import { AssetType } from '../../../../shared/constants/transaction';
+import { getCurrentChainId } from '../../../../shared/modules/selectors/networks';
+import { useHandleSendNonEvm } from '../../../components/app/wallet-overview/hooks/useHandleSendNonEvm';
+import {
+  Box,
+  Icon,
+  IconName,
+  IconSize,
+} from '../../../components/component-library';
+import IconButton from '../../../components/ui/icon-button/icon-button';
 import { I18nContext } from '../../../contexts/i18n';
+import { MetaMetricsContext } from '../../../contexts/metametrics';
+import { getIsNativeTokenBuyable } from '../../../ducks/ramps';
+import { startNewDraftTransaction } from '../../../ducks/send';
 import {
   SEND_ROUTE,
   ///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
   PREPARE_SWAP_ROUTE,
   ///: END:ONLY_INCLUDE_IF
 } from '../../../helpers/constants/routes';
-import { startNewDraftTransaction } from '../../../ducks/send';
 ///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
 import { isHardwareKeyring } from '../../../helpers/utils/hardware';
 import { setSwapsFromToken } from '../../../ducks/swaps/swaps';
+import useBridging from '../../../hooks/bridge/useBridging';
 import useRamps from '../../../hooks/ramps/useRamps/useRamps';
 ///: END:ONLY_INCLUDE_IF
 import {
@@ -29,53 +49,34 @@ import {
   getSelectedInternalAccount,
 } from '../../../selectors';
 ///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
-import useBridging from '../../../hooks/bridge/useBridging';
 ///: END:ONLY_INCLUDE_IF
 
 import { INVALID_ASSET_TYPE } from '../../../helpers/constants/error-keys';
+import {
+  getMultichainIsEvm,
+  getMultichainNetwork,
+} from '../../../selectors/multichain';
 import {
   showModal,
   setSwitchedNetworkDetails,
   setActiveNetworkWithError,
 } from '../../../store/actions';
-import { MetaMetricsContext } from '../../../contexts/metametrics';
-import {
-  MetaMetricsEventCategory,
-  MetaMetricsEventName,
-  MetaMetricsSwapsEventSource,
-} from '../../../../shared/constants/metametrics';
-import { AssetType } from '../../../../shared/constants/transaction';
 import {
   Display,
   IconColor,
   JustifyContent,
 } from '../../../helpers/constants/design-system';
-import IconButton from '../../../components/ui/icon-button/icon-button';
-import {
-  Box,
-  Icon,
-  IconName,
-  IconSize,
-} from '../../../components/component-library';
 ///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
-import { getIsNativeTokenBuyable } from '../../../ducks/ramps';
 ///: END:ONLY_INCLUDE_IF
 import { useMultichainSelector } from '../../../hooks/useMultichainSelector';
-import {
-  getMultichainIsEvm,
-  getMultichainNetwork,
-} from '../../../selectors/multichain';
 
 ///: BEGIN:ONLY_INCLUDE_IF(multichain)
-import { useHandleSendNonEvm } from '../../../components/app/wallet-overview/hooks/useHandleSendNonEvm';
 ///: END:ONLY_INCLUDE_IF
 
 ///: BEGIN:ONLY_INCLUDE_IF(solana-swaps)
-import { MultichainNetworks } from '../../../../shared/constants/multichain/networks';
 ///: END:ONLY_INCLUDE_IF
 
-import { getCurrentChainId } from '../../../../shared/modules/selectors/networks';
-import { Asset } from '../types/asset';
+import type { Asset } from './asset-page';
 
 const TokenButtons = ({
   token,
@@ -159,11 +160,7 @@ const TokenButtons = ({
       properties: {
         location: 'Token Overview',
         text: 'Buy',
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         chain_id: currentChainId,
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         token_symbol: token.symbol,
       },
     });
@@ -175,13 +172,9 @@ const TokenButtons = ({
         event: MetaMetricsEventName.NavSendButtonClicked,
         category: MetaMetricsEventCategory.Navigation,
         properties: {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           token_symbol: token.symbol,
           location: MetaMetricsSwapsEventSource.TokenView,
           text: 'Send',
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           chain_id: token.chainId,
         },
       },
@@ -205,8 +198,6 @@ const TokenButtons = ({
         }),
       );
       history.push(SEND_ROUTE);
-
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (!err.message.includes(INVALID_ASSET_TYPE)) {
@@ -259,13 +250,9 @@ const TokenButtons = ({
       event: MetaMetricsEventName.NavSwapButtonClicked,
       category: MetaMetricsEventCategory.Swaps,
       properties: {
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         token_symbol: token.symbol,
         location: MetaMetricsSwapsEventSource.TokenView,
         text: 'Swap',
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         chain_id: currentChainId,
       },
     });
@@ -308,16 +295,14 @@ const TokenButtons = ({
           className="token-overview__button"
           Icon={
             <Icon
-              name={IconName.PlusAndMinus}
-              color={IconColor.iconDefault}
+              name={IconName.PlusMinus}
+              color={IconColor.primaryInverse}
               size={IconSize.Sm}
             />
           }
           label={t('buyAndSell')}
           data-testid="token-overview-buy"
           onClick={handleBuyAndSellOnClick}
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-          // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
           disabled={token.isERC721 || !isBuyableChain}
           tooltipRender={null}
         />
@@ -330,7 +315,7 @@ const TokenButtons = ({
         Icon={
           <Icon
             name={IconName.Arrow2UpRight}
-            color={IconColor.iconDefault}
+            color={IconColor.primaryInverse}
             size={IconSize.Sm}
           />
         }
@@ -345,7 +330,7 @@ const TokenButtons = ({
           Icon={
             <Icon
               name={IconName.SwapHorizontal}
-              color={IconColor.iconDefault}
+              color={IconColor.primaryInverse}
               size={IconSize.Sm}
             />
           }
@@ -364,12 +349,12 @@ const TokenButtons = ({
             Icon={
               <Icon
                 name={IconName.Bridge}
-                color={IconColor.iconDefault}
+                color={IconColor.primaryInverse}
                 size={IconSize.Sm}
               />
             }
             label={t('bridge')}
-            onClick={() => handleBridgeOnClick(false)}
+            onClick={async () => handleBridgeOnClick(false)}
             tooltipRender={null}
           />
         )

@@ -1,28 +1,30 @@
-import React, { FunctionComponent, MouseEvent as ReactMouseEvent } from 'react';
 import {
   ButtonType,
   ButtonVariant,
   UserInputEventType,
 } from '@metamask/snaps-sdk';
 import type { ButtonProps as SnapButtonProps } from '@metamask/snaps-sdk/jsx';
-import { useSelector } from 'react-redux';
 import classnames from 'classnames';
-import {
-  Button,
-  ButtonProps,
-  ButtonSize,
-  Icon,
-  IconName,
-  IconSize,
-} from '../../../component-library';
+import React from 'react';
+import type { FunctionComponent, MouseEvent as ReactMouseEvent } from 'react';
+import { useSelector } from 'react-redux';
+
+import { useSnapInterfaceContext } from '../../../../contexts/snaps';
 import {
   AlignItems,
   Display,
   FlexDirection,
 } from '../../../../helpers/constants/design-system';
-import { useSnapInterfaceContext } from '../../../../contexts/snaps';
-import { SnapIcon } from '../snap-icon';
 import { getHideSnapBranding } from '../../../../selectors';
+import {
+  Button,
+  ButtonSize,
+  Icon,
+  IconName,
+  IconSize,
+} from '../../../component-library';
+import type { ButtonProps } from '../../../component-library';
+import { SnapIcon } from '../snap-icon';
 
 type SnapUIFooterButtonProps = {
   name?: string;
@@ -90,7 +92,6 @@ export const SnapUIFooterButton: FunctionComponent<
         alignItems: AlignItems.center,
         flexDirection: FlexDirection.Row,
       }}
-      data-testid={`${name}-snap-footer-button`}
       data-theme={null}
       danger={snapVariant === 'destructive'}
     >

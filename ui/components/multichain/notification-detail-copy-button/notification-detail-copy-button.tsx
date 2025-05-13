@@ -1,17 +1,13 @@
+import type { NotificationServicesController } from '@metamask/notification-services-controller';
 import React, { useContext } from 'react';
 import type { FC } from 'react';
-import { NotificationServicesController } from '@metamask/notification-services-controller';
-import { MetaMetricsContext } from '../../../contexts/metametrics';
+
 import {
   MetaMetricsEventCategory,
   MetaMetricsEventName,
 } from '../../../../shared/constants/metametrics';
-import {
-  ButtonBase,
-  IconName,
-  Box,
-  ButtonBaseSize,
-} from '../../component-library';
+import { MINUTE } from '../../../../shared/constants/time';
+import { MetaMetricsContext } from '../../../contexts/metametrics';
 import {
   AlignItems,
   BackgroundColor,
@@ -21,9 +17,14 @@ import {
   TextVariant,
 } from '../../../helpers/constants/design-system';
 import { useCopyToClipboard } from '../../../hooks/useCopyToClipboard';
-import Tooltip from '../../ui/tooltip/tooltip';
 import { useI18nContext } from '../../../hooks/useI18nContext';
-import { MINUTE } from '../../../../shared/constants/time';
+import {
+  ButtonBase,
+  IconName,
+  Box,
+  ButtonBaseSize,
+} from '../../component-library';
+import Tooltip from '../../ui/tooltip/tooltip';
 
 type Notification = NotificationServicesController.Types.INotification;
 
@@ -67,19 +68,11 @@ export const NotificationDetailCopyButton: FC<
         category: MetaMetricsEventCategory.NotificationInteraction,
         event: MetaMetricsEventName.NotificationDetailClicked,
         properties: {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           notification_id: notification.id,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           notification_type: notification.type,
           ...('chain_id' in notification && {
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             chain_id: notification.chain_id,
           }),
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           clicked_item: 'tx_id',
         },
       });

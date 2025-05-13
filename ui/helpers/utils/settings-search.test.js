@@ -1,4 +1,5 @@
 import React from 'react';
+
 import SETTINGS_CONSTANTS from '../constants/settings';
 import {
   getSettingsRoutes,
@@ -140,8 +141,6 @@ const t = (key) => {
       return 'Watch Ethereum Accounts (Beta)';
     case 'bitcoin-support':
       return 'Enable "Add a new Bitcoin account (Beta)"';
-    case 'backupAndSync':
-      return 'Backup and Sync';
     default:
       return '';
   }
@@ -170,12 +169,6 @@ describe('Settings Search Utils', () => {
       expect(getNumberOfSettingRoutesInTab(t, t('advanced'))).toStrictEqual(10);
     });
 
-    it('returns "Backup And Sync" section count', () => {
-      expect(
-        getNumberOfSettingRoutesInTab(t, t('backupAndSync')),
-      ).toStrictEqual(2);
-    });
-
     it('returns "Contact" section count', () => {
       expect(getNumberOfSettingRoutesInTab(t, t('contacts'))).toStrictEqual(1);
     });
@@ -183,7 +176,7 @@ describe('Settings Search Utils', () => {
     it('returns "Security & privacy" section count', () => {
       expect(
         getNumberOfSettingRoutesInTab(t, t('securityAndPrivacy')),
-      ).toStrictEqual(20);
+      ).toStrictEqual(21);
     });
 
     it('returns "Network" section count', () => {

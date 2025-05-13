@@ -1,4 +1,5 @@
-import { Mockttp } from 'mockttp';
+import type { Mockttp } from 'mockttp';
+
 import { toChecksumHexAddress } from '../../../../../shared/modules/hexstring-utils';
 
 const getPriceUrl = (version: string, chainId: string, endpoint: string) =>

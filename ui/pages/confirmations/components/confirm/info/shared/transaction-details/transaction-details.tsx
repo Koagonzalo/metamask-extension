@@ -1,8 +1,10 @@
-import { TransactionMeta } from '@metamask/transaction-controller';
+import type { TransactionMeta } from '@metamask/transaction-controller';
+import { TransactionType } from '@metamask/transaction-controller';
+import type { Hex } from '@metamask/utils';
 import { isValidAddress } from 'ethereumjs-util';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { Hex } from '@metamask/utils';
+
 import {
   ConfirmInfoRow,
   ConfirmInfoRowAddress,
@@ -11,25 +13,28 @@ import {
 } from '../../../../../../../components/app/confirm/info/row';
 import { ConfirmInfoAlertRow } from '../../../../../../../components/app/confirm/info/row/alert-row/alert-row';
 import { RowAlertKey } from '../../../../../../../components/app/confirm/info/row/constants';
-import { ConfirmInfoSection } from '../../../../../../../components/app/confirm/info/row/section';
-import { useI18nContext } from '../../../../../../../hooks/useI18nContext';
-import { selectPaymasterAddress } from '../../../../../../../selectors/account-abstraction';
-import { selectConfirmationAdvancedDetailsOpen } from '../../../../../selectors/preferences';
-import { useConfirmContext } from '../../../../../context/confirm';
-import { useFourByte } from '../../hooks/useFourByte';
 import { ConfirmInfoRowCurrency } from '../../../../../../../components/app/confirm/info/row/currency';
+import { ConfirmInfoSection } from '../../../../../../../components/app/confirm/info/row/section';
+import { Box, Text } from '../../../../../../../components/component-library';
 import { PRIMARY } from '../../../../../../../helpers/constants/common';
-import { useUserPreferencedCurrency } from '../../../../../../../hooks/useUserPreferencedCurrency';
-import { SmartContractWithLogo } from '../../../../smart-contract-with-logo';
 import {
-  useIsDowngradeTransaction,
-  useIsUpgradeTransaction,
-} from '../../hooks/useIsUpgradeTransaction';
-import { HEX_ZERO } from '../constants';
+  AlignItems,
+  BackgroundColor,
+  BorderRadius,
+  Display,
+  FlexDirection,
+  TextColor,
+} from '../../../../../../../helpers/constants/design-system';
+import { useI18nContext } from '../../../../../../../hooks/useI18nContext';
+import { useUserPreferencedCurrency } from '../../../../../../../hooks/useUserPreferencedCurrency';
+import { selectPaymasterAddress } from '../../../../../../../selectors/account-abstraction';
+import { useConfirmContext } from '../../../../../context/confirm';
+import { selectConfirmationAdvancedDetailsOpen } from '../../../../../selectors/preferences';
+import { useFourByte } from '../../hooks/useFourByte';
 import { hasValueAndNativeBalanceMismatch as checkValueAndNativeBalanceMismatch } from '../../utils';
+import { HEX_ZERO } from '../constants';
 import { NetworkRow } from '../network-row/network-row';
 import { SigningInWithRow } from '../sign-in-with-row/sign-in-with-row';
-import { isBatchTransaction } from '../../../../../../../../shared/lib/transactions.utils';
 
 export const OriginRow = () => {
   const t = useI18nContext();
@@ -58,31 +63,28 @@ export const OriginRow = () => {
 export const RecipientRow = ({ recipient }: { recipient?: Hex } = {}) => {
   const t = useI18nContext();
   const { currentConfirmation } = useConfirmContext<TransactionMeta>();
-  const { isUpgradeOnly } = useIsUpgradeTransaction();
-  const isDowngrade = useIsDowngradeTransaction();
-  const { nestedTransactions, txParams, chainId, id } =
-    currentConfirmation ?? {};
-  const { from, to: txTo } = txParams ?? {};
-  const to = recipient ?? txTo;
-
+  const { from } = currentConfirmation?.txParams ?? {};
+  const to = recipient ?? currentConfirmation?.txParams?.to;
+  const { nestedTransactions } = currentConfirmation ?? {};
   const isBatch =
-    isBatchTransaction(nestedTransactions) &&
+    Boolean(nestedTransactions?.length) &&
     to?.toLowerCase() === from.toLowerCase();
-  const showContractLogo = isBatch || isDowngrade || isUpgradeOnly;
 
   if (!to || !isValidAddress(to)) {
     return null;
   }
 
+  const { chainId } = currentConfirmation;
+
   return (
     <ConfirmInfoAlertRow
-      ownerId={id}
+      ownerId={currentConfirmation.id}
       alertKey={RowAlertKey.InteractingWith}
       data-testid="transaction-details-recipient-row"
       label={t('interactingWith')}
       tooltip={t('interactingWithTransactionDescription')}
     >
-      {showContractLogo ? (
+      {isBatch ? (
         <SmartContractWithLogo />
       ) : (
         <ConfirmInfoRowAddress address={to} chainId={chainId} />
@@ -144,10 +146,9 @@ const PaymasterRow = () => {
   const { id: userOperationId, chainId } = currentConfirmation ?? {};
   const isUserOperation = Boolean(currentConfirmation?.isUserOperation);
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const paymasterAddress = useSelector((state: any) =>
-    selectPaymasterAddress(state, userOperationId as string),
+    selectPaymasterAddress(state, userOperationId),
   );
 
   if (!isUserOperation || !paymasterAddress) {
@@ -176,25 +177,17 @@ export const TransactionDetails = () => {
     () => checkValueAndNativeBalanceMismatch(currentConfirmation),
     [currentConfirmation],
   );
-  const { isUpgradeOnly } = useIsUpgradeTransaction();
-  const isDowngrade = useIsDowngradeTransaction();
 
-  if (isUpgradeOnly || isDowngrade) {
+  if (currentConfirmation?.type === TransactionType.revokeDelegation) {
     return null;
   }
-  const { nestedTransactions, txParams } = currentConfirmation ?? {};
-  const { from, to } = txParams ?? {};
-
-  const isBatch =
-    isBatchTransaction(nestedTransactions) &&
-    to?.toLowerCase() === from.toLowerCase();
 
   return (
     <>
       <ConfirmInfoSection data-testid="transaction-details-section">
         <NetworkRow isShownWithAlertsOnly />
         <OriginRow />
-        {!isBatch && <RecipientRow />}
+        <RecipientRow />
         {showAdvancedDetails && <MethodDataRow />}
         <SigningInWithRow />
       </ConfirmInfoSection>
@@ -205,3 +198,24 @@ export const TransactionDetails = () => {
     </>
   );
 };
+
+function SmartContractWithLogo() {
+  const t = useI18nContext();
+  return (
+    <Box
+      display={Display.Flex}
+      flexDirection={FlexDirection.Row}
+      alignItems={AlignItems.center}
+      borderRadius={BorderRadius.pill}
+      backgroundColor={BackgroundColor.backgroundAlternative}
+      style={{
+        padding: '1px 8px 1px 4px',
+      }}
+    >
+      <img src="images/logo/metamask-fox.svg" width="16" height="16" />
+      <Text marginLeft={2} color={TextColor.inherit}>
+        {t('interactWithSmartContract')}
+      </Text>
+    </Box>
+  );
+}

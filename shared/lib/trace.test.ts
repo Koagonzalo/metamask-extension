@@ -1,10 +1,11 @@
+import type { Span } from '@sentry/browser';
 import {
   setMeasurement,
-  Span,
   startSpan,
   startSpanManual,
   withIsolationScope,
 } from '@sentry/browser';
+
 import { endTrace, trace, TraceName } from './trace';
 
 jest.mock('@sentry/browser', () => ({

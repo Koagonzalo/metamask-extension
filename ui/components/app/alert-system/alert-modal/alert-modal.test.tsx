@@ -1,6 +1,7 @@
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
 import configureMockStore from 'redux-mock-store';
+
 import {
   BlockaidReason,
   SecurityProvider,
@@ -8,7 +9,7 @@ import {
 import mockState from '../../../../../test/data/mock-state.json';
 import { tEn } from '../../../../../test/lib/i18n-helpers';
 import { renderWithProvider } from '../../../../../test/lib/render-helpers';
-import { Alert } from '../../../../ducks/confirm-alerts/confirm-alerts';
+import type { Alert } from '../../../../ducks/confirm-alerts/confirm-alerts';
 import { Severity } from '../../../../helpers/constants/design-system';
 import * as useAlertsModule from '../../../../hooks/useAlerts';
 import { useConfirmContext } from '../../../../pages/confirmations/context/confirm';

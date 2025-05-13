@@ -1,6 +1,7 @@
 import { ApprovalType } from '@metamask/controller-utils';
 import { CHAIN_IDS } from '@metamask/transaction-controller';
 import { act, fireEvent, screen, waitFor } from '@testing-library/react';
+
 import { MESSAGE_TYPE } from '../../../../shared/constants/app';
 import {
   MetaMetricsEventCategory,
@@ -78,7 +79,6 @@ describe('PersonalSign Confirmation', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     mockedAssetDetails.mockImplementation(() => ({
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       decimals: '4' as any,
     }));
@@ -154,11 +154,7 @@ describe('PersonalSign Confirmation', () => {
           properties: {
             action: 'Confirm Screen',
             location: MetaMetricsEventLocation.SignatureConfirmation,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             signature_type: ApprovalType.PersonalSign,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             hd_entropy_index: 0,
           },
         }),

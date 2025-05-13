@@ -1,10 +1,9 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
+import React from 'react';
+
 import { ButtonVariant } from '../../component-library';
-import {
-  NotificationDetailButton,
-  NotificationDetailButtonProps,
-} from './notification-detail-button';
+import type { NotificationDetailButtonProps } from './notification-detail-button';
+import { NotificationDetailButton } from './notification-detail-button';
 
 jest.mock('react-router-dom', () => {
   const original = jest.requireActual('react-router-dom');

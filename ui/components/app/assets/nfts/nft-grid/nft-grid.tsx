@@ -1,27 +1,28 @@
+import { toHex } from '@metamask/controller-utils';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { toHex } from '@metamask/controller-utils';
+
+import { isWebUrl } from '../../../../../../app/scripts/lib/util';
+import { getNetworkConfigurationsByChainId } from '../../../../../../shared/modules/selectors/networks';
 import {
   AlignItems,
   Display,
   JustifyContent,
 } from '../../../../../helpers/constants/design-system';
-import { Box } from '../../../../component-library';
-import Spinner from '../../../../ui/spinner';
 import { getNftImageAlt, getNftImage } from '../../../../../helpers/utils/nfts';
-import { NftItem } from '../../../../multichain/nft-item';
-import { NFT } from '../../../../multichain/asset-picker-amount/asset-picker-modal/types';
+import useFetchNftDetailsFromTokenURI from '../../../../../hooks/useFetchNftDetailsFromTokenURI';
+import useGetAssetImageUrl from '../../../../../hooks/useGetAssetImageUrl';
 import {
   getIpfsGateway,
   getNftIsStillFetchingIndication,
 } from '../../../../../selectors';
-import useGetAssetImageUrl from '../../../../../hooks/useGetAssetImageUrl';
 import { getImageForChainId } from '../../../../../selectors/multichain';
-import { getNetworkConfigurationsByChainId } from '../../../../../../shared/modules/selectors/networks';
-import useFetchNftDetailsFromTokenURI from '../../../../../hooks/useFetchNftDetailsFromTokenURI';
+import { Box } from '../../../../component-library';
+import type { NFT } from '../../../../multichain/asset-picker-amount/asset-picker-modal/types';
+import { NftItem } from '../../../../multichain/nft-item';
+import Spinner from '../../../../ui/spinner';
 // TODO: Remove restricted import
 // eslint-disable-next-line import/no-restricted-paths
-import { isWebUrl } from '../../../../../../app/scripts/lib/util';
 import NFTGridItemErrorBoundary from './nft-grid-item-error-boundary';
 
 const NFTGridItem = (props: {
@@ -43,12 +44,8 @@ const NFTGridItem = (props: {
   const allNetworks = useSelector(getNetworkConfigurationsByChainId);
 
   const isImageHosted =
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     (image && isWebUrl(image)) ||
     (imageFromTokenURI && isWebUrl(imageFromTokenURI));
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const nftItemSrc = isImageHosted ? image || imageFromTokenURI : nftImageURL;
 
   const nftImageAlt = getNftImageAlt(nft);
@@ -61,8 +58,8 @@ const NFTGridItem = (props: {
       nft={nft}
       alt={nftImageAlt}
       src={nftItemSrc}
-      networkName={allNetworks?.[toHex(nft?.chainId ?? '')]?.name}
-      networkSrc={getImageForChainId(toHex(nft?.chainId ?? '')) || undefined}
+      networkName={allNetworks?.[toHex(nft.chainId)]?.name}
+      networkSrc={getImageForChainId(toHex(nft.chainId)) || undefined}
       onClick={onClick}
       isIpfsURL={isIpfsURL}
       privacyMode={privacyMode}
@@ -71,8 +68,6 @@ const NFTGridItem = (props: {
   );
 };
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export default function NftGrid({
   nfts,
   handleNftClick,

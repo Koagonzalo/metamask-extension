@@ -1,21 +1,20 @@
+import type { Hex } from '@metamask/utils';
 import { useSelector } from 'react-redux';
-import { Hex } from '@metamask/utils';
-import { getMultichainSelectedAccountCachedBalance } from '../../../../selectors/multichain';
-import { getSelectedInternalAccount } from '../../../../selectors';
-import {
-  TranslateFunction,
-  networkTitleOverrides,
-} from '../util/networkTitleOverrides';
-import { useI18nContext } from '../../../../hooks/useI18nContext';
-import { formatWithThreshold } from '../util/formatWithThreshold';
-import { getIntlLocale } from '../../../../ducks/locale/locale';
-import { getCurrentCurrency } from '../../../../ducks/metamask/metamask';
+
 import {
   MULTICHAIN_PROVIDER_CONFIGS,
   MultichainNetworks,
 } from '../../../../../shared/constants/multichain/networks';
-import { TokenWithFiatAmount } from '../types';
+import { getIntlLocale } from '../../../../ducks/locale/locale';
+import { getCurrentCurrency } from '../../../../ducks/metamask/metamask';
+import { useI18nContext } from '../../../../hooks/useI18nContext';
+import { getSelectedInternalAccount } from '../../../../selectors';
 import { getMultiChainAssets } from '../../../../selectors/assets';
+import { getMultichainSelectedAccountCachedBalance } from '../../../../selectors/multichain';
+import type { TokenWithFiatAmount } from '../types';
+import { formatWithThreshold } from '../util/formatWithThreshold';
+import type { TranslateFunction } from '../util/networkTitleOverrides';
+import { networkTitleOverrides } from '../util/networkTitleOverrides';
 
 const useMultiChainAssets = () => {
   const t = useI18nContext();

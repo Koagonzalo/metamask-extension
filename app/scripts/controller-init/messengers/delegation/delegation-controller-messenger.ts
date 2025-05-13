@@ -1,8 +1,8 @@
-import { AccountsControllerGetSelectedAccountAction } from '@metamask/accounts-controller';
-import { Messenger } from '@metamask/base-controller';
+import type { AccountsControllerGetSelectedAccountAction } from '@metamask/accounts-controller';
+import type { Messenger } from '@metamask/base-controller';
 import { type DelegationControllerMessenger } from '@metamask/delegation-controller';
 import { type KeyringControllerSignTypedMessageAction } from '@metamask/keyring-controller';
-import { TransactionControllerTransactionStatusUpdatedEvent } from '@metamask/transaction-controller';
+import type { TransactionControllerTransactionStatusUpdatedEvent } from '@metamask/transaction-controller';
 
 export { type DelegationControllerMessenger } from '@metamask/delegation-controller';
 

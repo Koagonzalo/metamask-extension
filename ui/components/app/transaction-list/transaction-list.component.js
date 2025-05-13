@@ -1,3 +1,9 @@
+import {
+  isEvmAccountType,
+  TransactionType as KeyringTransactionType,
+} from '@metamask/keyring-api';
+import { TransactionType } from '@metamask/transaction-controller';
+import PropTypes from 'prop-types';
 import React, {
   useMemo,
   useState,
@@ -8,22 +14,22 @@ import React, {
   ///: END:ONLY_INCLUDE_IF
   useEffect,
 } from 'react';
-import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { TransactionType } from '@metamask/transaction-controller';
 ///: BEGIN:ONLY_INCLUDE_IF(multichain)
-import {
-  isEvmAccountType,
-  TransactionType as KeyringTransactionType,
-} from '@metamask/keyring-api';
+
 ///: END:ONLY_INCLUDE_IF
+import { getEnvironmentType } from '../../../../app/scripts/lib/util';
 import {
-  nonceSortedCompletedTransactionsSelector,
-  nonceSortedCompletedTransactionsSelectorAllChains,
-  nonceSortedPendingTransactionsSelector,
-  nonceSortedPendingTransactionsSelectorAllChains,
-} from '../../../selectors/transactions';
+  ENVIRONMENT_TYPE_NOTIFICATION,
+  ENVIRONMENT_TYPE_POPUP,
+} from '../../../../shared/constants/app';
+import { MULTICHAIN_TOKEN_IMAGE_MAP } from '../../../../shared/constants/multichain/networks';
+import { TEST_CHAINS } from '../../../../shared/constants/network';
+import { SWAPS_CHAINID_CONTRACT_ADDRESS_MAP } from '../../../../shared/constants/swaps';
+import { TransactionGroupCategory } from '../../../../shared/constants/transaction';
+import { endTrace, TraceName } from '../../../../shared/lib/trace';
 import { getCurrentChainId } from '../../../../shared/modules/selectors/networks';
+import useSolanaBridgeTransactionMapping from '../../../hooks/bridge/useSolanaBridgeTransactionMapping';
 import {
   getCurrentNetwork,
   getIsTokenNetworkFilterEqualCurrentNetwork,
@@ -32,31 +38,13 @@ import {
   getShouldHideZeroBalanceTokens,
   ///: END:ONLY_INCLUDE_IF
 } from '../../../selectors';
-///: BEGIN:ONLY_INCLUDE_IF(multichain)
-import useSolanaBridgeTransactionMapping from '../../../hooks/bridge/useSolanaBridgeTransactionMapping';
-import MultichainBridgeTransactionListItem from '../multichain-bridge-transaction-list-item/multichain-bridge-transaction-list-item';
-import MultichainBridgeTransactionDetailsModal from '../multichain-bridge-transaction-details-modal/multichain-bridge-transaction-details-modal';
-///: END:ONLY_INCLUDE_IF
-import { useI18nContext } from '../../../hooks/useI18nContext';
-import TransactionListItem from '../transaction-list-item';
-import SmartTransactionListItem from '../transaction-list-item/smart-transaction-list-item.component';
-import { TOKEN_CATEGORY_HASH } from '../../../helpers/constants/transactions';
-import { SWAPS_CHAINID_CONTRACT_ADDRESS_MAP } from '../../../../shared/constants/swaps';
-import { isEqualCaseInsensitive } from '../../../../shared/modules/string-utils';
-///: BEGIN:ONLY_INCLUDE_IF(multichain)
-import { useMultichainSelector } from '../../../hooks/useMultichainSelector';
 import {
-  getMultichainNetwork,
-  getSelectedAccountMultichainTransactions,
-} from '../../../selectors/multichain';
-///: END:ONLY_INCLUDE_IF
-import {
-  getIsEvmMultichainNetworkSelected,
-  ///: BEGIN:ONLY_INCLUDE_IF(multichain)
-  getSelectedMultichainNetworkConfiguration,
-  ///: END:ONLY_INCLUDE_IF
-} from '../../../selectors/multichain/networks';
-
+  nonceSortedCompletedTransactionsSelector,
+  nonceSortedCompletedTransactionsSelectorAllChains,
+  nonceSortedPendingTransactionsSelector,
+  nonceSortedPendingTransactionsSelectorAllChains,
+} from '../../../selectors/transactions';
+///: BEGIN:ONLY_INCLUDE_IF(multichain)
 import {
   Box,
   Button,
@@ -71,8 +59,33 @@ import {
   BadgeWrapperAnchorElementShape,
   ///: END:ONLY_INCLUDE_IF
 } from '../../component-library';
-///: BEGIN:ONLY_INCLUDE_IF(multichain)
+import {
+  RAMPS_CARD_VARIANT_TYPES,
+  RampsCard,
+} from '../../multichain/ramps-card/ramps-card';
+import MultichainBridgeTransactionDetailsModal from '../multichain-bridge-transaction-details-modal/multichain-bridge-transaction-details-modal';
+import MultichainBridgeTransactionListItem from '../multichain-bridge-transaction-list-item/multichain-bridge-transaction-list-item';
+///: END:ONLY_INCLUDE_IF
+import { useI18nContext } from '../../../hooks/useI18nContext';
 import TransactionIcon from '../transaction-icon';
+import TransactionListItem from '../transaction-list-item';
+import SmartTransactionListItem from '../transaction-list-item/smart-transaction-list-item.component';
+import { TOKEN_CATEGORY_HASH } from '../../../helpers/constants/transactions';
+import { isEqualCaseInsensitive } from '../../../../shared/modules/string-utils';
+///: BEGIN:ONLY_INCLUDE_IF(multichain)
+import { useMultichainSelector } from '../../../hooks/useMultichainSelector';
+import {
+  getMultichainNetwork,
+  getSelectedAccountMultichainTransactions,
+} from '../../../selectors/multichain';
+///: END:ONLY_INCLUDE_IF
+import {
+  getIsEvmMultichainNetworkSelected,
+  ///: BEGIN:ONLY_INCLUDE_IF(multichain)
+  getSelectedMultichainNetworkConfiguration,
+  ///: END:ONLY_INCLUDE_IF
+} from '../../../selectors/multichain/networks';
+///: BEGIN:ONLY_INCLUDE_IF(multichain)
 import TransactionStatusLabel from '../transaction-status-label/transaction-status-label';
 import { MultichainTransactionDetailsModal } from '../multichain-transaction-details-modal';
 import { formatTimestamp } from '../multichain-transaction-details-modal/helpers';
@@ -88,10 +101,6 @@ import {
 import { formatDateWithYearContext } from '../../../helpers/utils/util';
 ///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
 import { useAccountTotalFiatBalance } from '../../../hooks/useAccountTotalFiatBalance';
-import {
-  RAMPS_CARD_VARIANT_TYPES,
-  RampsCard,
-} from '../../multichain/ramps-card/ramps-card';
 import { getIsNativeTokenBuyable } from '../../../ducks/ramps';
 ///: END:ONLY_INCLUDE_IF
 ///: BEGIN:ONLY_INCLUDE_IF(multichain)
@@ -103,20 +112,11 @@ import {
   KEYRING_TRANSACTION_STATUS_KEY,
   useMultichainTransactionDisplay,
 } from '../../../hooks/useMultichainTransactionDisplay';
-import { TransactionGroupCategory } from '../../../../shared/constants/transaction';
 ///: END:ONLY_INCLUDE_IF
 
-import { endTrace, TraceName } from '../../../../shared/lib/trace';
-import { TEST_CHAINS } from '../../../../shared/constants/network';
 ///: BEGIN:ONLY_INCLUDE_IF(multichain)
-import { MULTICHAIN_TOKEN_IMAGE_MAP } from '../../../../shared/constants/multichain/networks';
 ///: END:ONLY_INCLUDE_IF
 // eslint-disable-next-line import/no-restricted-paths
-import { getEnvironmentType } from '../../../../app/scripts/lib/util';
-import {
-  ENVIRONMENT_TYPE_NOTIFICATION,
-  ENVIRONMENT_TYPE_POPUP,
-} from '../../../../shared/constants/app';
 import { NetworkFilterComponent } from '../../multichain/network-filter-menu';
 
 const PAGE_INCREMENT = 10;
@@ -200,7 +200,6 @@ const getFilteredTransactionGroupsAllChains = (
 const groupTransactionsByDate = (
   transactionGroups,
   getTransactionTimestamp,
-  shouldSort = true,
 ) => {
   const groupedTransactions = [];
 
@@ -218,14 +217,12 @@ const groupTransactionsByDate = (
 
     if (existingGroup) {
       existingGroup.transactionGroups.push(transactionGroup);
-      if (shouldSort) {
-        // Sort transactions within the group by timestamp (newest first)
-        existingGroup.transactionGroups.sort((a, b) => {
-          const aTime = getTransactionTimestamp(a);
-          const bTime = getTransactionTimestamp(b);
-          return bTime - aTime; // Descending order (newest first)
-        });
-      }
+      // Sort transactions within the group by timestamp (newest first)
+      existingGroup.transactionGroups.sort((a, b) => {
+        const aTime = getTransactionTimestamp(a);
+        const bTime = getTransactionTimestamp(b);
+        return bTime - aTime; // Descending order (newest first)
+      });
     } else {
       groupedTransactions.push({
         date,
@@ -233,10 +230,8 @@ const groupTransactionsByDate = (
         transactionGroups: [transactionGroup],
       });
     }
-    if (shouldSort) {
-      // Sort date groups by timestamp (newest first)
-      groupedTransactions.sort((a, b) => b.dateMillis - a.dateMillis);
-    }
+    // Sort date groups by timestamp (newest first)
+    groupedTransactions.sort((a, b) => b.dateMillis - a.dateMillis);
   });
 
   return groupedTransactions;
@@ -246,7 +241,6 @@ const groupEvmTransactionsByDate = (transactionGroups) =>
   groupTransactionsByDate(
     transactionGroups,
     (transactionGroup) => transactionGroup.primaryTransaction.time,
-    false, // maintains nonce ordering for EVM
   );
 
 ///: BEGIN:ONLY_INCLUDE_IF(multichain)
@@ -254,7 +248,6 @@ const groupNonEvmTransactionsByDate = (nonEvmTransactions) =>
   groupTransactionsByDate(
     nonEvmTransactions?.transactions,
     (transaction) => transaction.timestamp * 1000,
-    true, // timestamp sorting for non-EVM
   );
 
 /**

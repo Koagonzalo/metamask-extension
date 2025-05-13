@@ -2,10 +2,10 @@ import { useSelector } from 'react-redux';
 
 import { MESSAGE_TYPE } from '../../../../shared/constants/app';
 import { parseTypedDataMessage } from '../../../../shared/modules/transaction.utils';
-import { SignatureRequestType } from '../types/confirm';
-import { isPermitSignatureRequest } from '../utils';
-import { selectUseTransactionSimulations } from '../selectors/preferences';
 import { useConfirmContext } from '../context/confirm';
+import { selectUseTransactionSimulations } from '../selectors/preferences';
+import type { SignatureRequestType } from '../types/confirm';
+import { isPermitSignatureRequest } from '../utils';
 
 const NON_PERMIT_SUPPORTED_TYPES_SIGNS = [
   {
@@ -22,8 +22,7 @@ const NON_PERMIT_SUPPORTED_TYPES_SIGNS = [
 const isNonPermitSupportedByDecodingAPI = (
   signatureRequest: SignatureRequestType,
 ) => {
-  const data = (signatureRequest as SignatureRequestType).msgParams
-    ?.data as string;
+  const data = signatureRequest.msgParams?.data as string;
   if (!data) {
     return false;
   }

@@ -1,17 +1,25 @@
-import * as path from 'path';
-import { Browser, By } from 'selenium-webdriver';
 import {
   KnownRpcMethods,
   KnownNotifications,
 } from '@metamask/chain-agnostic-permission';
-import { JsonRpcRequest } from '@metamask/utils';
-import { regularDelayMs, WINDOW_TITLES } from '../../helpers';
-import { Driver } from '../../webdriver/driver';
+import type { JsonRpcRequest } from '@metamask/utils';
+import * as path from 'path';
+import { Browser, By } from 'selenium-webdriver';
+
 import {
   CONTENT_SCRIPT,
   METAMASK_CAIP_MULTICHAIN_PROVIDER,
   METAMASK_INPAGE,
 } from '../../../../app/scripts/constants/stream';
+import { DEFAULT_LOCAL_NODE_ETH_BALANCE_DEC } from '../../constants';
+import {
+  convertETHToHexGwei,
+  multipleGanacheOptions,
+  PRIVATE_KEY,
+  regularDelayMs,
+  WINDOW_TITLES,
+} from '../../helpers';
+import type { Driver } from '../../webdriver/driver';
 
 export type FixtureCallbackArgs = { driver: Driver; extensionId: string };
 
@@ -32,20 +40,27 @@ export const DEFAULT_MULTICHAIN_TEST_DAPP_FIXTURE_OPTIONS = {
   ],
   localNodeOptions: [
     {
-      type: 'anvil',
-    },
-    {
-      type: 'anvil',
+      type: 'ganache',
       options: {
-        port: 8546,
-        chainId: 1338,
+        secretKey: PRIVATE_KEY,
+        balance: convertETHToHexGwei(DEFAULT_LOCAL_NODE_ETH_BALANCE_DEC),
+        accounts: multipleGanacheOptions.accounts,
       },
     },
     {
-      type: 'anvil',
+      type: 'ganache',
+      options: {
+        port: 8546,
+        chainId: 1338,
+        accounts: multipleGanacheOptions.accounts,
+      },
+    },
+    {
+      type: 'ganache',
       options: {
         port: 7777,
         chainId: 1000,
+        accounts: multipleGanacheOptions.accounts,
       },
     },
   ],
@@ -148,7 +163,7 @@ export const passwordLockMetamaskExtension = async (
 export const escapeColon = (selector: string): string =>
   selector.replace(':', '\\:');
 
-export const sendMultichainApiRequest = ({
+export const sendMultichainApiRequest = async ({
   driver,
   extensionId,
   request,

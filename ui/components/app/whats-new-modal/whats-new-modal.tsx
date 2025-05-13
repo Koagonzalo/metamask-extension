@@ -5,7 +5,7 @@ import {
   MetaMetricsEventCategory,
   MetaMetricsEventName,
 } from '../../../../shared/constants/metametrics';
-import {
+import type {
   ModalBodyProps,
   ModalComponent,
   ModalFooterProps,
@@ -86,8 +86,6 @@ const renderNotification = ({
   );
 };
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export default function WhatsNewModal({ onClose }: WhatsNewModalProps) {
   const t = useContext(I18nContext);
   const trackEvent = useContext(MetaMetricsContext);
@@ -102,7 +100,7 @@ export default function WhatsNewModal({ onClose }: WhatsNewModalProps) {
 
   const handleModalClose = async () => {
     await Promise.all(
-      notifications.map(({ id }) => handleNotificationViewed(id)),
+      notifications.map(async ({ id }) => handleNotificationViewed(id)),
     );
     trackEvent({
       category: MetaMetricsEventCategory.Home,

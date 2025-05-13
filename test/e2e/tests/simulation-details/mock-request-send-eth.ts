@@ -1,8 +1,5 @@
-import {
-  RECIPIENT_ADDRESS_MOCK,
-  MockRequestResponse,
-  SENDER_ADDRESS_MOCK,
-} from './types';
+import type { MockRequestResponse } from './types';
+import { RECIPIENT_ADDRESS_MOCK, SENDER_ADDRESS_MOCK } from './types';
 
 export const SEND_ETH_TRANSACTION_MOCK = {
   data: '0x',
@@ -81,6 +78,6 @@ export const SEND_ETH_REQUEST_MOCK: MockRequestResponse = {
       blockNumber: '0x53afbb',
       id: '09156630-b754-4bb8-bfc4-3390d934cec6',
     },
-    id: '42',
+    id: 42,
   },
 };

@@ -1,3 +1,4 @@
+import { ChainId } from '@metamask/controller-utils';
 import { SolScope, BtcScope, EthScope } from '@metamask/keyring-api';
 import {
   toEvmCaipChainId,
@@ -7,8 +8,8 @@ import {
   type NetworkConfiguration,
   RpcEndpointType,
 } from '@metamask/network-controller';
-import { CaipChainId } from '@metamask/utils';
-import { ChainId } from '@metamask/controller-utils';
+import type { CaipChainId } from '@metamask/utils';
+
 import { MAX_SAFE_CHAIN_ID } from '../constants/network';
 import {
   isSafeChainId,

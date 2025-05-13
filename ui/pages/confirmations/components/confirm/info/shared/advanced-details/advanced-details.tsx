@@ -1,10 +1,8 @@
-import { TransactionMeta } from '@metamask/transaction-controller';
+import type { TransactionMeta } from '@metamask/transaction-controller';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  getIsSmartTransaction,
-  type SmartTransactionsState,
-} from '../../../../../../../../shared/modules/selectors';
+
+import { getIsSmartTransaction } from '../../../../../../../../shared/modules/selectors';
 import {
   ConfirmInfoRow,
   ConfirmInfoRowText,
@@ -23,8 +21,8 @@ import {
 import { useConfirmContext } from '../../../../../context/confirm';
 import { selectConfirmationAdvancedDetailsOpen } from '../../../../../selectors/preferences';
 import { isSignatureTransactionType } from '../../../../../utils';
-import { TransactionData } from '../transaction-data/transaction-data';
 import { NestedTransactionData } from '../../batch/nested-transaction-data/nested-transaction-data';
+import { TransactionData } from '../transaction-data/transaction-data';
 
 const NonceDetails = () => {
   const { currentConfirmation } = useConfirmContext<TransactionMeta>();
@@ -57,10 +55,7 @@ const NonceDetails = () => {
     );
 
   const displayedNonce = customNonceValue || nextNonce;
-  const isSmartTransactionsEnabled = useSelector(
-    (state: SmartTransactionsState) =>
-      getIsSmartTransaction(state, currentConfirmation?.chainId),
-  );
+  const isSmartTransactionsEnabled = useSelector(getIsSmartTransaction);
 
   return (
     <ConfirmInfoSection data-testid="advanced-details-nonce-section">

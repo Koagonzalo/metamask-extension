@@ -1,13 +1,10 @@
+import type { NetworkConfiguration } from '@metamask/network-controller';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { NetworkConfiguration } from '@metamask/network-controller';
-import {
-  Display,
-  FlexDirection,
-  BlockSize,
-  TextVariant,
-} from '../../../helpers/constants/design-system';
 
+import { NETWORK_TO_SHORT_NETWORK_NAME_MAP } from '../../../../shared/constants/bridge';
+import { TEST_CHAINS } from '../../../../shared/constants/network';
+import { getNetworkConfigurationsByChainId } from '../../../../shared/modules/selectors/networks';
 import {
   ModalOverlay,
   ModalContent,
@@ -17,12 +14,14 @@ import {
   Text,
   AvatarNetworkSize,
 } from '../../../components/component-library';
-
-import { getNetworkConfigurationsByChainId } from '../../../../shared/modules/selectors/networks';
-import { TEST_CHAINS } from '../../../../shared/constants/network';
-import { useI18nContext } from '../../../hooks/useI18nContext';
-import { NETWORK_TO_SHORT_NETWORK_NAME_MAP } from '../../../../shared/constants/bridge';
 import { NetworkListItem } from '../../../components/multichain';
+import {
+  Display,
+  FlexDirection,
+  BlockSize,
+  TextVariant,
+} from '../../../helpers/constants/design-system';
+import { useI18nContext } from '../../../hooks/useI18nContext';
 import { getImageForChainId } from '../../../selectors/multichain';
 
 export const ContactNetworks = ({

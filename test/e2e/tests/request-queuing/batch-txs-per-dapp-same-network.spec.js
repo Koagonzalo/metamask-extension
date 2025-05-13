@@ -1,4 +1,5 @@
 const { By } = require('selenium-webdriver');
+
 const FixtureBuilder = require('../../fixture-builder');
 const {
   withFixtures,
@@ -12,7 +13,7 @@ const {
 } = require('../../helpers');
 
 describe('Request Queuing for Multiple Dapps and Txs on same networks', function () {
-  it('should put confirmation txs for different dapps on same networks in same queue', async function () {
+  it('should batch confirmation txs for different dapps on same networks ', async function () {
     const port = 8546;
     const chainId = 1338;
     await withFixtures(
@@ -134,7 +135,7 @@ describe('Request Queuing for Multiple Dapps and Txs on same networks', function
         await driver.switchToWindowWithTitle(WINDOW_TITLES.Dialog);
 
         await driver.waitForSelector(
-          By.xpath("//p[normalize-space(.)='1 of 4']"),
+          By.xpath("//p[normalize-space(.)='1 of 2']"),
         );
 
         // Check correct network on confirm tx.
@@ -143,11 +144,18 @@ describe('Request Queuing for Multiple Dapps and Txs on same networks', function
           text: 'Localhost 7777',
         });
 
-        await driver.clickElement(
-          '[data-testid="confirm-nav__next-confirmation"]',
-        );
-        await driver.clickElement(
-          '[data-testid="confirm-nav__next-confirmation"]',
+        // Reject All Transactions
+        await driver.clickElement({ text: 'Reject all', tag: 'button' });
+
+        // Wait for confirmation to close
+        await driver.waitUntilXWindowHandles(4);
+
+        // Wait for new confirmations queued from second dapp to open
+        await driver.delay(largeDelayMs);
+        await driver.switchToWindowWithTitle(WINDOW_TITLES.Dialog);
+
+        await driver.waitForSelector(
+          By.xpath("//p[normalize-space(.)='1 of 2']"),
         );
 
         // Check correct network on confirm tx.
@@ -155,12 +163,6 @@ describe('Request Queuing for Multiple Dapps and Txs on same networks', function
           css: 'p',
           text: 'Localhost 8546',
         });
-
-        // Reject All Transactions
-        await driver.clickElement({ text: 'Reject all', tag: 'button' });
-
-        // Wait for confirmation to close
-        await driver.waitUntilXWindowHandles(3);
       },
     );
   });

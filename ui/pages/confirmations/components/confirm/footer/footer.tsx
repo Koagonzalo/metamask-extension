@@ -1,7 +1,8 @@
 import { providerErrors, serializeError } from '@metamask/rpc-errors';
-import { TransactionMeta } from '@metamask/transaction-controller';
+import type { TransactionMeta } from '@metamask/transaction-controller';
 import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { MetaMetricsEventLocation } from '../../../../../../shared/constants/metametrics';
 import { isCorrectDeveloperTransactionType } from '../../../../../../shared/lib/confirmation.utils';
 import { ConfirmAlertModal } from '../../../../../components/app/alert-system/confirm-alert-modal';
@@ -13,7 +14,7 @@ import {
   IconName,
 } from '../../../../../components/component-library';
 import { Footer as PageFooter } from '../../../../../components/multichain/pages/page';
-import { Alert } from '../../../../../ducks/confirm-alerts/confirm-alerts';
+import type { Alert } from '../../../../../ducks/confirm-alerts/confirm-alerts';
 import { clearConfirmTransaction } from '../../../../../ducks/confirm-transaction/confirm-transaction.duck';
 import {
   Display,
@@ -30,11 +31,13 @@ import {
   updateCustomNonce,
 } from '../../../../../store/actions';
 import { useConfirmContext } from '../../../context/confirm';
+import { useTransactionConfirm } from '../../../hooks/transactions/useTransactionConfirm';
 import { useOriginThrottling } from '../../../hooks/useOriginThrottling';
 import { isSignatureTransactionType } from '../../../utils';
+import { useIsUpgradeTransaction } from '../info/hooks/useIsUpgradeTransaction';
 import { getConfirmationSender } from '../utils';
-import { useTransactionConfirm } from '../../../hooks/transactions/useTransactionConfirm';
 import OriginThrottleModal from './origin-throttle-modal';
+import { UpgradeCancelModal } from './upgrade-cancel-modal';
 
 export type OnCancelHandler = ({
   location,
@@ -157,6 +160,7 @@ const ConfirmButton = ({
 const Footer = () => {
   const dispatch = useDispatch();
   const t = useI18nContext();
+  const [isUpgradeCancelModalOpen, setUpgradeCancelModalOpen] = useState(false);
   const { onTransactionConfirm } = useTransactionConfirm();
 
   const { currentConfirmation, isScrollToBottomCompleted } =
@@ -175,6 +179,7 @@ const Footer = () => {
   });
 
   const isSignature = isSignatureTransactionType(currentConfirmation);
+  const isUpgradeTransaction = useIsUpgradeTransaction();
 
   const isConfirmDisabled =
     (!isScrollToBottomCompleted && !isSignature) ||
@@ -207,10 +212,20 @@ const Footer = () => {
         return;
       }
 
+      if (isUpgradeTransaction) {
+        setUpgradeCancelModalOpen(true);
+        return;
+      }
+
       rejectApproval({ location });
       resetTransactionState();
     },
-    [currentConfirmation, rejectApproval, resetTransactionState],
+    [
+      currentConfirmation,
+      isUpgradeTransaction,
+      rejectApproval,
+      resetTransactionState,
+    ],
   );
 
   const onSubmit = useCallback(() => {
@@ -252,6 +267,11 @@ const Footer = () => {
         isOpen={showOriginThrottleModal}
         onConfirmationCancel={onCancel}
       />
+      <UpgradeCancelModal
+        isOpen={isUpgradeCancelModalOpen}
+        onClose={() => setUpgradeCancelModalOpen(false)}
+        onReject={rejectApproval}
+      />
       <Box display={Display.Flex} flexDirection={FlexDirection.Row} gap={4}>
         <Button
           block
@@ -259,6 +279,7 @@ const Footer = () => {
           onClick={handleFooterCancel}
           size={ButtonSize.Lg}
           variant={ButtonVariant.Secondary}
+          endIconName={isUpgradeTransaction ? IconName.ArrowDown : undefined}
         >
           {t('cancel')}
         </Button>

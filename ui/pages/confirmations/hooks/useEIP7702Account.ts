@@ -1,33 +1,29 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import type { TransactionMeta } from '@metamask/transaction-controller';
 import {
   TransactionEnvelopeType,
-  TransactionMeta,
   TransactionType,
 } from '@metamask/transaction-controller';
-import { Hex } from '@metamask/utils';
+import type { Hex } from '@metamask/utils';
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { getSelectedNetworkClientId } from '../../../../shared/modules/selectors/networks';
 import {
   addTransactionAndRouteToConfirmationPage,
   getCode,
 } from '../../../store/actions';
-import { selectDefaultRpcEndpointByChainId } from '../../../selectors';
 import { useConfirmationNavigation } from './useConfirmationNavigation';
 
 export const EIP_7702_REVOKE_ADDRESS =
   '0x0000000000000000000000000000000000000000';
 
-export function useEIP7702Account(
-  { chainId, onRedirect }: { chainId: Hex; onRedirect?: () => void } = {
-    chainId: '0x',
-  },
-) {
+export function useEIP7702Account({
+  onRedirect,
+}: { onRedirect?: () => void } = {}) {
   const dispatch = useDispatch();
   const [transactionId, setTransactionId] = useState<string | undefined>();
   const { confirmations, navigateToId } = useConfirmationNavigation();
-  const defaultRpcEndpoint = useSelector((state) =>
-    selectDefaultRpcEndpointByChainId(state, chainId),
-  ) ?? { defaultRpcEndpoint: {} };
-  const { networkClientId } = defaultRpcEndpoint as { networkClientId: string };
+  const globalNetworkClientId = useSelector(getSelectedNetworkClientId);
 
   const isRedirectPending = confirmations.some(
     (conf) => conf.id === transactionId,
@@ -48,7 +44,7 @@ export function useEIP7702Account(
             type: TransactionEnvelopeType.setCode,
           },
           {
-            networkClientId,
+            networkClientId: globalNetworkClientId,
             type: TransactionType.revokeDelegation,
           },
         ),
@@ -56,41 +52,15 @@ export function useEIP7702Account(
 
       setTransactionId(transactionMeta?.id);
     },
-    [dispatch, networkClientId],
-  );
-
-  const upgradeAccount = useCallback(
-    async (address: Hex, upgradeContractAddress: Hex) => {
-      const transactionMeta = (await dispatch(
-        addTransactionAndRouteToConfirmationPage(
-          {
-            authorizationList: [
-              {
-                address: upgradeContractAddress,
-              },
-            ],
-            from: address,
-            to: address,
-            type: TransactionEnvelopeType.setCode,
-          },
-          {
-            networkClientId,
-            type: TransactionType.batch,
-          },
-        ),
-      )) as unknown as TransactionMeta;
-
-      setTransactionId(transactionMeta?.id);
-    },
-    [dispatch, networkClientId],
+    [dispatch, globalNetworkClientId],
   );
 
   const isUpgraded = useCallback(
     async (address: Hex) => {
-      const code = await getCode(address, networkClientId);
+      const code = await getCode(address, globalNetworkClientId);
       return code?.length > 2;
     },
-    [networkClientId],
+    [globalNetworkClientId],
   );
 
   useEffect(() => {
@@ -100,5 +70,5 @@ export function useEIP7702Account(
     }
   }, [isRedirectPending, navigateToId, transactionId, onRedirect]);
 
-  return { isUpgraded, downgradeAccount, upgradeAccount };
+  return { isUpgraded, downgradeAccount };
 }

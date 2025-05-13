@@ -1,15 +1,14 @@
-import { DelegationEntry } from '@metamask/delegation-controller';
+import type { DelegationEntry } from '@metamask/delegation-controller';
 import type { Hex } from '@metamask/utils';
 import { createSelector } from 'reselect';
-import {
-  REMOTE_MODES,
-  RemoteModeConfig,
-} from '../pages/remote-mode/remote.types';
+
+import type { RemoteModeConfig } from '../pages/remote-mode/remote.types';
+import { REMOTE_MODES } from '../pages/remote-mode/remote.types';
+import { type DelegationState, listDelegationEntries } from './delegation';
 import {
   getRemoteFeatureFlags,
   type RemoteFeatureFlagsState,
 } from './remote-feature-flags';
-import { type DelegationState, listDelegationEntries } from './delegation';
 
 const EIP7702_CONTRACT_ADDRESSES_FLAG = 'confirmations_eip_7702';
 

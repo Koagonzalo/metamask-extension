@@ -1,5 +1,6 @@
 import { act, fireEvent, screen } from '@testing-library/react';
 import nock from 'nock';
+
 import { useAssetDetails } from '../../../../ui/pages/confirmations/hooks/useAssetDetails';
 import * as backgroundConnection from '../../../../ui/store/background-connection';
 import { tEn } from '../../../lib/i18n-helpers';
@@ -70,7 +71,6 @@ describe('Permit Single Signature Tests', () => {
       }),
     );
     mockedAssetDetails.mockImplementation(() => ({
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       decimals: '4' as any,
     }));

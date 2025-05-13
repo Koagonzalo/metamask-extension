@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
 import classnames from 'classnames';
+import React, { useState, useRef, useEffect } from 'react';
 
 import {
   Display,
@@ -7,19 +7,14 @@ import {
   BorderRadius,
   BackgroundColor,
 } from '../../../helpers/constants/design-system';
-
-import { Box, BoxProps, PolymorphicRef } from '../box';
-import { Input, InputProps } from '../input';
-import {
-  TextFieldComponent,
-  TextFieldProps,
-  TextFieldSize,
-  TextFieldType,
-} from './text-field.types';
+import type { BoxProps, PolymorphicRef } from '../box';
+import { Box } from '../box';
+import type { InputProps } from '../input';
+import { Input } from '../input';
+import type { TextFieldComponent, TextFieldProps } from './text-field.types';
+import { TextFieldSize, TextFieldType } from './text-field.types';
 
 export const TextField: TextFieldComponent = React.forwardRef(
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   <C extends React.ElementType = 'div'>(
     {
       autoComplete,

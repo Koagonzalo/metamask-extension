@@ -1,15 +1,17 @@
-import {
-  EncryptionPublicKeyManager,
+import type {
   AbstractMessage,
   OriginalRequest,
   EncryptionPublicKeyManagerMessenger,
 } from '@metamask/message-manager';
+import { EncryptionPublicKeyManager } from '@metamask/message-manager';
+
 import { KeyringType } from '../../../shared/constants/keyring';
 import { MetaMetricsEventCategory } from '../../../shared/constants/metametrics';
-import EncryptionPublicKeyController, {
+import type {
   EncryptionPublicKeyControllerMessenger,
   EncryptionPublicKeyControllerOptions,
 } from './encryption-public-key';
+import EncryptionPublicKeyController from './encryption-public-key';
 
 jest.mock('@metamask/message-manager', () => ({
   EncryptionPublicKeyManager: jest.fn(),
@@ -55,8 +57,6 @@ const createManagerMessengerMock = () =>
     subscribe: jest.fn(),
   } as unknown as jest.Mocked<EncryptionPublicKeyManagerMessenger>);
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 const createEncryptionPublicKeyManagerMock = <T>() =>
   ({
     getUnapprovedMessages: jest.fn(),
@@ -198,7 +198,6 @@ describe('EncryptionPublicKeyController', () => {
   });
 
   describe('newRequestEncryptionPublicKey', () => {
-    // @ts-expect-error This function is missing from the Mocha type definitions
     it.each([
       ['Ledger', KeyringType.ledger],
       ['Trezor', KeyringType.trezor],

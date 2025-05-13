@@ -1139,6 +1139,23 @@ export default class MetaMetricsController extends BaseController<
     }
     ///: END:ONLY_INCLUDE_IF
 
+    let chainId;
+    if (
+      properties &&
+      'chain_id_caip' in properties &&
+      typeof properties.chain_id_caip === 'string'
+    ) {
+      chainId = null;
+    } else if (
+      properties &&
+      'chain_id' in properties &&
+      typeof properties.chain_id === 'string'
+    ) {
+      chainId = properties.chain_id;
+    } else {
+      chainId = this.chainId;
+    }
+
     return {
       event,
       messageId: buildUniqueMessageId(rawPayload),
@@ -1157,12 +1174,7 @@ export default class MetaMetricsController extends BaseController<
         locale: this.locale,
         // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        chain_id:
-          properties &&
-          'chain_id' in properties &&
-          typeof properties.chain_id === 'string'
-            ? properties.chain_id
-            : this.chainId,
+        chain_id: chainId,
         // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
         // eslint-disable-next-line @typescript-eslint/naming-convention
         environment_type: environmentType,

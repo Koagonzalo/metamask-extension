@@ -1,25 +1,30 @@
-import {
-  CaveatSpecificationConstraint,
-  MethodNames,
-  PermissionController,
-  PermissionSpecificationConstraint,
-} from '@metamask/permission-controller';
+import type { Caip25CaveatValue } from '@metamask/chain-agnostic-permission';
 import {
   Caip25CaveatType,
-  Caip25CaveatValue,
   Caip25EndowmentPermissionName,
   getPermittedEthChainIds,
 } from '@metamask/chain-agnostic-permission';
-import {
+import type {
   AsyncJsonRpcEngineNextCallback,
   JsonRpcEngineEndCallback,
 } from '@metamask/json-rpc-engine';
-import { Json, JsonRpcRequest, PendingJsonRpcResponse } from '@metamask/utils';
-import { PermissionNames } from '../../../controllers/permissions';
+import { MethodNames } from '@metamask/permission-controller';
+import type {
+  CaveatSpecificationConstraint,
+  PermissionController,
+  PermissionSpecificationConstraint,
+} from '@metamask/permission-controller';
+import type {
+  Json,
+  JsonRpcRequest,
+  PendingJsonRpcResponse,
+} from '@metamask/utils';
+
 import {
   CaveatTypes,
   RestrictedMethods,
 } from '../../../../../shared/constants/permissions';
+import { PermissionNames } from '../../../controllers/permissions';
 
 export const getPermissionsHandler = {
   methodNames: [MethodNames.GetPermissions],
@@ -44,7 +49,7 @@ export const getPermissionsHandler = {
  */
 async function getPermissionsImplementation(
   _req: JsonRpcRequest<Json[]>,
-  res: PendingJsonRpcResponse<Json>,
+  res: PendingJsonRpcResponse,
   _next: AsyncJsonRpcEngineNextCallback,
   end: JsonRpcEngineEndCallback,
   {

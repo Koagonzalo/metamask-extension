@@ -1,21 +1,22 @@
-import React from 'react';
 import classnames from 'classnames';
+import React from 'react';
+
 import {
   AlignItems,
   BorderColor,
   Display,
 } from '../../../helpers/constants/design-system';
-import { Box, BoxProps, PolymorphicRef } from '../box';
-import { BannerBase, BannerBaseProps } from '../banner-base';
-import {
+import type { BannerBaseProps } from '../banner-base';
+import { BannerBase } from '../banner-base';
+import type { BoxProps, PolymorphicRef } from '../box';
+import { Box } from '../box';
+import type {
   BannerTipComponent,
   // BannerTipLogoType,
   BannerTipProps,
 } from './banner-tip.types';
 
 export const BannerTip: BannerTipComponent = React.forwardRef(
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   <C extends React.ElementType = 'div'>(
     {
       children,
@@ -34,8 +35,6 @@ export const BannerTip: BannerTipComponent = React.forwardRef(
     <BannerBase
       ref={ref}
       startAccessory={
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         startAccessory || (
           <Box
             display={Display.Flex}

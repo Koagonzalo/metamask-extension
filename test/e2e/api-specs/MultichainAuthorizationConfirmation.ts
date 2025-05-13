@@ -1,17 +1,16 @@
-import Rule from '@open-rpc/test-coverage/build/rules/rule';
-import { Call } from '@open-rpc/test-coverage/build/coverage';
-import {
+import type {
   ContentDescriptorObject,
   ExampleObject,
   ExamplePairingObject,
   MethodObject,
 } from '@open-rpc/meta-schema';
+import type { Call } from '@open-rpc/test-coverage/build/coverage';
+import type Rule from '@open-rpc/test-coverage/build/rules/rule';
 import paramsToObj from '@open-rpc/test-coverage/build/utils/params-to-obj';
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 import _ from 'lodash';
-import { Driver } from '../webdriver/driver';
+
 import { WINDOW_TITLES, switchToOrOpenDapp } from '../helpers';
+import type { Driver } from '../webdriver/driver';
 import { addToQueue } from './helpers';
 
 type MultichainAuthorizationConfirmationOptions = {
@@ -20,9 +19,9 @@ type MultichainAuthorizationConfirmationOptions = {
 };
 // this rule makes sure that a multichain authorization confirmation dialog is shown and confirmed
 export class MultichainAuthorizationConfirmation implements Rule {
-  private driver: Driver;
+  private readonly driver: Driver;
 
-  private only: string[];
+  private readonly only: string[];
 
   constructor(options: MultichainAuthorizationConfirmationOptions) {
     this.driver = options.driver;
@@ -33,8 +32,6 @@ export class MultichainAuthorizationConfirmation implements Rule {
     return 'Multichain Authorization Confirmation Rule';
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async afterRequest(__: unknown, call: Call) {
     await new Promise((resolve, reject) => {
       addToQueue({
@@ -71,8 +68,6 @@ export class MultichainAuthorizationConfirmation implements Rule {
   }
 
   // get all the confirmation calls to make and expect to pass
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   getCalls(__: unknown, method: MethodObject) {
     const calls: Call[] = [];
     const isMethodAllowed = this.only ? this.only.includes(method.name) : true;

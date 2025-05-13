@@ -1,55 +1,60 @@
-import { JsonRpcError, rpcErrors } from '@metamask/rpc-errors';
+import type {
+  Caip25Authorization,
+  NormalizedScopesObject,
+  Caip25CaveatValue,
+} from '@metamask/chain-agnostic-permission';
 import {
   Caip25CaveatType,
   Caip25EndowmentPermissionName,
   getEthAccounts,
   bucketScopes,
   validateAndNormalizeScopes,
-  Caip25Authorization,
   getInternalScopesObject,
   getSessionScopes,
-  NormalizedScopesObject,
   getSupportedScopeObjects,
-  Caip25CaveatValue,
   setPermittedAccounts,
 } from '@metamask/chain-agnostic-permission';
-import {
-  invalidParams,
-  RequestedPermissions,
-} from '@metamask/permission-controller';
-import {
-  CaipAccountId,
-  CaipChainId,
-  Hex,
-  isPlainObject,
-  Json,
-  JsonRpcRequest,
-  JsonRpcSuccess,
-  KnownCaipNamespace,
-  parseCaipAccountId,
-} from '@metamask/utils';
-import { NetworkController } from '@metamask/network-controller';
-import {
+import type {
   JsonRpcEngineEndCallback,
   JsonRpcEngineNextCallback,
 } from '@metamask/json-rpc-engine';
 import { MultichainNetwork } from '@metamask/multichain-transactions-controller';
+import type { NetworkController } from '@metamask/network-controller';
+import type { RequestedPermissions } from '@metamask/permission-controller';
+import { invalidParams } from '@metamask/permission-controller';
+import { JsonRpcError, rpcErrors } from '@metamask/rpc-errors';
+import type {
+  CaipAccountId,
+  CaipChainId,
+  Hex,
+  Json,
+  JsonRpcRequest,
+  JsonRpcSuccess,
+} from '@metamask/utils';
 import {
-  MetaMetricsEventCategory,
-  MetaMetricsEventName,
+  isPlainObject,
+  KnownCaipNamespace,
+  parseCaipAccountId,
+} from '@metamask/utils';
+
+import { MESSAGE_TYPE } from '../../../../../../shared/constants/app';
+import type {
   MetaMetricsEventOptions,
   MetaMetricsEventPayload,
 } from '../../../../../../shared/constants/metametrics';
-import { shouldEmitDappViewedEvent } from '../../../util';
-import { MESSAGE_TYPE } from '../../../../../../shared/constants/app';
-import { GrantedPermissions } from '../types';
-import { isEqualCaseInsensitive } from '../../../../../../shared/modules/string-utils';
-import { getAllScopesFromScopesObjects } from '../../../../../../shared/lib/multichain/chain-agnostic-permission-utils/caip-chainids';
+import {
+  MetaMetricsEventCategory,
+  MetaMetricsEventName,
+} from '../../../../../../shared/constants/metametrics';
 import { getCaipAccountIdsFromScopesObjects } from '../../../../../../shared/lib/multichain/chain-agnostic-permission-utils/caip-accounts';
+import { getAllScopesFromScopesObjects } from '../../../../../../shared/lib/multichain/chain-agnostic-permission-utils/caip-chainids';
 import {
   isKnownSessionPropertyValue,
   isNamespaceInScopesObject,
 } from '../../../../../../shared/lib/multichain/chain-agnostic-permission-utils/misc-utils';
+import { isEqualCaseInsensitive } from '../../../../../../shared/modules/string-utils';
+import { shouldEmitDappViewedEvent } from '../../../util';
+import type { GrantedPermissions } from '../types';
 
 /**
  * Handler for the `wallet_createSession` RPC method which is responsible
@@ -307,15 +312,9 @@ async function walletCreateSessionHandler(
             url: origin,
           },
           properties: {
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             is_first_visit: isFirstVisit,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             number_of_accounts: Object.keys(hooks.metamaskState.accounts)
               .length,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             number_of_accounts_connected: approvedEthAccounts.length,
           },
         },

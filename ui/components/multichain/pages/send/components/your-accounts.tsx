@@ -1,23 +1,25 @@
+import type { KeyringAccountType } from '@metamask/keyring-api';
+import { EthAccountType } from '@metamask/keyring-api';
+import type { InternalAccount } from '@metamask/keyring-internal-api';
 import React, { useCallback, useContext, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { EthAccountType, KeyringAccountType } from '@metamask/keyring-api';
-import { InternalAccount } from '@metamask/keyring-internal-api';
-import {
-  getUpdatedAndSortedAccounts,
-  getSelectedInternalAccount,
-} from '../../../../../selectors';
+
 import { AccountListItem } from '../../..';
+import {
+  MetaMetricsEventCategory,
+  MetaMetricsEventName,
+} from '../../../../../../shared/constants/metametrics';
+import { MetaMetricsContext } from '../../../../../contexts/metametrics';
 import {
   addHistoryEntry,
   updateRecipient,
   updateRecipientUserInput,
 } from '../../../../../ducks/send';
-import { MetaMetricsContext } from '../../../../../contexts/metametrics';
 import {
-  MetaMetricsEventCategory,
-  MetaMetricsEventName,
-} from '../../../../../../shared/constants/metametrics';
-import { MergedInternalAccount } from '../../../../../selectors/selectors.types';
+  getUpdatedAndSortedAccounts,
+  getSelectedInternalAccount,
+} from '../../../../../selectors';
+import type { MergedInternalAccount } from '../../../../../selectors/selectors.types';
 import { SendPageRow } from './send-page-row';
 
 type SendPageYourAccountsProps = {
@@ -72,7 +74,7 @@ export const SendPageYourAccounts = ({
 
   return (
     <SendPageRow>
-      {/* TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973 */}
+      {/* TODO: Replace `any` with type */}
       {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
       {filteredAccounts.map((account: any) => (
         <AccountListItem

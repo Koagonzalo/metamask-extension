@@ -1,6 +1,7 @@
 import { strict as assert } from 'assert';
+
 import { DAPP_HOST_ADDRESS } from '../../../../constants';
-import { Driver } from '../../../../webdriver/driver';
+import type { Driver } from '../../../../webdriver/driver';
 import Confirmation from './confirmation';
 
 export default class PersonalSignConfirmation extends Confirmation {
@@ -10,25 +11,27 @@ export default class PersonalSignConfirmation extends Confirmation {
     this.driver = driver;
   }
 
-  private originSelector = { text: DAPP_HOST_ADDRESS };
+  private readonly originSelector = { text: DAPP_HOST_ADDRESS };
 
-  private messageSelector = { text: 'Example `personal_sign` message' };
+  private readonly messageSelector = {
+    text: 'Example `personal_sign` message',
+  };
 
-  private signinConfirmationTitle = {
+  private readonly signinConfirmationTitle = {
     text: 'Sign-in request',
     css: 'h2',
   };
 
-  private siweMessage = {
+  private readonly siweMessage = {
     text: 'I accept the MetaMask Terms of Service: https://community.metamask.io/tos',
   };
 
-  private signinMessageTitle = {
+  private readonly signinMessageTitle = {
     text: 'A site wants you to sign in to prove you own this account.',
     css: 'p',
   };
 
-  private signinMessageUrl = {
+  private readonly signinMessageUrl = {
     text: 'https://127.0.0.1:8080',
     css: 'p',
   };
@@ -43,8 +46,6 @@ export default class PersonalSignConfirmation extends Confirmation {
     assert.ok(await message);
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_siweMessage() {
     console.log('Verify sign in with ethereum message on confirmation screen');
     await this.driver.waitForMultipleSelectors([

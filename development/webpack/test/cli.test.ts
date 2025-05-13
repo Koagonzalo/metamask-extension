@@ -1,5 +1,6 @@
-import { describe, it } from 'node:test';
 import assert from 'node:assert';
+import { describe, it } from 'node:test';
+
 import { getDryRunMessage, parseArgv } from '../utils/cli';
 import { getBuildTypes } from '../utils/config';
 import { Browsers } from '../utils/helpers';
@@ -17,8 +18,6 @@ describe('./utils/cli.ts', () => {
     zip: false,
     minify: false,
     browser: ['chrome'],
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     manifest_version: 2,
     type: 'main',
     lavamoat: false,

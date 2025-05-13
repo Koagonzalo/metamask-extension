@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
+import { getEnvironmentType } from '../../../../app/scripts/lib/util';
+import { ENVIRONMENT_TYPE_POPUP } from '../../../../shared/constants/app';
 import {
   Box,
   Button,
@@ -24,8 +26,8 @@ import {
   getNumberOfSettingRoutesInTab,
   handleSettingsRefs,
 } from '../../../helpers/utils/settings-search';
-
 import { useI18nContext } from '../../../hooks/useI18nContext';
+import { getRemoteFeatureFlags } from '../../../selectors';
 import {
   resetOnboarding,
   resetViewedNotifications,
@@ -33,12 +35,9 @@ import {
 } from '../../../store/actions';
 // TODO: Remove restricted import
 // eslint-disable-next-line import/no-restricted-paths
-import { getEnvironmentType } from '../../../../app/scripts/lib/util';
-import { ENVIRONMENT_TYPE_POPUP } from '../../../../shared/constants/app';
-import { getRemoteFeatureFlags } from '../../../selectors';
+import { BackupAndSyncDevSettings } from './backup-and-sync';
 import ToggleRow from './developer-options-toggle-row-component';
 import SentryTest from './sentry-test';
-import { BackupAndSyncDevSettings } from './backup-and-sync';
 
 /**
  * Settings Page for Developer Options (internal-only)
@@ -203,7 +202,7 @@ const DeveloperOptionsTab = () => {
         title="Service Worker Keep Alive"
         description="Results in a timestamp being continuously saved to session.storage"
         isEnabled={isServiceWorkerKeptAlive}
-        onToggle={(value) => handleToggleServiceWorkerAlive(!value)}
+        onToggle={async (value) => handleToggleServiceWorkerAlive(!value)}
         dataTestId="developer-options-service-worker-alive-toggle"
         settingsRef={settingsRefs[3] as React.RefObject<HTMLDivElement>}
       />

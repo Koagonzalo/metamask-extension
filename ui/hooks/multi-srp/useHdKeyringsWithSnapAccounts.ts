@@ -1,9 +1,13 @@
+import type {
+  KeyringMetadata,
+  KeyringObject,
+} from '@metamask/keyring-controller';
+import type { InternalAccount } from '@metamask/keyring-internal-api';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { KeyringMetadata, KeyringObject } from '@metamask/keyring-controller';
-import { InternalAccount } from '@metamask/keyring-internal-api';
-import { getInternalAccounts } from '../../selectors/accounts';
+
 import { getMetaMaskHdKeyrings } from '../../selectors';
+import { getInternalAccounts } from '../../selectors/accounts';
 
 // TODO: Move this data type to the @metamask/keyring-controller module
 type KeyringObjectWithMetadata = KeyringObject & { metadata: KeyringMetadata };

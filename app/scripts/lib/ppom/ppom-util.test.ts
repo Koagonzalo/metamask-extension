@@ -1,22 +1,23 @@
-import { PPOMController } from '@metamask/ppom-validator';
-import { PPOM } from '@blockaid/ppom_release';
-import {
-  TransactionController,
-  TransactionParams,
-  normalizeTransactionParams,
-} from '@metamask/transaction-controller';
-import {
+import type { PPOM } from '@blockaid/ppom_release';
+import type { PPOMController } from '@metamask/ppom-validator';
+import type {
   SignatureController,
   SignatureRequest,
 } from '@metamask/signature-controller';
-import { Hex, JsonRpcRequest } from '@metamask/utils';
+import type {
+  TransactionController,
+  TransactionParams,
+} from '@metamask/transaction-controller';
+import { normalizeTransactionParams } from '@metamask/transaction-controller';
+import type { Hex, JsonRpcRequest } from '@metamask/utils';
+
 import {
   BlockaidReason,
   BlockaidResultType,
   LOADING_SECURITY_ALERT_RESPONSE,
   SecurityAlertSource,
 } from '../../../../shared/constants/security-provider';
-import { AppStateController } from '../../controllers/app-state-controller';
+import type { AppStateController } from '../../controllers/app-state-controller';
 import {
   generateSecurityAlertId,
   METHOD_SIGN_TYPED_DATA_V3,
@@ -24,8 +25,8 @@ import {
   updateSecurityAlertResponse,
   validateRequestWithPPOM,
 } from './ppom-util';
-import { SecurityAlertResponse } from './types';
 import * as securityAlertAPI from './security-alerts-api';
+import type { SecurityAlertResponse } from './types';
 
 jest.mock('@metamask/transaction-controller', () => ({
   ...jest.requireActual('@metamask/transaction-controller'),
@@ -44,8 +45,6 @@ const REQUEST_MOCK = {
 };
 
 const SECURITY_ALERT_RESPONSE_MOCK: SecurityAlertResponse = {
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   result_type: 'success',
   reason: 'success',
   source: SecurityAlertSource.Local,
@@ -199,8 +198,6 @@ describe('PPOM Utils', () => {
         validateRequestWithPPOMOptionsBase.request.method,
         SECURITY_ALERT_ID_MOCK,
         {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           result_type: BlockaidResultType.Errored,
           reason: BlockaidReason.errored,
           description: 'Test Error: Test error message',
@@ -223,8 +220,6 @@ describe('PPOM Utils', () => {
         validateRequestWithPPOMOptionsBase.request.method,
         SECURITY_ALERT_ID_MOCK,
         {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           result_type: BlockaidResultType.Errored,
           reason: BlockaidReason.errored,
           description: 'Test Error: Test error message',
@@ -270,7 +265,6 @@ describe('PPOM Utils', () => {
       );
     });
 
-    // @ts-expect-error This is missing from the Mocha type definitions
     it.each([METHOD_SIGN_TYPED_DATA_V3, METHOD_SIGN_TYPED_DATA_V4])(
       'sanitizes request params if method is %s',
       async (method: string) => {

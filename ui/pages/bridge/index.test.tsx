@@ -1,17 +1,17 @@
+import nock from 'nock';
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import nock from 'nock';
-import { MemoryRouter } from 'react-router-dom';
 
-import { setBackgroundConnection } from '../../store/background-connection';
-import { renderWithProvider, MOCKS, CONSTANTS } from '../../../test/jest';
+import CrossChainSwap from '.';
 import { createBridgeMockStore } from '../../../test/data/bridge/mock-bridge-store';
+import { renderWithProvider, MOCKS, CONSTANTS } from '../../../test/jest';
 import {
   CROSS_CHAIN_SWAP_ROUTE,
   PREPARE_SWAP_ROUTE,
 } from '../../helpers/constants/routes';
-import CrossChainSwap from '.';
+import { setBackgroundConnection } from '../../store/background-connection';
 
 const mockResetBridgeState = jest.fn();
 const middleware = [thunk];
@@ -26,11 +26,10 @@ setBackgroundConnection({
   getNetworkConfigurationByNetworkClientId: jest
     .fn()
     .mockResolvedValue({ chainId: '0x1' }),
+  setBridgeFeatureFlags: jest.fn(),
   selectSrcNetwork: jest.fn(),
   resetState: () => mockResetBridgeState(),
   tokenBalancesStartPolling: jest.fn().mockResolvedValue('pollingToken'),
-
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 } as any);
 
@@ -70,25 +69,15 @@ describe('Bridge', () => {
   });
 
   it('renders the component with initial props', async () => {
-    const bridgeMockStore = createBridgeMockStore({
+    const swapsMockStore = createBridgeMockStore({
       featureFlagOverrides: {
-        extensionConfig: {
-          support: true,
-          refreshRate: 5000,
-          maxRefreshCount: 5,
-          chains: {
-            '1': {
-              isActiveSrc: true,
-              isActiveDest: false,
-            },
-          },
-        },
+        extensionConfig: { support: true },
       },
       metamaskStateOverrides: {
         useExternalServices: true,
       },
     });
-    const store = configureMockStore(middleware)(bridgeMockStore);
+    const store = configureMockStore(middleware)(swapsMockStore);
 
     const { container, getByText } = renderWithProvider(
       <MemoryRouter

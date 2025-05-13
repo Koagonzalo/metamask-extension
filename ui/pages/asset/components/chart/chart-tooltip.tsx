@@ -1,17 +1,18 @@
+import type { Point } from 'chart.js';
 import React from 'react';
+
 // @ts-expect-error suppress CommonJS vs ECMAScript error
-import { Point } from 'chart.js';
 import {
   Box,
   Text,
   TextDirection,
 } from '../../../../components/component-library';
-import { formatCurrency } from '../../../../helpers/utils/confirm-tx.util';
 import {
   TextAlign,
   TextColor,
   TextVariant,
 } from '../../../../helpers/constants/design-system';
+import { formatCurrency } from '../../../../helpers/utils/confirm-tx.util';
 import { getPricePrecision } from '../../util';
 
 // A label indicating the minimum or maximum price on the chart
@@ -22,12 +23,12 @@ const ChartTooltip = ({
   currency,
 }: {
   point?: Point;
-  xMin?: number;
-  xMax?: number;
+  xMin?: Point;
+  xMax?: Point;
   currency: string;
 }) => {
   const xAxisPercent =
-    point && xMin && xMax ? (point.x - xMin) / (xMax - xMin) : 0;
+    point && xMin && xMax ? (point.x - xMin.x) / (xMax.x - xMin.x) : 0;
 
   return (
     <Box

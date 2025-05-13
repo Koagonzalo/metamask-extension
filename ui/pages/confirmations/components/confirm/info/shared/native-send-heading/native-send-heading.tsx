@@ -1,7 +1,8 @@
-import { TransactionMeta } from '@metamask/transaction-controller';
+import type { TransactionMeta } from '@metamask/transaction-controller';
 import { BigNumber } from 'bignumber.js';
 import React from 'react';
 import { useSelector } from 'react-redux';
+
 import {
   CHAIN_ID_TOKEN_IMAGE_MAP,
   TEST_CHAINS,
@@ -72,9 +73,7 @@ const NativeSendHeading = () => {
   const transferValue = nativeAssetTransferValue.toFixed();
 
   type TestNetChainId = (typeof TEST_CHAINS)[number];
-  const isTestnet = TEST_CHAINS.includes(
-    transactionMeta.chainId as TestNetChainId,
-  );
+  const isTestnet = TEST_CHAINS.includes(transactionMeta.chainId);
   const { showFiatInTestnets } = useSelector(getPreferences);
 
   const NetworkImage = (

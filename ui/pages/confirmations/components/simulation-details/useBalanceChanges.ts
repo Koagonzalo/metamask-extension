@@ -1,26 +1,26 @@
-import { Hex } from '@metamask/utils';
-import { useSelector } from 'react-redux';
-import {
+import type { ContractExchangeRates } from '@metamask/assets-controllers';
+import type {
   SimulationBalanceChange,
   SimulationData,
   SimulationTokenBalanceChange,
-  SimulationTokenStandard,
 } from '@metamask/transaction-controller';
+import { SimulationTokenStandard } from '@metamask/transaction-controller';
+import type { Hex } from '@metamask/utils';
 import { BigNumber } from 'bignumber.js';
-import { ContractExchangeRates } from '@metamask/assets-controllers';
-import { useAsyncResultOrThrow } from '../../../../hooks/useAsync';
+import { useSelector } from 'react-redux';
+
 import { TokenStandard } from '../../../../../shared/constants/transaction';
 import { getCurrentCurrency } from '../../../../ducks/metamask/metamask';
-import { selectConversionRateByChainId } from '../../../../selectors';
 import { fetchTokenExchangeRates } from '../../../../helpers/utils/util';
+import { useAsyncResultOrThrow } from '../../../../hooks/useAsync';
+import { selectConversionRateByChainId } from '../../../../selectors';
 import { ERC20_DEFAULT_DECIMALS, fetchErc20Decimals } from '../../utils/token';
-
-import {
+import type {
   BalanceChange,
-  FIAT_UNAVAILABLE,
   NativeAssetIdentifier,
   TokenAssetIdentifier,
 } from './types';
+import { FIAT_UNAVAILABLE } from './types';
 
 const NATIVE_DECIMALS = 18;
 
@@ -171,12 +171,12 @@ export const useBalanceChanges = ({
     .map((tbc) => tbc.address);
 
   const erc20Decimals = useAsyncResultOrThrow(
-    () => fetchAllErc20Decimals(erc20TokenAddresses),
+    async () => fetchAllErc20Decimals(erc20TokenAddresses),
     [JSON.stringify(erc20TokenAddresses)],
   );
 
   const erc20FiatRates = useAsyncResultOrThrow(
-    () => fetchTokenFiatRates(fiatCurrency, erc20TokenAddresses, chainId),
+    async () => fetchTokenFiatRates(fiatCurrency, erc20TokenAddresses, chainId),
     [JSON.stringify(erc20TokenAddresses), chainId, fiatCurrency],
   );
 

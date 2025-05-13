@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from 'react';
 import classnames from 'classnames';
+import React, { useRef, useEffect } from 'react';
 
 import {
   BackgroundColor,
@@ -10,20 +10,17 @@ import {
   AlignItems,
   FlexDirection,
 } from '../../../helpers/constants/design-system';
-
-import { Box, BoxProps } from '../box';
-import type { PolymorphicRef } from '../box';
-import { useModalContext } from '../modal/modal.context';
+import { Box } from '../box';
+import type { PolymorphicRef, BoxProps } from '../box';
 import { ModalFocus } from '../modal-focus';
-import {
+import { useModalContext } from '../modal/modal.context';
+import type {
   ModalContentProps,
-  ModalContentSize,
   ModalContentComponent,
 } from './modal-content.types';
+import { ModalContentSize } from './modal-content.types';
 
 export const ModalContent: ModalContentComponent = React.forwardRef(
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   <C extends React.ElementType = 'div'>(
     {
       className = '',

@@ -1,18 +1,20 @@
+import type { ApprovalRequest } from '@metamask/approval-controller';
 import { ApprovalType } from '@metamask/controller-utils';
-import { ApprovalRequest } from '@metamask/approval-controller';
 import { isArray } from 'lodash';
+
+import { IconName } from '../../../components/component-library';
 import {
   BackgroundColor,
   IconColor,
 } from '../../../helpers/constants/design-system';
-import { IconName } from '../../../components/component-library';
-import { ResultTemplate, ResultTemplateActions } from './ResultTemplate';
-import { TemplateRendererComponent } from './util';
+import type { ResultTemplateActions } from './ResultTemplate';
+import { ResultTemplate } from './ResultTemplate';
+import type { TemplateRendererComponent } from './util';
 
 const PENDING_APPROVAL_MOCK = {
   id: 'testApprovalId',
   requestData: { testProperty: 'testValue' },
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+  // TODO: Replace `any` with type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 } as ApprovalRequest<any>;
 
@@ -184,7 +186,7 @@ describe('ResultTemplate', () => {
 
         expect(
           flattenContent(content).some(
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+            // TODO: Replace `any` with type
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (t: any) =>
               t.key === 'icon' &&
@@ -206,7 +208,7 @@ describe('ResultTemplate', () => {
 
         expect(
           flattenContent(content).some(
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+            // TODO: Replace `any` with type
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (t: any) =>
               t.key === 'icon' &&

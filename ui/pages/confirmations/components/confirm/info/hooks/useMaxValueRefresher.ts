@@ -1,5 +1,3 @@
-import { useEffect, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import {
   GasFeeEstimateLevel,
   TransactionType,
@@ -10,21 +8,24 @@ import {
   type GasPriceGasFeeEstimates,
   type LegacyGasFeeEstimates,
 } from '@metamask/transaction-controller';
-import { add0x, Hex } from '@metamask/utils';
+import type { Hex } from '@metamask/utils';
+import { add0x } from '@metamask/utils';
+import { useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {
-  getSelectedAccountCachedBalance,
-  selectMaxValueModeForTransaction,
-} from '../../../../../../selectors';
 import {
   decimalToHex,
   multiplyHexes,
   subtractHexes,
 } from '../../../../../../../shared/modules/conversion.utils';
+import {
+  getSelectedAccountCachedBalance,
+  selectMaxValueModeForTransaction,
+} from '../../../../../../selectors';
 import { updateEditableParams } from '../../../../../../store/actions';
 import { useConfirmContext } from '../../../../context/confirm';
-import { HEX_ZERO } from '../shared/constants';
 import { useTransactionEventFragment } from '../../../../hooks/useTransactionEventFragment';
+import { HEX_ZERO } from '../shared/constants';
 import { useSupportsEIP1559 } from './useSupportsEIP1559';
 
 // This hook is used to refresh the max value of the transaction
@@ -36,11 +37,7 @@ export const useMaxValueRefresher = () => {
   const dispatch = useDispatch();
   const { id: transactionId } = transactionMeta;
   const { supportsEIP1559 } = useSupportsEIP1559(transactionMeta);
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const gasLimit = transactionMeta?.txParams?.gas || HEX_ZERO;
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const gasPrice = transactionMeta?.txParams?.gasPrice || HEX_ZERO;
   const balance = useSelector(getSelectedAccountCachedBalance);
   const isMaxAmountMode = useSelector((state) =>
@@ -60,8 +57,6 @@ export const useMaxValueRefresher = () => {
     updateTransactionEventFragment(
       {
         properties: {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           is_send_max: isMaxAmountMode,
         },
       },
@@ -121,8 +116,10 @@ function getMaxFeePerGasFromGasFeeEstimates(
   gasFeeEstimates: GasFeeEstimates,
   userFeeLevel: GasFeeEstimateLevel,
 ): Hex {
-  return ((gasFeeEstimates as FeeMarketGasFeeEstimates)?.[userFeeLevel]
-    ?.maxFeePerGas ||
+  return (
+    (gasFeeEstimates as FeeMarketGasFeeEstimates)?.[userFeeLevel]
+      ?.maxFeePerGas ||
     (gasFeeEstimates as LegacyGasFeeEstimates)?.[userFeeLevel] ||
-    (gasFeeEstimates as GasPriceGasFeeEstimates)?.gasPrice) as Hex;
+    (gasFeeEstimates as GasPriceGasFeeEstimates)?.gasPrice
+  );
 }

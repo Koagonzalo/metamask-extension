@@ -1,7 +1,7 @@
-import { renderHookWithProvider } from '../../../test/lib/render-helpers';
-import { createBridgeMockStore } from '../../../test/data/bridge/mock-bridge-store';
-import { flushPromises } from '../../../test/lib/timer-helpers';
 import { SECOND } from '../../../shared/constants/time';
+import { createBridgeMockStore } from '../../../test/data/bridge/mock-bridge-store';
+import { renderHookWithProvider } from '../../../test/lib/render-helpers';
+import { flushPromises } from '../../../test/lib/timer-helpers';
 import { useCountdownTimer } from './useCountdownTimer';
 
 jest.useFakeTimers();

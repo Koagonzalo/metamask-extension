@@ -1,11 +1,11 @@
-import React from 'react';
 import { fireEvent } from '@testing-library/react';
+import React from 'react';
+
+import { AddressListItem } from '.';
 import mockState from '../../../../test/data/mock-state.json';
 import { renderWithProvider } from '../../../../test/jest';
-import configureStore from '../../../store/store';
 import { shortenAddress } from '../../../helpers/utils/util';
-import { CHAIN_IDS } from '../../../../shared/constants/network';
-import { AddressListItem } from '.';
+import configureStore from '../../../store/store';
 
 const SAMPLE_ADDRESS = '0x0c54FcCd2e384b4BB6f2E405Bf5Cbc15a017AaFb';
 const SAMPLE_LABEL = 'metamask.eth';
@@ -22,13 +22,10 @@ const render = (options?: Options) => {
   return renderWithProvider(
     <AddressListItem
       address={SAMPLE_ADDRESS}
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       label={options?.label || SAMPLE_LABEL}
       useConfusable={options?.useConfusable}
       onClick={mockOnClick}
       isDuplicate={options?.isDuplicate}
-      chainId={CHAIN_IDS.MAINNET}
     />,
     configureStore(mockState),
   );

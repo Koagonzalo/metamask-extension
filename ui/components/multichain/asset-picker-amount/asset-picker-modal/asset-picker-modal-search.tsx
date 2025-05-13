@@ -1,15 +1,16 @@
 import React from 'react';
+
+import {
+  BlockSize,
+  BorderRadius,
+} from '../../../../helpers/constants/design-system';
+import { useI18nContext } from '../../../../hooks/useI18nContext';
 import {
   Box,
   ButtonIconSize,
   TextFieldSearch,
   TextFieldSearchSize,
 } from '../../../component-library';
-import {
-  BlockSize,
-  BorderRadius,
-} from '../../../../helpers/constants/design-system';
-import { useI18nContext } from '../../../../hooks/useI18nContext';
 
 /**
  * Renders a search component for the asset picker modal.
@@ -41,13 +42,7 @@ export const Search = ({
   const t = useI18nContext();
 
   return (
-    <Box
-      paddingTop={4}
-      paddingLeft={4}
-      paddingRight={4}
-      paddingBottom={2}
-      {...props}
-    >
+    <Box padding={4} {...props}>
       <TextFieldSearch
         borderRadius={BorderRadius.LG}
         placeholder={
@@ -64,7 +59,7 @@ export const Search = ({
         clearButtonProps={{
           size: ButtonIconSize.Sm,
         }}
-        style={{ paddingInline: 12 }}
+        style={{ paddingInline: 8 }}
         showClearButton
         className="asset-picker-modal__search-list"
         inputProps={{

@@ -1,20 +1,19 @@
 import FixtureBuilder from '../../../fixture-builder';
 import {
-  defaultOptionsForType2Transactions,
+  defaultGanacheOptionsForType2Transactions,
   WINDOW_TITLES,
   withFixtures,
 } from '../../../helpers';
-import { Mockttp } from '../../../mock-e2e';
-import ContractAddressRegistry from '../../../seeder/contract-address-registry';
+import type { Mockttp } from '../../../mock-e2e';
+import type ContractAddressRegistry from '../../../seeder/contract-address-registry';
 import { SMART_CONTRACTS } from '../../../seeder/smart-contracts';
-import { Driver } from '../../../webdriver/driver';
+import type { Driver } from '../../../webdriver/driver';
 import { scrollAndConfirmAndAssertConfirm } from '../helpers';
+import type { TestSuiteArguments } from './shared';
 import {
   assertChangedSpendingCap,
   editSpendingCap,
-  mocked4BytesIncreaseAllowance,
   openDAppWithContract,
-  TestSuiteArguments,
 } from './shared';
 
 describe('Confirmation Redesign ERC20 Increase Allowance', function () {
@@ -91,7 +90,7 @@ function generateFixtureOptionsForEIP1559Tx(mochaContext: Mocha.Context) {
     fixtures: new FixtureBuilder()
       .withPermissionControllerConnectedToTestDapp()
       .build(),
-    localNodeOptions: defaultOptionsForType2Transactions,
+    localNodeOptions: defaultGanacheOptionsForType2Transactions,
     smartContract: SMART_CONTRACTS.HST,
     testSpecificMock: mocks,
     title: mochaContext.test?.fullTitle(),
@@ -116,6 +115,32 @@ async function createAndAssertIncreaseAllowanceSubmission(
 
 async function mocks(server: Mockttp) {
   return [await mocked4BytesIncreaseAllowance(server)];
+}
+
+export async function mocked4BytesIncreaseAllowance(mockServer: Mockttp) {
+  return await mockServer
+    .forGet('https://www.4byte.directory/api/v1/signatures/')
+    .always()
+    .withQuery({ hex_signature: '0x39509351' })
+    .thenCallback(() => {
+      return {
+        statusCode: 200,
+        json: {
+          count: 1,
+          next: null,
+          previous: null,
+          results: [
+            {
+              id: 46002,
+              created_at: '2018-06-24T21:43:27.354648Z',
+              text_signature: 'increaseAllowance(address,uint256)',
+              hex_signature: '0x39509351',
+              bytes_signature: '9PQ',
+            },
+          ],
+        },
+      };
+    });
 }
 
 async function createERC20IncreaseAllowanceTransaction(driver: Driver) {

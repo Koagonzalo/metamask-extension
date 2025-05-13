@@ -1,12 +1,13 @@
-import { NetworkClientId } from '@metamask/network-controller';
-import {
+import type { NetworkClientId } from '@metamask/network-controller';
+import type {
   GasFeeEstimates,
   TransactionParams,
 } from '@metamask/transaction-controller';
-import { Hex } from '@metamask/utils';
+import type { Hex } from '@metamask/utils';
+
 import { submitRequestToBackground } from '../../store/background-connection';
 
-export function estimateGasFee(request: {
+export async function estimateGasFee(request: {
   transactionParams: TransactionParams;
   chainId?: Hex;
   networkClientId?: NetworkClientId;

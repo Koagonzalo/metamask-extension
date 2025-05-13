@@ -367,6 +367,9 @@ export const AccountListMenu = ({
         // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
         // eslint-disable-next-line @typescript-eslint/naming-convention
         hd_entropy_index: hdEntropyIndex,
+        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        chain_id_caip: _options.scope,
       },
     });
 
@@ -652,23 +655,6 @@ export const AccountListMenu = ({
                         },
                         ACTION_MODES.ADD_SOLANA,
                       );
-
-                      trackEvent({
-                        category: MetaMetricsEventCategory.Navigation,
-                        event: MetaMetricsEventName.AccountAddSelected,
-                        properties: {
-                          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                          // eslint-disable-next-line @typescript-eslint/naming-convention
-                          account_type: MetaMetricsEventAccountType.Default,
-                          location: 'Main Menu',
-                          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                          // eslint-disable-next-line @typescript-eslint/naming-convention
-                          hd_entropy_index: hdEntropyIndex,
-                          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                          // eslint-disable-next-line @typescript-eslint/naming-convention
-                          chain_id_caip: MultichainNetworks.SOLANA,
-                        },
-                      });
                     }}
                     data-testid="multichain-account-menu-popover-add-solana-account"
                   >

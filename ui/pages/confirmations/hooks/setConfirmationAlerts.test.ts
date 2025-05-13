@@ -1,9 +1,10 @@
 import { useDispatch } from 'react-redux';
+
 import { getMockPersonalSignConfirmStateForRequest } from '../../../../test/data/confirmations/helper';
-import { renderHookWithConfirmContextProvider } from '../../../../test/lib/confirmations/render-helpers';
 import { unapprovedPersonalSignMsg } from '../../../../test/data/confirmations/personal_sign';
+import { renderHookWithConfirmContextProvider } from '../../../../test/lib/confirmations/render-helpers';
+import type { Alert } from '../../../ducks/confirm-alerts/confirm-alerts';
 import {
-  Alert,
   clearAlerts,
   updateAlerts,
 } from '../../../ducks/confirm-alerts/confirm-alerts';
@@ -16,8 +17,6 @@ jest.mock('react-redux', () => ({
   useDispatch: jest.fn(),
 }));
 jest.mock('./useConfirmationAlerts', () => ({
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   __esModule: true,
   default: jest.fn(),
 }));

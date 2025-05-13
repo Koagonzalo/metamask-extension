@@ -1,15 +1,16 @@
-import { Token, TokenListToken } from '@metamask/assets-controllers';
+import type { Token, TokenListToken } from '@metamask/assets-controllers';
 import { type Hex, type CaipChainId } from '@metamask/utils';
+
+import type {
+  CHAIN_ID_TO_CURRENCY_SYMBOL_MAP,
+  CHAIN_ID_TOKEN_IMAGE_MAP,
+} from '../../../../../shared/constants/network';
 import type {
   AssetType,
   TokenStandard,
 } from '../../../../../shared/constants/transaction';
 import type { Asset } from '../../../../ducks/send';
-import {
-  CHAIN_ID_TO_CURRENCY_SYMBOL_MAP,
-  CHAIN_ID_TOKEN_IMAGE_MAP,
-} from '../../../../../shared/constants/network';
-import { TokenWithFiatAmount } from '../../../app/assets/types';
+import type { TokenWithFiatAmount } from '../../../app/assets/types';
 
 export type NFT = {
   address: string;
@@ -55,8 +56,6 @@ export type NativeAsset = {
 /**
  * ERC20Asset or NativeAsset, plus additional fields for display purposes in the Asset component
  */
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export type AssetWithDisplayData<T extends ERC20Asset | NativeAsset> = T & {
   balance: string; // raw balance
   string: string | undefined; // normalized balance as a stringified number
@@ -75,4 +74,4 @@ export type Collection = {
  */
 export type TokenWithBalance = Token & { balance?: string; string?: string };
 
-export { Asset };
+export type { Asset };

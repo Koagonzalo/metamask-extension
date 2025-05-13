@@ -1,29 +1,30 @@
-import log from 'loglevel';
-import {
+import type {
+  AcceptRequest,
+  AddApprovalRequest,
+  RejectRequest,
+} from '@metamask/approval-controller';
+import type { RestrictedMessenger } from '@metamask/base-controller';
+import { BaseController } from '@metamask/base-controller';
+import { ApprovalType, ORIGIN_METAMASK } from '@metamask/controller-utils';
+import type { KeyringControllerDecryptMessageAction } from '@metamask/keyring-controller';
+import type {
+  DecryptMessageManagerMessenger,
+  DecryptMessageManagerState,
+  DecryptMessageManagerUnapprovedMessageAddedEvent,
   AbstractMessage,
   AbstractMessageParams,
   AbstractMessageParamsMetamask,
   MessageManagerState,
   OriginalRequest,
-  DecryptMessageManager,
   DecryptMessageParams,
   DecryptMessageParamsMetamask,
 } from '@metamask/message-manager';
-import type {
-  DecryptMessageManagerMessenger,
-  DecryptMessageManagerState,
-  DecryptMessageManagerUnapprovedMessageAddedEvent,
-} from '@metamask/message-manager';
-import { BaseController, RestrictedMessenger } from '@metamask/base-controller';
-import {
-  AcceptRequest,
-  AddApprovalRequest,
-  RejectRequest,
-} from '@metamask/approval-controller';
-import { ApprovalType, ORIGIN_METAMASK } from '@metamask/controller-utils';
-import { Patch } from 'immer';
-import type { KeyringControllerDecryptMessageAction } from '@metamask/keyring-controller';
-import { Eip1024EncryptedData, hasProperty, isObject } from '@metamask/utils';
+import { DecryptMessageManager } from '@metamask/message-manager';
+import type { Eip1024EncryptedData } from '@metamask/utils';
+import { hasProperty, isObject } from '@metamask/utils';
+import type { Patch } from 'immer';
+import log from 'loglevel';
+
 import { MetaMetricsEventCategory } from '../../../shared/constants/metametrics';
 import { stripHexPrefix } from '../../../shared/modules/hexstring-utils';
 
@@ -148,13 +149,13 @@ export default class DecryptMessageController extends BaseController<
 > {
   // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private _getState: () => any;
+  private readonly _getState: () => any;
 
   // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private _metricsEvent: (payload: any, options?: any) => void;
+  private readonly _metricsEvent: (payload: any, options?: any) => void;
 
-  private _decryptMessageManager: DecryptMessageManager;
+  private readonly _decryptMessageManager: DecryptMessageManager;
 
   /**
    * Construct a DecryptMessage controller.

@@ -1,9 +1,10 @@
-import { ApprovalType } from '@metamask/controller-utils';
-import {
+import type {
   ApprovalRequest,
   ErrorOptions,
   SuccessOptions,
 } from '@metamask/approval-controller';
+import { ApprovalType } from '@metamask/controller-utils';
+
 import { IconName, IconSize } from '../../../components/component-library';
 import {
   FontWeight,
@@ -16,13 +17,9 @@ import {
   IconColor,
   BackgroundColor,
 } from '../../../helpers/constants/design-system';
-import { resolvePendingApproval } from '../../../store/actions';
-import {
-  processError,
-  processHeader,
-  processString,
-  TemplateRendererComponent,
-} from './util';
+import type { resolvePendingApproval } from '../../../store/actions';
+import type { TemplateRendererComponent } from './util';
+import { processError, processHeader, processString } from './util';
 
 export type ResultTemplateActions = {
   resolvePendingApproval: typeof resolvePendingApproval;
@@ -31,18 +28,18 @@ export type ResultTemplateActions = {
 export type ResultType = ApprovalType.ResultSuccess | ApprovalType.ResultError;
 
 export class ResultTemplate {
-  #type: ResultType;
+  readonly #type: ResultType;
 
   constructor(type: ResultType) {
     this.#type = type;
   }
 
   getValues(
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+    // TODO: Replace `any` with type
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     pendingApproval: ApprovalRequest<any>,
     t: (key: string) => string,
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+    // TODO: Replace `any` with type
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     actions: any,
   ) {
@@ -62,11 +59,11 @@ export class ResultTemplate {
 
   #getContent(
     requestData: SuccessOptions | ErrorOptions,
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+    // TODO: Replace `any` with type
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     t: any,
   ): (undefined | string | TemplateRendererComponent)[] {
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+    // TODO: Replace `any` with type
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { error, header, icon, message, title } = requestData as any;
     const isSuccess = this.#type === ApprovalType.ResultSuccess;

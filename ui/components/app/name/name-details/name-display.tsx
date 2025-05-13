@@ -1,11 +1,12 @@
-import React, { memo } from 'react';
+import type { NameType } from '@metamask/name-controller';
 import classnames from 'classnames';
-import { NameType } from '@metamask/name-controller';
-import Identicon from '../../../ui/identicon';
-import { Icon, IconName, IconSize } from '../../../component-library';
+import React, { memo } from 'react';
+
 import { useDisplayName } from '../../../../hooks/useDisplayName';
-import ShortenedName from './shortened-name';
+import { Icon, IconName, IconSize } from '../../../component-library';
+import Identicon from '../../../ui/identicon';
 import FormattedName from './formatted-value';
+import ShortenedName from './shortened-name';
 
 export type NameDisplayProps = {
   preferContractSymbol?: boolean;
@@ -40,17 +41,9 @@ const NameDisplay = memo(
       <div
         className={classnames({
           name: true,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           name__clickable: Boolean(handleClick),
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           name__saved: hasPetname,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           name__recognized_unsaved: !hasPetname && hasDisplayName,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           name__missing: !hasDisplayName,
         })}
         onClick={handleClick}

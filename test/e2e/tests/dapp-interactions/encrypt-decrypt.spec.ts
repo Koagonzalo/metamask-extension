@@ -1,13 +1,14 @@
-import { Suite } from 'mocha';
-import { WINDOW_TITLES, withFixtures } from '../../helpers';
+import type { Suite } from 'mocha';
+
 import FixtureBuilder from '../../fixture-builder';
-import DecryptMessageConfirmation from '../../page-objects/pages/confirmations/redesign/decrypt-message-confirmation';
-import TestDapp from '../../page-objects/pages/test-dapp';
-import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
+import { WINDOW_TITLES, withFixtures } from '../../helpers';
 import {
   decryptMessageAndVerifyResult,
   getEncryptionKeyInDapp,
 } from '../../page-objects/flows/encrypt-decrypt.flow';
+import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
+import DecryptMessageConfirmation from '../../page-objects/pages/confirmations/redesign/decrypt-message-confirmation';
+import TestDapp from '../../page-objects/pages/test-dapp';
 
 describe('Encrypt Decrypt', function (this: Suite) {
   const encryptionKey = 'fxYXfCbun026g5zcCQh7Ia+O0urAEVZWLG8H4Jzu7Xs=';

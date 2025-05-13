@@ -1,16 +1,16 @@
-import { withFixtures, WINDOW_TITLES } from '../helpers';
-import { Driver } from '../webdriver/driver';
+import { TRADES_API_MOCK_RESULT } from '../../data/mock-data';
 import FixtureBuilder from '../fixture-builder';
+import { withFixtures, WINDOW_TITLES } from '../helpers';
+import type { Mockttp } from '../mock-e2e';
+import { loginWithBalanceValidation } from '../page-objects/flows/login.flow';
+import { installSnapSimpleKeyring } from '../page-objects/flows/snap-simple-keyring.flow';
 import {
   buildQuote,
   reviewQuote,
   waitForTransactionToComplete,
   checkActivityTransaction,
 } from '../tests/swaps/shared';
-import { TRADES_API_MOCK_RESULT } from '../../data/mock-data';
-import { installSnapSimpleKeyring } from '../page-objects/flows/snap-simple-keyring.flow';
-import { loginWithBalanceValidation } from '../page-objects/flows/login.flow';
-import { Mockttp } from '../mock-e2e';
+import type { Driver } from '../webdriver/driver';
 
 const DAI = 'DAI';
 const TEST_ETH = 'TESTETH';

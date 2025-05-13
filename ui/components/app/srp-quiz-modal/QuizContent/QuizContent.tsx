@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   AlignItems,
   BlockSize,
@@ -10,10 +11,8 @@ import {
 } from '../../../../helpers/constants/design-system';
 import { useI18nContext } from '../../../../hooks/useI18nContext';
 import { Button, Box, Text } from '../../../component-library';
-import { IQuizInformationProps } from '../types';
+import type { IQuizInformationProps } from '../types';
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export default function QuizContent({
   icon,
   image,
@@ -62,7 +61,7 @@ export default function QuizContent({
           key={idx}
           size={btn.size}
           onClick={btn.onClick}
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+          // TODO: Replace `any` with type
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           variant={btn.variant as any}
           width={BlockSize.Full}

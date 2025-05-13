@@ -1,9 +1,9 @@
 import { Severity } from '../../helpers/constants/design-system';
+import type { Alert } from './confirm-alerts';
 import confirmAlertsReducer, {
   updateAlerts,
   setAlertConfirmed,
   clearAlerts,
-  Alert,
 } from './confirm-alerts';
 
 describe('confirmAlertsReducer', () => {

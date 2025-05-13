@@ -1,7 +1,7 @@
-import { BigNumber } from 'bignumber.js';
 import { JsonRpcProvider } from '@ethersproject/providers';
 import type { NotificationServicesController } from '@metamask/notification-services-controller';
-import { TextVariant } from '../constants/design-system';
+import { BigNumber } from 'bignumber.js';
+
 import {
   CHAIN_IDS,
   CHAIN_ID_TO_CURRENCY_SYMBOL_MAP,
@@ -16,14 +16,15 @@ import {
   LINEA_MAINNET_RPC_URL,
   LOCALHOST_RPC_URL,
 } from '../../../shared/constants/network';
-import { SUPPORTED_NOTIFICATION_BLOCK_EXPLORERS } from '../constants/metamask-notifications/metamask-notifications';
 import { calcTokenAmount } from '../../../shared/lib/transactions-controller-utils';
-import type { BlockExplorerConfig } from '../constants/metamask-notifications/metamask-notifications';
 import {
   hexWEIToDecGWEI,
   hexWEIToDecETH,
   decimalToHex,
 } from '../../../shared/modules/conversion.utils';
+import type { TextVariant } from '../constants/design-system';
+import type { BlockExplorerConfig } from '../constants/metamask-notifications/metamask-notifications';
+import { SUPPORTED_NOTIFICATION_BLOCK_EXPLORERS } from '../constants/metamask-notifications/metamask-notifications';
 
 type OnChainRawNotification =
   NotificationServicesController.Types.OnChainRawNotification;
@@ -37,8 +38,6 @@ type OnChainRawNotificationsWithNetworkFields =
  * @param key - The key to check for.
  * @returns True if the key is present, false otherwise.
  */
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function isKey<T extends object>(object: T, key: PropertyKey): key is keyof T {
   return key in object;
 }
@@ -143,8 +142,6 @@ const defaultFormatOptions = {
 export const getLeadingZeroCount = (num: number | string) => {
   const numToString = new BigNumber(num, 10).toString(10);
   const fractionalPart = numToString.split('.')[1] ?? '';
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   return fractionalPart.match(/^0*/u)?.[0]?.length || 0;
 };
 
@@ -448,8 +445,6 @@ export const getNetworkFees = async (notification: OnChainRawNotification) => {
         parseFloat(value) *
           parseFloat(notification.data.network_fee.native_token_price_in_usd),
         {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-          // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
           decimalPlaces: decimalPlaces || 4,
         },
       );

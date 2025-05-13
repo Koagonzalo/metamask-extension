@@ -1,10 +1,10 @@
-import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
-import TestDapp from '../../page-objects/pages/test-dapp';
-import TransactionConfirmation from '../../page-objects/pages/confirmations/redesign/transaction-confirmation';
-import { Driver } from '../../webdriver/driver';
 import { DEFAULT_FIXTURE_ACCOUNT } from '../../constants';
 import FixtureBuilder from '../../fixture-builder';
 import { withFixtures, WINDOW_TITLES } from '../../helpers';
+import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
+import TransactionConfirmation from '../../page-objects/pages/confirmations/redesign/transaction-confirmation';
+import TestDapp from '../../page-objects/pages/test-dapp';
+import type { Driver } from '../../webdriver/driver';
 
 describe('Request Queuing', function () {
   // TODO: add a new spec which checks that after revoking and connecting again
@@ -41,8 +41,6 @@ describe('Request Queuing', function () {
           method: 'wallet_revokePermissions',
           params: [
             {
-              // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-              // eslint-disable-next-line @typescript-eslint/naming-convention
               eth_accounts: {},
             },
           ],

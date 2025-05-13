@@ -1,14 +1,13 @@
+import { fireEvent } from '@testing-library/react';
 import React from 'react';
 import configureMockStore from 'redux-mock-store';
-import { fireEvent } from '@testing-library/react';
-import { Severity } from '../../../../helpers/constants/design-system';
-import { renderWithProvider } from '../../../../../test/lib/render-helpers';
+
 import mockState from '../../../../../test/data/mock-state.json';
+import { renderWithProvider } from '../../../../../test/lib/render-helpers';
+import { Severity } from '../../../../helpers/constants/design-system';
 import * as useAlertsModule from '../../../../hooks/useAlerts';
-import {
-  MultipleAlertModal,
-  MultipleAlertModalProps,
-} from './multiple-alert-modal';
+import type { MultipleAlertModalProps } from './multiple-alert-modal';
+import { MultipleAlertModal } from './multiple-alert-modal';
 
 jest.mock('../contexts/alertMetricsContext', () => ({
   useAlertMetrics: jest.fn(() => ({

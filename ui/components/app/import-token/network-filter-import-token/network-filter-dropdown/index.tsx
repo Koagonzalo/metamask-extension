@@ -1,10 +1,5 @@
 import React, { useCallback } from 'react';
-import {
-  Box,
-  ButtonIcon,
-  IconName,
-  ButtonIconSize,
-} from '../../../../component-library';
+
 import {
   BorderRadius,
   AlignItems,
@@ -12,6 +7,12 @@ import {
   JustifyContent,
   BorderColor,
 } from '../../../../../helpers/constants/design-system';
+import {
+  Box,
+  ButtonIcon,
+  IconName,
+  ButtonIconSize,
+} from '../../../../component-library';
 import { NetworkFilterDropdownItem } from './network-filter-drop-down-item';
 
 type NetworkFilterDropdownProps = {
@@ -51,7 +52,7 @@ export const NetworkFilterDropdown = ({
       borderColor={BorderColor.borderDefault}
       borderWidth={1}
       paddingLeft={4}
-      paddingRight={2}
+      paddingRight={1}
       ref={dropdownRef}
     >
       <NetworkFilterDropdownItem
@@ -65,7 +66,7 @@ export const NetworkFilterDropdown = ({
         marginLeft="auto"
         iconName={isDropdownOpen ? IconName.ArrowUp : IconName.ArrowDown}
         ariaLabel={title}
-        size={ButtonIconSize.Sm}
+        size={ButtonIconSize.Md}
         onClick={setDropdownOpen}
         data-testid={buttonDataTestId}
       />

@@ -1,27 +1,31 @@
-import { AccountsController } from '@metamask/accounts-controller';
-import { PPOMController } from '@metamask/ppom-validator';
-import { NetworkController } from '@metamask/network-controller';
-import {
+import type { AccountsController } from '@metamask/accounts-controller';
+import { detectSIWE } from '@metamask/controller-utils';
+import type { NetworkController } from '@metamask/network-controller';
+import type { PPOMController } from '@metamask/ppom-validator';
+import type {
   Json,
   JsonRpcParams,
   JsonRpcRequest,
   JsonRpcResponse,
 } from '@metamask/utils';
-import { detectSIWE } from '@metamask/controller-utils';
 
 import { MESSAGE_TYPE } from '../../../../shared/constants/app';
-import { SIGNING_METHODS } from '../../../../shared/constants/transaction';
-import { PreferencesController } from '../../controllers/preferences-controller';
-import { AppStateController } from '../../controllers/app-state-controller';
-import { getProviderConfig } from '../../../../shared/modules/selectors/networks';
-import { trace, TraceContext, TraceName } from '../../../../shared/lib/trace';
 import { LOADING_SECURITY_ALERT_RESPONSE } from '../../../../shared/constants/security-provider';
+import { SIGNING_METHODS } from '../../../../shared/constants/transaction';
+import type { TraceContext } from '../../../../shared/lib/trace';
+import { trace, TraceName } from '../../../../shared/lib/trace';
+import { getProviderConfig } from '../../../../shared/modules/selectors/networks';
+import type { AppStateController } from '../../controllers/app-state-controller';
+import type { PreferencesController } from '../../controllers/preferences-controller';
 import {
   generateSecurityAlertId,
   handlePPOMError,
   validateRequestWithPPOM,
 } from './ppom-util';
-import { SecurityAlertResponse, UpdateSecurityAlertResponse } from './types';
+import type {
+  SecurityAlertResponse,
+  UpdateSecurityAlertResponse,
+} from './types';
 
 const CONFIRMATION_METHODS = Object.freeze([
   'eth_sendRawTransaction',
@@ -108,7 +112,7 @@ export function createPPOMMiddleware<
 
       trace(
         { name: TraceName.PPOMValidation, parentContext: req.traceContext },
-        () =>
+        async () =>
           validateRequestWithPPOM({
             ppomController,
             request: req,

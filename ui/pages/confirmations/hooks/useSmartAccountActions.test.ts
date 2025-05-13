@@ -1,18 +1,17 @@
+import { upgradeAccountConfirmation } from '../../../../test/data/confirmations/batch-transaction';
 import { getMockConfirmStateForTransaction } from '../../../../test/data/confirmations/helper';
-import {
-  disableAccountUpgrade,
-  rejectPendingApproval,
-} from '../../../store/actions';
 import { renderHookWithConfirmContextProvider } from '../../../../test/lib/confirmations/render-helpers';
 import { flushPromises } from '../../../../test/lib/timer-helpers';
-import { upgradeAccountConfirmation } from '../../../../test/data/confirmations/batch-transaction';
-import { Confirmation } from '../types/confirm';
+import {
+  disableAccountUpgradeForChain,
+  rejectPendingApproval,
+} from '../../../store/actions';
+import type { Confirmation } from '../types/confirm';
 import { useSmartAccountActions } from './useSmartAccountActions';
 
 jest.mock('../../../store/actions', () => ({
-  disableAccountUpgrade: jest.fn(),
+  disableAccountUpgradeForChain: jest.fn(),
   rejectPendingApproval: jest.fn().mockReturnValue({}),
-  setAccountDetailsAddress: jest.fn(),
 }));
 
 const mockDispatch = jest.fn();
@@ -30,17 +29,17 @@ describe('useSmartAccountActions', () => {
   describe('handleRejectUpgrade', () => {
     it('should reject current confirmation', async () => {
       const state = getMockConfirmStateForTransaction(
-        upgradeAccountConfirmation as Confirmation,
+        upgradeAccountConfirmation,
       );
       const { result } = renderHookWithConfirmContextProvider(
         () => useSmartAccountActions(),
         state,
       );
       result.current.handleRejectUpgrade();
-      expect(disableAccountUpgrade).toHaveBeenCalledTimes(1);
+      expect(disableAccountUpgradeForChain).toHaveBeenCalledTimes(1);
       await flushPromises();
       expect(rejectPendingApproval).toHaveBeenCalledTimes(1);
-      expect(mockDispatch).toHaveBeenCalledTimes(2);
+      expect(mockDispatch).toHaveBeenCalledTimes(1);
     });
   });
 });

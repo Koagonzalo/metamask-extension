@@ -1,19 +1,20 @@
-import { ApprovalType } from '@metamask/controller-utils';
-import { TransactionMeta } from '@metamask/transaction-controller';
+import type { ApprovalType } from '@metamask/controller-utils';
+import type { TransactionMeta } from '@metamask/transaction-controller';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+
 import {
-  ApprovalsMetaMaskState,
+  shouldUseRedesignForSignatures,
+  shouldUseRedesignForTransactions,
+} from '../../../../shared/lib/confirmation.utils';
+import type { ApprovalsMetaMaskState } from '../../../selectors';
+import {
   getUnapprovedTransaction,
   oldestPendingConfirmationSelector,
   selectPendingApproval,
 } from '../../../selectors';
 import { selectUnapprovedMessage } from '../../../selectors/signatures';
-import {
-  shouldUseRedesignForSignatures,
-  shouldUseRedesignForTransactions,
-} from '../../../../shared/lib/confirmation.utils';
 
 /**
  * Determine the current confirmation based on the pending approvals and controller state.
@@ -33,7 +34,6 @@ const useCurrentConfirmation = () => {
   );
 
   const transactionMetadata = useSelector((state) =>
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (getUnapprovedTransaction as any)(state, confirmationId),
   ) as TransactionMeta | undefined;

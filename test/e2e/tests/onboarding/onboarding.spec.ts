@@ -1,4 +1,7 @@
 import { Browser } from 'selenium-webdriver';
+
+import { FirstTimeFlowType } from '../../../../shared/constants/onboarding';
+import FixtureBuilder from '../../fixture-builder';
 import {
   convertToHexValue,
   TEST_SEED_PHRASE,
@@ -6,9 +9,14 @@ import {
   withFixtures,
   unlockWallet,
 } from '../../helpers';
-import { Driver } from '../../webdriver/driver';
-import FixtureBuilder from '../../fixture-builder';
-import { FirstTimeFlowType } from '../../../../shared/constants/onboarding';
+import { loginWithoutBalanceValidation } from '../../page-objects/flows/login.flow';
+import { switchToNetworkFlow } from '../../page-objects/flows/network.flow';
+import {
+  completeCreateNewWalletOnboardingFlow,
+  completeImportSRPOnboardingFlow,
+  importSRPOnboardingFlow,
+  incompleteCreateNewWalletOnboardingFlow,
+} from '../../page-objects/flows/onboarding.flow';
 import HomePage from '../../page-objects/pages/home/homepage';
 import OnboardingCompletePage from '../../page-objects/pages/onboarding/onboarding-complete-page';
 import OnboardingMetricsPage from '../../page-objects/pages/onboarding/onboarding-metrics-page';
@@ -17,16 +25,19 @@ import OnboardingPrivacySettingsPage from '../../page-objects/pages/onboarding/o
 import OnboardingSrpPage from '../../page-objects/pages/onboarding/onboarding-srp-page';
 import SecureWalletPage from '../../page-objects/pages/onboarding/secure-wallet-page';
 import StartOnboardingPage from '../../page-objects/pages/onboarding/start-onboarding-page';
-import { loginWithoutBalanceValidation } from '../../page-objects/flows/login.flow';
-import {
-  completeCreateNewWalletOnboardingFlow,
-  completeImportSRPOnboardingFlow,
-  importSRPOnboardingFlow,
-  incompleteCreateNewWalletOnboardingFlow,
-} from '../../page-objects/flows/onboarding.flow';
-import { switchToNetworkFlow } from '../../page-objects/flows/network.flow';
+import type { Driver } from '../../webdriver/driver';
 
 describe('MetaMask onboarding', function () {
+  const ganacheOptions2 = {
+    accounts: [
+      {
+        secretKey:
+          '0x53CB0AB5226EEBF4D872113D98332C1555DC304443BEE1CF759D15798D3C55A9',
+        balance: convertToHexValue(10000000000000000000),
+      },
+    ],
+  };
+
   it("Creates a new wallet, sets up a secure password, and doesn't complete the onboarding process and refreshes the page", async function () {
     await withFixtures(
       {
@@ -215,23 +226,20 @@ describe('MetaMask onboarding', function () {
         fixtures: new FixtureBuilder({ onboarding: true }).build(),
         localNodeOptions: [
           {
-            type: 'anvil',
+            type: 'ganache',
           },
           {
-            type: 'anvil',
+            type: 'ganache',
             options: {
               port,
               chainId,
+              ...ganacheOptions2,
             },
           },
         ],
         title: this.test?.fullTitle(),
       },
       async ({ driver, localNodes }) => {
-        await localNodes[1].setAccountBalance(
-          '0x0Cc5261AB8cE458dc977078A3623E2BaDD27afD3',
-          convertToHexValue(10000000000000000000),
-        );
         await importSRPOnboardingFlow({
           driver,
           seedPhrase: TEST_SEED_PHRASE,
@@ -263,9 +271,9 @@ describe('MetaMask onboarding', function () {
 
         // Check the correct balance for the custom network is displayed
         if (localNodes[1] && Array.isArray(localNodes)) {
-          await homePage.check_expectedBalanceIsDisplayed('10');
+          await homePage.check_localNodeBalanceIsDisplayed(localNodes[1]);
         } else {
-          throw new Error('Custom network server not available');
+          throw new Error('Custom network Ganache server not available');
         }
       },
     );

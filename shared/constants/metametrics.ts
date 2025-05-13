@@ -308,7 +308,7 @@ export type SegmentEventPayload = {
     locale: string;
     // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    chain_id: string;
+    chain_id: string | null;
     // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
     // eslint-disable-next-line @typescript-eslint/naming-convention
     environment_type?: string;
@@ -816,6 +816,8 @@ export enum MetaMetricsEventName {
   ProviderMethodCalled = 'Provider Method Called',
   PublicAddressCopied = 'Public Address Copied',
   QuoteError = 'Quote Error',
+  RpcServiceDegraded = 'RPC Service Degraded',
+  RpcServiceUnavailable = 'RPC Service Unavailable',
   SecretRecoveryPhrasePickerClicked = 'Secret Recovery Phrase Picker Clicked',
   SecretRecoveryPhrasePickerDetailsClicked = 'Secret Recovery Phrase Details Clicked',
   SecretRecoveryPhrasePickerSelected = 'Secret Recovery Phrase Picker Selected',

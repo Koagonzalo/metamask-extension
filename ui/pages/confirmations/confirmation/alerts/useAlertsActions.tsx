@@ -1,13 +1,11 @@
-import { ApprovalRequest } from '@metamask/approval-controller';
+import type { ApprovalRequest } from '@metamask/approval-controller';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 
 import { AlertActionKey } from '../../../../components/app/confirm/info/row/constants';
+import type { ApprovalsMetaMaskState } from '../../../../selectors';
+import { getApprovalsByOrigin } from '../../../../selectors';
 import { useConfirmationNavigation } from '../../hooks/useConfirmationNavigation';
-import {
-  ApprovalsMetaMaskState,
-  getApprovalsByOrigin,
-} from '../../../../selectors';
 
 export const useAlertsActions = (
   hideAlertModal: () => void,

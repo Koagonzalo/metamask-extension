@@ -1,8 +1,7 @@
-import {
-  TransactionMeta,
-  TransactionType,
-} from '@metamask/transaction-controller';
+import type { TransactionMeta } from '@metamask/transaction-controller';
+import { TransactionType } from '@metamask/transaction-controller';
 import React from 'react';
+
 import { ORIGIN_METAMASK } from '../../../../../../shared/constants/app';
 import {
   AvatarNetwork,
@@ -22,7 +21,7 @@ import { getAvatarNetworkColor } from '../../../../../helpers/utils/accounts';
 import { useConfirmContext } from '../../../context/confirm';
 import useConfirmationNetworkInfo from '../../../hooks/useConfirmationNetworkInfo';
 import useConfirmationRecipientInfo from '../../../hooks/useConfirmationRecipientInfo';
-import { Confirmation } from '../../../types/confirm';
+import type { Confirmation } from '../../../types/confirm';
 import { DAppInitiatedHeader } from './dapp-initiated-header';
 import HeaderInfo from './header-info';
 import { WalletInitiatedHeader } from './wallet-initiated-header';
@@ -39,7 +38,7 @@ const Header = () => {
   const { senderAddress: fromAddress, senderName: fromName } =
     useConfirmationRecipientInfo();
 
-  const { currentConfirmation } = useConfirmContext<Confirmation>();
+  const { currentConfirmation } = useConfirmContext();
 
   const DefaultHeader = (
     <Box

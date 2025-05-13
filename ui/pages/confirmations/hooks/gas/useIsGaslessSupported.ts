@@ -1,10 +1,8 @@
+import type { TransactionMeta } from '@metamask/transaction-controller';
+import type { Hex } from '@metamask/utils';
 import { useSelector } from 'react-redux';
-import { TransactionMeta } from '@metamask/transaction-controller';
-import { Hex } from '@metamask/utils';
-import {
-  getIsSmartTransaction,
-  type SmartTransactionsState,
-} from '../../../../../shared/modules/selectors';
+
+import { getIsSmartTransaction } from '../../../../../shared/modules/selectors';
 import { useAsyncResult } from '../../../../hooks/useAsync';
 import { isAtomicBatchSupported } from '../../../../store/controller-actions/transaction-controller';
 import { useConfirmContext } from '../../context/confirm';
@@ -13,12 +11,10 @@ export function useIsGaslessSupported() {
   const { currentConfirmation: transactionMeta } =
     useConfirmContext<TransactionMeta>();
 
+  const isSmartTransaction = useSelector(getIsSmartTransaction);
+
   const { chainId, txParams } = transactionMeta;
   const { from } = txParams;
-
-  const isSmartTransaction = useSelector((state: SmartTransactionsState) =>
-    getIsSmartTransaction(state, chainId),
-  );
 
   const { value: atomicBatchSupportResult } = useAsyncResult(
     async () =>
@@ -38,8 +34,6 @@ export function useIsGaslessSupported() {
   const supportsGasless7702 =
     process.env.TRANSACTION_RELAY_API_URL &&
     Boolean(atomicBatchChainSupport) &&
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     (atomicBatchChainSupport?.isSupported ||
       !atomicBatchChainSupport?.delegationAddress);
 

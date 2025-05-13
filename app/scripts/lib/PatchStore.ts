@@ -1,19 +1,20 @@
 import { createProjectLogger } from '@metamask/utils';
-import { Patch } from 'immer';
+import type { Patch } from 'immer';
 import { v4 as uuid } from 'uuid';
-import ComposableObservableStore from './ComposableObservableStore';
+
+import type ComposableObservableStore from './ComposableObservableStore';
 import { sanitizeUIState } from './state-utils';
 
 const log = createProjectLogger('patch-store');
 
 export class PatchStore {
-  private id: string;
+  private readonly id: string;
 
-  private observableStore: ComposableObservableStore;
+  private readonly observableStore: ComposableObservableStore;
 
-  private pendingPatches: Map<string, Patch> = new Map();
+  private readonly pendingPatches: Map<string, Patch> = new Map();
 
-  private listener: (request: {
+  private readonly listener: (request: {
     controllerKey: string;
     oldState: Record<string, unknown>;
     newState: Record<string, unknown>;

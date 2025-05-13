@@ -1,17 +1,16 @@
-import { Hex } from '@metamask/utils';
+import type { SimulationData } from '@metamask/transaction-controller';
+import { SimulationTokenStandard } from '@metamask/transaction-controller';
+import type { Hex } from '@metamask/utils';
 import { renderHook } from '@testing-library/react-hooks';
-import {
-  SimulationData,
-  SimulationTokenStandard,
-} from '@metamask/transaction-controller';
 import { BigNumber } from 'bignumber.js';
+
 import { TokenStandard } from '../../../../../shared/constants/transaction';
-import { getTokenStandardAndDetails } from '../../../../store/actions';
 import { fetchTokenExchangeRates } from '../../../../helpers/utils/util';
-import { memoizedGetTokenStandardAndDetails } from '../../utils/token';
 import { selectConversionRateByChainId } from '../../../../selectors';
-import { useBalanceChanges } from './useBalanceChanges';
+import { getTokenStandardAndDetails } from '../../../../store/actions';
+import { memoizedGetTokenStandardAndDetails } from '../../utils/token';
 import { FIAT_UNAVAILABLE } from './types';
+import { useBalanceChanges } from './useBalanceChanges';
 
 jest.mock('react-redux', () => ({
   useSelector: jest.fn((selector) => selector()),
@@ -65,7 +64,7 @@ const dummyBalanceChange = {
   newBalance: '0xIGNORE' as Hex,
 };
 
-const PENDING_PROMISE = () =>
+const PENDING_PROMISE = async () =>
   new Promise(() => {
     /* unresolved promise */
   });
@@ -73,7 +72,7 @@ const PENDING_PROMISE = () =>
 describe('useBalanceChanges', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockGetTokenStandardAndDetails.mockImplementation((address: Hex) => {
+    mockGetTokenStandardAndDetails.mockImplementation(async (address: Hex) => {
       const decimalMap: Record<Hex, number | string> = {
         [ERC20_TOKEN_ADDRESS_1_MOCK]: ERC20_DECIMALS_1_MOCK,
         [ERC20_TOKEN_ADDRESS_2_MOCK]: ERC20_DECIMALS_2_MOCK,

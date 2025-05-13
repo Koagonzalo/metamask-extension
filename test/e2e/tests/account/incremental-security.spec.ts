@@ -1,10 +1,8 @@
-import { Suite } from 'mocha';
+import type { Suite } from 'mocha';
 import { Browser } from 'selenium-webdriver';
-import { Anvil } from '../../seeder/anvil';
-import { withFixtures } from '../../helpers';
-import { WALLET_PASSWORD } from '../../constants';
+
 import FixtureBuilder from '../../fixture-builder';
-import { Driver } from '../../webdriver/driver';
+import { withFixtures, WALLET_PASSWORD } from '../../helpers';
 import HomePage from '../../page-objects/pages/home/homepage';
 import OnboardingCompletePage from '../../page-objects/pages/onboarding/onboarding-complete-page';
 import OnboardingMetricsPage from '../../page-objects/pages/onboarding/onboarding-metrics-page';
@@ -12,6 +10,7 @@ import OnboardingPasswordPage from '../../page-objects/pages/onboarding/onboardi
 import SecureWalletPage from '../../page-objects/pages/onboarding/secure-wallet-page';
 import StartOnboardingPage from '../../page-objects/pages/onboarding/start-onboarding-page';
 import TestDappSendEthWithPrivateKey from '../../page-objects/pages/test-dapp-send-eth-with-private-key';
+import type { Driver } from '../../webdriver/driver';
 
 describe('Incremental Security', function (this: Suite) {
   it('Back up Secret Recovery Phrase from backup reminder', async function () {
@@ -22,15 +21,11 @@ describe('Incremental Security', function (this: Suite) {
         title: this.test?.fullTitle(),
         dappPath: 'send-eth-with-private-key-test',
       },
-      async ({
-        driver,
-        localNodes,
-      }: {
-        driver: Driver;
-        localNodes: Anvil[];
-      }) => {
+      // TODO: Replace `any` with type
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      async ({ driver, localNodes }: { driver: Driver; localNodes: any[] }) => {
         // Seed Account
-        await localNodes?.[0]?.setAccountBalance(
+        await localNodes[0].setAccountBalance(
           '0x0Cc5261AB8cE458dc977078A3623E2BaDD27afD3',
           '0x100000000000000000000',
         );

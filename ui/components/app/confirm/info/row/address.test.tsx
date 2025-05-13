@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { CHAIN_IDS } from '../../../../../../shared/constants/network';
 import mockState from '../../../../../../test/data/mock-state.json';
 import { renderWithProvider } from '../../../../../../test/lib/render-helpers';
@@ -9,7 +10,7 @@ import { TEST_ADDRESS } from './constants';
 const CHAIN_ID_MOCK = CHAIN_IDS.MAINNET;
 
 const render = (
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+  // TODO: Replace `any` with type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   storeOverrides: Record<string, any> = {},
   address: string = TEST_ADDRESS,

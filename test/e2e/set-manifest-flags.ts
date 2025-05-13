@@ -1,7 +1,8 @@
 import fs from 'fs';
 import { merge } from 'lodash';
-import { ManifestFlags } from '../../shared/lib/manifestFlags';
+
 import { fetchManifestFlagsFromPRAndGit } from '../../development/lib/get-manifest-flag';
+import type { ManifestFlags } from '../../shared/lib/manifestFlags';
 
 if (process.env.SELENIUM_BROWSER === undefined) {
   process.env.SELENIUM_BROWSER = 'chrome';
@@ -9,8 +10,6 @@ if (process.env.SELENIUM_BROWSER === undefined) {
 
 export const folder = `dist/${process.env.SELENIUM_BROWSER}`;
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 type ManifestType = { _flags?: ManifestFlags; manifest_version: string };
 let manifest: ManifestType;
 

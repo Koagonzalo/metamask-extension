@@ -1,7 +1,8 @@
-import { Mockttp } from 'mockttp';
-import { withFixtures, unlockWallet } from '../../helpers';
+import type { Mockttp } from 'mockttp';
+
 import { SWAP_TEST_ETH_USDC_TRADES_MOCK } from '../../../data/mock-data';
 import FixtureBuilder from '../../fixture-builder';
+import { withFixtures, unlockWallet } from '../../helpers';
 import { buildQuote, reviewQuote, checkNotification } from './shared';
 
 async function mockSwapsTransactionQuote(mockServer: Mockttp) {

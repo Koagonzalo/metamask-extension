@@ -1,7 +1,6 @@
+const { Octokit } = require('@octokit/core');
 const fs = require('fs');
 const simpleGit = require('simple-git');
-
-const { Octokit } = require('@octokit/core');
 
 const octokit = new Octokit({
   auth: 'your-access-token',

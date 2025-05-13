@@ -1,16 +1,16 @@
 import { mockNetworkStateOld } from '../../../stub/networks';
-import { withFixtures } from '../../helpers';
-import { SMART_CONTRACTS } from '../../seeder/smart-contracts';
 import { DEFAULT_FIXTURE_ACCOUNT } from '../../constants';
 import FixtureBuilder from '../../fixture-builder';
+import { withFixtures } from '../../helpers';
+import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
 import AccountListPage from '../../page-objects/pages/account-list-page';
+import HeaderNavbar from '../../page-objects/pages/header-navbar';
 import ActivityListPage from '../../page-objects/pages/home/activity-list';
 import AssetListPage from '../../page-objects/pages/home/asset-list';
-import HeaderNavbar from '../../page-objects/pages/header-navbar';
 import HomePage from '../../page-objects/pages/home/homepage';
 import MockedPage from '../../page-objects/pages/mocked-page';
 import TokenOverviewPage from '../../page-objects/pages/token-overview-page';
-import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
+import { SMART_CONTRACTS } from '../../seeder/smart-contracts';
 
 describe('Block Explorer', function () {
   it('links to the users account on the explorer, ', async function () {

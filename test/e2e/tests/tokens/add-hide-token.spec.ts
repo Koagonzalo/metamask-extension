@@ -1,8 +1,9 @@
 import { toHex } from '@metamask/controller-utils';
-import { withFixtures } from '../../helpers';
+
 import FixtureBuilder from '../../fixture-builder';
-import AssetListPage from '../../page-objects/pages/home/asset-list';
+import { withFixtures } from '../../helpers';
 import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
+import AssetListPage from '../../page-objects/pages/home/asset-list';
 
 describe('Add hide token', function () {
   it('hides the token when clicked', async function () {

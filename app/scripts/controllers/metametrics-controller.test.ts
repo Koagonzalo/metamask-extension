@@ -1,42 +1,43 @@
-import { toHex } from '@metamask/controller-utils';
+import type { AddressBookEntry } from '@metamask/address-book-controller';
 import type {
-  NetworkClientId,
-  NetworkState,
-} from '@metamask/network-controller';
-import { NameEntry, NameType } from '@metamask/name-controller';
-import { AddressBookEntry } from '@metamask/address-book-controller';
-import {
   Nft,
   Token,
   TokensControllerState,
 } from '@metamask/assets-controllers';
-import { InternalAccount } from '@metamask/keyring-internal-api';
-import { Browser } from 'webextension-polyfill';
 import { Messenger } from '@metamask/base-controller';
+import { toHex } from '@metamask/controller-utils';
+import type { InternalAccount } from '@metamask/keyring-internal-api';
+import { NameType } from '@metamask/name-controller';
+import type { NameEntry } from '@metamask/name-controller';
+import type {
+  NetworkClientId,
+  NetworkState,
+} from '@metamask/network-controller';
 import { merge } from 'lodash';
+import type { Browser } from 'webextension-polyfill';
+
 import { ENVIRONMENT_TYPE_BACKGROUND } from '../../../shared/constants/app';
-import { createSegmentMock } from '../lib/segment';
+import { LedgerTransportTypes } from '../../../shared/constants/hardware-wallets';
+import { KeyringType } from '../../../shared/constants/keyring';
 import {
   METAMETRICS_ANONYMOUS_ID,
   METAMETRICS_BACKGROUND_PAGE_OBJECT,
   MetaMetricsUserTrait,
-  MetaMetricsUserTraits,
 } from '../../../shared/constants/metametrics';
+import type { MetaMetricsUserTraits } from '../../../shared/constants/metametrics';
 import { CHAIN_IDS } from '../../../shared/constants/network';
-import { KeyringType } from '../../../shared/constants/keyring';
-import { LedgerTransportTypes } from '../../../shared/constants/hardware-wallets';
-import * as Utils from '../lib/util';
-import { mockNetworkState } from '../../../test/stub/networks';
 import { flushPromises } from '../../../test/lib/timer-helpers';
-import MetaMetricsController, {
+import { mockNetworkState } from '../../../test/stub/networks';
+import { createSegmentMock } from '../lib/segment';
+import * as Utils from '../lib/util';
+import type {
   AllowedActions,
   AllowedEvents,
   MetaMetricsControllerOptions,
 } from './metametrics-controller';
-import {
-  getDefaultPreferencesControllerState,
-  PreferencesControllerState,
-} from './preferences-controller';
+import MetaMetricsController from './metametrics-controller';
+import type { PreferencesControllerState } from './preferences-controller';
+import { getDefaultPreferencesControllerState } from './preferences-controller';
 
 const segmentMock = createSegmentMock(2);
 
@@ -56,32 +57,16 @@ const MOCK_EXTENSION = {
 } as unknown as Browser;
 
 const MOCK_TRAITS = {
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   test_boolean: true,
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   test_string: 'abc',
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   test_number: 123,
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   test_bool_array: [true, true, false],
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   test_string_array: ['test', 'test', 'test'],
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   test_boolean_array: [1, 2, 3],
 } as MetaMetricsUserTraits;
 
 const MOCK_INVALID_TRAITS = {
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   test_null: null,
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   test_array_multi_types: [true, 'a', 1],
 } as MetaMetricsUserTraits;
 
@@ -98,12 +83,8 @@ const DEFAULT_TEST_CONTEXT = {
 };
 
 const DEFAULT_SHARED_PROPERTIES = {
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   chain_id: DEFAULT_CHAIN_ID,
   locale: LOCALE.replace('_', '-'),
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   environment_type: 'background',
 };
 
@@ -124,11 +105,7 @@ const SAMPLE_TX_SUBMITTED_PARTIAL_FRAGMENT = {
   successEvent: 'Transaction Finalized',
   persist: true,
   properties: {
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     simulation_response: 'no_balance_change',
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     test_stored_prop: 1,
   },
 };
@@ -234,13 +211,19 @@ describe('MetaMetricsController', function () {
   });
 
   describe('createEventFragment', function () {
-    it('should throw an error if the param is missing successEvent', async function () {
+    it('should throw an error if the param is missing successEvent or category', async function () {
       await withController(async ({ controller }) => {
         await expect(() => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-expect-error because we are testing the error case
+          controller.createEventFragment({ event: 'test' });
+        }).toThrow(/Must specify success event and category\./u);
+
+        await expect(() => {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error because we are testing the error case
           controller.createEventFragment({ category: 'test' });
-        }).toThrow(/Must specify success event\./u);
+        }).toThrow(/Must specify success event and category\./u);
       });
     });
 
@@ -505,8 +488,6 @@ describe('MetaMetricsController', function () {
         },
         ({ controller }) => {
           controller.identify({
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             test_date: new Date().toISOString(),
           } as MetaMetricsUserTraits);
           expect(spy).toHaveBeenCalledTimes(1);
@@ -514,8 +495,6 @@ describe('MetaMetricsController', function () {
             {
               userId: TEST_META_METRICS_ID,
               traits: {
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                // eslint-disable-next-line @typescript-eslint/naming-convention
                 test_date: new Date().toISOString(),
               },
               messageId: Utils.generateRandomId(),
@@ -651,8 +630,6 @@ describe('MetaMetricsController', function () {
             event: 'Fake Event',
             category: 'Unit Test',
             properties: {
-              // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-              // eslint-disable-next-line @typescript-eslint/naming-convention
               chain_id: '1',
             },
           });
@@ -677,8 +654,6 @@ describe('MetaMetricsController', function () {
               event: 'Fake Event',
               category: 'Unit Test',
               properties: {
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                // eslint-disable-next-line @typescript-eslint/naming-convention
                 chain_id: '1',
               },
             },
@@ -692,8 +667,6 @@ describe('MetaMetricsController', function () {
               context: DEFAULT_TEST_CONTEXT,
               properties: {
                 ...DEFAULT_EVENT_PROPERTIES,
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                // eslint-disable-next-line @typescript-eslint/naming-convention
                 chain_id: '1',
               },
               messageId: Utils.generateRandomId(),
@@ -721,8 +694,6 @@ describe('MetaMetricsController', function () {
               event: 'Fake Event',
               category: 'Unit Test',
               properties: {
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                // eslint-disable-next-line @typescript-eslint/naming-convention
                 chain_id: '1',
               },
             },
@@ -736,8 +707,6 @@ describe('MetaMetricsController', function () {
               context: DEFAULT_TEST_CONTEXT,
               properties: {
                 ...DEFAULT_EVENT_PROPERTIES,
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                // eslint-disable-next-line @typescript-eslint/naming-convention
                 chain_id: '1',
               },
               messageId: Utils.generateRandomId(),
@@ -757,8 +726,6 @@ describe('MetaMetricsController', function () {
             event: 'Fake Event',
             category: 'Unit Test',
             properties: {
-              // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-              // eslint-disable-next-line @typescript-eslint/naming-convention
               chain_id: '1',
             },
           },
@@ -772,11 +739,7 @@ describe('MetaMetricsController', function () {
             context: DEFAULT_TEST_CONTEXT,
             properties: {
               ...DEFAULT_EVENT_PROPERTIES,
-              // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-              // eslint-disable-next-line @typescript-eslint/naming-convention
               legacy_event: true,
-              // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-              // eslint-disable-next-line @typescript-eslint/naming-convention
               chain_id: '1',
             },
             messageId: Utils.generateRandomId(),
@@ -794,8 +757,6 @@ describe('MetaMetricsController', function () {
           event: 'Fake Event',
           category: 'Unit Test',
           properties: {
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             chain_id: '1',
           },
         });
@@ -805,8 +766,6 @@ describe('MetaMetricsController', function () {
             event: 'Fake Event',
             properties: {
               ...DEFAULT_EVENT_PROPERTIES,
-              // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-              // eslint-disable-next-line @typescript-eslint/naming-convention
               chain_id: '1',
             },
             context: DEFAULT_TEST_CONTEXT,
@@ -833,13 +792,19 @@ describe('MetaMetricsController', function () {
       });
     });
 
-    it('should throw if event not provided', async function () {
+    it('should throw if event or category not provided', async function () {
       await withController(({ controller }) => {
         expect(() => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-expect-error because we are testing the error case
+          controller.trackEvent({ event: 'test' });
+        }).toThrow(/Must specify event and category\./u);
+
+        expect(() => {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error because we are testing the error case
           controller.trackEvent({ category: 'test' });
-        }).toThrow(/Must specify event\./u);
+        }).toThrow(/Must specify event and category\./u);
       });
     });
 
@@ -909,7 +874,6 @@ describe('MetaMetricsController', function () {
   });
 
   describe('Change Signature XXX anonymous event names', function () {
-    // @ts-expect-error This function is missing from the Mocha type definitions
     it.each([
       ['Signature Requested', 'Signature Requested Anon'],
       ['Signature Rejected', 'Signature Rejected Anon'],
@@ -1165,8 +1129,6 @@ describe('MetaMetricsController', function () {
           event: 'Fake Event',
           category: 'Unit Test',
           properties: {
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             chain_id: 'bar',
           },
           actionId: '0x001',
@@ -1179,8 +1141,6 @@ describe('MetaMetricsController', function () {
             context: DEFAULT_TEST_CONTEXT,
             properties: {
               ...DEFAULT_EVENT_PROPERTIES,
-              // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-              // eslint-disable-next-line @typescript-eslint/naming-convention
               chain_id: 'bar',
             },
             messageId: '0x001',
@@ -1236,8 +1196,6 @@ describe('MetaMetricsController', function () {
           event: 'Fake Event',
           category: 'Unit Test',
           properties: {
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             chain_id: 'bar',
           },
           uniqueIdentifier: 'transaction-submitted-0000',
@@ -1250,8 +1208,6 @@ describe('MetaMetricsController', function () {
             context: DEFAULT_TEST_CONTEXT,
             properties: {
               ...DEFAULT_EVENT_PROPERTIES,
-              // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-              // eslint-disable-next-line @typescript-eslint/naming-convention
               chain_id: 'bar',
             },
             messageId: 'transaction-submitted-0000',
@@ -1308,8 +1264,6 @@ describe('MetaMetricsController', function () {
         controller.trackEvent({
           event: 'Fake Event',
           category: 'Unit Test',
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           properties: { chain_id: 'bar' },
           actionId: '0x001',
           uniqueIdentifier: 'transaction-submitted-0000',
@@ -1322,8 +1276,6 @@ describe('MetaMetricsController', function () {
             context: DEFAULT_TEST_CONTEXT,
             properties: {
               ...DEFAULT_EVENT_PROPERTIES,
-              // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-              // eslint-disable-next-line @typescript-eslint/naming-convention
               chain_id: 'bar',
             },
             messageId: 'transaction-submitted-0000-0x001',
@@ -1485,8 +1437,6 @@ describe('MetaMetricsController', function () {
           theme: 'default',
           useTokenDetection: true,
           ShowNativeTokenAsMainBalance: true,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           security_providers: [],
           names: {
             [NameType.ETHEREUM_ADDRESS]: {
@@ -1628,8 +1578,6 @@ describe('MetaMetricsController', function () {
           names: {
             ethereumAddress: {},
           },
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           security_providers: ['blockaid'],
           currentCurrency: 'usd',
           ///: BEGIN:ONLY_INCLUDE_IF(build-mmi)
@@ -1687,8 +1635,6 @@ describe('MetaMetricsController', function () {
           names: {
             ethereumAddress: {},
           },
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           security_providers: ['blockaid'],
           currentCurrency: 'usd',
           allNfts: {},
@@ -1776,8 +1722,6 @@ describe('MetaMetricsController', function () {
             ethereumAddress: {},
           },
           securityAlertsEnabled: true,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           security_providers: ['blockaid'],
           currentCurrency: 'usd',
           ///: BEGIN:ONLY_INCLUDE_IF(build-mmi)
@@ -1841,8 +1785,6 @@ describe('MetaMetricsController', function () {
             ethereumAddress: {},
           },
           securityAlertsEnabled: true,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           security_providers: ['blockaid'],
           currentCurrency: 'usd',
           ///: BEGIN:ONLY_INCLUDE_IF(build-mmi)
@@ -1923,8 +1865,6 @@ describe('MetaMetricsController', function () {
               event: 'Fake Event',
               category: 'Unit Test',
               properties: {
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                // eslint-disable-next-line @typescript-eslint/naming-convention
                 chain_id: '1',
               },
             },
@@ -1941,8 +1881,6 @@ describe('MetaMetricsController', function () {
               },
               properties: {
                 ...DEFAULT_EVENT_PROPERTIES,
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                // eslint-disable-next-line @typescript-eslint/naming-convention
                 chain_id: '1',
               },
               messageId: Utils.generateRandomId(),

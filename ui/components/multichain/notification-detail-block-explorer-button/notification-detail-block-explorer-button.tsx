@@ -1,18 +1,19 @@
+import { toHex } from '@metamask/controller-utils';
+import type { NotificationServicesController } from '@metamask/notification-services-controller';
 import React, { useCallback, useContext, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import type { NotificationServicesController } from '@metamask/notification-services-controller';
-import { toHex } from '@metamask/controller-utils';
-import { getNetworkConfigurationsByChainId } from '../../../../shared/modules/selectors/networks';
-import { CHAIN_IDS } from '../../../../shared/constants/network';
-import { ButtonVariant } from '../../component-library';
-import { useI18nContext } from '../../../hooks/useI18nContext';
-import { getNetworkDetailsByChainId } from '../../../helpers/utils/notification.util';
-import { NotificationDetailButton } from '../notification-detail-button';
-import { MetaMetricsContext } from '../../../contexts/metametrics';
+
 import {
   MetaMetricsEventCategory,
   MetaMetricsEventName,
 } from '../../../../shared/constants/metametrics';
+import type { CHAIN_IDS } from '../../../../shared/constants/network';
+import { getNetworkConfigurationsByChainId } from '../../../../shared/modules/selectors/networks';
+import { MetaMetricsContext } from '../../../contexts/metametrics';
+import { getNetworkDetailsByChainId } from '../../../helpers/utils/notification.util';
+import { useI18nContext } from '../../../hooks/useI18nContext';
+import { ButtonVariant } from '../../component-library';
+import { NotificationDetailButton } from '../notification-detail-button';
 
 type Notification = NotificationServicesController.Types.INotification;
 
@@ -60,17 +61,9 @@ export const NotificationDetailBlockExplorerButton = ({
       category: MetaMetricsEventCategory.NotificationInteraction,
       event: MetaMetricsEventName.NotificationDetailClicked,
       properties: {
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         notification_id: notification.id,
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         notification_type: notification.type,
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         chain_id: chainId,
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         clicked_item: 'block_explorer',
       },
     });

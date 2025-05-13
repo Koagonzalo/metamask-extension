@@ -1,15 +1,16 @@
 import { strict as assert } from 'assert';
-import { MockttpServer } from 'mockttp';
-import { withFixtures, getEventPayloads } from '../../../helpers';
-import { SMART_CONTRACTS } from '../../../seeder/smart-contracts';
-import FixtureBuilder from '../../../fixture-builder';
+import type { MockttpServer } from 'mockttp';
+
 import { MetaMetricsEventName } from '../../../../../shared/constants/metametrics';
 import { CHAIN_IDS } from '../../../../../shared/constants/network';
 import { MOCK_META_METRICS_ID } from '../../../constants';
-import Homepage from '../../../page-objects/pages/home/homepage';
-import NFTDetailsPage from '../../../page-objects/pages/nft-details-page';
-import NftListPage from '../../../page-objects/pages/home/nft-list';
+import FixtureBuilder from '../../../fixture-builder';
+import { withFixtures, getEventPayloads } from '../../../helpers';
 import { loginWithBalanceValidation } from '../../../page-objects/flows/login.flow';
+import Homepage from '../../../page-objects/pages/home/homepage';
+import NftListPage from '../../../page-objects/pages/home/nft-list';
+import NFTDetailsPage from '../../../page-objects/pages/nft-details-page';
+import { SMART_CONTRACTS } from '../../../seeder/smart-contracts';
 
 async function mockedNftRemoved(mockServer: MockttpServer) {
   return await mockServer

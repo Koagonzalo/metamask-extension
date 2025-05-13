@@ -1,5 +1,5 @@
-import path from 'path';
 import { chromium } from '@playwright/test';
+import path from 'path';
 
 const extensionPath = path.join(__dirname, '../../../../../dist/chrome');
 

@@ -1,6 +1,4 @@
-import AddTokensModal from '../../page-objects/pages/dialog/add-tokens';
-import AssetListPage from '../../page-objects/pages/home/asset-list';
-import TestDapp from '../../page-objects/pages/test-dapp';
+import FixtureBuilder from '../../fixture-builder';
 import {
   withFixtures,
   openDapp,
@@ -8,8 +6,10 @@ import {
   DAPP_URL,
   unlockWallet,
 } from '../../helpers';
-import FixtureBuilder from '../../fixture-builder';
+import AddTokensModal from '../../page-objects/pages/dialog/add-tokens';
 import CreateContractModal from '../../page-objects/pages/dialog/create-contract';
+import AssetListPage from '../../page-objects/pages/home/asset-list';
+import TestDapp from '../../page-objects/pages/test-dapp';
 
 describe('Multiple ERC20 Watch Asset', function () {
   it('should show multiple erc20 watchAsset token list, only confirms one bug', async function () {

@@ -1,15 +1,13 @@
-import React from 'react';
 import classnames from 'classnames';
+import React from 'react';
 
 import {
   TextVariant,
   TextColor,
 } from '../../../helpers/constants/design-system';
-
 import { Box } from '../box';
 import type { PolymorphicRef, BoxProps } from '../box';
-
-import { TextProps, TextComponent } from './text.types';
+import type { TextProps, TextComponent } from './text.types';
 
 const getTextElementDefault = (variant: TextVariant) => {
   switch (variant) {
@@ -30,8 +28,6 @@ const getTextElementDefault = (variant: TextVariant) => {
 };
 
 export const Text: TextComponent = React.forwardRef(
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   <C extends React.ElementType = 'p'>(
     {
       variant = TextVariant.bodyMd,

@@ -1,9 +1,10 @@
-import { Suite } from 'mocha';
-import { Driver } from '../../webdriver/driver';
-import HeaderNavbar from '../../page-objects/pages/header-navbar';
-import AccountListPage from '../../page-objects/pages/account-list-page';
+import type { Suite } from 'mocha';
+
 import { ACCOUNT_TYPE } from '../../constants';
-import { mockActiveNetworks, withMultiSrp } from './common-multi-srp';
+import AccountListPage from '../../page-objects/pages/account-list-page';
+import HeaderNavbar from '../../page-objects/pages/header-navbar';
+import type { Driver } from '../../webdriver/driver';
+import { withMultiSrp } from './common-multi-srp';
 
 const addAccountToSrp = async (driver: Driver, srpIndex: number) => {
   const headerNavbar = new HeaderNavbar(driver);
@@ -23,10 +24,7 @@ const addAccountToSrp = async (driver: Driver, srpIndex: number) => {
 describe('Multi SRP - Add accounts', function (this: Suite) {
   it('adds a new account for the default srp', async function () {
     await withMultiSrp(
-      {
-        title: this.test?.fullTitle(),
-        testSpecificMock: mockActiveNetworks,
-      },
+      { title: this.test?.fullTitle() },
       async (driver: Driver) => {
         await addAccountToSrp(driver, 1);
       },
@@ -35,10 +33,7 @@ describe('Multi SRP - Add accounts', function (this: Suite) {
 
   it('adds a new account for the new srp', async function () {
     await withMultiSrp(
-      {
-        title: this.test?.fullTitle(),
-        testSpecificMock: mockActiveNetworks,
-      },
+      { title: this.test?.fullTitle() },
       async (driver: Driver) => {
         await addAccountToSrp(driver, 2);
       },

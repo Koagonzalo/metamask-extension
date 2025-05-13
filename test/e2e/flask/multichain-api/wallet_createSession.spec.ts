@@ -1,6 +1,8 @@
 import { strict as assert } from 'assert';
-import { By } from 'selenium-webdriver';
 import { isObject } from 'lodash';
+import { By } from 'selenium-webdriver';
+
+import FixtureBuilder from '../../fixture-builder';
 import {
   largeDelayMs,
   WINDOW_TITLES,
@@ -9,7 +11,6 @@ import {
   ACCOUNT_2,
   unlockWallet,
 } from '../../helpers';
-import FixtureBuilder from '../../fixture-builder';
 import TestDappMultichain from '../../page-objects/pages/test-dapp-multichain';
 import {
   DEFAULT_MULTICHAIN_TEST_DAPP_FIXTURE_OPTIONS,

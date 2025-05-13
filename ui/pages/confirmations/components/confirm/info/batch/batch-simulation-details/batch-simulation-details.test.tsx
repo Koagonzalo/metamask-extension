@@ -1,26 +1,22 @@
-import React from 'react';
-import { BigNumber } from 'bignumber.js';
-import { BatchTransactionParams } from '@metamask/transaction-controller';
+import type { BatchTransactionParams } from '@metamask/transaction-controller';
 import { act } from '@testing-library/react';
-import { renderWithConfirmContextProvider } from '../../../../../../../../test/lib/confirmations/render-helpers';
-import configureStore from '../../../../../../../store/store';
-import { getMockConfirmStateForTransaction } from '../../../../../../../../test/data/confirmations/helper';
-import { genUnapprovedContractInteractionConfirmation } from '../../../../../../../../test/data/confirmations/contract-interaction';
-import {
-  ApprovalBalanceChange,
-  useBatchApproveBalanceChanges,
-} from '../../hooks/useBatchApproveBalanceChanges';
-import { AlertMetricsProvider } from '../../../../../../../components/app/alert-system/contexts/alertMetricsContext';
-import { useBalanceChanges } from '../../../../simulation-details/useBalanceChanges';
+import { BigNumber } from 'bignumber.js';
+import React from 'react';
+
 import { TokenStandard } from '../../../../../../../../shared/constants/transaction';
+import { RevokeDelegation } from '../../../../../../../../test/data/confirmations/batch-transaction';
+import { genUnapprovedContractInteractionConfirmation } from '../../../../../../../../test/data/confirmations/contract-interaction';
+import { getMockConfirmStateForTransaction } from '../../../../../../../../test/data/confirmations/helper';
 import { buildApproveTransactionData } from '../../../../../../../../test/data/confirmations/token-approve';
-import {
-  downgradeAccountConfirmation,
-  upgradeAccountConfirmationOnly,
-} from '../../../../../../../../test/data/confirmations/batch-transaction';
+import { renderWithConfirmContextProvider } from '../../../../../../../../test/lib/confirmations/render-helpers';
+import { AlertMetricsProvider } from '../../../../../../../components/app/alert-system/contexts/alertMetricsContext';
 import { updateAtomicBatchData } from '../../../../../../../store/controller-actions/transaction-controller';
-import { Confirmation } from '../../../../../types/confirm';
+import configureStore from '../../../../../../../store/store';
 import { getCustomTxParamsData } from '../../../../../confirm-approve/confirm-approve.util';
+import type { Confirmation } from '../../../../../types/confirm';
+import { useBalanceChanges } from '../../../../simulation-details/useBalanceChanges';
+import { useBatchApproveBalanceChanges } from '../../hooks/useBatchApproveBalanceChanges';
+import type { ApprovalBalanceChange } from '../../hooks/useBatchApproveBalanceChanges';
 import { BatchSimulationDetails } from './batch-simulation-details';
 
 jest.mock('../../../../simulation-details/useBalanceChanges', () => ({
@@ -286,12 +282,7 @@ describe('BatchSimulationDetails', () => {
   });
 
   it('return null for transaction of type revokeDelegation', () => {
-    const { container } = render(downgradeAccountConfirmation);
-    expect(container.firstChild).toBeNull();
-  });
-
-  it('return null for upgrade transaction if there are no nested transactions', () => {
-    const { container } = render(upgradeAccountConfirmationOnly);
+    const { container } = render(RevokeDelegation);
     expect(container.firstChild).toBeNull();
   });
 });

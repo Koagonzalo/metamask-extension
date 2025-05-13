@@ -1,11 +1,11 @@
+import { BtcAccountType } from '@metamask/keyring-api';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { getMultichainSelectedAccountCachedBalance } from '../../../selectors/multichain';
-import { getSelectedMultichainNetworkConfiguration } from '../../../selectors/multichain/networks';
 
 ///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
-import { getIsNativeTokenBuyable } from '../../../ducks/ramps';
 ///: END:ONLY_INCLUDE_IF
+import { getIsBitcoinBuyable } from '../../../ducks/ramps';
+import { useMultichainSelector } from '../../../hooks/useMultichainSelector';
 import {
   ///: BEGIN:ONLY_INCLUDE_IF(solana-swaps)
   getIsSwapsChain,
@@ -14,6 +14,16 @@ import {
   getSelectedInternalAccount,
   getSwapsDefaultToken,
 } from '../../../selectors';
+import {
+  ///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
+  getMultichainIsMainnet,
+  ///: END:ONLY_INCLUDE_IF
+  getMultichainSelectedAccountCachedBalance,
+} from '../../../selectors/multichain';
+import { getSelectedMultichainNetworkConfiguration } from '../../../selectors/multichain/networks';
+
+///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
+///: END:ONLY_INCLUDE_IF
 import { CoinOverview } from './coin-overview';
 
 type NonEvmOverviewProps = {
@@ -24,7 +34,18 @@ const NonEvmOverview = ({ className }: NonEvmOverviewProps) => {
   const { chainId } = useSelector(getSelectedMultichainNetworkConfiguration);
   const balance = useSelector(getMultichainSelectedAccountCachedBalance);
   const account = useSelector(getSelectedInternalAccount);
-  const isNativeTokenBuyable = useSelector(getIsNativeTokenBuyable);
+  ///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
+  const isBtcMainnetAccount = useMultichainSelector(
+    getMultichainIsMainnet,
+    account,
+  );
+  const isBtcBuyable = useSelector(getIsBitcoinBuyable);
+
+  // TODO: Update this to add support to check if Solana is buyable when the Send flow starts
+  const accountType = account.type;
+  const isBtc = accountType === BtcAccountType.P2wpkh;
+  const isBuyableChain = isBtc ? isBtcBuyable && isBtcMainnetAccount : false;
+  ///: END:ONLY_INCLUDE_IF
   const defaultSwapsToken = useSelector(getSwapsDefaultToken);
 
   let isSwapsChain = false;
@@ -47,7 +68,7 @@ const NonEvmOverview = ({ className }: NonEvmOverviewProps) => {
       defaultSwapsToken={defaultSwapsToken}
       ///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
       isBridgeChain={isBridgeChain}
-      isBuyableChain={isNativeTokenBuyable}
+      isBuyableChain={isBuyableChain}
       ///: END:ONLY_INCLUDE_IF
     />
   );

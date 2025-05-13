@@ -1,19 +1,20 @@
 /* eslint-disable @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires */
-import { MockttpServer } from 'mockttp';
+import type { MockttpServer } from 'mockttp';
+
+import { TRANSACTION_DATA_UNISWAP } from '../../../../data/confirmations/transaction-decode';
 import {
   createDappTransaction,
   DAPP_URL,
   unlockWallet,
   WINDOW_TITLES,
 } from '../../../helpers';
-import TestDapp from '../../../page-objects/pages/test-dapp';
-import { TRANSACTION_DATA_UNISWAP } from '../../../../data/confirmations/transaction-decode';
 import TransactionConfirmation from '../../../page-objects/pages/confirmations/redesign/transaction-confirmation';
-import ContractAddressRegistry from '../../../seeder/contract-address-registry';
-import { TestSuiteArguments } from './shared';
+import TestDapp from '../../../page-objects/pages/test-dapp';
+import type ContractAddressRegistry from '../../../seeder/contract-address-registry';
+import type { TestSuiteArguments } from './shared';
 
-const { withFixtures } = require('../../../helpers');
 const FixtureBuilder = require('../../../fixture-builder');
+const { withFixtures } = require('../../../helpers');
 const { SMART_CONTRACTS } = require('../../../seeder/smart-contracts');
 
 describe('Confirmation Redesign Contract Interaction Transaction Decoding', function () {
@@ -157,8 +158,6 @@ async function mocked4BytesResponse(mockServer: MockttpServer) {
   return await mockServer
     .forGet('https://www.4byte.directory/api/v1/signatures/')
     .always()
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     .withQuery({ hex_signature: '0x3b4b1381' })
     .thenCallback(() => ({
       statusCode: 200,
@@ -169,17 +168,9 @@ async function mocked4BytesResponse(mockServer: MockttpServer) {
         results: [
           {
             id: 1,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             created_at: '2021-09-14T02:07:09.805000Z',
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             text_signature: 'mintNFTs(uint256)',
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             hex_signature: '0x3b4b1381',
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             bytes_signature: ';K\u0013',
           },
         ],
@@ -187,7 +178,7 @@ async function mocked4BytesResponse(mockServer: MockttpServer) {
     }));
 }
 
-const SOURCIFY_RESPONSE = {
+export const SOURCIFY_RESPONSE = {
   files: [
     {
       name: 'metadata.json',

@@ -1,19 +1,19 @@
-import React from 'react';
-import {
+import type {
   BatchTransactionParams,
   TransactionMeta,
 } from '@metamask/transaction-controller';
-import { useConfirmContext } from '../../../../../context/confirm';
-import { Box } from '../../../../../../../components/component-library';
-import { ConfirmInfoSection } from '../../../../../../../components/app/confirm/info/row/section';
-import { ConfirmInfoExpandableRow } from '../../../../../../../components/app/confirm/info/row/expandable-row';
-import { RecipientRow } from '../../shared/transaction-details/transaction-details';
-import { TransactionData } from '../../shared/transaction-data/transaction-data';
-import { ConfirmInfoRowText } from '../../../../../../../components/app/confirm/info/row';
-import { useNestedTransactionLabels } from '../../hooks/useNestedTransactionLabels';
+import React from 'react';
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
+import { ConfirmInfoRowText } from '../../../../../../../components/app/confirm/info/row';
+import { ConfirmInfoExpandableRow } from '../../../../../../../components/app/confirm/info/row/expandable-row';
+import { ConfirmInfoSection } from '../../../../../../../components/app/confirm/info/row/section';
+import { Box } from '../../../../../../../components/component-library';
+import { useI18nContext } from '../../../../../../../hooks/useI18nContext';
+import { useConfirmContext } from '../../../../../context/confirm';
+import { useFourByte } from '../../hooks/useFourByte';
+import { TransactionData } from '../../shared/transaction-data/transaction-data';
+import { RecipientRow } from '../../shared/transaction-details/transaction-details';
+
 export function NestedTransactionData() {
   const { currentConfirmation } = useConfirmContext<TransactionMeta>();
   const { nestedTransactions } = currentConfirmation ?? {};
@@ -35,8 +35,6 @@ export function NestedTransactionData() {
   );
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function NestedTransaction({
   index,
   nestedTransaction,
@@ -44,12 +42,14 @@ function NestedTransaction({
   index: number;
   nestedTransaction: BatchTransactionParams;
 }) {
+  const t = useI18nContext();
   const { data, to } = nestedTransaction;
+  const methodData = useFourByte({ data, to });
 
-  const label = useNestedTransactionLabels({
-    nestedTransactions: [nestedTransaction],
-    useIndex: index,
-  })[0];
+  const functionName = methodData?.name;
+
+  const label =
+    functionName ?? t('confirmNestedTransactionTitle', [String(index + 1)]);
 
   return (
     <ConfirmInfoSection>

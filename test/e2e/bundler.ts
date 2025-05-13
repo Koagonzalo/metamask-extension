@@ -1,4 +1,6 @@
-import { startBundler, BundlerServer } from '@metamask/test-bundler';
+import type { BundlerServer } from '@metamask/test-bundler';
+import { startBundler } from '@metamask/test-bundler';
+
 import { BUNDLER_URL } from './constants';
 
 const CONFIG_FILE = `${__dirname}/bundler.config.json`;
@@ -6,7 +8,7 @@ const CONFIG_FILE = `${__dirname}/bundler.config.json`;
 export class Bundler {
   #server: BundlerServer | undefined;
 
-  #userOperationHashes: string[] = [];
+  readonly #userOperationHashes: string[] = [];
 
   async start() {
     console.log('Starting bundler');

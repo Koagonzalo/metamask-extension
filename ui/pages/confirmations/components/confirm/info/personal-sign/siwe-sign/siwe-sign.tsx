@@ -1,10 +1,8 @@
-import React from 'react';
-import { DateTime } from 'luxon';
 import { toHex } from '@metamask/controller-utils';
+import { DateTime } from 'luxon';
+import React from 'react';
 
 import { NETWORK_TO_NAME_MAP } from '../../../../../../../../shared/constants/network';
-import { useI18nContext } from '../../../../../../../hooks/useI18nContext';
-import { SignatureRequestType } from '../../../../../types/confirm';
 import {
   ConfirmInfoRow,
   ConfirmInfoRowAddress,
@@ -12,11 +10,10 @@ import {
   ConfirmInfoRowText,
 } from '../../../../../../../components/app/confirm/info/row';
 import { Box, Text } from '../../../../../../../components/component-library';
-import {
-  BlockSize,
-  TextColor,
-} from '../../../../../../../helpers/constants/design-system';
+import { TextColor } from '../../../../../../../helpers/constants/design-system';
+import { useI18nContext } from '../../../../../../../hooks/useI18nContext';
 import { useConfirmContext } from '../../../../../context/confirm';
+import type { SignatureRequestType } from '../../../../../types/confirm';
 
 const SIWESignInfo: React.FC = () => {
   const t = useI18nContext();
@@ -50,8 +47,11 @@ const SIWESignInfo: React.FC = () => {
       copyEnabled
       copyText={JSON.stringify(siweMessage)}
     >
-      <Box width={BlockSize.Full} className="siwe-sign__message-rows">
-        <Text color={TextColor.inherit} style={{ whiteSpace: 'pre-wrap' }}>
+      <Box style={{ marginLeft: -8, marginRight: -8 }}>
+        <Text
+          color={TextColor.inherit}
+          style={{ whiteSpace: 'pre-wrap', marginLeft: 8, marginRight: 8 }}
+        >
           {statement ?? ''}
         </Text>
         <ConfirmInfoRow label={t('siweURI')}>

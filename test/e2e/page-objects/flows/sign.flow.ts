@@ -1,5 +1,5 @@
-import { Driver } from '../../webdriver/driver';
 import { WINDOW_TITLES } from '../../helpers';
+import type { Driver } from '../../webdriver/driver';
 import SnapSimpleKeyringPage from '../pages/snap-simple-keyring-page';
 import TestDapp from '../pages/test-dapp';
 

@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires */
 import { strict as assert } from 'assert';
-import { MockedEndpoint, MockttpServer } from 'mockttp';
+import type { MockedEndpoint, MockttpServer } from 'mockttp';
+
 import {
   AnonymousTransactionMetaMetricsEvent,
   TransactionMetaMetricsEvent,
 } from '../../../../../shared/constants/transaction';
-import { Driver } from '../../../webdriver/driver';
 import { MOCK_META_METRICS_ID } from '../../../constants';
+import type { Driver } from '../../../webdriver/driver';
 import {
   confirmContractDeploymentTransaction,
   confirmDepositTransaction,
@@ -14,15 +15,15 @@ import {
   createDepositTransaction,
 } from './shared';
 
+const FixtureBuilder = require('../../../fixture-builder');
 const {
-  defaultOptionsForType2Transactions,
+  defaultGanacheOptionsForType2Transactions,
   openDapp,
   unlockWallet,
   WINDOW_TITLES,
   withFixtures,
   getEventPayloads,
 } = require('../../../helpers');
-const FixtureBuilder = require('../../../fixture-builder');
 
 describe('Metrics', function () {
   it('Sends a contract interaction type 2 transaction (EIP1559) with the right properties in the metric events', async function () {
@@ -36,7 +37,7 @@ describe('Metrics', function () {
             participateInMetaMetrics: true,
           })
           .build(),
-        localNodeOptions: defaultOptionsForType2Transactions,
+        localNodeOptions: defaultGanacheOptionsForType2Transactions,
         title: this.test?.fullTitle(),
         testSpecificMock: mocks,
       },

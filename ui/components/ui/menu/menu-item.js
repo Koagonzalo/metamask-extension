@@ -1,7 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import PropTypes from 'prop-types';
+import React from 'react';
 
+import {
+  Display,
+  IconColor,
+  TextVariant,
+} from '../../../helpers/constants/design-system';
 import {
   BadgeWrapper,
   BadgeWrapperAnchorElementShape,
@@ -11,12 +16,6 @@ import {
   IconSize,
   Text,
 } from '../../component-library';
-import {
-  Display,
-  IconColor,
-  TextColor,
-  TextVariant,
-} from '../../../helpers/constants/design-system';
 
 const MenuItem = React.forwardRef(
   (
@@ -62,17 +61,13 @@ const MenuItem = React.forwardRef(
         <Icon
           name={iconName}
           size={IconSize.Sm}
-          marginRight={3}
+          marginRight={2}
           color={iconColor}
         />
       )}
       <div>
         <Text as="div">{children}</Text>
-        {subtitle ? (
-          <Text variant={TextVariant.bodyXs} color={TextColor.textAlternative}>
-            {subtitle}
-          </Text>
-        ) : null}
+        {subtitle ? <Text variant={TextVariant.bodyXs}>{subtitle}</Text> : null}
       </div>
     </button>
   ),

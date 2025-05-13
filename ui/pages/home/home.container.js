@@ -1,7 +1,30 @@
-import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { compose } from 'redux';
 
+import { getEnvironmentType } from '../../../app/scripts/lib/util';
+import {
+  AlertTypes,
+  Web3ShimUsageAlertStates,
+} from '../../../shared/constants/alerts';
+import {
+  ENVIRONMENT_TYPE_NOTIFICATION,
+  ENVIRONMENT_TYPE_POPUP,
+  ///: BEGIN:ONLY_INCLUDE_IF(keyring-snaps)
+  SNAP_MANAGE_ACCOUNTS_CONFIRMATION_TYPES,
+  ///: END:ONLY_INCLUDE_IF
+} from '../../../shared/constants/app';
+import { getInfuraBlocked } from '../../../shared/modules/selectors/networks';
+import {
+  hideWhatsNewPopup,
+  openBasicFunctionalityModal,
+} from '../../ducks/app/app';
+import { getWeb3ShimUsageAlertEnabledness } from '../../ducks/metamask/metamask';
+import { fetchBuyableChains } from '../../ducks/ramps';
+import { getSwapsFeatureIsLive } from '../../ducks/swaps/swaps';
+// TODO: Remove restricted import
+// eslint-disable-next-line import/no-restricted-paths
+import { getIsBrowserDeprecated } from '../../helpers/utils/util';
 import {
   activeTabHasPermissions,
   getUseExternalServices,
@@ -23,13 +46,14 @@ import {
   getNewTokensImportedError,
   hasPendingApprovals,
   getSelectedInternalAccount,
+  getQueuedRequestCount,
   getEditedNetwork,
   selectPendingApprovalsForNavigation,
   ///: BEGIN:ONLY_INCLUDE_IF(solana)
   getIsSolanaSupportEnabled,
   ///: END:ONLY_INCLUDE_IF
 } from '../../selectors';
-import { getInfuraBlocked } from '../../../shared/modules/selectors/networks';
+import { getShouldShowSeedPhraseReminder } from '../../selectors/multi-srp/multi-srp';
 import {
   attemptCloseNotificationPopup,
   setConnectedStatusPopoverHasBeenShown,
@@ -49,29 +73,6 @@ import {
   setDataCollectionForMarketing,
   setEditedNetwork,
 } from '../../store/actions';
-import {
-  hideWhatsNewPopup,
-  openBasicFunctionalityModal,
-} from '../../ducks/app/app';
-import { getWeb3ShimUsageAlertEnabledness } from '../../ducks/metamask/metamask';
-import { getSwapsFeatureIsLive } from '../../ducks/swaps/swaps';
-import { fetchBuyableChains } from '../../ducks/ramps';
-// TODO: Remove restricted import
-// eslint-disable-next-line import/no-restricted-paths
-import { getEnvironmentType } from '../../../app/scripts/lib/util';
-import { getIsBrowserDeprecated } from '../../helpers/utils/util';
-import {
-  ENVIRONMENT_TYPE_NOTIFICATION,
-  ENVIRONMENT_TYPE_POPUP,
-  ///: BEGIN:ONLY_INCLUDE_IF(keyring-snaps)
-  SNAP_MANAGE_ACCOUNTS_CONFIRMATION_TYPES,
-  ///: END:ONLY_INCLUDE_IF
-} from '../../../shared/constants/app';
-import {
-  AlertTypes,
-  Web3ShimUsageAlertStates,
-} from '../../../shared/constants/alerts';
-import { getShouldShowSeedPhraseReminder } from '../../selectors/multi-srp/multi-srp';
 import Home from './home.component';
 
 const mapStateToProps = (state) => {
@@ -91,6 +92,9 @@ const mapStateToProps = (state) => {
   const { address: selectedAddress } = selectedAccount;
   const { forgottenPassword } = metamask;
   const totalUnapprovedCount = getTotalUnapprovedCount(state);
+  const queuedRequestCount = getQueuedRequestCount(state);
+  const totalUnapprovedAndQueuedRequestCount =
+    totalUnapprovedCount + queuedRequestCount;
   const swapsEnabled = getSwapsFeatureIsLive(state);
   const pendingApprovals = selectPendingApprovalsForNavigation(state);
 
@@ -145,6 +149,7 @@ const mapStateToProps = (state) => {
     dataCollectionForMarketing,
     selectedAddress,
     totalUnapprovedCount,
+    totalUnapprovedAndQueuedRequestCount,
     participateInMetaMetrics,
     hasApprovalFlows: getApprovalFlows(state)?.length > 0,
     connectedStatusPopoverHasBeenShown,

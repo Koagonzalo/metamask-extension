@@ -1,4 +1,4 @@
-import { Driver } from '../../webdriver/driver';
+import type { Driver } from '../../webdriver/driver';
 
 class SnapListPage {
   private readonly driver: Driver;
@@ -81,8 +81,6 @@ class SnapListPage {
     await this.driver.clickElementAndWaitToDisappear(this.closeModalButton);
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_noSnapInstalledMessageIsDisplayed(): Promise<void> {
     console.log('Verifying no snaps is installed for current account');
     await this.driver.waitForSelector(this.noSnapInstalledMessage);
@@ -94,8 +92,6 @@ class SnapListPage {
     await this.driver.clickElement(this.homePageSnap);
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_homePageTitle(): Promise<void> {
     console.log('Checking title of snap list page');
     await this.driver.waitForSelector(this.homePageTitle);

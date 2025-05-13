@@ -1,24 +1,27 @@
-import {
-  FALLBACK_VARIATION,
+import type { AccountsControllerState } from '@metamask/accounts-controller';
+import { KeyringTypes } from '@metamask/keyring-controller';
+import type {
   NameController,
   NameControllerState,
+} from '@metamask/name-controller';
+import {
+  FALLBACK_VARIATION,
   NameType,
   NameOrigin,
 } from '@metamask/name-controller';
 import { cloneDeep } from 'lodash';
-import { AccountsControllerState } from '@metamask/accounts-controller';
-import { KeyringTypes } from '@metamask/keyring-controller';
+
 import { createMockInternalAccount } from '../../../test/jest/mocks';
-import {
-  AccountIdentitiesPetnamesBridgeActions,
-  AccountIdentitiesPetnamesBridgeEvents,
-  AccountIdentitiesPetnamesBridge,
-  AccountIdentitiesPetnamesBridgeMessenger,
-} from './AccountIdentitiesPetnamesBridge';
-import {
+import type {
   PetnameEntry,
   PetnamesBridgeMessenger,
 } from './AbstractPetnamesBridge';
+import type {
+  AccountIdentitiesPetnamesBridgeActions,
+  AccountIdentitiesPetnamesBridgeEvents,
+  AccountIdentitiesPetnamesBridgeMessenger,
+} from './AccountIdentitiesPetnamesBridge';
+import { AccountIdentitiesPetnamesBridge } from './AccountIdentitiesPetnamesBridge';
 
 const ADDRESS_MOCK = '0xabc';
 const NAME_MOCK = 'Account 1';
@@ -204,7 +207,6 @@ describe('AccountIdentitiesPetnamesBridge', () => {
   });
 
   describe('shouldSyncPetname', () => {
-    // @ts-expect-error This is missing from the Mocha type definitions
     it.each([
       {
         origin: NameOrigin.ACCOUNT_IDENTITY,

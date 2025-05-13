@@ -1,12 +1,13 @@
-import { strict as assert } from 'assert';
-import { JsonRpcRequest } from '@metamask/utils';
-import { MockedEndpoint } from 'mockttp';
+import type { JsonRpcRequest } from '@metamask/utils';
 import { expect } from '@playwright/test';
+import { strict as assert } from 'assert';
+import type { MockedEndpoint } from 'mockttp';
+
 import FixtureBuilder from '../../fixture-builder';
 import { withFixtures } from '../../helpers';
-import { Mockttp } from '../../mock-e2e';
-import HomePage from '../../page-objects/pages/home/homepage';
+import type { Mockttp } from '../../mock-e2e';
 import { loginWithoutBalanceValidation } from '../../page-objects/flows/login.flow';
+import HomePage from '../../page-objects/pages/home/homepage';
 
 const infuraMainnetUrl =
   'https://mainnet.infura.io/v3/00000000000000000000000000000000';
@@ -315,7 +316,9 @@ describe('Account Tracker API polling', function () {
       },
     );
   });
+});
 
+describe('Token Detection', function () {
   async function mockAccountApiForPortfolioView(mockServer: Mockttp) {
     return [
       await mockServer
@@ -347,7 +350,7 @@ describe('Account Tracker API polling', function () {
         })),
     ];
   }
-  it('should make token detection calls to account api as expected', async function () {
+  it('should make calls to account api as expected', async function () {
     if (process.env.PORTFOLIO_VIEW) {
       await withFixtures(
         {

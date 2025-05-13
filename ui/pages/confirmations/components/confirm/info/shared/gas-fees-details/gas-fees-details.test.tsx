@@ -1,12 +1,12 @@
+import type { Hex } from '@metamask/utils';
 import { act } from '@testing-library/react';
 import React from 'react';
 
-import { Hex } from '@metamask/utils';
+import { genUnapprovedContractInteractionConfirmation } from '../../../../../../../../test/data/confirmations/contract-interaction';
 import { getMockConfirmStateForTransaction } from '../../../../../../../../test/data/confirmations/helper';
 import { renderWithConfirmContextProvider } from '../../../../../../../../test/lib/confirmations/render-helpers';
 import { getGasFeeTimeEstimate } from '../../../../../../../store/actions';
 import configureStore from '../../../../../../../store/store';
-import { genUnapprovedContractInteractionConfirmation } from '../../../../../../../../test/data/confirmations/contract-interaction';
 import { GasFeesDetails } from './gas-fees-details';
 
 jest.mock('../../../../../../../store/actions', () => ({
@@ -48,7 +48,7 @@ describe('<GasFeesDetails />', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    (getGasFeeTimeEstimate as jest.Mock).mockImplementation(() =>
+    (getGasFeeTimeEstimate as jest.Mock).mockImplementation(async () =>
       Promise.resolve({ upperTimeBound: '1000' }),
     );
   });
@@ -102,22 +102,5 @@ describe('<GasFeesDetails />', () => {
     });
 
     expect(queryByTestId('gas-fee-details-max-fee')).toBeNull();
-  });
-
-  it('does not render gas timing if selected gas fee token', async () => {
-    const { queryByText } = renderWithConfirmContextProvider(
-      <GasFeesDetails
-        setShowCustomizeGasPopover={() => {
-          // Intentionally empty
-        }}
-      />,
-      getStore({ isAdvanced: true, selectedGasFeeToken: '0x123' }),
-    );
-
-    await act(async () => {
-      // Intentionally empty
-    });
-
-    expect(queryByText('Speed')).not.toBeInTheDocument();
   });
 });

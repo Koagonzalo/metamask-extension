@@ -1,26 +1,29 @@
-import React, { FunctionComponent } from 'react';
-
+import type { FunctionComponent } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
-import {
-  getSnapMetadata,
-  getTargetSubjectMetadata,
-} from '../../../../selectors';
-import { getAvatarFallbackLetter } from '../../../../helpers/utils/util';
-import {
-  AvatarBase,
-  AvatarBaseSize,
-  AvatarFavicon,
-  AvatarFaviconProps,
-  AvatarFaviconSize,
-  IconSize,
-} from '../../../component-library';
+
+import type { BackgroundColor } from '../../../../helpers/constants/design-system';
 import {
   AlignItems,
-  BackgroundColor,
   Display,
   JustifyContent,
   TextColor,
 } from '../../../../helpers/constants/design-system';
+import { getAvatarFallbackLetter } from '../../../../helpers/utils/util';
+import {
+  getSnapMetadata,
+  getTargetSubjectMetadata,
+} from '../../../../selectors';
+import type {
+  AvatarBaseSize,
+  AvatarFaviconProps,
+  AvatarFaviconSize,
+} from '../../../component-library';
+import {
+  AvatarBase,
+  AvatarFavicon,
+  IconSize,
+} from '../../../component-library';
 
 type SnapIconProps = {
   snapId: string;

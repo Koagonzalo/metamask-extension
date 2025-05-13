@@ -1,21 +1,22 @@
-import { Suite } from 'mocha';
-import { MockttpServer } from 'mockttp';
-import { withFixtures, sentryRegEx } from '../../helpers';
+import type { Suite } from 'mocha';
+import type { MockttpServer } from 'mockttp';
+
+import { MOCK_META_METRICS_ID } from '../../constants';
 import FixtureBuilder from '../../fixture-builder';
-import { Driver } from '../../webdriver/driver';
+import { withFixtures, sentryRegEx } from '../../helpers';
 import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
-import SettingsPage from '../../page-objects/pages/settings/settings-page';
-import HeaderNavbar from '../../page-objects/pages/header-navbar';
 import DevelopOptions from '../../page-objects/pages/developer-options-page';
 import ErrorPage from '../../page-objects/pages/error-page';
-import { MOCK_META_METRICS_ID } from '../../constants';
+import HeaderNavbar from '../../page-objects/pages/header-navbar';
+import SettingsPage from '../../page-objects/pages/settings/settings-page';
+import type { Driver } from '../../webdriver/driver';
 
 const triggerCrash = async (driver: Driver): Promise<void> => {
   const headerNavbar = new HeaderNavbar(driver);
   await headerNavbar.openSettingsPage();
   const settingsPage = new SettingsPage(driver);
   await settingsPage.check_pageIsLoaded();
-  await settingsPage.goToDeveloperOptions();
+  await settingsPage.goToDevelopOptionSettings();
 
   const developOptionsPage = new DevelopOptions(driver);
   await developOptionsPage.check_pageIsLoaded();

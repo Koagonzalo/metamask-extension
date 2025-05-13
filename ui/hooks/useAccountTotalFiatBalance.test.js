@@ -1,13 +1,12 @@
+import { renderHook } from '@testing-library/react-hooks';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { renderHook } from '@testing-library/react-hooks';
-
-import mockState from '../../test/data/mock-state.json';
-import configureStore from '../store/store';
 
 import { CHAIN_IDS } from '../../shared/constants/network';
+import mockState from '../../test/data/mock-state.json';
 import { createMockInternalAccount } from '../../test/jest/mocks';
 import { mockNetworkState } from '../../test/stub/networks';
+import configureStore from '../store/store';
 import { useAccountTotalFiatBalance } from './useAccountTotalFiatBalance';
 
 const mockAccount = createMockInternalAccount({
@@ -75,47 +74,22 @@ const renderUseAccountTotalFiatBalance = (address) => {
       },
       ...mockNetworkState({ chainId: CHAIN_IDS.MAINNET }),
 
-      allDetectedTokens: {
+      detectedTokens: {
         [CHAIN_IDS.MAINNET]: {
           '0x0836f5ed6b62baf60706fe3adc0ff0fd1df833da': [
             {
               address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+              decimals: 6,
               symbol: 'USDC',
             },
-          ],
-        },
-      },
-      tokensChainsCache: {
-        [CHAIN_IDS.MAINNET]: {
-          data: {
-            '0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e': {
-              address: '0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e',
-              aggregators: [
-                'airswapLight',
-                'bancor',
-                'cmc',
-                'coinGecko',
-                'kleros',
-                'oneInch',
-                'paraswap',
-                'pmm',
-                'totle',
-                'zapper',
-                'zerion',
-                'zeroEx',
-              ],
-              balance: '1409247882142934',
-              balanceError: null,
+            {
+              address: '0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e',
+              aggregators: [],
               decimals: 18,
-              fiatBalance: '0.05',
-              iconUrl:
-                'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e/logo.png',
               name: 'yearn.finance',
-              occurrences: 12,
-              string: '0.001409247882142934',
               symbol: 'YFI',
             },
-          },
+          ],
         },
       },
     },

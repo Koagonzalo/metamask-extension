@@ -1,11 +1,25 @@
+import { formatChainIdToHex } from '@metamask/bridge-controller';
+import type { EvmNetworkConfiguration } from '@metamask/multichain-network-controller';
+import type { TransactionMeta } from '@metamask/transaction-controller';
+import { BigNumber } from 'bignumber.js';
 import React, { useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory, useParams, useLocation } from 'react-router-dom';
-import type { TransactionMeta } from '@metamask/transaction-controller';
-import { BigNumber } from 'bignumber.js';
-import type { EvmNetworkConfiguration } from '@metamask/multichain-network-controller';
-import { formatChainIdToHex, StatusTypes } from '@metamask/bridge-controller';
-import { type BridgeHistoryItem } from '@metamask/bridge-status-controller';
+
+import type { AllowedBridgeChainIds } from '../../../../shared/constants/bridge';
+import { NETWORK_TO_SHORT_NETWORK_NAME_MAP } from '../../../../shared/constants/bridge';
+import { EtherDenomination } from '../../../../shared/constants/common';
+import {
+  MetaMetricsContextProp,
+  MetaMetricsEventCategory,
+  MetaMetricsEventName,
+} from '../../../../shared/constants/metametrics';
+import { MINUTE } from '../../../../shared/constants/time';
+import { hexToDecimal } from '../../../../shared/modules/conversion.utils';
+import { getNetworkConfigurationsByChainId } from '../../../../shared/modules/selectors/networks';
+import type { BridgeHistoryItem } from '../../../../shared/types/bridge-status';
+import { StatusTypes } from '../../../../shared/types/bridge-status';
+import { getTransactionBreakdownData } from '../../../components/app/transaction-breakdown/transaction-breakdown-utils';
 import {
   AvatarNetwork,
   AvatarNetworkSize,
@@ -23,11 +37,10 @@ import {
 import { Content, Header } from '../../../components/multichain/pages/page';
 import { selectBridgeHistoryForAccount } from '../../../ducks/bridge-status/selectors';
 import useBridgeChainInfo from '../../../hooks/bridge/useBridgeChainInfo';
-import { getTransactionBreakdownData } from '../../../components/app/transaction-breakdown/transaction-breakdown-utils';
-import type { MetaMaskReduxState } from '../../../store/store';
-import { hexToDecimal } from '../../../../shared/modules/conversion.utils';
+import { useI18nContext } from '../../../hooks/useI18nContext';
+import { selectedAddressTxListSelectorAllChain } from '../../../selectors';
+import { MetaMaskReduxState } from '../../../store/store';
 import UserPreferencedCurrencyDisplay from '../../../components/app/user-preferenced-currency-display/user-preferenced-currency-display.component';
-import { EtherDenomination } from '../../../../shared/constants/common';
 import {
   PRIMARY,
   SUPPORT_REQUEST_LINK,
@@ -43,27 +56,15 @@ import {
 } from '../../../helpers/constants/design-system';
 import { formatDate } from '../../../helpers/utils/util';
 import { ConfirmInfoRowDivider as Divider } from '../../../components/app/confirm/info/row';
-import { useI18nContext } from '../../../hooks/useI18nContext';
-import { selectedAddressTxListSelectorAllChain } from '../../../selectors';
-import {
-  MetaMetricsContextProp,
-  MetaMetricsEventCategory,
-  MetaMetricsEventName,
-} from '../../../../shared/constants/metametrics';
 import { MetaMetricsContext } from '../../../contexts/metametrics';
 import { formatAmount } from '../../confirmations/components/simulation-details/formatAmount';
 import { getIntlLocale } from '../../../ducks/locale/locale';
 import type { TransactionGroup } from '../../../hooks/bridge/useBridgeTxHistoryData';
 import TransactionActivityLog from '../../../components/app/transaction-activity-log';
-import {
-  NETWORK_TO_SHORT_NETWORK_NAME_MAP,
-  type AllowedBridgeChainIds,
-} from '../../../../shared/constants/bridge';
 import { getImageForChainId } from '../../../selectors/multichain';
-import { MINUTE } from '../../../../shared/constants/time';
-import TransactionDetailRow from './transaction-detail-row';
 import BridgeExplorerLinks from './bridge-explorer-links';
 import BridgeStepList from './bridge-step-list';
+import TransactionDetailRow from './transaction-detail-row';
 
 const getBlockExplorerUrl = (
   networkConfiguration: EvmNetworkConfiguration | undefined,
@@ -169,6 +170,10 @@ const CrossChainSwapTxDetails = () => {
   const selectedAddressTxList = useSelector(
     selectedAddressTxListSelectorAllChain,
   ) as TransactionMeta[];
+
+  const networkConfigurationsByChainId = useSelector(
+    getNetworkConfigurationsByChainId,
+  );
 
   const transactionGroup: TransactionGroup | null =
     location.state?.transactionGroup || null;
@@ -328,12 +333,11 @@ const CrossChainSwapTxDetails = () => {
 
           {/* Bridge step list */}
           {status !== StatusTypes.COMPLETE &&
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
             (bridgeHistoryItem || srcChainTxMeta) && (
               <BridgeStepList
                 bridgeHistoryItem={bridgeHistoryItem}
                 srcChainTxMeta={srcChainTxMeta}
+                networkConfigurationsByChainId={networkConfigurationsByChainId}
               />
             )}
 

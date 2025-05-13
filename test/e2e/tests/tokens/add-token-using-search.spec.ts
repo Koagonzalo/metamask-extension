@@ -1,9 +1,10 @@
-import { MockedEndpoint, Mockttp } from 'mockttp';
-import { withFixtures } from '../../helpers';
-import FixtureBuilder from '../../fixture-builder';
+import type { MockedEndpoint, Mockttp } from 'mockttp';
+
 import { CHAIN_IDS } from '../../../../shared/constants/network';
-import AssetListPage from '../../page-objects/pages/home/asset-list';
+import FixtureBuilder from '../../fixture-builder';
+import { withFixtures } from '../../helpers';
 import { loginWithoutBalanceValidation } from '../../page-objects/flows/login.flow';
+import AssetListPage from '../../page-objects/pages/home/asset-list';
 
 describe('Add existing token using search', function () {
   // Mock call to core to fetch BAT token price

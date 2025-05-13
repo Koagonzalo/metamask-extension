@@ -1,30 +1,33 @@
 /* eslint-disable camelcase */
-import { TransactionControllerTransactionFailedEvent } from '@metamask/transaction-controller';
 import {
   formatChainIdToHex,
   isEthUsdt,
   StatusTypes,
 } from '@metamask/bridge-controller';
 // eslint-disable-next-line import/no-restricted-paths
-import {
+import type {
   BridgeStatusControllerBridgeTransactionCompleteEvent,
   BridgeStatusControllerBridgeTransactionFailedEvent,
 } from '@metamask/bridge-status-controller';
-import { decimalToPrefixedHex } from '../../../../shared/modules/conversion.utils';
-import { calcTokenAmount } from '../../../../shared/lib/transactions-controller-utils';
+import type { TransactionControllerTransactionFailedEvent } from '@metamask/transaction-controller';
+
 // eslint-disable-next-line import/no-restricted-paths
-import {
-  MetaMetricsEventCategory,
-  MetaMetricsEventName,
+import type {
   MetaMetricsEventOptions,
   MetaMetricsEventPayload,
 } from '../../../../shared/constants/metametrics';
+import {
+  MetaMetricsEventCategory,
+  MetaMetricsEventName,
+} from '../../../../shared/constants/metametrics';
 // eslint-disable-next-line import/no-restricted-paths
-import { CrossChainSwapsEventProperties } from '../../../../ui/hooks/bridge/useCrossChainSwapsEventTracker';
 import { getCommonProperties } from '../../../../shared/lib/bridge-status/metrics';
+import { calcTokenAmount } from '../../../../shared/lib/transactions-controller-utils';
+import { decimalToPrefixedHex } from '../../../../shared/modules/conversion.utils';
 // eslint-disable-next-line import/no-restricted-paths
-import { type ActionType } from '../../../../ui/hooks/bridge/events/types';
 import { type MetricsBackgroundState } from '../../../../shared/types/bridge-status';
+import { type ActionType } from '../../../../ui/hooks/bridge/events/types';
+import type { CrossChainSwapsEventProperties } from '../../../../ui/hooks/bridge/useCrossChainSwapsEventTracker';
 import { getTokenUsdValue } from './metrics-utils';
 
 type TrackEvent = (
@@ -48,17 +51,9 @@ export const handleBridgeTransactionComplete = async (
 
   const common = getCommonProperties(bridgeHistoryItem, state);
   const {
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     chain_id_destination,
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     usd_actual_gas,
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     usd_quoted_return,
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     usd_quoted_gas,
   } = common;
 
@@ -77,24 +72,16 @@ export const handleBridgeTransactionComplete = async (
       state,
     })) ?? 0;
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   const quote_vs_execution_ratio =
     usd_quoted_return && destTokenUsdValue
       ? usd_quoted_return / destTokenUsdValue
       : 0;
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   const quoted_vs_used_gas_ratio =
     usd_quoted_gas && usd_actual_gas ? usd_quoted_gas / usd_actual_gas : 0;
 
   // Get tx statuses
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   const source_transaction = StatusTypes.COMPLETE;
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   const destination_transaction = StatusTypes.COMPLETE;
 
   const isEthUsdtTx = isEthUsdt(
@@ -104,40 +91,24 @@ export const handleBridgeTransactionComplete = async (
 
   const allowanceResetTransaction =
     isEthUsdtTx && hasApprovalTx
-      ? // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        { allowance_reset_transaction: StatusTypes.COMPLETE }
+      ? { allowance_reset_transaction: StatusTypes.COMPLETE }
       : undefined;
   const approvalTransaction = hasApprovalTx
-    ? // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      { approval_transaction: StatusTypes.COMPLETE }
+    ? { approval_transaction: StatusTypes.COMPLETE }
     : undefined;
 
   const properties: CrossChainSwapsEventProperties[MetaMetricsEventName.ActionCompleted] & {
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     action_type: ActionType;
   } = {
     ...common,
 
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     usd_actual_return: destTokenUsdValue,
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     quote_vs_execution_ratio,
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     quoted_vs_used_gas_ratio,
 
     ...allowanceResetTransaction,
     ...approvalTransaction,
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     source_transaction,
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     destination_transaction,
   };
 
@@ -174,13 +145,9 @@ export const handleBridgeTransactionFailed = async (
   const common = getCommonProperties(bridgeHistoryItem, state);
 
   // Get tx statuses
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   const source_transaction = status.srcChain.txHash
     ? StatusTypes.COMPLETE
     : StatusTypes.FAILED;
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   const destination_transaction = status.destChain?.txHash
     ? StatusTypes.COMPLETE
     : StatusTypes.FAILED;
@@ -190,14 +157,10 @@ export const handleBridgeTransactionFailed = async (
     quote.srcAsset.address,
   );
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   const allowance_reset_transaction =
     isEthUsdtTx && hasApprovalTx && status.srcChain.txHash
       ? StatusTypes.COMPLETE
       : StatusTypes.FAILED;
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   const approval_transaction =
     hasApprovalTx && status.srcChain.txHash
       ? StatusTypes.COMPLETE
@@ -207,21 +170,11 @@ export const handleBridgeTransactionFailed = async (
     {
       ...common,
 
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       allowance_reset_transaction,
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       approval_transaction,
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       source_transaction,
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       destination_transaction,
 
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       error_message: '',
     };
 
@@ -260,8 +213,6 @@ export const handleTransactionFailedTypeBridge = async (
   const common = getCommonProperties(bridgeHistoryItem, state);
 
   // Get tx statuses
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   const source_transaction = StatusTypes.FAILED;
 
   const isEthUsdtTx = isEthUsdt(
@@ -270,14 +221,10 @@ export const handleTransactionFailedTypeBridge = async (
   );
   const allowanceResetTransaction =
     isEthUsdtTx && hasApprovalTx
-      ? // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        { allowance_reset_transaction: StatusTypes.COMPLETE }
+      ? { allowance_reset_transaction: StatusTypes.COMPLETE }
       : undefined;
   const approvalTransaction = hasApprovalTx
-    ? // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      { approval_transaction: StatusTypes.COMPLETE }
+    ? { approval_transaction: StatusTypes.COMPLETE }
     : undefined;
 
   const properties: CrossChainSwapsEventProperties[MetaMetricsEventName.ActionFailed] =
@@ -286,12 +233,8 @@ export const handleTransactionFailedTypeBridge = async (
 
       ...allowanceResetTransaction,
       ...approvalTransaction,
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       source_transaction,
 
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       error_message: payload.error,
     };
 

@@ -1,13 +1,13 @@
+import { getBlockExplorerLink } from '@metamask/etherscan-link';
+import { TransactionStatus } from '@metamask/transaction-controller';
+import { startCase, toLower } from 'lodash';
 import browser from 'webextension-polyfill';
 
-import { getBlockExplorerLink } from '@metamask/etherscan-link';
-import { startCase, toLower } from 'lodash';
-import { TransactionStatus } from '@metamask/transaction-controller';
-import { getEnvironmentType } from '../lib/util';
 import { ENVIRONMENT_TYPE_BACKGROUND } from '../../../shared/constants/app';
 // TODO: Remove restricted import
 // eslint-disable-next-line import/no-restricted-paths
 import { getURLHostName } from '../../../ui/helpers/utils/util';
+import { getEnvironmentType } from '../lib/util';
 import { t } from '../translate';
 
 export default class ExtensionPlatform {

@@ -7,14 +7,21 @@
  * on each new block.
  */
 
-import { v4 as random } from 'uuid';
-
-import log from 'loglevel';
-import { Web3Provider } from '@ethersproject/providers';
 import { Contract } from '@ethersproject/contracts';
-import SINGLE_CALL_BALANCES_ABI from 'single-call-balance-checker-abi';
-import { cloneDeep } from 'lodash';
-import {
+import { Web3Provider } from '@ethersproject/providers';
+import type {
+  AccountsControllerGetSelectedAccountAction,
+  AccountsControllerSelectedEvmAccountChangeEvent,
+} from '@metamask/accounts-controller';
+import type {
+  ControllerGetStateAction,
+  ControllerStateChangeEvent,
+  RestrictedMessenger,
+} from '@metamask/base-controller';
+import { BaseController } from '@metamask/base-controller';
+import type { KeyringControllerAccountRemovedEvent } from '@metamask/keyring-controller';
+import type { InternalAccount } from '@metamask/keyring-internal-api';
+import type {
   BlockTracker,
   NetworkClientConfiguration,
   NetworkClientId,
@@ -23,18 +30,10 @@ import {
   Provider,
 } from '@metamask/network-controller';
 import { hasProperty, type Hex, type JsonRpcParams } from '@metamask/utils';
-import {
-  BaseController,
-  ControllerGetStateAction,
-  ControllerStateChangeEvent,
-  RestrictedMessenger,
-} from '@metamask/base-controller';
-import {
-  AccountsControllerGetSelectedAccountAction,
-  AccountsControllerSelectedEvmAccountChangeEvent,
-} from '@metamask/accounts-controller';
-import { KeyringControllerAccountRemovedEvent } from '@metamask/keyring-controller';
-import { InternalAccount } from '@metamask/keyring-internal-api';
+import { cloneDeep } from 'lodash';
+import log from 'loglevel';
+import SINGLE_CALL_BALANCES_ABI from 'single-call-balance-checker-abi';
+import { v4 as random } from 'uuid';
 
 import { LOCALHOST_RPC_URL } from '../../../shared/constants/network';
 import { SINGLE_CALL_BALANCES_ADDRESSES } from '../constants/contracts';
@@ -43,7 +42,7 @@ import type {
   OnboardingControllerGetStateAction,
   OnboardingControllerStateChangeEvent,
 } from './onboarding';
-import { PreferencesControllerGetStateAction } from './preferences-controller';
+import type { PreferencesControllerGetStateAction } from './preferences-controller';
 
 // Unique name for the controller
 const controllerName = 'AccountTrackerController';
@@ -183,18 +182,18 @@ export default class AccountTrackerController extends BaseController<
   AccountTrackerControllerState,
   AccountTrackerControllerMessenger
 > {
-  #pollingTokenSets = new Map<NetworkClientId, Set<string>>();
+  readonly #pollingTokenSets = new Map<NetworkClientId, Set<string>>();
 
   #listeners: Record<NetworkClientId, (blockNumber: string) => Promise<void>> =
     {};
 
-  #provider: Provider;
+  readonly #provider: Provider;
 
-  #blockTracker: BlockTracker;
+  readonly #blockTracker: BlockTracker;
 
   #currentBlockNumberByChainId: Record<Hex, string | null> = {};
 
-  #getNetworkIdentifier: AccountTrackerControllerOptions['getNetworkIdentifier'];
+  readonly #getNetworkIdentifier: AccountTrackerControllerOptions['getNetworkIdentifier'];
 
   #selectedAccount: InternalAccount;
 
@@ -424,7 +423,7 @@ export default class AccountTrackerController extends BaseController<
       return;
     }
     const { blockTracker } = this.#getCorrectNetworkClient(networkClientId);
-    const updateForBlock = (blockNumber: string) =>
+    const updateForBlock = async (blockNumber: string) =>
       this.#updateForBlockByNetworkClientId(networkClientId, blockNumber);
     blockTracker.addListener('latest', updateForBlock);
 
@@ -587,7 +586,7 @@ export default class AccountTrackerController extends BaseController<
    * @param blockNumber - the block number to update to.
    * @fires 'block' The updated state, if all account updates are successful
    */
-  #updateForBlock = async (blockNumber: string): Promise<void> => {
+  readonly #updateForBlock = async (blockNumber: string): Promise<void> => {
     await this.#updateForBlockByNetworkClientId(undefined, blockNumber);
   };
 
@@ -642,7 +641,7 @@ export default class AccountTrackerController extends BaseController<
   async updateAccountsAllActiveNetworks(): Promise<void> {
     await this.updateAccounts();
     await Promise.all(
-      Array.from(this.#pollingTokenSets).map(([networkClientId]) => {
+      Array.from(this.#pollingTokenSets).map(async ([networkClientId]) => {
         return this.updateAccounts(networkClientId);
       }),
     );
@@ -689,7 +688,7 @@ export default class AccountTrackerController extends BaseController<
         id in SINGLE_CALL_BALANCES_ADDRESSES)(chainId)
     ) {
       await Promise.all(
-        addresses.map((address) =>
+        addresses.map(async (address) =>
           this.#updateAccount(address, provider, chainId),
         ),
       );
@@ -855,7 +854,7 @@ export default class AccountTrackerController extends BaseController<
         error,
       );
       Promise.allSettled(
-        addresses.map((address) =>
+        addresses.map(async (address) =>
           this.#updateAccount(address, provider, chainId),
         ),
       );

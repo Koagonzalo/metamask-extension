@@ -1,15 +1,15 @@
 import { ApprovalType } from '@metamask/controller-utils';
+import type { TransactionMeta } from '@metamask/transaction-controller';
 import {
-  TransactionMeta,
   TransactionStatus,
   TransactionType,
 } from '@metamask/transaction-controller';
 
+import { genUnapprovedContractInteractionConfirmation } from '../../../../../../test/data/confirmations/contract-interaction';
 import { getMockConfirmState } from '../../../../../../test/data/confirmations/helper';
 import { renderHookWithConfirmContextProvider } from '../../../../../../test/lib/confirmations/render-helpers';
-import { Severity } from '../../../../../helpers/constants/design-system';
 import { RowAlertKey } from '../../../../../components/app/confirm/info/row/constants';
-import { genUnapprovedContractInteractionConfirmation } from '../../../../../../test/data/confirmations/contract-interaction';
+import { Severity } from '../../../../../helpers/constants/design-system';
 import { useResimulationAlert } from './useResimulationAlert';
 
 const ACCOUNT_ADDRESS = '0x0dcd5d886577d5081b0c52e242ef29e70be3e7bc';
@@ -45,7 +45,7 @@ function runHook({
   let pendingApprovals = {};
   if (currentConfirmation) {
     pendingApprovals = {
-      [currentConfirmation.id as string]: {
+      [currentConfirmation.id]: {
         id: currentConfirmation.id,
         type: ApprovalType.Transaction,
       },

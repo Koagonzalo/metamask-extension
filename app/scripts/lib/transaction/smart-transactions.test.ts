@@ -1,15 +1,15 @@
+import { Messenger } from '@metamask/base-controller';
+import type { NetworkControllerStateChangeEvent } from '@metamask/network-controller';
+import type { SmartTransactionsControllerMessenger } from '@metamask/smart-transactions-controller';
+import SmartTransactionsController from '@metamask/smart-transactions-controller';
+import type { SmartTransaction } from '@metamask/smart-transactions-controller/dist/types';
+import { ClientId } from '@metamask/smart-transactions-controller/dist/types';
 import {
   TransactionType,
   TransactionStatus,
-  TransactionController,
 } from '@metamask/transaction-controller';
-import { Messenger } from '@metamask/base-controller';
-import SmartTransactionsController, {
-  SmartTransactionsControllerMessenger,
-} from '@metamask/smart-transactions-controller';
-import { NetworkControllerStateChangeEvent } from '@metamask/network-controller';
-import type { SmartTransaction } from '@metamask/smart-transactions-controller/dist/types';
-import { ClientId } from '@metamask/smart-transactions-controller/dist/types';
+import type { TransactionController } from '@metamask/transaction-controller';
+
 import { CHAIN_IDS } from '../../../../shared/constants/network';
 import {
   submitSmartTransactionHook,
@@ -79,7 +79,7 @@ function withRequest<ReturnValue>(
   const startFlowSpy = jest.fn().mockResolvedValue({ id: 'approvalId' });
   messenger.registerActionHandler('ApprovalController:startFlow', startFlowSpy);
 
-  const addRequestSpy = jest.fn().mockImplementation(() => {
+  const addRequestSpy = jest.fn().mockImplementation(async () => {
     return Promise.resolve().then(() => {
       if (typeof addRequestCallback === 'function') {
         addRequestCallback();
@@ -554,7 +554,7 @@ describe('submitSmartTransactionHook', () => {
 
     const endFlowSpy = jest.fn();
     const acceptRequestSpy = jest.fn();
-    const addRequestSpy = jest.fn(() => Promise.resolve());
+    const addRequestSpy = jest.fn(async () => Promise.resolve());
 
     // Create a mock messenger
     const mockMessenger = {

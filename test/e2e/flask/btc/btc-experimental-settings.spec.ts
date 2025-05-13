@@ -1,13 +1,14 @@
-import { Suite } from 'mocha';
+import type { Suite } from 'mocha';
+
 import FixtureBuilder from '../../fixture-builder';
 import { withFixtures } from '../../helpers';
-import { Driver } from '../../webdriver/driver';
-import AccountListPage from '../../page-objects/pages/account-list-page';
-import ExperimentalSettings from '../../page-objects/pages/settings/experimental-settings';
-import HomePage from '../../page-objects/pages/home/homepage';
-import HeaderNavbar from '../../page-objects/pages/header-navbar';
-import SettingsPage from '../../page-objects/pages/settings/settings-page';
 import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
+import AccountListPage from '../../page-objects/pages/account-list-page';
+import HeaderNavbar from '../../page-objects/pages/header-navbar';
+import HomePage from '../../page-objects/pages/home/homepage';
+import ExperimentalSettings from '../../page-objects/pages/settings/experimental-settings';
+import SettingsPage from '../../page-objects/pages/settings/settings-page';
+import type { Driver } from '../../webdriver/driver';
 
 describe('BTC Experimental Settings', function (this: Suite) {
   // eslint-disable-next-line mocha/no-skipped-tests

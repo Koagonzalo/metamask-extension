@@ -1,4 +1,3 @@
-import { withFixtures, WINDOW_TITLES } from '../../helpers';
 import {
   DAPP_ONE_ADDRESS,
   DAPP_ONE_URL,
@@ -6,6 +5,7 @@ import {
   DEFAULT_FIXTURE_ACCOUNT,
 } from '../../constants';
 import FixtureBuilder from '../../fixture-builder';
+import { withFixtures, WINDOW_TITLES } from '../../helpers';
 import AddNetworkConfirmation from '../../page-objects/pages/confirmations/redesign/add-network-confirmations';
 import ConnectAccountConfirmation from '../../page-objects/pages/confirmations/redesign/connect-account-confirmation';
 import Homepage from '../../page-objects/pages/home/homepage';

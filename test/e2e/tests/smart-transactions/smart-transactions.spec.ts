@@ -1,19 +1,20 @@
-import { MockttpServer } from 'mockttp';
+import type { MockttpServer } from 'mockttp';
+
+import FixtureBuilder from '../../fixture-builder';
+import { unlockWallet, WINDOW_TITLES, withFixtures } from '../../helpers';
+import { createDappTransaction } from '../../page-objects/flows/transaction';
+import TransactionConfirmation from '../../page-objects/pages/confirmations/redesign/transaction-confirmation';
+import ActivityListPage from '../../page-objects/pages/home/activity-list';
+import HomePage from '../../page-objects/pages/home/homepage';
+import type { Driver } from '../../webdriver/driver';
 import {
   buildQuote,
   reviewQuote,
   checkActivityTransaction,
 } from '../swaps/shared';
-import FixtureBuilder from '../../fixture-builder';
-import { unlockWallet, WINDOW_TITLES, withFixtures } from '../../helpers';
-import { Driver } from '../../webdriver/driver';
-import { createDappTransaction } from '../../page-objects/flows/transaction';
-import ActivityListPage from '../../page-objects/pages/home/activity-list';
-import TransactionConfirmation from '../../page-objects/pages/confirmations/redesign/transaction-confirmation';
-import HomePage from '../../page-objects/pages/home/homepage';
 import { mockSmartTransactionRequests } from './mocks';
 
-async function withFixturesForSmartTransactions(
+export async function withFixturesForSmartTransactions(
   {
     title,
     testSpecificMock,
@@ -21,7 +22,7 @@ async function withFixturesForSmartTransactions(
     title?: string;
     testSpecificMock: (mockServer: MockttpServer) => Promise<void>;
   },
-  runTestWithFixtures: (args: { driver: Driver }) => Promise<void>,
+  test: (args: { driver: Driver }) => Promise<void>,
 ) {
   await withFixtures(
     {
@@ -39,12 +40,12 @@ async function withFixturesForSmartTransactions(
     },
     async ({ driver }) => {
       await unlockWallet(driver);
-      await runTestWithFixtures({ driver });
+      await test({ driver });
     },
   );
 }
 
-const waitForTransactionToComplete = async (
+export const waitForTransactionToComplete = async (
   driver: Driver,
   options: { tokenName: string },
 ) => {
@@ -81,7 +82,6 @@ describe('Smart Transactions', function () {
         await buildQuote(driver, {
           amount: 2,
           swapTo: 'DAI',
-          mainnet: true,
         });
 
         await reviewQuote(driver, {

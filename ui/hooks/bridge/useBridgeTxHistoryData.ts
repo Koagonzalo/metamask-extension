@@ -1,10 +1,9 @@
+import type { TransactionMeta } from '@metamask/transaction-controller';
+import { TransactionStatus } from '@metamask/transaction-controller';
+import type { Hex } from '@metamask/utils';
 import { useSelector } from 'react-redux';
-import { Hex } from '@metamask/utils';
-import {
-  TransactionMeta,
-  TransactionStatus,
-} from '@metamask/transaction-controller';
 import { useHistory } from 'react-router-dom';
+
 import { selectBridgeHistoryForAccount } from '../../ducks/bridge-status/selectors';
 import { CROSS_CHAIN_SWAP_TX_DETAILS_ROUTE } from '../../helpers/constants/routes';
 

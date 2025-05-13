@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 // //////////////////////////////////////////////////////////////////////////////
 //
 // Reports on missing localized strings
@@ -17,6 +16,7 @@
 // //////////////////////////////////////////////////////////////////////////////
 
 const log = require('loglevel');
+
 const localeIndex = require('../app/_locales/index.json');
 const { compareLocalesForMissingItems, getLocale } = require('./lib/locales');
 

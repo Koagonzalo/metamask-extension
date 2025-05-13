@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   TextVariant,
   TextColor,
@@ -8,6 +9,7 @@ import {
   JustifyContent,
   BorderColor,
 } from '../../../../helpers/constants/design-system';
+import { getImageForChainId } from '../../../../selectors/multichain';
 import {
   ButtonIcon,
   Box,
@@ -17,7 +19,6 @@ import {
   AvatarNetwork,
   AvatarNetworkSize,
 } from '../../../component-library';
-import { getImageForChainId } from '../../../../selectors/multichain';
 
 export const NetworkSelectorCustomImport = ({
   title,
@@ -43,11 +44,11 @@ export const NetworkSelectorCustomImport = ({
         borderColor={BorderColor.borderDefault}
         borderWidth={1}
         paddingLeft={4}
-        paddingRight={2}
+        paddingRight={1}
       >
         <Text
           variant={TextVariant.bodyMdMedium}
-          color={TextColor.textDefault}
+          color={TextColor.textAlternative}
           paddingTop={3}
           paddingBottom={3}
         >
@@ -69,7 +70,7 @@ export const NetworkSelectorCustomImport = ({
           <ButtonIcon
             marginLeft="auto"
             iconName={IconName.ArrowRight}
-            size={ButtonIconSize.Sm}
+            size={ButtonIconSize.Md}
             ariaLabel={title}
           />
         </Box>

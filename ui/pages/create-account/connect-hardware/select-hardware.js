@@ -1,6 +1,14 @@
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+
+import {
+  HardwareDeviceNames,
+  LedgerTransportTypes,
+  HardwareAffiliateLinks,
+  HardwareAffiliateTutorialLinks,
+} from '../../../../shared/constants/hardware-wallets';
+import { MetaMetricsEventCategory } from '../../../../shared/constants/metametrics';
 import {
   Text,
   Box,
@@ -10,22 +18,11 @@ import {
   Button,
   BUTTON_SIZES,
   BUTTON_VARIANT,
-  BannerAlert,
 } from '../../../components/component-library';
+import LogoLattice from '../../../components/ui/logo/logo-lattice';
 import LogoLedger from '../../../components/ui/logo/logo-ledger';
 import LogoQRBased from '../../../components/ui/logo/logo-qr-based';
 import LogoTrezor from '../../../components/ui/logo/logo-trezor';
-import LogoLattice from '../../../components/ui/logo/logo-lattice';
-
-import {
-  HardwareDeviceNames,
-  LedgerTransportTypes,
-  HardwareAffiliateLinks,
-  HardwareAffiliateTutorialLinks,
-} from '../../../../shared/constants/hardware-wallets';
-import ZENDESK_URLS from '../../../helpers/constants/zendesk-url';
-import { MetaMetricsEventCategory } from '../../../../shared/constants/metametrics';
-import { openWindow } from '../../../helpers/utils/window';
 import {
   AlignItems,
   Display,
@@ -36,6 +33,8 @@ import {
   TextColor,
   TextVariant,
 } from '../../../helpers/constants/design-system';
+import ZENDESK_URLS from '../../../helpers/constants/zendesk-url';
+import { openWindow } from '../../../helpers/utils/window';
 
 // Not all browsers have usb support. In particular, Firefox does
 // not support usb. More information on that can be found here:
@@ -267,20 +266,24 @@ export default class SelectHardware extends Component {
         alignItems={AlignItems.center}
       >
         {this.state.selectedDevice === HardwareDeviceNames.ledger && (
-          <Box>
-            <BannerAlert
-              marginTop={6}
-              title={this.context.t(
-                'ledgerMultipleDevicesUnsupportedInfoTitle',
-              )}
+          <Box
+            display={Display.Flex}
+            flexDirection={FlexDirection.Row}
+            justifyContent={JustifyContent.center}
+            alignItems={AlignItems.center}
+            marginTop={6}
+          >
+            <Text
+              className="hw-connect__error"
+              variant={TextVariant.bodyMd}
+              as="h5"
+              marginTop={5}
+              marginBottom={3}
             >
-              {this.context.t(
-                'ledgerMultipleDevicesUnsupportedInfoDescription',
-              )}
-            </BannerAlert>
+              {this.context.t('ledgerMultipleDevicesUnsupportedErrorMessage')}
+            </Text>
           </Box>
         )}
-
         <Box
           display={Display.Flex}
           flexDirection={FlexDirection.Row}
@@ -766,41 +769,6 @@ export default class SelectHardware extends Component {
                   event: 'Clicked imToken Tutorial',
                 });
                 openWindow(HardwareAffiliateTutorialLinks.imtoken);
-              }}
-            >
-              {this.context.t('tutorial')}
-            </Button>
-          </>
-        ),
-      },
-      {
-        message: (
-          <>
-            <p className="hw-connect__QR-subtitle">
-              {this.context.t('onekey')}
-            </p>
-            <Button
-              className="hw-connect__external-btn-first"
-              variant={BUTTON_VARIANT.SECONDARY}
-              onClick={() => {
-                this.context.trackEvent({
-                  category: MetaMetricsEventCategory.Navigation,
-                  event: 'Clicked OneKey Learn More',
-                });
-                openWindow(HardwareAffiliateLinks.onekey);
-              }}
-            >
-              {this.context.t('buyNow')}
-            </Button>
-            <Button
-              className="hw-connect__external-btn"
-              variant={BUTTON_VARIANT.SECONDARY}
-              onClick={() => {
-                this.context.trackEvent({
-                  category: MetaMetricsEventCategory.Navigation,
-                  event: 'Clicked OneKey Tutorial',
-                });
-                openWindow(HardwareAffiliateTutorialLinks.onekey);
               }}
             >
               {this.context.t('tutorial')}

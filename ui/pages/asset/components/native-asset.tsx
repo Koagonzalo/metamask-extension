@@ -1,19 +1,20 @@
-import React, { useContext } from 'react';
-import { Token } from '@metamask/assets-controllers';
-import { useSelector } from 'react-redux';
+import type { Token } from '@metamask/assets-controllers';
 import { getAccountLink } from '@metamask/etherscan-link';
-import { Hex } from '@metamask/utils';
+import type { Hex } from '@metamask/utils';
+import React, { useContext } from 'react';
+import { useSelector } from 'react-redux';
+
+import { MetaMetricsEventCategory } from '../../../../shared/constants/metametrics';
+import { AssetType } from '../../../../shared/constants/transaction';
+import { getProviderConfig } from '../../../../shared/modules/selectors/networks';
+import { MetaMetricsContext } from '../../../contexts/metametrics';
+import { getURLHostName } from '../../../helpers/utils/util';
+import { useIsOriginalNativeTokenSymbol } from '../../../hooks/useIsOriginalNativeTokenSymbol';
 import {
   getRpcPrefsForCurrentProvider,
   getSelectedInternalAccount,
   getNativeCurrencyForChain,
 } from '../../../selectors';
-import { getProviderConfig } from '../../../../shared/modules/selectors/networks';
-import { AssetType } from '../../../../shared/constants/transaction';
-import { useIsOriginalNativeTokenSymbol } from '../../../hooks/useIsOriginalNativeTokenSymbol';
-import { MetaMetricsEventCategory } from '../../../../shared/constants/metametrics';
-import { getURLHostName } from '../../../helpers/utils/util';
-import { MetaMetricsContext } from '../../../contexts/metametrics';
 import AssetOptions from './asset-options';
 import AssetPage from './asset-page';
 
@@ -40,7 +41,7 @@ const NativeAsset = ({ token, chainId }: { token: Token; chainId: Hex }) => {
         symbol,
         image,
         decimals: token.decimals,
-        isOriginalNativeSymbol: isOriginalNativeSymbol === true,
+        isOriginalNativeSymbol,
       }}
       optionsButton={
         <AssetOptions
@@ -50,12 +51,8 @@ const NativeAsset = ({ token, chainId }: { token: Token; chainId: Hex }) => {
               event: 'Clicked Block Explorer Link',
               category: MetaMetricsEventCategory.Navigation,
               properties: {
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                // eslint-disable-next-line @typescript-eslint/naming-convention
                 link_type: 'Account Tracker',
                 action: 'Asset Options',
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                // eslint-disable-next-line @typescript-eslint/naming-convention
                 block_explorer_domain: getURLHostName(accountLink),
               },
             });

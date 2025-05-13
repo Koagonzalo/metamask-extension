@@ -1,5 +1,6 @@
 import { strict as assert } from 'assert';
-import { Driver } from '../../webdriver/driver';
+
+import type { Driver } from '../../webdriver/driver';
 
 class HeaderNavbar {
   protected driver: Driver;
@@ -21,8 +22,6 @@ class HeaderNavbar {
   private readonly openAccountDetailsButton =
     '[data-testid="account-list-menu-details"]';
 
-  private readonly accountDetailsTab = { text: 'Details', tag: 'button' };
-
   private readonly settingsButton = '[data-testid="global-menu-settings"]';
 
   private readonly switchNetworkDropDown = '[data-testid="network-display"]';
@@ -42,8 +41,6 @@ class HeaderNavbar {
     this.driver = driver;
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_pageIsLoaded(): Promise<void> {
     try {
       await this.driver.waitForMultipleSelectors([
@@ -69,13 +66,6 @@ class HeaderNavbar {
   async openAccountMenu(): Promise<void> {
     await this.driver.clickElement(this.accountMenuButton);
     await this.driver.waitForSelector('.multichain-account-menu-popover__list');
-  }
-
-  async openAccountDetailsModalDetailsTab(): Promise<void> {
-    console.log('Open account details modal');
-    await this.openThreeDotMenu();
-    await this.driver.clickElement(this.openAccountDetailsButton);
-    await this.driver.clickElementSafe(this.accountDetailsTab);
   }
 
   async openAccountDetailsModal(): Promise<void> {
@@ -130,8 +120,6 @@ class HeaderNavbar {
     await this.driver.clickElement(this.notificationsButton);
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_notificationCountInMenuOption(count: number): Promise<void> {
     await this.openThreeDotMenu();
     await this.driver.findElement({
@@ -140,8 +128,6 @@ class HeaderNavbar {
     });
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_currentSelectedNetwork(networkName: string): Promise<void> {
     console.log(`Validate the Switch network to ${networkName}`);
     await this.driver.waitForSelector(
@@ -149,8 +135,6 @@ class HeaderNavbar {
     );
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_ifNetworkPickerClickable(clickable: boolean): Promise<void> {
     console.log('Check whether the network picker is clickable or not');
     assert.equal(
@@ -164,8 +148,6 @@ class HeaderNavbar {
    *
    * @param expectedAddress - The expected address of the account.
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_accountAddress(expectedAddress: string): Promise<void> {
     console.log(
       `Verify the displayed account address in header is: ${expectedAddress}`,
@@ -181,8 +163,6 @@ class HeaderNavbar {
    *
    * @param expectedLabel - The expected label of the account.
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_accountLabel(expectedLabel: string): Promise<void> {
     console.log(
       `Verify the displayed account label in header is: ${expectedLabel}`,

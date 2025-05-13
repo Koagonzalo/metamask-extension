@@ -1,10 +1,9 @@
 import { NameType } from '@metamask/name-controller';
-import { Hex } from '@metamask/utils';
+import type { Hex } from '@metamask/utils';
 import { useSelector } from 'react-redux';
-import {
-  EXPERIENCES_TYPE,
-  FIRST_PARTY_CONTRACT_NAMES,
-} from '../../shared/constants/first-party-contracts';
+
+import type { EXPERIENCES_TYPE } from '../../shared/constants/first-party-contracts';
+import { FIRST_PARTY_CONTRACT_NAMES } from '../../shared/constants/first-party-contracts';
 import { toChecksumHexAddress } from '../../shared/modules/hexstring-utils';
 import { getDomainResolutions } from '../ducks/domains';
 import { selectERC20TokensByChain } from '../selectors';
@@ -46,26 +45,14 @@ export function useDisplayNames(
     const ensName = ens[index];
 
     const name =
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       nameEntry?.name ||
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       firstPartyContractName ||
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       nft?.name ||
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       erc20Token?.name ||
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       watchedNftName ||
       ensName ||
       null;
 
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     const image = nft?.image || erc20Token?.image;
 
     const hasPetname = Boolean(nameEntry?.name);

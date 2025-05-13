@@ -4,7 +4,7 @@ import {
 } from '../../page-objects/flows/onboarding.flow';
 import HeaderNavbar from '../../page-objects/pages/header-navbar';
 import HomePage from '../../page-objects/pages/home/homepage';
-import { Driver } from '../../webdriver/driver';
+import type { Driver } from '../../webdriver/driver';
 import { IDENTITY_TEAM_PASSWORD, IDENTITY_TEAM_SEED_PHRASE } from './constants';
 
 export const completeOnboardFlowIdentity = async (

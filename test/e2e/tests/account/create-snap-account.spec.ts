@@ -1,12 +1,13 @@
-import { Suite } from 'mocha';
-import { Driver } from '../../webdriver/driver';
+import type { Suite } from 'mocha';
+
 import FixtureBuilder from '../../fixture-builder';
 import { withFixtures, WINDOW_TITLES } from '../../helpers';
+import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
+import { installSnapSimpleKeyring } from '../../page-objects/flows/snap-simple-keyring.flow';
 import AccountListPage from '../../page-objects/pages/account-list-page';
 import HeaderNavbar from '../../page-objects/pages/header-navbar';
 import SnapSimpleKeyringPage from '../../page-objects/pages/snap-simple-keyring-page';
-import { installSnapSimpleKeyring } from '../../page-objects/flows/snap-simple-keyring.flow';
-import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
+import type { Driver } from '../../webdriver/driver';
 
 describe('Create Snap Account', function (this: Suite) {
   it('create Snap account with custom name input ends in approval success', async function () {

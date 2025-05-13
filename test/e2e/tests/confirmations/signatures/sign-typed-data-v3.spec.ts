@@ -1,18 +1,18 @@
 import { TransactionEnvelopeType } from '@metamask/transaction-controller';
-import { Suite } from 'mocha';
-import { MockedEndpoint } from 'mockttp';
+import type { Suite } from 'mocha';
+import type { MockedEndpoint } from 'mockttp';
+
 import { WINDOW_TITLES } from '../../../helpers';
-import { Driver } from '../../../webdriver/driver';
+import SignTypedData from '../../../page-objects/pages/confirmations/redesign/sign-typed-data-confirmation';
+import TestDapp from '../../../page-objects/pages/test-dapp';
+import type { Driver } from '../../../webdriver/driver';
 import {
   mockSignatureApproved,
   mockSignatureRejected,
   scrollAndConfirmAndAssertConfirm,
   withTransactionEnvelopeTypeFixtures,
 } from '../helpers';
-import { TestSuiteArguments } from '../transactions/shared';
-import SignTypedData from '../../../page-objects/pages/confirmations/redesign/sign-typed-data-confirmation';
-import TestDapp from '../../../page-objects/pages/test-dapp';
-import { MetaMetricsRequestedThrough } from '../../../../../shared/constants/metametrics';
+import type { TestSuiteArguments } from '../transactions/shared';
 import {
   assertAccountDetailsMetrics,
   assertHeaderInfoBalance,
@@ -66,7 +66,6 @@ describe('Confirmation Signature - Sign Typed Data V3', function (this: Suite) {
           driver,
           mockedEndpoints: mockedEndpoints as MockedEndpoint[],
           signatureType: 'eth_signTypedData_v3',
-          requestedThrough: MetaMetricsRequestedThrough.EthereumProvider,
         });
         await assertVerifiedResults(driver, publicAddress);
       },
@@ -97,7 +96,6 @@ describe('Confirmation Signature - Sign Typed Data V3', function (this: Suite) {
           mockedEndpoints: mockedEndpoints as MockedEndpoint[],
           signatureType: 'eth_signTypedData_v3',
           location: 'confirmation',
-          requestedThrough: MetaMetricsRequestedThrough.EthereumProvider,
         });
 
         await driver.switchToWindowWithTitle(WINDOW_TITLES.TestDApp);

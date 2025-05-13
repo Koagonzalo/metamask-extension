@@ -1,5 +1,5 @@
-import React from 'react';
 import classnames from 'classnames';
+import React from 'react';
 
 import {
   AlignItems,
@@ -9,14 +9,11 @@ import {
   IconColor,
   JustifyContent,
 } from '../../../helpers/constants/design-system';
-
-import { Box, BoxProps, PolymorphicRef } from '../box';
+import type { BoxProps, PolymorphicRef } from '../box';
+import { Box } from '../box';
 import { Icon, IconSize } from '../icon';
-import {
-  ButtonIconSize,
-  ButtonIconProps,
-  ButtonIconComponent,
-} from './button-icon.types';
+import type { ButtonIconProps, ButtonIconComponent } from './button-icon.types';
+import { ButtonIconSize } from './button-icon.types';
 
 const buttonIconSizeToIconSize: Record<ButtonIconSize, IconSize> = {
   [ButtonIconSize.Sm]: IconSize.Sm,
@@ -25,8 +22,6 @@ const buttonIconSizeToIconSize: Record<ButtonIconSize, IconSize> = {
 };
 
 export const ButtonIcon: ButtonIconComponent = React.forwardRef(
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   <C extends React.ElementType = 'button' | 'a'>(
     {
       ariaLabel,
@@ -42,8 +37,6 @@ export const ButtonIcon: ButtonIconComponent = React.forwardRef(
     }: ButtonIconProps<C>,
     ref?: PolymorphicRef<C>,
   ) => {
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     const tag = href ? 'a' : as || 'button';
     const isDisabled = disabled && tag === 'button';
     return (

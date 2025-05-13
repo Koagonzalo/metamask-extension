@@ -1,4 +1,6 @@
-import React, { ReactElement } from 'react';
+import type { ReactElement } from 'react';
+import React from 'react';
+
 import { useI18nContext } from '../../../../hooks/useI18nContext';
 import { Tab, Tabs } from '../../../ui/tabs';
 

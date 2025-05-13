@@ -1,6 +1,32 @@
+import type { CaipChainId } from '@metamask/utils';
 import React, { useCallback, useContext } from 'react';
 import { useSelector } from 'react-redux';
-import { CaipChainId } from '@metamask/utils';
+
+import {
+  MetaMetricsEventCategory,
+  MetaMetricsEventName,
+} from '../../../../shared/constants/metametrics';
+import type { ChainId } from '../../../../shared/constants/network';
+import { MetaMetricsContext } from '../../../contexts/metametrics';
+import {
+  TextVariant,
+  TextAlign,
+} from '../../../helpers/constants/design-system';
+import { getPortfolioUrl } from '../../../helpers/utils/portfolio';
+import useRamps, {
+  RampsMetaMaskEntry,
+} from '../../../hooks/ramps/useRamps/useRamps';
+import { useI18nContext } from '../../../hooks/useI18nContext';
+import {
+  getMetaMetricsId,
+  getParticipateInMetaMetrics,
+  getDataCollectionForMarketing,
+  getSelectedAccount,
+} from '../../../selectors';
+import {
+  getMultichainCurrentNetwork,
+  getMultichainDefaultToken,
+} from '../../../selectors/multichain';
 import {
   Modal,
   ModalContent,
@@ -9,31 +35,6 @@ import {
   Text,
   IconName,
 } from '../../component-library';
-import {
-  TextVariant,
-  TextAlign,
-} from '../../../helpers/constants/design-system';
-import {
-  getMultichainCurrentNetwork,
-  getMultichainDefaultToken,
-} from '../../../selectors/multichain';
-import useRamps, {
-  RampsMetaMaskEntry,
-} from '../../../hooks/ramps/useRamps/useRamps';
-import { getPortfolioUrl } from '../../../helpers/utils/portfolio';
-import {
-  getMetaMetricsId,
-  getParticipateInMetaMetrics,
-  getDataCollectionForMarketing,
-  getSelectedAccount,
-} from '../../../selectors';
-import { useI18nContext } from '../../../hooks/useI18nContext';
-import { ChainId } from '../../../../shared/constants/network';
-import {
-  MetaMetricsEventCategory,
-  MetaMetricsEventName,
-} from '../../../../shared/constants/metametrics';
-import { MetaMetricsContext } from '../../../contexts/metametrics';
 import FundingMethodItem from './funding-method-item';
 
 type FundingMethodModalProps = {
@@ -66,11 +67,7 @@ export const FundingMethodModal: React.FC<FundingMethodModalProps> = ({
       properties: {
         location: RampsMetaMaskEntry?.TokensBanner,
         text: 'Transfer crypto',
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         chain_id: chainId,
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         token_symbol: symbol,
       },
     });
@@ -101,11 +98,7 @@ export const FundingMethodModal: React.FC<FundingMethodModalProps> = ({
       properties: {
         location: RampsMetaMaskEntry?.TokensBanner,
         text: 'Buy crypto',
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         chain_id: chainId,
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         token_symbol: symbol,
       },
     });

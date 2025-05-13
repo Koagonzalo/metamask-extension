@@ -1,24 +1,26 @@
-import React from 'react';
 import classnames from 'classnames';
+import React from 'react';
+
 import {
   Display,
   FlexDirection,
 } from '../../../helpers/constants/design-system';
-import { Box, PolymorphicRef } from '../box';
-import type { BoxProps } from '../box';
-import { TextFieldProps, TextFieldSize } from '../text-field/text-field.types';
+import { Box } from '../box';
+import type { BoxProps, PolymorphicRef } from '../box';
+import { HelpText, HelpTextSeverity } from '../help-text';
 import { Label } from '../label';
 import { TextField } from '../text-field';
-import { HelpText, HelpTextSeverity } from '../help-text';
-import {
-  FormTextFieldSize,
+import type {
+  TextFieldProps,
+  TextFieldSize,
+} from '../text-field/text-field.types';
+import type {
   FormTextFieldProps,
   FormTextFieldComponent,
 } from './form-text-field.types';
+import { FormTextFieldSize } from './form-text-field.types';
 
 export const FormTextField: FormTextFieldComponent = React.forwardRef(
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   <C extends React.ElementType = 'div'>(
     {
       autoComplete,
@@ -67,7 +69,7 @@ export const FormTextField: FormTextFieldComponent = React.forwardRef(
         display={Display.Flex}
         flexDirection={FlexDirection.Column}
         ref={ref}
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+        // TODO: Replace `any` with type
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         {...(props as BoxProps<any>)}
       >

@@ -1,29 +1,29 @@
+import { getNativeTokenAddress } from '@metamask/assets-controllers';
+import { toChecksumAddress } from 'ethereumjs-util';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
-import { toChecksumAddress } from 'ethereumjs-util';
-import { getNativeTokenAddress } from '@metamask/assets-controllers';
+import { formatValue, isValidAmount } from '../../../../app/scripts/lib/util';
+import { getCurrentChainId } from '../../../../shared/modules/selectors/networks';
+import { getIntlLocale } from '../../../ducks/locale/locale';
 import { getCurrentCurrency } from '../../../ducks/metamask/metamask';
+import {
+  Display,
+  TextColor,
+  TextVariant,
+} from '../../../helpers/constants/design-system';
+import { getCalculatedTokenAmount1dAgo } from '../../../helpers/utils/util';
+import { useAccountTotalFiatBalance } from '../../../hooks/useAccountTotalFiatBalance';
 import {
   getSelectedAccount,
   getShouldHideZeroBalanceTokens,
   getTokensMarketData,
   getPreferences,
 } from '../../../selectors';
-import { getCurrentChainId } from '../../../../shared/modules/selectors/networks';
 
-import { useAccountTotalFiatBalance } from '../../../hooks/useAccountTotalFiatBalance';
 // TODO: Remove restricted import
 // eslint-disable-next-line import/no-restricted-paths
-import { formatValue, isValidAmount } from '../../../../app/scripts/lib/util';
-import { getIntlLocale } from '../../../ducks/locale/locale';
-import {
-  Display,
-  TextColor,
-  TextVariant,
-} from '../../../helpers/constants/design-system';
 import { Box, SensitiveText } from '../../component-library';
-import { getCalculatedTokenAmount1dAgo } from '../../../helpers/utils/util';
 
 // core already has this exported type but its not yet available in this version
 // todo remove this and use core type once available
@@ -89,7 +89,7 @@ export const AggregatedPercentageOverview = () => {
 
   let formattedAmountChange = '';
   if (isValidAmount(amountChange)) {
-    formattedAmountChange = (amountChange as number) >= 0 ? '+' : '';
+    formattedAmountChange = amountChange >= 0 ? '+' : '';
 
     const options = {
       notation: 'compact',
@@ -103,23 +103,23 @@ export const AggregatedPercentageOverview = () => {
         ...options,
         style: 'currency',
         currency: fiatCurrency,
-      }).format(amountChange as number)} `;
+      }).format(amountChange)} `;
     } catch {
       // Non-standard Currency Codes
       formattedAmountChange += `${Intl.NumberFormat(locale, {
         ...options,
         minimumFractionDigits: 2,
         style: 'decimal',
-      }).format(amountChange as number)} `;
+      }).format(amountChange)} `;
     }
   }
 
   let color = TextColor.textAlternative;
 
   if (!privacyMode && isValidAmount(amountChange)) {
-    if ((amountChange as number) === 0) {
+    if (amountChange === 0) {
       color = TextColor.textAlternative;
-    } else if ((amountChange as number) > 0) {
+    } else if (amountChange > 0) {
       color = TextColor.successDefault;
     } else {
       color = TextColor.errorDefault;

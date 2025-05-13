@@ -1,17 +1,17 @@
-import { withFixtures, WINDOW_TITLES } from '../../helpers';
-import FixtureBuilder from '../../fixture-builder';
 import {
   ACCOUNT_TYPE,
   DEFAULT_FIXTURE_ACCOUNT,
   DAPP_HOST_ADDRESS,
 } from '../../constants';
+import FixtureBuilder from '../../fixture-builder';
+import { withFixtures, WINDOW_TITLES } from '../../helpers';
+import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
 import AccountListPage from '../../page-objects/pages/account-list-page';
 import HeaderNavbar from '../../page-objects/pages/header-navbar';
 import Homepage from '../../page-objects/pages/home/homepage';
 import PermissionListPage from '../../page-objects/pages/permission/permission-list-page';
 import SitePermissionPage from '../../page-objects/pages/permission/site-permission-page';
 import TestDapp from '../../page-objects/pages/test-dapp';
-import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
 
 const accountLabel2 = '2nd custom name';
 const accountLabel3 = '3rd custom name';

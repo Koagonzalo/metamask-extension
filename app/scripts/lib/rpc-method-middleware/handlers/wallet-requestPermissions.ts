@@ -1,29 +1,33 @@
-import { pick } from 'lodash';
-import { isPlainObject } from '@metamask/controller-utils';
-import {
-  Caveat,
-  invalidParams,
-  MethodNames,
-  RequestedPermissions,
-  ValidPermission,
-} from '@metamask/permission-controller';
+import type { Caip25CaveatValue } from '@metamask/chain-agnostic-permission';
 import {
   Caip25CaveatType,
-  Caip25CaveatValue,
   Caip25EndowmentPermissionName,
   getPermittedEthChainIds,
 } from '@metamask/chain-agnostic-permission';
-import { Json, JsonRpcRequest, PendingJsonRpcResponse } from '@metamask/utils';
-import {
+import { isPlainObject } from '@metamask/controller-utils';
+import type {
   AsyncJsonRpcEngineNextCallback,
   JsonRpcEngineEndCallback,
 } from '@metamask/json-rpc-engine';
+import type {
+  Caveat,
+  RequestedPermissions,
+  ValidPermission,
+} from '@metamask/permission-controller';
+import { invalidParams, MethodNames } from '@metamask/permission-controller';
+import type {
+  Json,
+  JsonRpcRequest,
+  PendingJsonRpcResponse,
+} from '@metamask/utils';
+import { pick } from 'lodash';
+
 import {
   CaveatTypes,
   RestrictedMethods,
 } from '../../../../../shared/constants/permissions';
 import { PermissionNames } from '../../../controllers/permissions';
-import { GrantedPermissions } from './types';
+import type { GrantedPermissions } from './types';
 
 export const requestPermissionsHandler = {
   methodNames: [MethodNames.RequestPermissions],
@@ -50,7 +54,7 @@ export const requestPermissionsHandler = {
  */
 async function requestPermissionsImplementation(
   req: JsonRpcRequest<[RequestedPermissions]> & { origin: string },
-  res: PendingJsonRpcResponse<Json>,
+  res: PendingJsonRpcResponse,
   _next: AsyncJsonRpcEngineNextCallback,
   end: JsonRpcEngineEndCallback,
   {

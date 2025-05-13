@@ -1,4 +1,6 @@
-import {
+import { Interface } from '@ethersproject/abi';
+import { abiERC20 } from '@metamask/metamask-eth-abis';
+import type {
   AuthorizationList,
   GasFeeToken,
   IsAtomicBatchSupportedRequest,
@@ -8,25 +10,25 @@ import {
   TransactionMeta,
   TransactionParams,
 } from '@metamask/transaction-controller';
-import { Hex, add0x, createProjectLogger, remove0x } from '@metamask/utils';
-import { abiERC20 } from '@metamask/metamask-eth-abis';
-import { Interface } from '@ethersproject/abi';
-import {
-  ANY_BENEFICIARY,
+import type { Hex } from '@metamask/utils';
+import { add0x, createProjectLogger, remove0x } from '@metamask/utils';
+
+import type { TransactionControllerInitMessenger } from '../../../controller-init/messengers/transaction-controller-messenger';
+import type {
   Caveat,
   Delegation,
   Execution,
+  UnsignedDelegation,
+} from '../delegation';
+import {
+  ANY_BENEFICIARY,
   ExecutionMode,
   ROOT_AUTHORITY,
-  UnsignedDelegation,
   encodeRedeemDelegations,
   signDelegation,
 } from '../delegation';
-import { TransactionControllerInitMessenger } from '../../../controller-init/messengers/transaction-controller-messenger';
-import {
-  RelaySubmitRequest,
-  submitRelayTransaction,
-} from '../transaction-relay';
+import type { RelaySubmitRequest } from '../transaction-relay';
+import { submitRelayTransaction } from '../transaction-relay';
 
 const EMPTY_HEX = '0x';
 
@@ -37,11 +39,11 @@ const EMPTY_RESULT = {
 const log = createProjectLogger('delegation-7702-publish-hook');
 
 export class Delegation7702PublishHook {
-  #isAtomicBatchSupported: (
+  readonly #isAtomicBatchSupported: (
     request: IsAtomicBatchSupportedRequest,
   ) => Promise<IsAtomicBatchSupportedResult>;
 
-  #messenger: TransactionControllerInitMessenger;
+  readonly #messenger: TransactionControllerInitMessenger;
 
   constructor({
     isAtomicBatchSupported,
@@ -296,7 +298,7 @@ export class Delegation7702PublishHook {
 
   #decodeAuthorizationSignature(signature: Hex) {
     const r = signature.slice(0, 66) as Hex;
-    const s = `0x${signature.slice(66, 130)}` as Hex;
+    const s = `0x${signature.slice(66, 130)}`;
     const v = parseInt(signature.slice(130, 132), 16);
     const yParity = v - 27 === 0 ? ('0x' as const) : ('0x1' as const);
 

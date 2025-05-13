@@ -1,12 +1,18 @@
 #!/usr/bin/env -S node --require "./node_modules/tsx/dist/preflight.cjs" --import "./node_modules/tsx/dist/loader.mjs"
 
-import { join, relative } from 'node:path';
-import { homedir } from 'node:os';
-import { Dir, readFileSync } from 'node:fs';
-import { copyFile, opendir, rm, symlink, unlink } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
+import type { Dir } from 'node:fs';
+import { readFileSync } from 'node:fs';
+import { copyFile, opendir, rm, symlink, unlink } from 'node:fs/promises';
+import { homedir } from 'node:os';
+import { join, relative } from 'node:path';
 import { cwd, exit } from 'node:process';
 import { parse as parseYaml } from 'yaml';
+
+import { extractFrom } from './extract';
+import { parseArgs, printBanner } from './options';
+import type { Architecture, Binary, Checksums } from './types';
+import { Extension, Platform } from './types';
 import {
   getVersion,
   isCodedError,
@@ -14,9 +20,6 @@ import {
   say,
   transformChecksums,
 } from './utils';
-import { extractFrom } from './extract';
-import { parseArgs, printBanner } from './options';
-import { Architecture, Binary, Checksums, Extension, Platform } from './types';
 
 export function getCacheDirectory(): string {
   let enableGlobalCache = false;
@@ -73,8 +76,6 @@ export async function checkAndDownloadBinaries(
 
 export async function installBinaries(
   downloadedBinaries: Dir,
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   BIN_DIR: string,
   cachePath: string,
 ): Promise<void> {

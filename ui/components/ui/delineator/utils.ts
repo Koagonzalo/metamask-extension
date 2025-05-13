@@ -1,10 +1,12 @@
 import React from 'react';
+
 import {
   BackgroundColor,
   IconColor,
   TextColor,
 } from '../../../helpers/constants/design-system';
-import { AvatarIconSize, IconProps, Text } from '../../component-library';
+import type { IconProps, Text } from '../../component-library';
+import { AvatarIconSize } from '../../component-library';
 import { DelineatorType } from './delineator.types';
 
 const defaultIconProps = {

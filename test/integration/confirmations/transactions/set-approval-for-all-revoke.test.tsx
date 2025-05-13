@@ -1,6 +1,7 @@
 import { ApprovalType } from '@metamask/controller-utils';
 import { act, screen, within } from '@testing-library/react';
 import nock from 'nock';
+
 import { TokenStandard } from '../../../../shared/constants/transaction';
 import { useAssetDetails } from '../../../../ui/pages/confirmations/hooks/useAssetDetails';
 import * as backgroundConnection from '../../../../ui/store/background-connection';
@@ -136,7 +137,6 @@ describe('ERC721 setApprovalForAll - Revoke Confirmation', () => {
       chainId: '0xaa36a7',
     });
 
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     global.ethereumProvider = provider as any;
   });
@@ -156,7 +156,6 @@ describe('ERC721 setApprovalForAll - Revoke Confirmation', () => {
       INCREASE_SET_APPROVAL_FOR_ALL_TEXT_SIG,
     );
     mockedAssetDetails.mockImplementation(() => ({
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       decimals: '4' as any,
     }));
@@ -167,7 +166,6 @@ describe('ERC721 setApprovalForAll - Revoke Confirmation', () => {
   });
 
   afterAll(() => {
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     delete (global as any).ethereumProvider;
   });

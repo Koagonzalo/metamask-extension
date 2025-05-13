@@ -1,12 +1,11 @@
-import {
-  TokenRatesController,
-  TokenRatesControllerMessenger,
-} from '@metamask/assets-controllers';
+import type { TokenRatesControllerMessenger } from '@metamask/assets-controllers';
+import { TokenRatesController } from '@metamask/assets-controllers';
 import { Messenger } from '@metamask/base-controller';
-import { PreferencesController } from '@metamask/preferences-controller';
-import { buildControllerInitRequestMock } from '../test/utils';
-import { ControllerInitRequest } from '../types';
+import type { PreferencesController } from '@metamask/preferences-controller';
+
 import { getTokenRatesControllerMessenger } from '../messengers/assets';
+import { buildControllerInitRequestMock } from '../test/utils';
+import type { ControllerInitRequest } from '../types';
 import { TokenRatesControllerInit } from './token-rates-controller-init';
 
 jest.mock('@metamask/assets-controllers');

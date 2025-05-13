@@ -1,8 +1,9 @@
-import { Nft } from '@metamask/assets-controllers';
-import { Hex } from '@metamask/utils';
+import type { Nft } from '@metamask/assets-controllers';
+import type { Hex } from '@metamask/utils';
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Redirect, useParams } from 'react-router-dom';
+
 import { isEqualCaseInsensitive } from '../../../shared/modules/string-utils';
 import NftDetails from '../../components/app/assets/nfts/nft-details/nft-details';
 import { getNFTsByChainId } from '../../ducks/metamask/metamask';

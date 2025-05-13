@@ -1,12 +1,7 @@
-import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import {
-  getAddressBook,
-  getAddressBookEntry,
-  getInternalAccountByAddress,
-  getInternalAccounts,
-} from '../../../../selectors';
+import { compose } from 'redux';
+
 import {
   getNetworkConfigurationsByChainId,
   getProviderConfig,
@@ -15,6 +10,12 @@ import {
   CONTACT_VIEW_ROUTE,
   CONTACT_LIST_ROUTE,
 } from '../../../../helpers/constants/routes';
+import {
+  getAddressBook,
+  getAddressBookEntry,
+  getInternalAccountByAddress,
+  getInternalAccounts,
+} from '../../../../selectors';
 import {
   addToAddressBook,
   removeFromAddressBook,

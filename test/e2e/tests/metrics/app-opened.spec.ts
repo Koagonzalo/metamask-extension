@@ -1,9 +1,14 @@
 import { strict as assert } from 'assert';
-import { Mockttp } from 'mockttp';
-import { getEventPayloads, withFixtures } from '../../helpers';
+import type { Mockttp } from 'mockttp';
+
 import FixtureBuilder from '../../fixture-builder';
-import TestDapp from '../../page-objects/pages/test-dapp';
-import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
+import {
+  withFixtures,
+  getEventPayloads,
+  unlockWallet,
+  connectToDapp,
+} from '../../helpers';
+import { loginWithoutBalanceValidation } from '../../page-objects/flows/login.flow';
 
 /**
  * Mocks the segment API for the App Opened event that we expect to see when
@@ -41,7 +46,7 @@ describe('App Opened metric', function () {
         testSpecificMock: mockSegment,
       },
       async ({ driver, mockedEndpoint: mockedEndpoints }) => {
-        await loginWithBalanceValidation(driver);
+        await loginWithoutBalanceValidation(driver);
 
         const events = await getEventPayloads(driver, mockedEndpoints);
         assert.equal(events.length, 1);
@@ -63,7 +68,7 @@ describe('App Opened metric', function () {
         testSpecificMock: mockSegment,
       },
       async ({ driver, mockedEndpoint: mockedEndpoints }) => {
-        await loginWithBalanceValidation(driver);
+        await unlockWallet(driver);
 
         const events = await getEventPayloads(driver, mockedEndpoints);
         assert.equal(events.length, 0);
@@ -76,7 +81,6 @@ describe('App Opened metric', function () {
       {
         dapp: true,
         fixtures: new FixtureBuilder()
-          .withPermissionControllerConnectedToTestDapp()
           .withMetaMetricsController({
             metaMetricsId: 'fake-metrics-fd20',
             participateInMetaMetrics: true,
@@ -86,12 +90,10 @@ describe('App Opened metric', function () {
         testSpecificMock: mockSegment,
       },
       async ({ driver, mockedEndpoint: mockedEndpoints }) => {
-        await loginWithBalanceValidation(driver);
+        await unlockWallet(driver);
 
-        // Go to dapp which will trigger MetaMask to open
-        const testDapp = new TestDapp(driver);
-        await testDapp.openTestDappPage();
-        await testDapp.check_pageIsLoaded();
+        // Connect to dapp which will trigger MetaMask to open
+        await connectToDapp(driver);
 
         // Wait for events to be tracked
         const events = await getEventPayloads(driver, mockedEndpoints);

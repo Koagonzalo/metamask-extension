@@ -9,8 +9,9 @@ import {
   wrap,
   CircuitState,
 } from 'cockatiel';
+
+import type { DeleteRegulationStatus } from '../../../shared/constants/metametrics';
 import getFetchWithTimeout from '../../../shared/modules/fetch-with-timeout';
-import { DeleteRegulationStatus } from '../../../shared/constants/metametrics';
 
 const inTest = process.env.IN_TEST;
 const fallbackSourceId = 'test';
@@ -143,15 +144,15 @@ function createRetryPolicy({
  * A serivce for requesting the deletion of analytics data.
  */
 export class DataDeletionService {
-  #analyticsDataDeletionEndpoint: string;
+  readonly #analyticsDataDeletionEndpoint: string;
 
-  #analyticsDataDeletionSourceId: string;
+  readonly #analyticsDataDeletionSourceId: string;
 
-  #fetchStatusPolicy: IPolicy;
+  readonly #fetchStatusPolicy: IPolicy;
 
-  #createDataDeletionTaskPolicy: IPolicy;
+  readonly #createDataDeletionTaskPolicy: IPolicy;
 
-  #fetchWithTimeout: ReturnType<typeof getFetchWithTimeout>;
+  readonly #fetchWithTimeout: ReturnType<typeof getFetchWithTimeout>;
 
   /**
    * Construct a data deletion service.
@@ -225,21 +226,22 @@ export class DataDeletionService {
   async createDataDeletionRegulationTask(
     metaMetricsId: string,
   ): Promise<string> {
-    const response = await this.#createDataDeletionTaskPolicy.execute(() =>
-      this.#fetchWithTimeout(
-        `${this.#analyticsDataDeletionEndpoint}/regulations/sources/${
-          this.#analyticsDataDeletionSourceId
-        }`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/vnd.segment.v1+json' },
-          body: JSON.stringify({
-            regulationType: 'DELETE_ONLY',
-            subjectType: 'USER_ID',
-            subjectIds: [metaMetricsId],
-          }),
-        },
-      ),
+    const response = await this.#createDataDeletionTaskPolicy.execute(
+      async () =>
+        this.#fetchWithTimeout(
+          `${this.#analyticsDataDeletionEndpoint}/regulations/sources/${
+            this.#analyticsDataDeletionSourceId
+          }`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/vnd.segment.v1+json' },
+            body: JSON.stringify({
+              regulationType: 'DELETE_ONLY',
+              subjectType: 'USER_ID',
+              subjectIds: [metaMetricsId],
+            }),
+          },
+        ),
     );
     if (!response.ok) {
       throw new Error(
@@ -259,7 +261,7 @@ export class DataDeletionService {
   async fetchDeletionRegulationStatus(
     deleteRegulationId: string,
   ): Promise<DeleteRegulationStatus> {
-    const response = await this.#fetchStatusPolicy.execute(() =>
+    const response = await this.#fetchStatusPolicy.execute(async () =>
       this.#fetchWithTimeout(
         `${
           this.#analyticsDataDeletionEndpoint

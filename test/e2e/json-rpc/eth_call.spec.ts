@@ -1,13 +1,14 @@
 import { strict as assert } from 'assert';
 import { keccak } from 'ethereumjs-util';
-import { withFixtures } from '../helpers';
-import { Driver } from '../webdriver/driver';
+
 import FixtureBuilder from '../fixture-builder';
-import ContractAddressRegistry from '../seeder/contract-address-registry';
-import { SMART_CONTRACTS } from '../seeder/smart-contracts';
+import { withFixtures } from '../helpers';
 import { loginWithBalanceValidation } from '../page-objects/flows/login.flow';
-import { Anvil } from '../seeder/anvil';
-import { Ganache } from '../seeder/ganache';
+import type { Anvil } from '../seeder/anvil';
+import type ContractAddressRegistry from '../seeder/contract-address-registry';
+import type { Ganache } from '../seeder/ganache';
+import { SMART_CONTRACTS } from '../seeder/smart-contracts';
+import type { Driver } from '../webdriver/driver';
 
 describe('eth_call', function () {
   const smartContract = SMART_CONTRACTS.NFTS;

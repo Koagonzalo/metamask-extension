@@ -31,18 +31,17 @@ const restoreContextAfterImports = () => {
 cleanContextForImports();
 
 /* eslint-disable import/first */
-import log from 'loglevel';
-import { v4 as uuid } from 'uuid';
-import { WindowPostMessageStream } from '@metamask/post-message-stream';
-import { initializeProvider } from '@metamask/providers/initializeInpageProvider';
-import ObjectMultiplex from '@metamask/object-multiplex';
-import { pipeline } from 'readable-stream';
-
 import {
   getMultichainClient,
   getDefaultTransport,
 } from '@metamask/multichain-api-client';
+import ObjectMultiplex from '@metamask/object-multiplex';
+import { WindowPostMessageStream } from '@metamask/post-message-stream';
+import { initializeProvider } from '@metamask/providers/initializeInpageProvider';
 import { registerSolanaWalletStandard } from '@metamask/solana-wallet-standard';
+import log from 'loglevel';
+import { pipeline } from 'readable-stream';
+import { v4 as uuid } from 'uuid';
 
 import shouldInjectProvider from '../../shared/modules/provider-injection';
 import { METAMASK_EIP_1193_PROVIDER } from './constants/stream';

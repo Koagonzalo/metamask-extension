@@ -1,16 +1,18 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
 import classnames from 'classnames';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+
+import {
+  Display,
+  IconColor,
+} from '../../../../../helpers/constants/design-system';
 import {
   Box,
   ButtonIcon,
   ButtonIconSize,
   IconName,
 } from '../../../../component-library';
-import {
-  Display,
-  IconColor,
-} from '../../../../../helpers/constants/design-system';
-import { ConfirmInfoRow, ConfirmInfoRowProps } from './row';
+import type { ConfirmInfoRowProps } from './row';
+import { ConfirmInfoRow } from './row';
 
 export type ConfirmInfoExpandableRowProps = ConfirmInfoRowProps & {
   content: React.ReactNode | string;

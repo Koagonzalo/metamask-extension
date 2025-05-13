@@ -1,16 +1,17 @@
-import { CaipChainId } from '@metamask/utils';
 import {
   BtcAccountType,
   SolAccountType,
   BtcScope,
   SolScope,
 } from '@metamask/keyring-api';
+import type { CaipChainId } from '@metamask/utils';
+
 import {
   isBtcMainnetAddress,
   isBtcTestnetAddress,
   isSolanaAddress,
 } from '../../lib/multichain/accounts';
-import { MultichainBlockExplorerFormatUrls } from '../../lib/multichain/networks';
+import type { MultichainBlockExplorerFormatUrls } from '../../lib/multichain/networks';
 
 export type ProviderConfigWithImageUrl = {
   rpcUrl?: string;
@@ -40,19 +41,11 @@ export type MultichainNetworkIds = `${MultichainNetworks}`;
 
 export enum MultichainNetworks {
   BITCOIN = BtcScope.Mainnet,
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   BITCOIN_TESTNET = BtcScope.Testnet,
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   BITCOIN_SIGNET = BtcScope.Signet,
 
   SOLANA = SolScope.Mainnet,
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   SOLANA_DEVNET = SolScope.Devnet,
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   SOLANA_TESTNET = SolScope.Testnet,
 }
 

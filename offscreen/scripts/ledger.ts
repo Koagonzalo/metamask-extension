@@ -1,5 +1,5 @@
+import type { LedgerAction } from '../../shared/constants/offscreen-communication';
 import {
-  LedgerAction,
   OffscreenCommunicationEvents,
   OffscreenCommunicationTarget,
   KnownOrigins,

@@ -1,19 +1,20 @@
-import { MockttpServer, CompletedRequest } from 'mockttp';
-import { withFixtures } from '../../helpers';
+import type { MockttpServer, CompletedRequest } from 'mockttp';
+
+import { DEFAULT_FIXTURE_ACCOUNT } from '../../constants';
 import FixtureBuilder from '../../fixture-builder';
+import { withFixtures } from '../../helpers';
+import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
+import HeaderNavbar from '../../page-objects/pages/header-navbar';
 import AssetListPage from '../../page-objects/pages/home/asset-list';
 import HomePage from '../../page-objects/pages/home/homepage';
-import TokenOverviewPage from '../../page-objects/pages/token-overview-page';
-import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
 import AdvancedSettings from '../../page-objects/pages/settings/advanced-settings';
-import HeaderNavbar from '../../page-objects/pages/header-navbar';
 import SettingsPage from '../../page-objects/pages/settings/settings-page';
 import SwapPage from '../../page-objects/pages/swap/swap-page';
+import TokenOverviewPage from '../../page-objects/pages/token-overview-page';
 import {
   mockEmptyHistoricalPrices,
   mockEmptyPrices,
 } from '../tokens/utils/mocks';
-import { DEFAULT_FIXTURE_ACCOUNT } from '../../constants';
 
 async function mockSwapQuotes(mockServer: MockttpServer) {
   const WETH_ADDRESS = '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';

@@ -1,10 +1,11 @@
-import { Messenger } from '@metamask/base-controller';
 import type {
   AcceptRequest,
   AddApprovalRequest,
 } from '@metamask/approval-controller';
-import { KeyringControllerQRKeyringStateChangeEvent } from '@metamask/keyring-controller';
-import { Browser } from 'webextension-polyfill';
+import { Messenger } from '@metamask/base-controller';
+import type { KeyringControllerQRKeyringStateChangeEvent } from '@metamask/keyring-controller';
+import type { Browser } from 'webextension-polyfill';
+
 import {
   ENVIRONMENT_TYPE_POPUP,
   ORIGIN_METAMASK,
@@ -36,7 +37,7 @@ jest.mock('../../../shared/modules/mv3.utils', () => ({
 
 const extensionMock = {
   alarms: {
-    getAll: jest.fn(() => Promise.resolve([])),
+    getAll: jest.fn(async () => Promise.resolve([])),
     create: jest.fn(),
     clear: jest.fn(),
     onAlarm: {

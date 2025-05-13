@@ -1,7 +1,9 @@
-import { TransactionMeta } from '@metamask/transaction-controller';
-import React, { Dispatch, SetStateAction } from 'react';
+import type { TransactionMeta } from '@metamask/transaction-controller';
+import type { Hex } from '@metamask/utils';
+import type { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
-import { Hex } from '@metamask/utils';
+
 import { TEST_CHAINS } from '../../../../../../../../shared/constants/network';
 import { ConfirmInfoAlertRow } from '../../../../../../../components/app/confirm/info/row/alert-row/alert-row';
 import { RowAlertKey } from '../../../../../../../components/app/confirm/info/row/constants';
@@ -19,10 +21,10 @@ import {
 import { useI18nContext } from '../../../../../../../hooks/useI18nContext';
 import { getPreferences } from '../../../../../../../selectors';
 import { useConfirmContext } from '../../../../../context/confirm';
+import { selectConfirmationAdvancedDetailsOpen } from '../../../../../selectors/preferences';
+import { useSelectedGasFeeToken } from '../../hooks/useGasFeeToken';
 import { EditGasIconButton } from '../edit-gas-icon/edit-gas-icon-button';
 import { SelectedGasFeeToken } from '../selected-gas-fee-token';
-import { useSelectedGasFeeToken } from '../../hooks/useGasFeeToken';
-import { selectConfirmationAdvancedDetailsOpen } from '../../../../../selectors/preferences';
 
 export const EditGasFeesRow = ({
   fiatFee,
@@ -97,11 +99,7 @@ export const EditGasFeesRow = ({
         justifyContent={JustifyContent.spaceBetween}
         paddingInline={2}
       >
-        <Text
-          data-testid="gas-fee-token-fee"
-          variant={TextVariant.bodySm}
-          color={TextColor.textAlternative}
-        >
+        <Text variant={TextVariant.bodySm} color={TextColor.textAlternative}>
           {gasFeeToken
             ? t('confirmGasFeeTokenMetaMaskFee', [metamaskFeeFiat])
             : ' '}
@@ -119,8 +117,6 @@ export const EditGasFeesRow = ({
   );
 };
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function TokenValue({ roundedValue }: { roundedValue: string }) {
   return (
     <Text color={TextColor.textDefault} data-testid="first-gas-field">
@@ -129,8 +125,6 @@ function TokenValue({ roundedValue }: { roundedValue: string }) {
   );
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function FiatValue({
   color,
   fullValue,
@@ -159,7 +153,7 @@ function FiatValue({
 function useShowFiat(chainId: Hex): boolean {
   type TestNetChainId = (typeof TEST_CHAINS)[number];
 
-  const isTestnet = TEST_CHAINS.includes(chainId as TestNetChainId);
+  const isTestnet = TEST_CHAINS.includes(chainId);
   const { showFiatInTestnets } = useSelector(getPreferences);
 
   return !isTestnet || showFiatInTestnets;

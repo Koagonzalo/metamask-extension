@@ -1,16 +1,14 @@
-import { createSelector } from 'reselect';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getCurrentChainId } from '../../../shared/modules/selectors/networks';
-import { getUseExternalServices } from '../../selectors';
-import RampAPI from '../../helpers/ramps/rampApi/rampAPI';
-import { hexToDecimal } from '../../../shared/modules/conversion.utils';
-import {
-  getMultichainIsBitcoin,
-  getMultichainIsSolana,
-} from '../../selectors/multichain';
+import { createSelector } from 'reselect';
+
 import { MultichainNetworks } from '../../../shared/constants/multichain/networks';
+import { hexToDecimal } from '../../../shared/modules/conversion.utils';
+import { getCurrentChainId } from '../../../shared/modules/selectors/networks';
+import RampAPI from '../../helpers/ramps/rampApi/rampAPI';
+import { getUseExternalServices } from '../../selectors';
+import { getMultichainIsBitcoin } from '../../selectors/multichain';
 import { defaultBuyableChains } from './constants';
-import { AggregatorNetwork } from './types';
+import type { AggregatorNetwork } from './types';
 
 export const fetchBuyableChains = createAsyncThunk(
   'ramps/fetchBuyableChains',
@@ -71,8 +69,6 @@ const rampsSlice = createSlice({
 const { reducer } = rampsSlice;
 
 // Can be typed to RootState if/when the interface is defined
-
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getBuyableChains = (state: any) =>
   state.ramps?.buyableChains ?? defaultBuyableChains;
@@ -88,49 +84,23 @@ export const getIsBitcoinBuyable = createSelector(
       ),
 );
 
-export const getIsSolanaBuyable = createSelector(
-  [getBuyableChains],
-  (buyableChains) => {
-    return buyableChains
-      .filter(Boolean)
-      .some(
-        (network: AggregatorNetwork) =>
-          network.chainId === MultichainNetworks.SOLANA && network.active,
-      );
-  },
-);
-
 export const getIsNativeTokenBuyable = createSelector(
   [
     getCurrentChainId,
     getBuyableChains,
     getIsBitcoinBuyable,
     getMultichainIsBitcoin,
-    getIsSolanaBuyable,
-    getMultichainIsSolana,
   ],
-  (
-    currentChainId,
-    buyableChains,
-    isBtcBuyable,
-    isBtc,
-    isSolanaBuyable,
-    isSolana,
-  ) => {
+  (currentChainId, buyableChains, isBtcBuyable, isBtc) => {
     try {
-      if (isBtc) {
-        return isBtcBuyable;
-      }
-      if (isSolana) {
-        return isSolanaBuyable;
-      }
-
       return buyableChains
         .filter(Boolean)
-        .some(
-          (network: AggregatorNetwork) =>
-            String(network.chainId) === hexToDecimal(currentChainId),
-        );
+        .some((network: AggregatorNetwork) => {
+          if (isBtc) {
+            return isBtcBuyable;
+          }
+          return String(network.chainId) === hexToDecimal(currentChainId);
+        });
     } catch (e) {
       return false;
     }

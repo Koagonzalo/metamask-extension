@@ -1,16 +1,15 @@
+const { toHex } = require('@metamask/controller-utils');
+const {
+  ETHERSCAN_SUPPORTED_CHAIN_IDS,
+} = require('@metamask/preferences-controller');
 const {
   WALLET_SNAP_PERMISSION_KEY,
   SnapCaveatType,
 } = require('@metamask/snaps-utils');
 const { merge, mergeWith } = require('lodash');
-const { toHex } = require('@metamask/controller-utils');
-const {
-  ETHERSCAN_SUPPORTED_CHAIN_IDS,
-} = require('@metamask/preferences-controller');
-const { mockNetworkStateOld } = require('../stub/networks');
 
 const { CHAIN_IDS } = require('../../shared/constants/network');
-const { SMART_CONTRACTS } = require('./seeder/smart-contracts');
+const { mockNetworkStateOld } = require('../stub/networks');
 const {
   DAPP_URL,
   DAPP_URL_LOCALHOST,
@@ -21,6 +20,7 @@ const {
   defaultFixture,
   FIXTURE_STATE_METADATA_VERSION,
 } = require('./default-fixture');
+const { SMART_CONTRACTS } = require('./seeder/smart-contracts');
 
 function onboardingFixture() {
   return {
@@ -304,22 +304,6 @@ class FixtureBuilder {
     });
   }
 
-  withNetworkControllerOnLineaLocahost() {
-    return this.withNetworkController({
-      networkConfigurations: {
-        networkConfigurationId: {
-          chainId: CHAIN_IDS.LINEA_MAINNET,
-          nickname: 'Localhost 8545',
-          rpcPrefs: {},
-          rpcUrl: 'http://localhost:8545',
-          ticker: 'ETH',
-          networkConfigurationId: 'networkConfigurationId',
-          id: 'networkConfigurationId',
-        },
-      },
-    });
-  }
-
   withNetworkControllerOnOptimism() {
     return this.withNetworkController({
       networkConfigurations: {
@@ -384,16 +368,6 @@ class FixtureBuilder {
       this.fixture.data.NftController
         ? this.fixture.data.NftController
         : (this.fixture.data.NftController = {}),
-      data,
-    );
-    return this;
-  }
-
-  withDeFiPositionsController(data) {
-    merge(
-      this.fixture.data.DeFiPositionsController
-        ? this.fixture.data.DeFiPositionsController
-        : (this.fixture.data.DeFiPositionsController = {}),
       data,
     );
     return this;
@@ -492,7 +466,14 @@ class FixtureBuilder {
   }
 
   withBridgeControllerDefaultState() {
-    this.fixture.data.BridgeController = {};
+    this.fixture.data.BridgeController = {
+      bridgeFeatureFlags: {
+        extensionConfig: {
+          support: false,
+          chains: {},
+        },
+      },
+    };
     return this;
   }
 

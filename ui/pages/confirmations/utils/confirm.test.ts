@@ -5,7 +5,7 @@ import {
   permitSignatureMsg,
   unapprovedTypedSignMsgV4,
 } from '../../../../test/data/confirmations/typed_sign';
-import { SignatureRequestType } from '../types/confirm';
+import type { SignatureRequestType } from '../types/confirm';
 import {
   isOrderSignatureRequest,
   isPermitSignatureRequest,
@@ -49,15 +49,11 @@ describe('confirm util', () => {
 
   describe('isPermitSignatureRequest', () => {
     it('returns true for permit signature requests', () => {
-      const result = isPermitSignatureRequest(
-        permitSignatureMsg as SignatureRequestType,
-      );
+      const result = isPermitSignatureRequest(permitSignatureMsg);
       expect(result).toStrictEqual(true);
     });
     it('returns false for request not of type permit signature', () => {
-      const result = isPermitSignatureRequest(
-        unapprovedTypedSignMsgV4 as SignatureRequestType,
-      );
+      const result = isPermitSignatureRequest(unapprovedTypedSignMsgV4);
       expect(result).toStrictEqual(false);
     });
   });
@@ -71,9 +67,7 @@ describe('confirm util', () => {
     });
 
     it('returns false for request not of type permit signature', () => {
-      const result = isOrderSignatureRequest(
-        unapprovedTypedSignMsgV4 as SignatureRequestType,
-      );
+      const result = isOrderSignatureRequest(unapprovedTypedSignMsgV4);
       expect(result).toStrictEqual(false);
     });
   });

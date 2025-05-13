@@ -1,15 +1,14 @@
-import {
-  Caip25CaveatType,
+import type {
   Caip25CaveatValue,
   InternalScopesObject,
   InternalScopeString,
-  parseScopeString,
 } from '@metamask/chain-agnostic-permission';
 import {
-  CaipChainId,
-  CaipNamespace,
-  KnownCaipNamespace,
-} from '@metamask/utils';
+  Caip25CaveatType,
+  parseScopeString,
+} from '@metamask/chain-agnostic-permission';
+import type { CaipChainId, CaipNamespace } from '@metamask/utils';
+import { KnownCaipNamespace } from '@metamask/utils';
 
 /**
  * Gets all scopes from a CAIP-25 caveat value

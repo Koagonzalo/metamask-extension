@@ -1,5 +1,5 @@
-import { AccountsControllerState } from '@metamask/accounts-controller';
-import { NetworkConfiguration } from '@metamask/network-controller';
+import type { AccountsControllerState } from '@metamask/accounts-controller';
+import type { NetworkConfiguration } from '@metamask/network-controller';
 import { hasProperty, isObject } from '@metamask/utils';
 import { cloneDeep } from 'lodash';
 
@@ -45,7 +45,7 @@ function transformState(
   }
 
   const accountsControllerState =
-    state.AccountsController as unknown as AccountsControllerState;
+    state.AccountsController as AccountsControllerState;
   if (!isObject(accountsControllerState)) {
     global.sentry?.captureException?.(
       new Error(

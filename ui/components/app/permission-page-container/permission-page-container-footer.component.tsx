@@ -1,7 +1,8 @@
 import React from 'react';
+
 import { useI18nContext } from '../../../hooks/useI18nContext';
 import { useTemplateAlertContext } from '../../../pages/confirmations/confirmation/alerts/TemplateAlertContext';
-import { IconName } from '../../component-library';
+import { Icon, IconName, IconSize } from '../../component-library';
 import { PageContainerFooter } from '../../ui/page-container';
 
 export const PermissionPageContainerFooter = ({
@@ -26,8 +27,11 @@ export const PermissionPageContainerFooter = ({
       cancelText={cancelText}
       onSubmit={hasAlerts ? showAlertsModal : onSubmit}
       submitText={t('confirm')}
+      buttonSizeLarge={false}
       disabled={disabled}
-      submitButtonIcon={hasAlerts ? IconName.Info : undefined}
+      submitButtonIcon={
+        hasAlerts ? <Icon name={IconName.Info} size={IconSize.Sm} /> : undefined
+      }
     />
   );
 };

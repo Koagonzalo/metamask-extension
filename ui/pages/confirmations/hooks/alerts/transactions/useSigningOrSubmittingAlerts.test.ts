@@ -1,12 +1,12 @@
 import { ApprovalType } from '@metamask/controller-utils';
+import type { TransactionMeta } from '@metamask/transaction-controller';
 import {
-  TransactionMeta,
   TransactionStatus,
   TransactionType,
 } from '@metamask/transaction-controller';
 
-import { getMockConfirmState } from '../../../../../../test/data/confirmations/helper';
 import { genUnapprovedContractInteractionConfirmation } from '../../../../../../test/data/confirmations/contract-interaction';
+import { getMockConfirmState } from '../../../../../../test/data/confirmations/helper';
 import { renderHookWithConfirmContextProvider } from '../../../../../../test/lib/confirmations/render-helpers';
 import { Severity } from '../../../../../helpers/constants/design-system';
 import { useSigningOrSubmittingAlerts } from './useSigningOrSubmittingAlerts';
@@ -46,7 +46,7 @@ function runHook({
   let pendingApprovals = {};
   if (currentConfirmation) {
     pendingApprovals = {
-      [currentConfirmation.id as string]: {
+      [currentConfirmation.id]: {
         id: currentConfirmation.id,
         type: ApprovalType.Transaction,
       },

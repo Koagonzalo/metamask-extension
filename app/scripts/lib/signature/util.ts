@@ -1,10 +1,11 @@
-import type { SignatureController } from '@metamask/signature-controller';
 import type {
   OriginalRequest,
   TypedMessageParams,
 } from '@metamask/message-manager';
+import type { SignatureController } from '@metamask/signature-controller';
+
+import type { MESSAGE_TYPE } from '../../../../shared/constants/app';
 import { endTrace, TraceName } from '../../../../shared/lib/trace';
-import { MESSAGE_TYPE } from '../../../../shared/constants/app';
 
 export type SignatureParams = [TypedMessageParams, OriginalRequest];
 

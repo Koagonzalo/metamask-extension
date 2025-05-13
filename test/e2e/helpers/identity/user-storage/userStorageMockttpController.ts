@@ -1,6 +1,6 @@
-import EventEmitter from 'events';
-import { CompletedRequest, Mockttp } from 'mockttp';
 import { USER_STORAGE_FEATURE_NAMES } from '@metamask/profile-sync-controller/sdk';
+import EventEmitter from 'events';
+import type { CompletedRequest, Mockttp } from 'mockttp';
 
 const baseUrl =
   'https://user-storage\\.api\\.cx\\.metamask\\.io\\/api\\/v1\\/userstorage';
@@ -20,40 +20,18 @@ export const pathRegexps = {
   ),
 };
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export type UserStorageResponseData = { HashedKey: string; Data: string };
 
 export enum UserStorageMockttpControllerEvents {
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   GET_NOT_FOUND = 'GET_NOT_FOUND',
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   GET_SINGLE = 'GET_SINGLE',
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   GET_ALL = 'GET_ALL',
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   PUT_SINGLE = 'PUT_SINGLE',
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   PUT_BATCH = 'PUT_BATCH',
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   DELETE_NOT_FOUND = 'DELETE_NOT_FOUND',
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   DELETE_SINGLE = 'DELETE_SINGLE',
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   DELETE_ALL = 'DELETE_ALL',
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   DELETE_BATCH_NOT_FOUND = 'DELETE_BATCH_NOT_FOUND',
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   DELETE_BATCH = 'DELETE_BATCH',
 }
 
@@ -133,8 +111,6 @@ export class UserStorageMockttpController {
 
     const data = (await request.body.getJson()) as {
       data?: string | Record<string, string>;
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       batch_delete?: string[];
     };
 
@@ -210,8 +186,6 @@ export class UserStorageMockttpController {
             ...internalPathData,
             response: [
               ...(internalPathData?.response || []),
-              // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-              // eslint-disable-next-line @typescript-eslint/naming-convention
               entry as { HashedKey: string; Data: string },
             ],
           });
@@ -312,21 +286,21 @@ export class UserStorageMockttpController {
       .get(path)
       ?.server.forGet(pathRegexps[path])
       .always()
-      .thenCallback((request) =>
+      .thenCallback(async (request) =>
         this.onGet(path, request, overrides?.getStatusCode),
       );
     this.paths
       .get(path)
       ?.server.forPut(pathRegexps[path])
       .always()
-      .thenCallback((request) =>
+      .thenCallback(async (request) =>
         this.onPut(path, request, overrides?.putStatusCode),
       );
     this.paths
       .get(path)
       ?.server.forDelete(pathRegexps[path])
       .always()
-      .thenCallback((request) =>
+      .thenCallback(async (request) =>
         this.onDelete(path, request, overrides?.deleteStatusCode),
       );
   };

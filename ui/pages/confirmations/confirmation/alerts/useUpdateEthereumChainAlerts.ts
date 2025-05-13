@@ -1,17 +1,15 @@
-import { ApprovalRequest } from '@metamask/approval-controller';
+import type { ApprovalRequest } from '@metamask/approval-controller';
 import { ApprovalType } from '@metamask/controller-utils';
-import { Json } from '@metamask/utils';
+import type { Json } from '@metamask/utils';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
-import { Alert } from '../../../../ducks/confirm-alerts/confirm-alerts';
 import { AlertActionKey } from '../../../../components/app/confirm/info/row/constants';
+import type { Alert } from '../../../../ducks/confirm-alerts/confirm-alerts';
 import { Severity } from '../../../../helpers/constants/design-system';
-import {
-  ApprovalsMetaMaskState,
-  getApprovalsByOrigin,
-} from '../../../../selectors';
 import { useI18nContext } from '../../../../hooks/useI18nContext';
+import type { ApprovalsMetaMaskState } from '../../../../selectors';
+import { getApprovalsByOrigin } from '../../../../selectors';
 
 const VALIDATED_APPROVAL_TYPES = [
   ApprovalType.AddEthereumChain,
@@ -35,8 +33,8 @@ export function useUpdateEthereumChainAlerts(
       (!VALIDATED_APPROVAL_TYPES.includes(
         pendingConfirmation.type as ApprovalType,
       ) &&
-        (pendingConfirmation?.requestData?.metadata as Record<string, boolean>)
-          ?.isSwitchEthereumChain !== true)
+        !(pendingConfirmation?.requestData?.metadata as Record<string, boolean>)
+          ?.isSwitchEthereumChain)
     ) {
       return [];
     }

@@ -1,14 +1,19 @@
 import { Contract } from '@ethersproject/contracts';
 import { Web3Provider } from '@ethersproject/providers';
-import { BaseController, StateMetadata } from '@metamask/base-controller';
-import { GasFeeState } from '@metamask/gas-fee-controller';
-import { TransactionParams } from '@metamask/transaction-controller';
+import type { StateMetadata } from '@metamask/base-controller';
+import { BaseController } from '@metamask/base-controller';
+import type { GasFeeState } from '@metamask/gas-fee-controller';
+import type {
+  NetworkClient,
+  NetworkClientId,
+} from '@metamask/network-controller';
+import type { TransactionParams } from '@metamask/transaction-controller';
+import type { Hex } from '@metamask/utils';
 import { captureException } from '@sentry/browser';
 import { BigNumber } from 'bignumber.js';
 import abi from 'human-standard-token-abi';
 import { cloneDeep, mapValues } from 'lodash';
-import { NetworkClient, NetworkClientId } from '@metamask/network-controller';
-import { Hex } from '@metamask/utils';
+
 import { EtherDenomination } from '../../../../shared/constants/common';
 import { GasEstimateTypes } from '../../../../shared/constants/gas';
 import {
@@ -53,10 +58,6 @@ import {
   POLL_COUNT_LIMIT,
   getDefaultSwapsControllerState,
 } from './swaps.constants';
-import {
-  calculateGasEstimateWithRefund,
-  getMedianEthValueQuote,
-} from './swaps.utils';
 import type {
   FetchTradesInfoParams,
   FetchTradesInfoParamsMetadata,
@@ -67,6 +68,10 @@ import type {
   QuoteSavings,
   Trade,
 } from './swaps.types';
+import {
+  calculateGasEstimateWithRefund,
+  getMedianEthValueQuote,
+} from './swaps.utils';
 
 type Network = {
   client: NetworkClient;
@@ -113,19 +118,19 @@ export default class SwapsController extends BaseController<
 
   #pollingTimeout: ReturnType<typeof setTimeout> | null = null;
 
-  #getEIP1559GasFeeEstimates: (options?: {
+  readonly #getEIP1559GasFeeEstimates: (options?: {
     networkClientId?: NetworkClientId;
     shouldUpdateState?: boolean;
   }) => Promise<GasFeeState>;
 
-  #getLayer1GasFee: (params: {
+  readonly #getLayer1GasFee: (params: {
     transactionParams: TransactionParams;
     networkClientId: NetworkClientId;
   }) => Promise<string>;
 
   #network: Network | undefined;
 
-  private _fetchTradesInfo: (
+  private readonly _fetchTradesInfo: (
     fetchParams: FetchTradesInfoParams,
     fetchMetadata: { chainId: Hex },
   ) => Promise<{
@@ -933,8 +938,6 @@ export default class SwapsController extends BaseController<
    *
    * @param newState - The new state to set
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   public __test__updateState = (newState: Partial<SwapsControllerState>) => {
     this.update((oldState) => {
       return { swapsState: { ...oldState.swapsState, ...newState.swapsState } };
@@ -1118,7 +1121,7 @@ export default class SwapsController extends BaseController<
     });
   }
 
-  private _timedoutGasReturn(
+  private async _timedoutGasReturn(
     tradeTxParams: Trade,
     aggregator = '',
   ): Promise<{ gasLimit: string | null; simulationFails: boolean }> {
@@ -1131,8 +1134,6 @@ export default class SwapsController extends BaseController<
           event: MetaMetricsEventName.QuoteError,
           category: MetaMetricsEventCategory.Swaps,
           properties: {
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             error_type: MetaMetricsEventErrorType.GasTimeout,
             aggregator,
           },

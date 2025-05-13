@@ -1,5 +1,9 @@
-import { useSelector } from 'react-redux';
 import { isEqualCaseInsensitive } from '@metamask/controller-utils';
+import { useSelector } from 'react-redux';
+
+import { getIntlLocale } from '../../../../ducks/locale/locale';
+import { getCurrentCurrency } from '../../../../ducks/metamask/metamask';
+import { useMultichainSelector } from '../../../../hooks/useMultichainSelector';
 import {
   getIsTestnet,
   getSelectedAccount,
@@ -7,29 +11,24 @@ import {
   getTokenList,
   selectERC20TokensByChain,
 } from '../../../../selectors';
-import { TokenDisplayInfo, TokenWithFiatAmount } from '../types';
 import {
   getImageForChainId,
   getMultichainIsEvm,
   getMultichainShouldShowFiat,
   isChainIdMainnet,
 } from '../../../../selectors/multichain';
+import type { TokenDisplayInfo, TokenWithFiatAmount } from '../types';
 import { formatWithThreshold } from '../util/formatWithThreshold';
-import { getIntlLocale } from '../../../../ducks/locale/locale';
-import { getCurrentCurrency } from '../../../../ducks/metamask/metamask';
-import { useMultichainSelector } from '../../../../hooks/useMultichainSelector';
 
 type UseTokenDisplayInfoProps = {
   token: TokenWithFiatAmount;
-  fixCurrencyToUSD?: boolean;
 };
 
 export const useTokenDisplayInfo = ({
   token,
-  fixCurrencyToUSD,
 }: UseTokenDisplayInfoProps): TokenDisplayInfo => {
   const isEvm = useSelector(getMultichainIsEvm);
-  const tokenList = useSelector(getTokenList) || {};
+  const tokenList = useSelector(getTokenList);
   const erc20TokensByChain = useSelector(selectERC20TokensByChain);
   const currentCurrency = useSelector(getCurrentCurrency);
   const locale = useSelector(getIntlLocale);
@@ -61,7 +60,7 @@ export const useTokenDisplayInfo = ({
           locale,
           {
             style: 'currency',
-            currency: fixCurrencyToUSD ? 'USD' : currentCurrency.toUpperCase(),
+            currency: currentCurrency.toUpperCase(),
           },
         )
       : undefined;
@@ -79,8 +78,7 @@ export const useTokenDisplayInfo = ({
   const isEvmMainnet =
     token.chainId && isEvm ? isChainIdMainnet(token.chainId) : false;
 
-  const isStakeable =
-    token.isStakeable || (isEvmMainnet && isEvm && token.isNative);
+  const isStakeable = isEvmMainnet && isEvm && token.isNative;
 
   if (isEvm) {
     const tokenData = Object.values(tokenList).find(
@@ -124,7 +122,7 @@ export const useTokenDisplayInfo = ({
     primary: formattedPrimary,
     secondary: token.secondary,
     isStakeable: false,
-    tokenChainImage: token.image as string,
+    tokenChainImage: token.image,
   };
 };
 

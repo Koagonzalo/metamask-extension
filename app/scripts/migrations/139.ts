@@ -1,3 +1,8 @@
+import type {
+  Caveat,
+  PermissionConstraint,
+  ValidPermission,
+} from '@metamask/permission-controller';
 import { hasProperty, hexToBigInt, isObject } from '@metamask/utils';
 import type {
   CaipChainId,
@@ -7,11 +12,6 @@ import type {
   NonEmptyArray,
 } from '@metamask/utils';
 import { cloneDeep } from 'lodash';
-import type {
-  Caveat,
-  PermissionConstraint,
-  ValidPermission,
-} from '@metamask/permission-controller';
 
 type VersionedData = {
   meta: { version: number };
@@ -45,8 +45,6 @@ type Caip25Permission = ValidPermission<
 >;
 
 const PermissionNames = {
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   eth_accounts: 'eth_accounts',
   permittedChains: 'endowment:permitted-chains',
 } as const;
@@ -107,7 +105,7 @@ export async function migrate(
   versionedData.meta.version = version;
 
   const newState = transformState(versionedData.data);
-  versionedData.data = newState as Record<string, unknown>;
+  versionedData.data = newState;
   return versionedData;
 }
 

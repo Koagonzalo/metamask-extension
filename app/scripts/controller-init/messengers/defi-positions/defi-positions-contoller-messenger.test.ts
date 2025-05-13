@@ -1,4 +1,5 @@
 import { Messenger, RestrictedMessenger } from '@metamask/base-controller';
+
 import { getDeFiPositionsControllerMessenger } from './defi-positions-controller-messenger';
 
 describe('getDefiPositionsControllerMessenger', () => {

@@ -1,7 +1,8 @@
-import { randomUUID } from 'crypto';
 import { ApprovalType } from '@metamask/controller-utils';
 import { act, fireEvent, screen } from '@testing-library/react';
+import { randomUUID } from 'crypto';
 import nock from 'nock';
+
 import { useAssetDetails } from '../../../../ui/pages/confirmations/hooks/useAssetDetails';
 import * as backgroundConnection from '../../../../ui/store/background-connection';
 import { integrationTestRender } from '../../../lib/render-helpers';
@@ -93,7 +94,6 @@ describe('Contract Interaction Confirmation Alerts', () => {
       chainId: '0xaa36a7',
     });
 
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     global.ethereumProvider = provider as any;
   });
@@ -104,7 +104,6 @@ describe('Contract Interaction Confirmation Alerts', () => {
     const APPROVE_NFT_HEX_SIG = '0x095ea7b3';
     mock4byte(APPROVE_NFT_HEX_SIG);
     mockedAssetDetails.mockImplementation(() => ({
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       decimals: '4' as any,
     }));
@@ -115,7 +114,6 @@ describe('Contract Interaction Confirmation Alerts', () => {
   });
 
   afterAll(() => {
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     delete (global as any).ethereumProvider;
   });

@@ -1,21 +1,22 @@
 /* eslint-disable @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires */
-import { MockttpServer } from 'mockttp';
+import type { MockttpServer } from 'mockttp';
+
 import { WINDOW_TITLES } from '../../../helpers';
-import { Driver } from '../../../webdriver/driver';
+import type { Driver } from '../../../webdriver/driver';
 import { scrollAndConfirmAndAssertConfirm } from '../helpers';
+import type { TestSuiteArguments } from './shared';
 import {
   assertChangedSpendingCap,
   editSpendingCap,
   mocked4BytesApprove,
   openDAppWithContract,
-  TestSuiteArguments,
 } from './shared';
 
+const FixtureBuilder = require('../../../fixture-builder');
 const {
-  defaultOptionsForType2Transactions,
+  defaultGanacheOptionsForType2Transactions,
   withFixtures,
 } = require('../../../helpers');
-const FixtureBuilder = require('../../../fixture-builder');
 const { SMART_CONTRACTS } = require('../../../seeder/smart-contracts');
 
 describe('Confirmation Redesign ERC20 Revoke Allowance', function () {
@@ -60,7 +61,7 @@ describe('Confirmation Redesign ERC20 Revoke Allowance', function () {
           fixtures: new FixtureBuilder()
             .withPermissionControllerConnectedToTestDapp()
             .build(),
-          localNodeOptions: defaultOptionsForType2Transactions,
+          localNodeOptions: defaultGanacheOptionsForType2Transactions,
           smartContract,
           testSpecificMock: mocks,
           title: this.test?.fullTitle(),

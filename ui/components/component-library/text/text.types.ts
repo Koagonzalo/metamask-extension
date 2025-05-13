@@ -1,12 +1,12 @@
-import React from 'react';
-import {
+import type React from 'react';
+
+import type {
   FontWeight,
   FontStyle,
   TextVariant,
   TextTransform,
   OverflowWrap,
 } from '../../../helpers/constants/design-system';
-
 import type {
   StyleUtilityProps,
   PolymorphicComponentPropWithRef,
@@ -136,13 +136,9 @@ export interface TextStyleUtilityProps extends StyleUtilityProps {
   ellipsis?: boolean;
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export type TextProps<C extends React.ElementType> =
   PolymorphicComponentPropWithRef<C, TextStyleUtilityProps>;
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export type TextComponent = <C extends React.ElementType = 'span'>(
   props: TextProps<C>,
 ) => React.ReactElement | null;

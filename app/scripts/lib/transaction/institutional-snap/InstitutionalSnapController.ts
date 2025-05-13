@@ -1,16 +1,18 @@
-import {
+import type { AccountsControllerGetAccountByAddressAction } from '@metamask/accounts-controller';
+import type { RestrictedMessenger } from '@metamask/base-controller';
+import { BaseController } from '@metamask/base-controller';
+import { ORIGIN_METAMASK } from '@metamask/controller-utils';
+import type { HandleSnapRequest } from '@metamask/snaps-controllers';
+import { HandlerType } from '@metamask/snaps-utils';
+import { TransactionStatus } from '@metamask/transaction-controller';
+import type {
   TransactionControllerUpdateCustodialTransactionAction,
   TransactionEnvelopeType,
   TransactionMeta,
-  TransactionStatus,
 } from '@metamask/transaction-controller';
-import type { HandleSnapRequest } from '@metamask/snaps-controllers';
-import { HandlerType } from '@metamask/snaps-utils';
-import { BaseController, RestrictedMessenger } from '@metamask/base-controller';
-import { AccountsControllerGetAccountByAddressAction } from '@metamask/accounts-controller';
-import { ORIGIN_METAMASK } from '@metamask/controller-utils';
+
 import { INSTITUTIONAL_WALLET_SNAP_ID } from '../../../../../shared/lib/accounts/institutional-wallet-snap';
-import {
+import type {
   InstitutionalSnapRequestSearchParameters,
   InstitutionalSnapResponse,
 } from './institutional-snap-controller.types';
@@ -129,7 +131,7 @@ export class InstitutionalSnapController extends BaseController<
 
   async #getUpdatedTransactionParameters(transactionMeta: TransactionMeta) {
     const searchParams: InstitutionalSnapRequestSearchParameters = {
-      from: transactionMeta.txParams.from as string,
+      from: transactionMeta.txParams.from,
       to: transactionMeta.txParams.to as string,
       value: transactionMeta.txParams.value as string,
       data: transactionMeta.txParams.data as string,
@@ -202,7 +204,7 @@ export class InstitutionalSnapController extends BaseController<
   async #shouldDeferPublication(transactionMeta: TransactionMeta) {
     const account = (await this.messagingSystem.call(
       'AccountsController:getAccountByAddress',
-      transactionMeta.txParams.from as string,
+      transactionMeta.txParams.from,
     )) as unknown as DeferrableTransactionAccount;
 
     return account?.options.custodian?.deferPublication;

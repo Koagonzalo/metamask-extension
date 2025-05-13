@@ -1,18 +1,19 @@
+import { BigNumber } from 'bignumber.js';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { BigNumber } from 'bignumber.js';
-import { getCurrentCurrency } from '../../../../ducks/metamask/metamask';
-import { useTokenFiatAmount } from '../../../../hooks/useTokenFiatAmount';
-import { TokenListItem } from '../../token-list-item';
-import { formatAmount } from '../../../../pages/confirmations/components/simulation-details/formatAmount';
+
 import { getIntlLocale } from '../../../../ducks/locale/locale';
+import { getCurrentCurrency } from '../../../../ducks/metamask/metamask';
 import { formatCurrency } from '../../../../helpers/utils/confirm-tx.util';
+import { useTokenFiatAmount } from '../../../../hooks/useTokenFiatAmount';
+import { formatAmount } from '../../../../pages/confirmations/components/simulation-details/formatAmount';
 import {
   getMultichainNetworkConfigurationsByChainId,
   getImageForChainId,
 } from '../../../../selectors/multichain';
 import { selectERC20TokensByChain } from '../../../../selectors/selectors';
-import { AssetWithDisplayData, ERC20Asset, NativeAsset } from './types';
+import { TokenListItem } from '../../token-list-item';
+import type { AssetWithDisplayData, ERC20Asset, NativeAsset } from './types';
 
 type AssetProps = AssetWithDisplayData<NativeAsset | ERC20Asset> & {
   tooltipText?: string;
@@ -22,8 +23,6 @@ type AssetProps = AssetWithDisplayData<NativeAsset | ERC20Asset> & {
   >;
 };
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export default function Asset({
   address,
   image,
@@ -38,9 +37,7 @@ export default function Asset({
 
   const currency = useSelector(getCurrentCurrency);
   const allNetworks = useSelector(getMultichainNetworkConfigurationsByChainId);
-  const isTokenChainIdInWallet = Boolean(
-    chainId ? allNetworks[chainId as keyof typeof allNetworks] : true,
-  );
+  const isTokenChainIdInWallet = Boolean(chainId ? allNetworks[chainId] : true);
 
   const cachedTokens = useSelector(selectERC20TokensByChain);
 

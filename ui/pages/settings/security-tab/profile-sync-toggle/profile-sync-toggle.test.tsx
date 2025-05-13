@@ -1,7 +1,8 @@
+import { render, fireEvent } from '@testing-library/react';
 import React from 'react';
 import * as Redux from 'react-redux';
 import configureMockStore from 'redux-mock-store';
-import { render, fireEvent } from '@testing-library/react';
+
 import { MetamaskNotificationsProvider } from '../../../../contexts/metamask-notifications';
 import * as ProfileSyncingHook from '../../../../hooks/identity/useBackupAndSync/useBackupAndSync';
 import ProfileSyncToggle from './profile-sync-toggle';
@@ -46,7 +47,7 @@ describe('ProfileSyncToggle', () => {
   });
 
   function arrangeMocks() {
-    const setIsBackupAndSyncFeatureEnabledMock = jest.fn(() =>
+    const setIsBackupAndSyncFeatureEnabledMock = jest.fn(async () =>
       Promise.resolve(),
     );
 

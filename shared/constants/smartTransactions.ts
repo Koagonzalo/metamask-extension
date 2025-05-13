@@ -1,6 +1,6 @@
 import { isProduction } from '../modules/environment';
-import { SECOND } from './time';
 import { CHAIN_IDS } from './network';
+import { SECOND } from './time';
 
 export const FALLBACK_SMART_TRANSACTIONS_REFRESH_TIME: number = SECOND * 10;
 export const FALLBACK_SMART_TRANSACTIONS_DEADLINE: number = 180;
@@ -13,8 +13,8 @@ const ALLOWED_SMART_TRANSACTIONS_CHAIN_IDS_DEVELOPMENT: string[] = [
   CHAIN_IDS.SEPOLIA,
   CHAIN_IDS.BSC,
   CHAIN_IDS.BASE,
-  // CHAIN_IDS.LINEA_MAINNET, // TODO: Add linea mainnet to development when ready
-  // CHAIN_IDS.LINEA_SEPOLIA, // TODO: Add linea sepolia to development when ready
+  CHAIN_IDS.LINEA_MAINNET,
+  CHAIN_IDS.LINEA_SEPOLIA,
 ];
 
 const ALLOWED_SMART_TRANSACTIONS_CHAIN_IDS_PRODUCTION: string[] = [

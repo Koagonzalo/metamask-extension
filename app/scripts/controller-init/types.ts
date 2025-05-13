@@ -1,22 +1,23 @@
-import { Provider } from '@metamask/network-controller';
-import {
+import type {
   ActionConstraint,
   Messenger,
   EventConstraint,
   RestrictedMessenger,
 } from '@metamask/base-controller';
-import { Hex } from '@metamask/utils';
-import { Duplex } from 'readable-stream';
-import { SubjectType } from '@metamask/permission-controller';
-import { PreinstalledSnap } from '@metamask/snaps-controllers';
-import { TransactionMeta } from '@metamask/transaction-controller';
-import type { TransactionMetricsRequest } from '../../../shared/types/metametrics';
-import { MessageSender } from '../../../types/global';
-import {
+import type { Provider } from '@metamask/network-controller';
+import type { SubjectType } from '@metamask/permission-controller';
+import type { PreinstalledSnap } from '@metamask/snaps-controllers';
+import type { TransactionMeta } from '@metamask/transaction-controller';
+import type { Hex } from '@metamask/utils';
+import type { Duplex } from 'readable-stream';
+
+import type {
   MetaMetricsEventOptions,
   MetaMetricsEventPayload,
 } from '../../../shared/constants/metametrics';
-import { Controller, ControllerFlatState } from './controller-list';
+import type { TransactionMetricsRequest } from '../../../shared/types/metametrics';
+import type { MessageSender } from '../../../types/global';
+import type { Controller, ControllerFlatState } from './controller-list';
 
 /** The supported controller names. */
 export type ControllerName = Controller['name'];

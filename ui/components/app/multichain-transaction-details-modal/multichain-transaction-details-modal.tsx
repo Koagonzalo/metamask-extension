@@ -1,10 +1,15 @@
-import React, { useContext } from 'react';
+import type { Transaction } from '@metamask/keyring-api';
+import { TransactionStatus, TransactionType } from '@metamask/keyring-api';
 import { capitalize } from 'lodash';
+import React, { useContext } from 'react';
+
 import {
-  Transaction,
-  TransactionStatus,
-  TransactionType,
-} from '@metamask/keyring-api';
+  MetaMetricsEventCategory,
+  MetaMetricsEventName,
+  MetaMetricsEventLinkType,
+} from '../../../../shared/constants/metametrics';
+import type { MultichainProviderConfig } from '../../../../shared/constants/multichain/networks';
+import { MetaMetricsContext } from '../../../contexts/metametrics';
 import {
   Display,
   FlexDirection,
@@ -16,7 +21,12 @@ import {
   TextColor,
   TextAlign,
 } from '../../../helpers/constants/design-system';
+import { getURLHostName, shortenAddress } from '../../../helpers/utils/util';
 import { useI18nContext } from '../../../hooks/useI18nContext';
+import {
+  KEYRING_TRANSACTION_STATUS_KEY,
+  useMultichainTransactionDisplay,
+} from '../../../hooks/useMultichainTransactionDisplay';
 import {
   ModalOverlay,
   ModalContent,
@@ -34,19 +44,7 @@ import {
   ButtonLink,
   ButtonLinkSize,
 } from '../../component-library';
-import {
-  MetaMetricsEventCategory,
-  MetaMetricsEventName,
-  MetaMetricsEventLinkType,
-} from '../../../../shared/constants/metametrics';
-import { MetaMetricsContext } from '../../../contexts/metametrics';
 import { ConfirmInfoRowDivider as Divider } from '../confirm/info/row';
-import { getURLHostName, shortenAddress } from '../../../helpers/utils/util';
-import {
-  KEYRING_TRANSACTION_STATUS_KEY,
-  useMultichainTransactionDisplay,
-} from '../../../hooks/useMultichainTransactionDisplay';
-import { MultichainProviderConfig } from '../../../../shared/constants/multichain/networks';
 import {
   formatTimestamp,
   getTransactionUrl,
@@ -61,8 +59,6 @@ export type MultichainTransactionDetailsModalProps = {
   networkConfig: MultichainProviderConfig;
 };
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export function MultichainTransactionDetailsModal({
   transaction,
   onClose,
@@ -122,10 +118,8 @@ export function MultichainTransactionDetailsModal({
               name={IconName.Export}
               size={IconSize.Sm}
               color={IconColor.primaryDefault}
-              onClick={() =>
-                navigator.clipboard.writeText(
-                  getAddressUrl(address as string, chain),
-                )
+              onClick={async () =>
+                navigator.clipboard.writeText(getAddressUrl(address, chain))
               }
             />
           </ButtonLink>
@@ -253,7 +247,7 @@ export function MultichainTransactionDetailsModal({
                     name={IconName.Export}
                     size={IconSize.Sm}
                     color={IconColor.primaryDefault}
-                    onClick={() =>
+                    onClick={async () =>
                       navigator.clipboard.writeText(
                         getTransactionUrl(id, chain),
                       )
@@ -316,12 +310,8 @@ export function MultichainTransactionDetailsModal({
                 event: MetaMetricsEventName.ExternalLinkClicked,
                 category: MetaMetricsEventCategory.Navigation,
                 properties: {
-                  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                  // eslint-disable-next-line @typescript-eslint/naming-convention
                   link_type: MetaMetricsEventLinkType.AccountTracker,
                   location: 'Transaction Details',
-                  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                  // eslint-disable-next-line @typescript-eslint/naming-convention
                   url_domain: getURLHostName(getTransactionUrl(id, chain)),
                 },
               });

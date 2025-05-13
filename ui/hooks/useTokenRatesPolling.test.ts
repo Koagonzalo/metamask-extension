@@ -8,7 +8,7 @@ import useTokenRatesPolling from './useTokenRatesPolling';
 let mockPromises: Promise<string>[];
 
 jest.mock('../store/actions', () => ({
-  tokenRatesStartPolling: jest.fn().mockImplementation((input) => {
+  tokenRatesStartPolling: jest.fn().mockImplementation(async (input) => {
     const promise = Promise.resolve(`${input}_rates`);
     mockPromises.push(promise);
     return promise;
@@ -67,13 +67,17 @@ describe('useTokenRatesPolling', () => {
 
     // Should poll each chain
     await Promise.all(mockPromises);
-    expect(tokenRatesStartPolling).toHaveBeenCalledTimes(1);
-    expect(tokenRatesStartPolling).toHaveBeenCalledWith(['0x1', '0x89']);
+    expect(tokenRatesStartPolling).toHaveBeenCalledTimes(2);
+    expect(tokenRatesStartPolling).toHaveBeenCalledWith('0x1');
+    expect(tokenRatesStartPolling).toHaveBeenCalledWith('0x89');
     // Stop polling on dismount
     unmount();
-    expect(tokenRatesStopPollingByPollingToken).toHaveBeenCalledTimes(1);
+    expect(tokenRatesStopPollingByPollingToken).toHaveBeenCalledTimes(2);
     expect(tokenRatesStopPollingByPollingToken).toHaveBeenCalledWith(
-      '0x1,0x89_rates',
+      '0x1_rates',
+    );
+    expect(tokenRatesStopPollingByPollingToken).toHaveBeenCalledWith(
+      '0x89_rates',
     );
   });
 

@@ -1,10 +1,9 @@
+import type { TransactionMeta } from '@metamask/transaction-controller';
+import { TransactionStatus } from '@metamask/transaction-controller';
 import React from 'react';
-import {
-  type TransactionMeta,
-  TransactionStatus,
-} from '@metamask/transaction-controller';
-import type { BridgeHistoryItem } from '@metamask/bridge-status-controller';
-import { StatusTypes } from '@metamask/bridge-controller';
+
+import type { BridgeHistoryItem } from '../../../../shared/types/bridge-status';
+import { StatusTypes } from '../../../../shared/types/bridge-status';
 import { Box, Text } from '../../../components/component-library';
 import {
   BlockSize,
@@ -58,8 +57,6 @@ const getDestTxStatus = ({
  * @param options.bridgeTxHistoryItem - The bridge history item for the transaction
  * @param options.transactionGroup - The transaction group for the transaction
  */
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export default function BridgeActivityItemTxSegments({
   bridgeTxHistoryItem,
   transactionGroup,

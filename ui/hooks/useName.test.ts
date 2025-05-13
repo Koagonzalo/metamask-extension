@@ -1,15 +1,15 @@
+import type { NameControllerState, NameEntry } from '@metamask/name-controller';
 import {
   FALLBACK_VARIATION,
-  NameControllerState,
-  NameEntry,
   NameOrigin,
   NameType,
 } from '@metamask/name-controller';
+
 import { getNames } from '../selectors';
 import { useName } from './useName';
 
 jest.mock('react-redux', () => ({
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+  // TODO: Replace `any` with type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   useSelector: (selector: any) => selector(),
 }));
@@ -36,7 +36,7 @@ const PROPOSED_NAMES_MOCK = {
 
 describe('useName', () => {
   const getNamesMock =
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+    // TODO: Replace `any` with type
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     jest.mocked<(state: any) => NameControllerState['names']>(getNames);
 

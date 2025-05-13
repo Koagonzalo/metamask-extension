@@ -1,18 +1,19 @@
-import { useDispatch, useSelector } from 'react-redux';
+import type { Hex } from '@metamask/utils';
 import { useEffect } from 'react';
-import { Hex } from '@metamask/utils';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { hasTransactionData } from '../../../../../../../shared/modules/transaction.utils';
 import {
   getKnownMethodData,
   use4ByteResolutionSelector,
 } from '../../../../../../selectors';
 import { getContractMethodData } from '../../../../../../store/actions';
-import { hasTransactionData } from '../../../../../../../shared/modules/transaction.utils';
 
 export const useFourByte = ({ to, data }: { to?: Hex; data?: Hex }) => {
   const dispatch = useDispatch();
   const isFourByteEnabled = useSelector(use4ByteResolutionSelector);
-  const transactionTo = to as Hex | undefined;
-  const transactionData = data as Hex | undefined;
+  const transactionTo = to;
+  const transactionData = data;
 
   useEffect(() => {
     if (

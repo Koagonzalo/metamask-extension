@@ -1,9 +1,10 @@
-import { useHistory } from 'react-router-dom';
+import type { ApprovalFlowState } from '@metamask/approval-controller';
 import { ApprovalType } from '@metamask/controller-utils';
-import { Json } from '@metamask/utils';
-import { ApprovalFlowState } from '@metamask/approval-controller';
-import { renderHookWithProvider } from '../../../../test/lib/render-helpers';
+import type { Json } from '@metamask/utils';
+import { useHistory } from 'react-router-dom';
+
 import mockState from '../../../../test/data/mock-state.json';
+import { renderHookWithProvider } from '../../../../test/lib/render-helpers';
 import {
   CONFIRM_ADD_SUGGESTED_NFT_ROUTE,
   CONFIRM_ADD_SUGGESTED_TOKEN_ROUTE,
@@ -210,7 +211,6 @@ describe('useConfirmationNavigation', () => {
       expect(result.count).toBe(2);
     });
 
-    // @ts-expect-error This function is missing from the Mocha type definitions
     it.each([
       ['token', undefined],
       ['NFT', '123'],
@@ -262,7 +262,6 @@ describe('useConfirmationNavigation', () => {
       ]);
     });
 
-    // @ts-expect-error This function is missing from the Mocha type definitions
     it.each([
       ['token', undefined],
       ['NFT', '123'],

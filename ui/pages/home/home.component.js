@@ -1,6 +1,7 @@
-import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import React, { PureComponent } from 'react';
 import { Redirect, Route } from 'react-router-dom';
+
 import {
   ///: BEGIN:ONLY_INCLUDE_IF(build-main)
   MetaMetricsContextProp,
@@ -9,18 +10,8 @@ import {
   MetaMetricsEventName,
 } from '../../../shared/constants/metametrics';
 ///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
-import TermsOfUsePopup from '../../components/app/terms-of-use-popup';
-import RecoveryPhraseReminder from '../../components/app/recovery-phrase-reminder';
-import WhatsNewModal from '../../components/app/whats-new-modal';
 import { FirstTimeFlowType } from '../../../shared/constants/onboarding';
 ///: END:ONLY_INCLUDE_IF
-import HomeNotification from '../../components/app/home-notification';
-import MultipleNotifications from '../../components/app/multiple-notifications';
-import Typography from '../../components/ui/typography/typography';
-import Button from '../../components/ui/button';
-import Popover from '../../components/ui/popover';
-import ConnectedSites from '../connected-sites';
-import ConnectedAccounts from '../connected-accounts';
 import { isMv3ButOffscreenDocIsMissing } from '../../../shared/modules/mv3.utils';
 import ActionableMessage from '../../components/ui/actionable-message/actionable-message';
 
@@ -70,9 +61,19 @@ import {
   SUPPORT_LINK,
   ///: END:ONLY_INCLUDE_IF
 } from '../../../shared/lib/ui-utils';
+import HomeNotification from '../../components/app/home-notification';
+import MultipleNotifications from '../../components/app/multiple-notifications';
+import RecoveryPhraseReminder from '../../components/app/recovery-phrase-reminder';
+import TermsOfUsePopup from '../../components/app/terms-of-use-popup';
+import WhatsNewModal from '../../components/app/whats-new-modal';
 import { AccountOverview } from '../../components/multichain/account-overview';
+import Button from '../../components/ui/button';
+import Popover from '../../components/ui/popover';
+import Typography from '../../components/ui/typography/typography';
 import { setEditedNetwork } from '../../store/actions';
 import { navigateToConfirmation } from '../confirmations/hooks/useConfirmationNavigation';
+import ConnectedAccounts from '../connected-accounts';
+import ConnectedSites from '../connected-sites';
 ///: BEGIN:ONLY_INCLUDE_IF(build-beta)
 import BetaHomeFooter from './beta/beta-home-footer.component';
 ///: END:ONLY_INCLUDE_IF
@@ -82,13 +83,15 @@ import FlaskHomeFooter from './flask/flask-home-footer.component';
 
 function shouldCloseNotificationPopup({
   isNotification,
-  totalUnapprovedCount,
+  totalUnapprovedAndQueuedRequestCount,
   hasApprovalFlows,
   isSigningQRHardwareTransaction,
 }) {
+  // we can't use totalUnapproved because there are also queued requests
+
   const shouldClose =
     isNotification &&
-    totalUnapprovedCount === 0 &&
+    totalUnapprovedAndQueuedRequestCount === 0 &&
     !hasApprovalFlows &&
     !isSigningQRHardwareTransaction;
 
@@ -834,7 +837,7 @@ export default class Home extends PureComponent {
     ///: END:ONLY_INCLUDE_IF
 
     return (
-      <div className="main-container main-container--has-shadow">
+      <div className="main-container">
         <Route path={CONNECTED_ROUTE} component={ConnectedSites} exact />
         <Route
           path={CONNECTED_ACCOUNTS_ROUTE}

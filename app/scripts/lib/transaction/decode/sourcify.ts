@@ -1,6 +1,9 @@
-import { FunctionFragment, Interface, ParamType } from '@ethersproject/abi';
-import { Hex, createProjectLogger } from '@metamask/utils';
-import {
+import type { FunctionFragment, ParamType } from '@ethersproject/abi';
+import { Interface } from '@ethersproject/abi';
+import type { Hex } from '@metamask/utils';
+import { createProjectLogger } from '@metamask/utils';
+
+import type {
   DecodedTransactionDataMethod,
   DecodedTransactionDataParam,
 } from '../../../../../shared/types/transaction-decode';

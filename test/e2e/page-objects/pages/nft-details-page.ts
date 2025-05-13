@@ -1,7 +1,7 @@
-import { Driver } from '../../webdriver/driver';
+import type { Driver } from '../../webdriver/driver';
 
 class NFTDetailsPage {
-  private driver: Driver;
+  private readonly driver: Driver;
 
   private readonly nftBackButton = '[data-testid="nft__back"]';
 
@@ -26,8 +26,6 @@ class NFTDetailsPage {
     this.driver = driver;
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_pageIsLoaded(): Promise<void> {
     try {
       await this.driver.waitForMultipleSelectors([
@@ -56,8 +54,6 @@ class NFTDetailsPage {
     await this.driver.clickElement(this.nftRemoveButton);
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_nftDescriptionIsDisplayed(description: string) {
     console.log(
       'Check if NFT description is displayed on NFT details page',
@@ -69,8 +65,6 @@ class NFTDetailsPage {
     });
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_nftDetailsAddressIsDisplayed(address: string) {
     console.log(
       'Check if NFT address is displayed on NFT details page',
@@ -82,8 +76,6 @@ class NFTDetailsPage {
     });
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_nftImageContainerIsDisplayed() {
     console.log(
       'Check if NFT image container is displayed on NFT details page',
@@ -91,8 +83,6 @@ class NFTDetailsPage {
     await this.driver.waitForSelector(this.nftImageContainer);
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_nftNameIsDisplayed(name: string) {
     console.log('Check if NFT name is displayed on NFT details page', name);
     await this.driver.waitForSelector({
@@ -101,8 +91,6 @@ class NFTDetailsPage {
     });
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_nftFullImageIsDisplayed() {
     console.log('Check if NFT full image is displayed on NFT details page');
     await this.driver.waitForSelector('[data-testid="nft-item"]');

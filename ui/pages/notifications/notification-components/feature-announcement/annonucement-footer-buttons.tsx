@@ -1,12 +1,13 @@
 import React, { useCallback, useContext } from 'react';
+
 import {
   MetaMetricsEventCategory,
   MetaMetricsEventName,
 } from '../../../../../shared/constants/metametrics';
-import { MetaMetricsContext } from '../../../../contexts/metametrics';
-import { NotificationDetailButton } from '../../../../components/multichain';
 import { ButtonVariant } from '../../../../components/component-library';
-import { FeatureAnnouncementNotification } from './types';
+import { NotificationDetailButton } from '../../../../components/multichain';
+import { MetaMetricsContext } from '../../../../contexts/metametrics';
+import type { FeatureAnnouncementNotification } from './types';
 
 const useAnalyticEventCallback = (props: {
   id: string;
@@ -20,14 +21,8 @@ const useAnalyticEventCallback = (props: {
       category: MetaMetricsEventCategory.NotificationInteraction,
       event: MetaMetricsEventName.NotificationDetailClicked,
       properties: {
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         notification_id: props.id,
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         notification_type: props.type,
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         clicked_item: props.clickType,
       },
     });

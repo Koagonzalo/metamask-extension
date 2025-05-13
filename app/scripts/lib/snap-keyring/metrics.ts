@@ -1,9 +1,10 @@
-import { RestrictedMessenger } from '@metamask/base-controller';
-import { KeyringControllerGetKeyringForAccountAction } from '@metamask/keyring-controller';
-import { AccountsControllerGetSelectedAccountAction } from '@metamask/accounts-controller';
-import { GetSnap } from '@metamask/snaps-controllers';
-import { Snap } from '@metamask/snaps-utils';
-import { HardwareKeyringType } from '../../../../shared/constants/hardware-wallets';
+import type { AccountsControllerGetSelectedAccountAction } from '@metamask/accounts-controller';
+import type { RestrictedMessenger } from '@metamask/base-controller';
+import type { KeyringControllerGetKeyringForAccountAction } from '@metamask/keyring-controller';
+import type { GetSnap } from '@metamask/snaps-controllers';
+import type { Snap } from '@metamask/snaps-utils';
+
+import type { HardwareKeyringType } from '../../../../shared/constants/hardware-wallets';
 
 type AllowedActions =
   | GetSnap
@@ -42,20 +43,10 @@ export async function getSnapAndHardwareInfoForMetrics(
   }
 
   return {
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     account_type: await getAccountType(selectedAddress),
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     device_model: await getDeviceModel(selectedAddress),
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     account_hardware_type: await getHardwareTypeForMetric(selectedAddress),
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     account_snap_type: snap?.id,
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     account_snap_version: snap?.version,
   };
 }

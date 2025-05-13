@@ -1,21 +1,21 @@
 import log from 'loglevel';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  deleteAccountSyncingDataFromUserStorage,
-  syncInternalAccountsWithUserStorage,
-} from '../../../store/actions';
-import {
-  selectIsAccountSyncingEnabled,
-  selectIsAccountSyncingReadyToBeDispatched,
-  selectIsBackupAndSyncEnabled,
-} from '../../../selectors/identity/backup-and-sync';
-import { getUseExternalServices } from '../../../selectors';
+
 import {
   getCompletedOnboarding,
   getIsUnlocked,
 } from '../../../ducks/metamask/metamask';
+import { getUseExternalServices } from '../../../selectors';
 import { selectIsSignedIn } from '../../../selectors/identity/authentication';
+import {
+  selectIsAccountSyncingReadyToBeDispatched,
+  selectIsProfileSyncingEnabled,
+} from '../../../selectors/identity/profile-syncing';
+import {
+  deleteAccountSyncingDataFromUserStorage,
+  syncInternalAccountsWithUserStorage,
+} from '../../../store/actions';
 
 /**
  * A utility used internally to decide if account syncing should be dispatched
@@ -27,8 +27,7 @@ export const useShouldDispatchAccountSyncing = () => {
   const isAccountSyncingReadyToBeDispatched = useSelector(
     selectIsAccountSyncingReadyToBeDispatched,
   );
-  const isBackupAndSyncEnabled = useSelector(selectIsBackupAndSyncEnabled);
-  const isAccountSyncingEnabled = useSelector(selectIsAccountSyncingEnabled);
+  const isProfileSyncingEnabled = useSelector(selectIsProfileSyncingEnabled);
   const basicFunctionality: boolean | undefined = useSelector(
     getUseExternalServices,
   );
@@ -38,17 +37,16 @@ export const useShouldDispatchAccountSyncing = () => {
     getCompletedOnboarding,
   );
 
-  const shouldDispatchAccountSyncing: boolean = Boolean(
+  const shouldDispatchProfileSyncing: boolean = Boolean(
     basicFunctionality &&
-      isBackupAndSyncEnabled &&
-      isAccountSyncingEnabled &&
+      isProfileSyncingEnabled &&
       isUnlocked &&
       isSignedIn &&
       completedOnboarding &&
       isAccountSyncingReadyToBeDispatched,
   );
 
-  return shouldDispatchAccountSyncing;
+  return shouldDispatchProfileSyncing;
 };
 
 /**
@@ -90,7 +88,7 @@ export const useDeleteAccountSyncingDataFromUserStorage = () => {
     } catch {
       // Do Nothing
     }
-  }, [dispatch]);
+  }, []);
 
   return { dispatchDeleteAccountSyncingData };
 };

@@ -1,13 +1,13 @@
 const { strict: assert } = require('assert');
-const { mockNetworkStateOld } = require('../../../stub/networks');
 
+const { mockNetworkStateOld } = require('../../../stub/networks');
+const FixtureBuilder = require('../../fixture-builder');
 const {
   withFixtures,
   regularDelayMs,
   unlockWallet,
   tinyDelayMs,
 } = require('../../helpers');
-const FixtureBuilder = require('../../fixture-builder');
 
 describe('Custom RPC history', function () {
   it(`creates first custom RPC entry`, async function () {
@@ -36,7 +36,7 @@ describe('Custom RPC history', function () {
         await unlockWallet(driver);
 
         const rpcUrl = `http://127.0.0.1:${port}`;
-        const networkName = 'Secondary Local Testnet';
+        const networkName = 'Secondary Ganache Testnet';
 
         await driver.clickElement('[data-testid="network-display"]');
         await driver.clickElement({
@@ -87,12 +87,12 @@ describe('Custom RPC history', function () {
 
         // Validate the network was added
         const networkAdded = await driver.isElementPresent({
-          text: '“Secondary Local Testnet” was successfully added!',
+          text: '“Secondary Ganache Testnet” was successfully added!',
         });
         assert.equal(
           networkAdded,
           true,
-          '“Secondary Local Testnet” was successfully added!',
+          '“Secondary Ganache Testnet” was successfully added!',
         );
       },
     );

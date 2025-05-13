@@ -1,4 +1,4 @@
-import { NestedTransactionMetadata } from '@metamask/transaction-controller';
+import type { NestedTransactionMetadata } from '@metamask/transaction-controller';
 
 /**
  * Determines if a transaction is a batch transaction.

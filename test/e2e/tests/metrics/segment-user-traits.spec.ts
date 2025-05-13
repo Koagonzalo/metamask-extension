@@ -1,15 +1,16 @@
 import { strict as assert } from 'assert';
-import { Mockttp } from 'mockttp';
-import { getEventPayloads, withFixtures } from '../../helpers';
+import type { Mockttp } from 'mockttp';
+
+import { MOCK_META_METRICS_ID } from '../../constants';
 import FixtureBuilder from '../../fixture-builder';
+import { getEventPayloads, withFixtures } from '../../helpers';
 import {
   completeCreateNewWalletOnboardingFlow,
   createNewWalletOnboardingFlow,
 } from '../../page-objects/flows/onboarding.flow';
-import { MOCK_META_METRICS_ID } from '../../constants';
 import HeaderNavbar from '../../page-objects/pages/header-navbar';
-import SettingsPage from '../../page-objects/pages/settings/settings-page';
 import PrivacySettings from '../../page-objects/pages/settings/privacy-settings';
+import SettingsPage from '../../page-objects/pages/settings/settings-page';
 
 async function mockSegment(mockServer: Mockttp) {
   return [

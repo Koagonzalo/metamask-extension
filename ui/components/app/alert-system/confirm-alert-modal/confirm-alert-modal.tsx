@@ -1,5 +1,15 @@
 import React, { useCallback, useState } from 'react';
 
+import { MetaMetricsEventLocation } from '../../../../../shared/constants/metametrics';
+import {
+  AlignItems,
+  Severity,
+  TextAlign,
+  TextVariant,
+} from '../../../../helpers/constants/design-system';
+import useAlerts from '../../../../hooks/useAlerts';
+import { useI18nContext } from '../../../../hooks/useI18nContext';
+import type { OnCancelHandler } from '../../../../pages/confirmations/components/confirm/footer/footer';
 import {
   Box,
   Button,
@@ -12,19 +22,9 @@ import {
   IconSize,
   Text,
 } from '../../../component-library';
-import {
-  AlignItems,
-  Severity,
-  TextAlign,
-  TextVariant,
-} from '../../../../helpers/constants/design-system';
-import { useI18nContext } from '../../../../hooks/useI18nContext';
-import useAlerts from '../../../../hooks/useAlerts';
 import { AlertModal } from '../alert-modal';
 import { AcknowledgeCheckboxBase } from '../alert-modal/alert-modal';
 import { MultipleAlertModal } from '../multiple-alert-modal';
-import { MetaMetricsEventLocation } from '../../../../../shared/constants/metametrics';
-import type { OnCancelHandler } from '../../../../pages/confirmations/components/confirm/footer/footer';
 
 export type ConfirmAlertModalProps = {
   /** Callback function that is called when the cancel button is clicked. */
@@ -37,8 +37,6 @@ export type ConfirmAlertModalProps = {
   ownerId: string;
 };
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function ConfirmButtons({
   onCancel,
   onSubmit,
@@ -79,8 +77,6 @@ function ConfirmButtons({
   );
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function ConfirmDetails({
   onAlertLinkClick,
 }: {
@@ -114,8 +110,6 @@ function ConfirmDetails({
   );
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export function ConfirmAlertModal({
   onCancel,
   onClose,
@@ -141,8 +135,6 @@ export function ConfirmAlertModal({
       setMultipleAlertModalVisible(false);
 
       if (
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         request?.recursive ||
         hasUnconfirmedFieldDangerAlerts ||
         hasDangerBlockingAlerts

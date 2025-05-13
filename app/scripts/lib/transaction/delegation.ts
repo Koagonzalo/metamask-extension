@@ -1,8 +1,10 @@
-import { MessageParamsTypedData } from '@metamask/signature-controller';
-import { Hex, hexToNumber } from '@metamask/utils';
-import { SignTypedDataVersion } from '@metamask/keyring-controller';
 import { Interface, ParamType, defaultAbiCoder } from '@ethersproject/abi';
-import { TransactionControllerInitMessenger } from '../../controller-init/messengers/transaction-controller-messenger';
+import { SignTypedDataVersion } from '@metamask/keyring-controller';
+import type { MessageParamsTypedData } from '@metamask/signature-controller';
+import type { Hex } from '@metamask/utils';
+import { hexToNumber } from '@metamask/utils';
+
+import type { TransactionControllerInitMessenger } from '../../controller-init/messengers/transaction-controller-messenger';
 
 export type Caveat = {
   enforcer: Hex;
@@ -29,8 +31,6 @@ export type Execution = {
 };
 
 export enum ExecutionMode {
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   BATCH_DEFAULT_MODE = '0x0100000000000000000000000000000000000000000000000000000000000000',
 }
 

@@ -1,33 +1,22 @@
 import React, { useState, useEffect, useContext } from 'react';
-///: BEGIN:ONLY_INCLUDE_IF(solana)
-import { useSelector } from 'react-redux';
-import { SolAccountType } from '@metamask/keyring-api';
-///: END:ONLY_INCLUDE_IF
 import { Carousel as ResponsiveCarousel } from 'react-responsive-carousel';
-import { useI18nContext } from '../../../hooks/useI18nContext';
-import { Box, BoxProps, BannerBase } from '../../component-library';
-import {
-  TextAlign,
-  AlignItems,
-  TextVariant,
-  BorderRadius,
-  TextColor,
-  FontWeight,
-} from '../../../helpers/constants/design-system';
+
 import {
   MetaMetricsEventCategory,
   MetaMetricsEventName,
 } from '../../../../shared/constants/metametrics';
-///: BEGIN:ONLY_INCLUDE_IF(solana)
-import { getSelectedAccount } from '../../../selectors';
-///: END:ONLY_INCLUDE_IF
 import { MetaMetricsContext } from '../../../contexts/metametrics';
 import {
-  getSweepstakesCampaignActive,
-  ///: BEGIN:ONLY_INCLUDE_IF(solana)
-  SOLANA_SLIDE,
-  ///: END:ONLY_INCLUDE_IF
-} from '../../../hooks/useCarouselManagement';
+  TextAlign,
+  AlignItems,
+  TextVariant,
+  FontWeight,
+  BorderColor,
+} from '../../../helpers/constants/design-system';
+import { getSweepstakesCampaignActive } from '../../../hooks/useCarouselManagement';
+import { useI18nContext } from '../../../hooks/useI18nContext';
+import { Box, BannerBase } from '../../component-library';
+import type { BoxProps } from '../../component-library';
 import type { CarouselProps } from './carousel.types';
 import { BANNER_STYLES, MAX_SLIDES } from './constants';
 import {
@@ -52,34 +41,9 @@ export const Carousel = React.forwardRef(
     const t = useI18nContext();
     const trackEvent = useContext(MetaMetricsContext);
 
-    ///: BEGIN:ONLY_INCLUDE_IF(solana)
-    const selectedAccount = useSelector(getSelectedAccount);
-    ///: END:ONLY_INCLUDE_IF
-
     const visibleSlides = slides
-      .filter((slide) => {
-        ///: BEGIN:ONLY_INCLUDE_IF(solana)
-        if (
-          slide.id === SOLANA_SLIDE.id &&
-          selectedAccount?.type === SolAccountType.DataAccount
-        ) {
-          return false;
-        }
-        ///: END:ONLY_INCLUDE_IF
-
-        return !slide.dismissed || slide.undismissable;
-      })
+      .filter((slide) => !slide.dismissed || slide.undismissable)
       .sort((a, b) => {
-        ///: BEGIN:ONLY_INCLUDE_IF(solana)
-        // prioritize Solana slide
-        if (a.id === SOLANA_SLIDE.id) {
-          return -1;
-        }
-        if (b.id === SOLANA_SLIDE.id) {
-          return 1;
-        }
-        ///: END:ONLY_INCLUDE_IF
-
         const isSweepstakesActive = getSweepstakesCampaignActive(
           new Date(new Date().toISOString()),
         );
@@ -150,20 +114,10 @@ export const Carousel = React.forwardRef(
           event: MetaMetricsEventName.BannerNavigated,
           category: MetaMetricsEventCategory.Banner,
           properties: {
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             from_banner: previousSlide.id,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             to_banner: nextSlide.id,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             from_banner_title: previousSlide.title,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             to_banner_title: nextSlide.title,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             navigation_method:
               Math.abs(selectedIndex - index) === 1 ? 'swipe' : 'dot',
           },
@@ -195,8 +149,8 @@ export const Carousel = React.forwardRef(
                 className="mm-carousel-slide"
                 textAlign={TextAlign.Left}
                 alignItems={AlignItems.center}
+                borderColor={BorderColor.borderMuted}
                 paddingLeft={0}
-                borderRadius={BorderRadius.XL}
                 paddingRight={0}
                 style={{
                   height: BANNER_STYLES.HEIGHT,
@@ -266,13 +220,13 @@ export const Carousel = React.forwardRef(
               titleProps={{
                 variant: TextVariant.bodySmMedium,
                 fontWeight: FontWeight.Medium,
-                marginLeft: 1,
+                marginLeft: 2,
               }}
+              borderColor={BorderColor.borderMuted}
               descriptionProps={{
                 variant: TextVariant.bodyXs,
                 fontWeight: FontWeight.Normal,
-                color: TextColor.textAlternative,
-                marginLeft: 1,
+                marginLeft: 2,
               }}
               onClose={
                 Boolean(handleClose) && !slide.undismissable
@@ -292,7 +246,6 @@ export const Carousel = React.forwardRef(
               padding={0}
               paddingLeft={3}
               paddingRight={3}
-              borderRadius={BorderRadius.XL}
             />
           ))}
         </ResponsiveCarousel>

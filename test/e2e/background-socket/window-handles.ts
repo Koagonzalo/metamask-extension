@@ -1,7 +1,8 @@
 import log from 'loglevel';
-import { ThenableWebDriver } from 'selenium-webdriver';
+import type { ThenableWebDriver } from 'selenium-webdriver';
+
 import { getServerMochaToBackground } from './server-mocha-to-background';
-import { Handle, WindowProperties } from './types';
+import type { Handle, WindowProperties } from './types';
 
 /**
  * Keeps a list of window handles and their properties (title, url).
@@ -35,7 +36,7 @@ export class WindowHandles {
     // Remove any annotatedHandles that are no longer present
     for (let i = 0; i < this.annotatedHandles.length; i++) {
       const handleId = this.annotatedHandles[i].id;
-      if (this.rawHandles.indexOf(handleId) === -1) {
+      if (!this.rawHandles.includes(handleId)) {
         log.debug('Removing handle:', this.annotatedHandles[i]);
         this.annotatedHandles.splice(i, 1);
         i -= 1;

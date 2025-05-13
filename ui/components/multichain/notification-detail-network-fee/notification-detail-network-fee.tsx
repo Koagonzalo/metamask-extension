@@ -1,29 +1,14 @@
+import type { NotificationServicesController } from '@metamask/notification-services-controller';
 import React, { useContext, useState, useEffect } from 'react';
 import type { FC } from 'react';
-import type { NotificationServicesController } from '@metamask/notification-services-controller';
 
-import { useI18nContext } from '../../../hooks/useI18nContext';
-import { MetaMetricsContext } from '../../../contexts/metametrics';
-import {
-  getNetworkFees,
-  getNetworkDetailsByChainId,
-} from '../../../helpers/utils/notification.util';
-import { decimalToHex } from '../../../../shared/modules/conversion.utils';
-import { CHAIN_IDS } from '../../../../shared/constants/network';
 import {
   MetaMetricsEventCategory,
   MetaMetricsEventName,
 } from '../../../../shared/constants/metametrics';
-
-import { NotificationDetail } from '../notification-detail';
-import {
-  AvatarIcon,
-  Box,
-  Icon,
-  IconName,
-  IconSize,
-  Text,
-} from '../../component-library';
+import type { CHAIN_IDS } from '../../../../shared/constants/network';
+import { decimalToHex } from '../../../../shared/modules/conversion.utils';
+import { MetaMetricsContext } from '../../../contexts/metametrics';
 import {
   AlignItems,
   BackgroundColor,
@@ -36,7 +21,21 @@ import {
   IconColor,
   FlexDirection,
 } from '../../../helpers/constants/design-system';
+import {
+  getNetworkFees,
+  getNetworkDetailsByChainId,
+} from '../../../helpers/utils/notification.util';
+import { useI18nContext } from '../../../hooks/useI18nContext';
+import {
+  AvatarIcon,
+  Box,
+  Icon,
+  IconName,
+  IconSize,
+  Text,
+} from '../../component-library';
 import Preloader from '../../ui/icon/preloader/preloader-icon.component';
+import { NotificationDetail } from '../notification-detail';
 
 type OnChainRawNotificationsWithNetworkFields =
   NotificationServicesController.Types.OnChainRawNotificationsWithNetworkFields;
@@ -133,17 +132,9 @@ export const NotificationDetailNetworkFee: FC<
         category: MetaMetricsEventCategory.NotificationInteraction,
         event: MetaMetricsEventName.NotificationDetailClicked,
         properties: {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           notification_id: notification.id,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           notification_type: notification.type,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           chain_id: notification.chain_id,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           clicked_item: 'fee_details',
         },
       });
@@ -258,32 +249,22 @@ export const NotificationDetailNetworkFee: FC<
         >
           <FeeDetail
             label={t('notificationDetailGasLimit')}
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
             value={networkFees?.gasLimitUnits.toString() || ''}
           />
           <FeeDetail
             label={t('notificationDetailGasUsed')}
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
             value={networkFees?.gasUsedUnits.toString() || ''}
           />
           <FeeDetail
             label={t('notificationDetailBaseFee')}
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
             value={networkFees?.baseFee || ''}
           />
           <FeeDetail
             label={t('notificationDetailPriorityFee')}
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
             value={networkFees?.priorityFee || ''}
           />
           <FeeDetail
             label={t('notificationDetailMaxFee')}
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
             value={networkFees?.maxFeePerGas || ''}
           />
         </Box>

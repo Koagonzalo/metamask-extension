@@ -1,10 +1,27 @@
 /**
  * @jest-environment node
  */
-import { cloneDeep } from 'lodash';
-import nock from 'nock';
-import { obj as createThroughStream } from 'through2';
-import { wordlist as englishWordlist } from '@metamask/scure-bip39/dist/wordlists/english';
+import {
+  RatesController,
+  TokenListController,
+} from '@metamask/assets-controllers';
+import { Messenger } from '@metamask/base-controller';
+import { LedgerKeyring } from '@metamask/eth-ledger-bridge-keyring';
+import {
+  Caip25CaveatType,
+  Caip25EndowmentPermissionName,
+} from '@metamask/chain-agnostic-permission';
+import { TrezorKeyring } from '@metamask/eth-trezor-keyring';
+import {
+  BtcAccountType,
+  BtcMethod,
+  EthAccountType,
+  SolScope,
+} from '@metamask/keyring-api';
+import { KeyringInternalSnapClient } from '@metamask/keyring-internal-snap-client';
+import { LoggingController, LogType } from '@metamask/logging-controller';
+import ObjectMultiplex from '@metamask/object-multiplex';
+import { PermissionDoesNotExistError } from '@metamask/permission-controller';
 import {
   ListNames,
   METAMASK_STALELIST_URL,
@@ -13,55 +30,39 @@ import {
   METAMASK_STALELIST_FILE,
   METAMASK_HOTLIST_DIFF_FILE,
 } from '@metamask/phishing-controller';
-import {
-  BtcAccountType,
-  BtcMethod,
-  EthAccountType,
-  SolScope,
-} from '@metamask/keyring-api';
-import { Messenger } from '@metamask/base-controller';
-import { LoggingController, LogType } from '@metamask/logging-controller';
+import { wordlist as englishWordlist } from '@metamask/scure-bip39/dist/wordlists/english';
 import {
   CHAIN_IDS,
   TransactionController,
 } from '@metamask/transaction-controller';
-import {
-  RatesController,
-  TokenListController,
-} from '@metamask/assets-controllers';
-import ObjectMultiplex from '@metamask/object-multiplex';
-import { TrezorKeyring } from '@metamask/eth-trezor-keyring';
-import { LedgerKeyring } from '@metamask/eth-ledger-bridge-keyring';
-import {
-  Caip25CaveatType,
-  Caip25EndowmentPermissionName,
-} from '@metamask/chain-agnostic-permission';
-import { PermissionDoesNotExistError } from '@metamask/permission-controller';
-import { KeyringInternalSnapClient } from '@metamask/keyring-internal-snap-client';
-import { createTestProviderTools } from '../../test/stub/provider';
+import { cloneDeep } from 'lodash';
+import nock from 'nock';
+import { obj as createThroughStream } from 'through2';
+
+import { ENVIRONMENT } from '../../development/build/constants';
+import { ETH_EOA_METHODS } from '../../shared/constants/eth-methods';
 import {
   HardwareDeviceNames,
   HardwareKeyringType,
 } from '../../shared/constants/hardware-wallets';
 import { KeyringType } from '../../shared/constants/keyring';
 import { LOG_EVENT } from '../../shared/constants/logs';
-import mockEncryptor from '../../test/lib/mock-encryptor';
-import * as tokenUtils from '../../shared/lib/token-util';
-import { flushPromises } from '../../test/lib/timer-helpers';
-import { ETH_EOA_METHODS } from '../../shared/constants/eth-methods';
-import { createMockInternalAccount } from '../../test/jest/mocks';
-import { mockNetworkState } from '../../test/stub/networks';
-import { ENVIRONMENT } from '../../development/build/constants';
-import { SECOND } from '../../shared/constants/time';
 import {
   CaveatTypes,
   EndowmentTypes,
   RestrictedEthMethods,
 } from '../../shared/constants/permissions';
-import { deferredPromise } from './lib/util';
+import { SECOND } from '../../shared/constants/time';
+import * as tokenUtils from '../../shared/lib/token-util';
+import { createMockInternalAccount } from '../../test/jest/mocks';
+import mockEncryptor from '../../test/lib/mock-encryptor';
+import { flushPromises } from '../../test/lib/timer-helpers';
+import { mockNetworkState } from '../../test/stub/networks';
+import { createTestProviderTools } from '../../test/stub/provider';
 import { METAMASK_COOKIE_HANDLER } from './constants/stream';
-import MetaMaskController from './metamask-controller';
 import { PermissionNames } from './controllers/permissions';
+import { deferredPromise } from './lib/util';
+import MetaMaskController from './metamask-controller';
 
 const { Ganache } = require('../../test/e2e/seeder/ganache');
 
@@ -3275,8 +3276,8 @@ describe('MetaMaskController', () => {
         };
         const { provider } = createTestProviderTools({
           scaffold: providerResultStub,
-          networkId: '0x1',
-          chainId: '0x1',
+          networkId: '5',
+          chainId: '5',
         });
 
         const tokenData = {
@@ -3284,15 +3285,12 @@ describe('MetaMaskController', () => {
           symbol: 'DAI',
         };
 
-        await metamaskController.tokensController.addTokens(
-          [
-            {
-              address: '0x6b175474e89094c44da98b954eedeac495271d0f',
-              ...tokenData,
-            },
-          ],
-          'networkConfigurationId1',
-        );
+        await metamaskController.tokensController.addTokens([
+          {
+            address: '0x6b175474e89094c44da98b954eedeac495271d0f',
+            ...tokenData,
+          },
+        ]);
 
         metamaskController.provider = provider;
         const tokenDetails =
@@ -4094,38 +4092,6 @@ describe('MetaMaskController', () => {
         });
       });
       ///: END:ONLY_INCLUDE_IF
-    });
-
-    describe('NetworkController state', () => {
-      it('fixes selectedNetworkClientId from network controller state if it is invalid', () => {
-        metamaskController = new MetaMaskController({
-          showUserConfirmation: noop,
-          encryptor: mockEncryptor,
-          initState: {
-            ...cloneDeep(firstTimeState),
-            NetworkController: {
-              ...cloneDeep(firstTimeState.NetworkController),
-              selectedNetworkClientId: 'invalid-client-id',
-            },
-          },
-          initLangCode: 'en_US',
-          platform: {
-            showTransactionNotification: () => undefined,
-            getVersion: () => 'foo',
-          },
-          browser: browserPolyfillMock,
-          infuraProjectId: 'foo',
-          isFirstMetaMaskControllerSetup: true,
-        });
-
-        expect(
-          metamaskController.networkController.state.selectedNetworkClientId,
-        ).toBe(
-          metamaskController.networkController.state
-            .networkConfigurationsByChainId[CHAIN_IDS.MAINNET].rpcEndpoints[0]
-            .networkClientId,
-        );
-      });
     });
   });
 

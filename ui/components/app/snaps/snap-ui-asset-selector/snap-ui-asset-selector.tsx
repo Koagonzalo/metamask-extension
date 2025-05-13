@@ -1,7 +1,6 @@
-import React, { FunctionComponent } from 'react';
-import { CaipAccountId, CaipChainId } from '@metamask/utils';
-
-import { SnapUISelector } from '../snap-ui-selector';
+import type { CaipAccountId, CaipChainId } from '@metamask/utils';
+import type { FunctionComponent } from 'react';
+import React from 'react';
 
 import {
   Display,
@@ -13,6 +12,7 @@ import {
   BackgroundColor,
   BlockSize,
 } from '../../../../helpers/constants/design-system';
+import { useI18nContext } from '../../../../hooks/useI18nContext';
 import {
   Box,
   Text,
@@ -21,9 +21,9 @@ import {
   AvatarNetwork,
   AvatarNetworkSize,
 } from '../../../component-library';
-
-import { useI18nContext } from '../../../../hooks/useI18nContext';
-import { SnapUIAsset, useSnapAssetSelectorData } from './useSnapAssetDisplay';
+import { SnapUISelector } from '../snap-ui-selector';
+import type { SnapUIAsset } from './useSnapAssetDisplay';
+import { useSnapAssetSelectorData } from './useSnapAssetDisplay';
 
 /**
  * An option for the SnapUIAssetSelector.
@@ -48,7 +48,6 @@ const SnapUIAssetSelectorOption: FunctionComponent<SnapUIAsset> = ({
   networkIcon,
 }) => (
   <Box
-    className="snap-ui-renderer__asset-selector-option"
     display={Display.Flex}
     alignItems={AlignItems.center}
     width={BlockSize.Full}
@@ -146,8 +145,6 @@ export const SnapUIAssetSelector: FunctionComponent<
       title={t('snapUIAssetSelectorTitle')}
       options={options}
       optionComponents={optionComponents}
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       disabled={disabled || assets.length === 0}
       {...props}
     />

@@ -1,18 +1,17 @@
-import React from 'react';
 import classnames from 'classnames';
+import React from 'react';
 
-import { ButtonBase, ButtonBaseProps } from '../button-base';
 import { Color } from '../../../helpers/constants/design-system';
-import { PolymorphicRef } from '../box';
-import type { ButtonSecondaryProps } from './button-secondary.types';
-import {
-  ButtonSecondarySize,
+import type { PolymorphicRef } from '../box';
+import type { ButtonBaseProps } from '../button-base';
+import { ButtonBase } from '../button-base';
+import type {
+  ButtonSecondaryProps,
   ButtonSecondaryComponent,
 } from './button-secondary.types';
+import { ButtonSecondarySize } from './button-secondary.types';
 
 export const ButtonSecondary: ButtonSecondaryComponent = React.forwardRef(
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   <C extends React.ElementType = 'button' | 'a'>(
     {
       className = '',

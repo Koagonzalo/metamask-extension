@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+
 import {
-  AvatarTokenSize,
-  IconName,
-  AvatarToken,
-  Text,
-  Box,
-  ButtonBase,
-  AvatarNetworkSize,
-  BadgeWrapper,
-  AvatarNetwork,
-} from '../../../component-library';
+  GOERLI_DISPLAY_NAME,
+  SEPOLIA_DISPLAY_NAME,
+} from '../../../../../shared/constants/network';
+import { AssetType } from '../../../../../shared/constants/transaction';
 import {
   AlignItems,
   BackgroundColor,
@@ -22,35 +17,41 @@ import {
   TextColor,
   TextVariant,
 } from '../../../../helpers/constants/design-system';
-import { AssetType } from '../../../../../shared/constants/transaction';
-import { AssetPickerModal } from '../asset-picker-modal/asset-picker-modal';
-import Tooltip from '../../../ui/tooltip';
-import { LARGE_SYMBOL_LENGTH } from '../constants';
-///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
+import { getNftImage } from '../../../../helpers/utils/nfts';
 import { useI18nContext } from '../../../../hooks/useI18nContext';
-///: END:ONLY_INCLUDE_IF
-import { ellipsify } from '../../../../pages/confirmations/send/send.utils';
-import {
-  AssetWithDisplayData,
-  ERC20Asset,
-  NativeAsset,
-  NFT,
-} from '../asset-picker-modal/types';
-import { TabName } from '../asset-picker-modal/asset-picker-modal-tabs';
-import { AssetPickerModalNetwork } from '../asset-picker-modal/asset-picker-modal-network';
-import {
-  GOERLI_DISPLAY_NAME,
-  SEPOLIA_DISPLAY_NAME,
-} from '../../../../../shared/constants/network';
 import { useMultichainBalances } from '../../../../hooks/useMultichainBalances';
+import { useMultichainSelector } from '../../../../hooks/useMultichainSelector';
+import { ellipsify } from '../../../../pages/confirmations/send/send.utils';
 import {
   getMultichainCurrentChainId,
   getMultichainCurrentNetwork,
   getImageForChainId,
   getMultichainNetworkConfigurationsByChainId,
 } from '../../../../selectors/multichain';
-import { useMultichainSelector } from '../../../../hooks/useMultichainSelector';
-import { getNftImage } from '../../../../helpers/utils/nfts';
+import {
+  AvatarTokenSize,
+  IconName,
+  AvatarToken,
+  Text,
+  Box,
+  ButtonBase,
+  AvatarNetworkSize,
+  BadgeWrapper,
+  AvatarNetwork,
+} from '../../../component-library';
+import Tooltip from '../../../ui/tooltip';
+import { AssetPickerModal } from '../asset-picker-modal/asset-picker-modal';
+import { TabName } from '../asset-picker-modal/asset-picker-modal-tabs';
+import type {
+  AssetWithDisplayData,
+  ERC20Asset,
+  NativeAsset,
+  NFT,
+} from '../asset-picker-modal/types';
+import { LARGE_SYMBOL_LENGTH } from '../constants';
+///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
+///: END:ONLY_INCLUDE_IF
+import { AssetPickerModalNetwork } from '../asset-picker-modal/asset-picker-modal-network';
 
 const ELLIPSIFY_LENGTH = 13; // 6 (start) + 4 (end) + 3 (...)
 
@@ -95,8 +96,6 @@ export type AssetPickerProps = {
 >;
 
 // A component that lets the user pick from a list of assets.
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export function AssetPicker({
   children,
   header,
@@ -135,8 +134,7 @@ export function AssetPicker({
   const currentChainId = useMultichainSelector(getMultichainCurrentChainId);
   const allNetworks = useSelector(getMultichainNetworkConfigurationsByChainId);
   // These 2 have similar data but different types
-  const currentNetworkConfiguration =
-    allNetworks[currentChainId as keyof typeof allNetworks];
+  const currentNetworkConfiguration = allNetworks[currentChainId];
   const currentNetworkProviderConfig = useMultichainSelector(
     getMultichainCurrentNetwork,
   );
@@ -229,7 +227,7 @@ export function AssetPicker({
           // If isMultiselectEnabled=true, update the network when a token is selected
           if (isMultiselectEnabled && networkProps?.onNetworkChange) {
             const networkFromToken = token.chainId
-              ? allNetworks[token.chainId as keyof typeof allNetworks]
+              ? allNetworks[token.chainId]
               : undefined;
             if (networkFromToken) {
               networkProps.onNetworkChange(networkFromToken);
@@ -260,8 +258,6 @@ export function AssetPicker({
       />
 
       {/** If a child prop is passed in, use it as the trigger button instead of the default */}
-      {/* TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880 */}
-      {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
       {children?.(handleButtonClick, networkImageSrc) || (
         <ButtonBase
           data-testid="asset-picker-button"
@@ -292,7 +288,6 @@ export function AssetPicker({
                     size={AvatarNetworkSize.Xs}
                     name={selectedNetwork?.name ?? ''}
                     src={networkImageSrc}
-                    borderWidth={2}
                     backgroundColor={
                       Object.entries({
                         [GOERLI_DISPLAY_NAME]: BackgroundColor.goerli,

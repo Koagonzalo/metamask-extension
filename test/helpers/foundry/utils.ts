@@ -1,11 +1,11 @@
 import { execFileSync, execSync } from 'node:child_process';
 import { arch } from 'node:os';
+
+import type { Binary, Platform } from './types';
 import {
   type Checksums,
   type PlatformArchChecksums,
   Architecture,
-  Binary,
-  Platform,
 } from './types';
 
 /**
@@ -107,12 +107,12 @@ export function transformChecksums(
   const key = `${targetPlatform}-${targetArch}` as const;
   return {
     algorithm: checksums.algorithm,
-    binaries: Object.entries(checksums.binaries).reduce(
+    binaries: Object.entries(checksums.binaries).reduce<Record<Binary, string>>(
       (acc, [name, record]) => {
         acc[name as Binary] = record[key];
         return acc;
       },
-      {} as Record<Binary, string>,
+      {},
     ),
   };
 }

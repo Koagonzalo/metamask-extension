@@ -1,6 +1,7 @@
 import log from 'loglevel';
+
 import { isManifestV3 } from '../../../shared/modules/mv3.utils';
-import { MessageType, WindowProperties } from './types';
+import type { MessageType, WindowProperties } from './types';
 
 /**
  * This singleton class runs on the Extension background script (service worker in MV3).
@@ -9,7 +10,7 @@ import { MessageType, WindowProperties } from './types';
  * We had hoped it would be able to call chrome.tabs.highlight(), but Selenium doesn't see the tab change.
  */
 class SocketBackgroundToMocha {
-  private client: WebSocket;
+  private readonly client: WebSocket;
 
   constructor() {
     this.client = new WebSocket('ws://localhost:8111');

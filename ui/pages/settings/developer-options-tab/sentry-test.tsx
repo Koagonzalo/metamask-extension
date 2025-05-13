@@ -1,5 +1,9 @@
-import React, { useState, useCallback, ReactElement } from 'react';
+import type { ReactElement } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
+import { trace, TraceName } from '../../../../shared/lib/trace';
+import { FALLBACK_LOCALE, fetchLocale } from '../../../../shared/modules/i18n';
 import {
   Box,
   Button,
@@ -9,6 +13,8 @@ import {
   IconSize,
   Text,
 } from '../../../components/component-library';
+import { ButtonSize } from '../../../components/component-library/button/button.types';
+import { getCurrentLocale } from '../../../ducks/locale/locale';
 import {
   AlignItems,
   Display,
@@ -16,17 +22,12 @@ import {
   IconColor,
   JustifyContent,
 } from '../../../helpers/constants/design-system';
-import { trace, TraceName } from '../../../../shared/lib/trace';
-import { ButtonSize } from '../../../components/component-library/button/button.types';
-
 import {
   forceUpdateMetamaskState,
   setCurrentLocale,
 } from '../../../store/actions';
-import { FALLBACK_LOCALE, fetchLocale } from '../../../../shared/modules/i18n';
-import { getCurrentLocale } from '../../../ducks/locale/locale';
 
-function sleep(ms: number) {
+async function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
@@ -111,7 +112,7 @@ function GenerateTrace() {
             tags: { 'test.tag.boolean': true },
             parentContext: context,
           },
-          () => sleep(1000),
+          async () => sleep(1000),
         );
 
         await trace(
@@ -121,7 +122,7 @@ function GenerateTrace() {
             tags: { 'test.tag.string': 'test' },
             parentContext: context,
           },
-          () => sleep(500),
+          async () => sleep(500),
         );
       },
     );

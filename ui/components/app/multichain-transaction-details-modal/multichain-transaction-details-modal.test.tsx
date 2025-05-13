@@ -1,29 +1,27 @@
-import React from 'react';
-import { CaipChainId } from '@metamask/utils';
-import {
-  CaipAssetType,
-  Transaction,
-  TransactionStatus,
-} from '@metamask/keyring-api';
+import type { CaipAssetType, Transaction } from '@metamask/keyring-api';
+import { TransactionStatus } from '@metamask/keyring-api';
+import type { CaipChainId } from '@metamask/utils';
 import { screen, fireEvent } from '@testing-library/react';
-import { useI18nContext } from '../../../hooks/useI18nContext';
-import { renderWithProvider } from '../../../../test/lib/render-helpers';
-import { MOCK_ACCOUNT_SOLANA_MAINNET } from '../../../../test/data/mock-accounts';
-import { MetaMetricsContext } from '../../../contexts/metametrics';
+import React from 'react';
+
+import type { MultichainProviderConfig } from '../../../../shared/constants/multichain/networks';
 import {
   MULTICHAIN_PROVIDER_CONFIGS,
   MultichainNetworks,
-  MultichainProviderConfig,
   SOLANA_BLOCK_EXPLORER_URL,
 } from '../../../../shared/constants/multichain/networks';
+import { MOCK_ACCOUNT_SOLANA_MAINNET } from '../../../../test/data/mock-accounts';
 import mockState from '../../../../test/data/mock-state.json';
+import { renderWithProvider } from '../../../../test/lib/render-helpers';
+import { MetaMetricsContext } from '../../../contexts/metametrics';
+import { useI18nContext } from '../../../hooks/useI18nContext';
 import configureStore from '../../../store/store';
-import { MultichainTransactionDetailsModal } from './multichain-transaction-details-modal';
 import {
   getAddressUrl,
   getTransactionUrl,
   shortenTransactionId,
 } from './helpers';
+import { MultichainTransactionDetailsModal } from './multichain-transaction-details-modal';
 
 jest.mock('../../../hooks/useI18nContext', () => ({
   useI18nContext: jest.fn(),
@@ -187,8 +185,6 @@ describe('MultichainTransactionDetailsModal', () => {
     renderComponent();
 
     const feeElement =
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       screen.queryByTestId('transaction-network-fee') ||
       screen.queryByTestId('transaction-base-fee');
 
@@ -212,7 +208,6 @@ describe('MultichainTransactionDetailsModal', () => {
     expect(mockTrackEvent).toHaveBeenCalled();
   });
 
-  // @ts-expect-error This is missing from the Mocha type definitions
   it.each([
     [TransactionStatus.Confirmed, 'Confirmed'],
     [TransactionStatus.Unconfirmed, 'Pending'],
@@ -327,16 +322,12 @@ describe('MultichainTransactionDetailsModal', () => {
 
     const addressStart = userAddress.substring(0, 6);
     const addressElements = screen.getAllByText((_content, element) => {
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       return element?.textContent?.includes(addressStart) || false;
     });
 
     expect(addressElements.length).toBeGreaterThan(0);
 
     const feeElement =
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       screen.queryByTestId('transaction-network-fee') ||
       screen.queryByTestId('transaction-base-fee');
 

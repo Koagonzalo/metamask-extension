@@ -1,11 +1,10 @@
 import React from 'react';
+
 import mockState from '../../../../test/data/mock-state.json';
-import configureStore from '../../../store/store';
 import { renderWithProvider } from '../../../../test/jest/rendering';
-import {
-  AccountOverviewUnknown,
-  AccountOverviewUnknownProps,
-} from './account-overview-unknown';
+import configureStore from '../../../store/store';
+import type { AccountOverviewUnknownProps } from './account-overview-unknown';
+import { AccountOverviewUnknown } from './account-overview-unknown';
 
 const render = (props: AccountOverviewUnknownProps) => {
   const store = configureStore({
@@ -29,6 +28,5 @@ describe('AccountOverviewUnknown', () => {
     ).not.toBeInTheDocument();
     expect(queryByTestId('account-overview__nfts-tab')).not.toBeInTheDocument();
     expect(queryByTestId('account-overview__activity-tab')).toBeInTheDocument();
-    expect(queryByTestId('account-overview__defi-tab')).not.toBeInTheDocument();
   });
 });

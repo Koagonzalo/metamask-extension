@@ -1,13 +1,13 @@
-import { Driver } from '../../../../webdriver/driver';
-import { RawLocator } from '../../../common';
+import type { Driver } from '../../../../webdriver/driver';
+import type { RawLocator } from '../../../common';
 import Confirmation from './confirmation';
 
 class AccountDetailsModal extends Confirmation {
-  private accountBalanceInfo: RawLocator;
+  private readonly accountBalanceInfo: RawLocator;
 
-  private addressCopyButton: RawLocator;
+  private readonly addressCopyButton: RawLocator;
 
-  private accountDetailsModalCloseButton: RawLocator;
+  private readonly accountDetailsModalCloseButton: RawLocator;
 
   constructor(driver: Driver) {
     super(driver);

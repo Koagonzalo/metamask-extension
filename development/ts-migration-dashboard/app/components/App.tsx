@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { readPartitionsFile } from '../../common/partitions-file';
+
 import type { ModulePartitionChild } from '../../common/build-module-partitions';
+import { readPartitionsFile } from '../../common/partitions-file';
 import Box from './Box';
 import Connections from './Connections';
 import type { BoxRect, BoxModel } from './types';
@@ -30,8 +31,6 @@ const overallTotal = {
   numModules: allModules.length,
 };
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export default function App() {
   const [boxRectsByModuleId, setBoxRectsById] = useState<Record<
     string,

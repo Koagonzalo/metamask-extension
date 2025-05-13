@@ -1,13 +1,11 @@
-import {
-  DecodingData,
-  DecodingDataChangeType,
-} from '@metamask/signature-controller';
+import type { DecodingData } from '@metamask/signature-controller';
+import { DecodingDataChangeType } from '@metamask/signature-controller';
 
 import { getMockTypedSignConfirmStateForRequest } from '../../../../test/data/confirmations/helper';
-import { renderHookWithConfirmContextProvider } from '../../../../test/lib/confirmations/render-helpers';
 import { permitSignatureMsg } from '../../../../test/data/confirmations/typed_sign';
-import * as SignatureEventFragment from './useSignatureEventFragment';
+import { renderHookWithConfirmContextProvider } from '../../../../test/lib/confirmations/render-helpers';
 import { useDecodedSignatureMetrics } from './useDecodedSignatureMetrics';
+import * as SignatureEventFragment from './useSignatureEventFragment';
 
 const decodingData: DecodingData = {
   stateChanges: [
@@ -76,8 +74,6 @@ describe('useDecodedSignatureMetrics', () => {
     expect(mockUpdateSignatureEventFragment).toHaveBeenCalledTimes(1);
     expect(mockUpdateSignatureEventFragment).toHaveBeenLastCalledWith({
       properties: {
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         decoding_response: 'decoding_in_progress',
       },
     });
@@ -104,17 +100,9 @@ describe('useDecodedSignatureMetrics', () => {
     expect(mockUpdateSignatureEventFragment).toHaveBeenCalledTimes(1);
     expect(mockUpdateSignatureEventFragment).toHaveBeenLastCalledWith({
       properties: {
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         decoding_change_types: [],
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         decoding_response: 'NO_CHANGE',
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         decoding_description: null,
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         decoding_latency: 0,
       },
     });
@@ -142,17 +130,9 @@ describe('useDecodedSignatureMetrics', () => {
     expect(mockUpdateSignatureEventFragment).toHaveBeenCalledTimes(1);
     expect(mockUpdateSignatureEventFragment).toHaveBeenLastCalledWith({
       properties: {
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         decoding_change_types: ['APPROVE'],
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         decoding_response: 'CHANGE',
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         decoding_description: null,
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         decoding_latency: 0,
       },
     });
@@ -186,17 +166,9 @@ describe('useDecodedSignatureMetrics', () => {
     expect(mockUpdateSignatureEventFragment).toHaveBeenCalledTimes(1);
     expect(mockUpdateSignatureEventFragment).toHaveBeenLastCalledWith({
       properties: {
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         decoding_change_types: [],
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         decoding_response: 'SOME_ERROR',
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         decoding_description: 'some message',
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         decoding_latency: 0,
       },
     });

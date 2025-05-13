@@ -1,3 +1,6 @@
+import { getTokenTrackerLink } from '@metamask/etherscan-link/dist/token-tracker-link';
+import { CHAIN_IDS } from '@metamask/transaction-controller';
+import PropTypes from 'prop-types';
 import React, {
   useCallback,
   useContext,
@@ -7,62 +10,6 @@ import React, {
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { getTokenTrackerLink } from '@metamask/etherscan-link/dist/token-tracker-link';
-import { CHAIN_IDS } from '@metamask/transaction-controller';
-import { Tab, Tabs } from '../../ui/tabs';
-import { useI18nContext } from '../../../hooks/useI18nContext';
-import {
-  getCurrentChainId,
-  getIsAllNetworksFilterEnabled,
-  getNetworkConfigurationsByChainId,
-} from '../../../../shared/modules/selectors/networks';
-import {
-  getInternalAccounts,
-  getIsDynamicTokenListAvailable,
-  getIsTokenDetectionInactiveOnMainnet,
-  getIsTokenDetectionSupported,
-  getIstokenDetectionInactiveOnNonMainnetSupportedNetwork,
-  getSelectedInternalAccount,
-  getTokenDetectionSupportNetworkByChainId,
-  getCurrentNetwork,
-  getTestNetworkBackgroundColor,
-  getTokenExchangeRates,
-  getPendingTokens,
-  selectERC20TokensByChain,
-  getTokenNetworkFilter,
-  getAllTokens,
-} from '../../../selectors';
-import {
-  addImportedTokens,
-  clearPendingTokens,
-  setPendingTokens,
-  showImportNftsModal,
-  setNewTokensImported,
-  setNewTokensImportedError,
-  hideImportTokensModal,
-  setConfirmationExchangeRates,
-  getTokenStandardAndDetailsByChain,
-} from '../../../store/actions';
-import {
-  BannerAlert,
-  Box,
-  ButtonLink,
-  ButtonPrimary,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  Text,
-  ButtonSecondary,
-  IconName,
-  ModalBody,
-  AvatarNetworkSize,
-  AvatarNetwork,
-} from '../../component-library';
-import { FormTextField } from '../../component-library/form-text-field/deprecated';
-import TokenSearch from '../../app/import-token/token-search';
-import TokenList from '../../app/import-token/token-list';
 
 import {
   AlignItems,
@@ -76,12 +23,10 @@ import {
   TextColor,
   TextVariant,
 } from '../../../helpers/constants/design-system';
-
 import {
   SECURITY_ROUTE,
   DEFAULT_ROUTE,
 } from '../../../helpers/constants/routes';
-import ZENDESK_URLS from '../../../helpers/constants/zendesk-url';
 import {
   isValidHexAddress,
   toChecksumHexAddress,
@@ -109,11 +54,63 @@ import {
 } from '../../../../shared/constants/metametrics';
 import { NetworkFilterImportToken } from '../../app/import-token/network-filter-import-token';
 import { FEATURED_NETWORK_CHAIN_IDS } from '../../../../shared/constants/network';
-import { NetworkSelectorCustomImport } from '../../app/import-token/network-selector-custom-import';
+import {
+  getCurrentChainId,
+  getIsAllNetworksFilterEnabled,
+  getNetworkConfigurationsByChainId,
+} from '../../../../shared/modules/selectors/networks';
+import ZENDESK_URLS from '../../../helpers/constants/zendesk-url';
+import { useI18nContext } from '../../../hooks/useI18nContext';
+import {
+  getInternalAccounts,
+  getIsDynamicTokenListAvailable,
+  getIsTokenDetectionInactiveOnMainnet,
+  getIsTokenDetectionSupported,
+  getIstokenDetectionInactiveOnNonMainnetSupportedNetwork,
+  getSelectedInternalAccount,
+  getTokenDetectionSupportNetworkByChainId,
+  getCurrentNetwork,
+  getTestNetworkBackgroundColor,
+  getTokenExchangeRates,
+  getPendingTokens,
+  selectERC20TokensByChain,
+  getTokenNetworkFilter,
+} from '../../../selectors';
 import { getImageForChainId } from '../../../selectors/multichain';
-import { NetworkListItem } from '../network-list-item';
+import {
+  addImportedTokens,
+  clearPendingTokens,
+  setPendingTokens,
+  showImportNftsModal,
+  setNewTokensImported,
+  setNewTokensImportedError,
+  hideImportTokensModal,
+  setConfirmationExchangeRates,
+  getTokenStandardAndDetailsByChain,
+} from '../../../store/actions';
+import { NetworkSelectorCustomImport } from '../../app/import-token/network-selector-custom-import';
+import TokenList from '../../app/import-token/token-list';
 import TokenListPlaceholder from '../../app/import-token/token-list/token-list-placeholder';
-import { endTrace, trace, TraceName } from '../../../../shared/lib/trace';
+import TokenSearch from '../../app/import-token/token-search';
+import {
+  BannerAlert,
+  Box,
+  ButtonLink,
+  ButtonPrimary,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+  ButtonSecondary,
+  IconName,
+  ModalBody,
+  AvatarNetworkSize,
+  AvatarNetwork,
+} from '../../component-library';
+import { FormTextField } from '../../component-library/form-text-field/deprecated';
+import { Tab, Tabs } from '../../ui/tabs';
+import { NetworkListItem } from '../network-list-item';
 import { ImportTokensModalConfirm } from './import-tokens-modal-confirm';
 
 const ACTION_MODES = {
@@ -184,9 +181,7 @@ export const ImportTokensModal = ({ onClose }) => {
   );
   const selectedAccount = useSelector(getSelectedInternalAccount);
   const accounts = useSelector(getInternalAccounts);
-  const chainId = useSelector(getCurrentChainId);
-  const allTokens = useSelector(getAllTokens);
-  const tokens = allTokens?.[chainId]?.[selectedAccount.address] || [];
+  const tokens = useSelector((state) => state.metamask.tokens);
   const contractExchangeRates = useSelector(getTokenExchangeRates);
   const networkConfigurations = useSelector(getNetworkConfigurationsByChainId);
   const allOpts = useSelector(getIsAllNetworksFilterEnabled);
@@ -211,6 +206,7 @@ export const ImportTokensModal = ({ onClose }) => {
         ?.defaultBlockExplorerUrlIndex
     ] ?? null;
 
+  const chainId = useSelector(getCurrentChainId);
   const blockExplorerTokenLink = getTokenTrackerLink(
     customAddress,
     selectedNetworkForCustomImport,
@@ -903,7 +899,7 @@ export const ImportTokensModal = ({ onClose }) => {
                         <FormTextField
                           paddingLeft={4}
                           paddingRight={4}
-                          size={Size.LG}
+                          paddingTop={6}
                           label={t('tokenContractAddress')}
                           value={customAddress}
                           onChange={(e) => {
@@ -941,7 +937,6 @@ export const ImportTokensModal = ({ onClose }) => {
                               paddingLeft={4}
                               paddingRight={4}
                               paddingTop={4}
-                              size={Size.LG}
                               label={<>{t('tokenSymbol')}</>}
                               value={customSymbol}
                               onChange={(e) =>
@@ -963,7 +958,6 @@ export const ImportTokensModal = ({ onClose }) => {
                               paddingLeft={4}
                               paddingRight={4}
                               paddingTop={4}
-                              size={Size.LG}
                               label={t('decimal')}
                               type="number"
                               value={customDecimals}
@@ -1016,9 +1010,7 @@ export const ImportTokensModal = ({ onClose }) => {
             <ButtonPrimary
               size={Size.LG}
               onClick={async () => {
-                trace({ name: TraceName.ImportTokens });
                 await handleAddTokens();
-                endTrace({ name: TraceName.ImportTokens });
                 history.push(DEFAULT_ROUTE);
               }}
               block

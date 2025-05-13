@@ -1,13 +1,13 @@
-import { Driver } from '../../webdriver/driver';
-import { withFixtures } from '../../helpers';
 import FixtureBuilder from '../../fixture-builder';
-import AccountListPage from '../../page-objects/pages/account-list-page';
-import HeaderNavbar from '../../page-objects/pages/header-navbar';
-import HomePage from '../../page-objects/pages/home/homepage';
+import { withFixtures } from '../../helpers';
 import {
   loginWithBalanceValidation,
   loginWithoutBalanceValidation,
 } from '../../page-objects/flows/login.flow';
+import AccountListPage from '../../page-objects/pages/account-list-page';
+import HeaderNavbar from '../../page-objects/pages/header-navbar';
+import HomePage from '../../page-objects/pages/home/homepage';
+import type { Driver } from '../../webdriver/driver';
 
 describe('Privacy Mode', function () {
   it('should hide fiat balance and token balance when privacy mode is activated', async function () {

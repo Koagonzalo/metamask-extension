@@ -1,8 +1,8 @@
 import { act } from '@testing-library/react-hooks';
-import * as actions from '../store/actions';
-import mockState from '../../test/data/mock-state.json';
 
+import mockState from '../../test/data/mock-state.json';
 import { renderHookWithProvider } from '../../test/lib/render-helpers';
+import * as actions from '../store/actions';
 import { useIsOriginalTokenSymbol } from './useIsOriginalTokenSymbol';
 
 // Mocking the getTokenSymbol function
@@ -13,14 +13,9 @@ jest.mock('../store/actions', () => ({
 const state = {
   metamask: {
     ...mockState.metamask,
-    tokensChainsCache: {
-      '0x5': {
-        data: {
-          '0x1234': {
-            address: '0x1234',
-            symbol: 'ABCD',
-          },
-        },
+    tokenList: {
+      '0x1234': {
+        symbol: 'ABCD',
       },
     },
   },

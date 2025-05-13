@@ -1,9 +1,8 @@
-import {
-  DeFiPositionsController,
-  DeFiPositionsControllerMessenger,
-} from '@metamask/assets-controllers';
-import { ControllerInitFunction } from '../types';
-import { DeFiPositionsControllerInitMessenger } from '../messengers/defi-positions/defi-positions-controller-messenger';
+import type { DeFiPositionsControllerMessenger } from '@metamask/assets-controllers';
+import { DeFiPositionsController } from '@metamask/assets-controllers';
+
+import type { DeFiPositionsControllerInitMessenger } from '../messengers/defi-positions/defi-positions-controller-messenger';
+import type { ControllerInitFunction } from '../types';
 
 export const DeFiPositionsControllerInit: ControllerInitFunction<
   DeFiPositionsController,

@@ -1,5 +1,5 @@
+import type { Hex } from '@metamask/utils';
 import { useContext, useEffect, useRef } from 'react';
-import { Hex } from '@metamask/utils';
 
 import {
   MetaMetricsEventCategory,
@@ -9,7 +9,8 @@ import {
 } from '../../../../shared/constants/metametrics';
 import { TokenStandard } from '../../../../shared/constants/transaction';
 import { MetaMetricsContext } from '../../../contexts/metametrics';
-import { parseTokenDetailDecimals, TokenDetailsERC20 } from '../utils/token';
+import type { TokenDetailsERC20 } from '../utils/token';
+import { parseTokenDetailDecimals } from '../utils/token';
 
 /**
  * Track event that number of decimals in ERC20 is not obtained
@@ -48,21 +49,11 @@ const useTrackERC20WithoutDecimalInformation = (
         event: MetaMetricsEventName.SimulationIncompleteAssetDisplayed,
         category: MetaMetricsEventCategory.Confirmations,
         properties: {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           token_decimals_available: 'not_available',
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           asset_address: tokenAddress,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           asset_type: TokenStandard.ERC20,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           chain_id: chainId,
           location: metricLocation,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           ui_customizations: [
             MetaMetricsEventUiCustomization.RedesignedConfirmation,
           ],

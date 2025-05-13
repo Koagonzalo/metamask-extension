@@ -1,9 +1,11 @@
-import React, { CSSProperties } from 'react';
-import { Box } from '../../../../component-library';
+import type { CSSProperties } from 'react';
+import React from 'react';
+
 import {
   BackgroundColor,
   BorderRadius,
 } from '../../../../../helpers/constants/design-system';
+import { Box } from '../../../../component-library';
 
 export type ConfirmInfoSectionProps = {
   children: React.ReactNode | string;

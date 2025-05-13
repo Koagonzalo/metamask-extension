@@ -1,11 +1,14 @@
 import ObjectMultiplex from '@metamask/object-multiplex';
-import { Substream } from '@metamask/object-multiplex/dist/Substream';
+import type { Substream } from '@metamask/object-multiplex/dist/Substream';
 import { WindowPostMessageStream } from '@metamask/post-message-stream';
 import PortStream from 'extension-port-stream';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error types/readable-stream.d.ts does not get picked up by ts-node
 import { pipeline, Transform } from 'readable-stream';
 import browser from 'webextension-polyfill';
+
+import { EXTENSION_MESSAGES } from '../../../shared/constants/app';
+import { checkForLastError } from '../../../shared/modules/browser-runtime.utils';
 import {
   CONTENT_SCRIPT,
   LEGACY_CONTENT_SCRIPT,
@@ -19,10 +22,9 @@ import {
   PHISHING_SAFELIST,
   PHISHING_STREAM,
 } from '../constants/stream';
-import { EXTENSION_MESSAGES } from '../../../shared/constants/app';
-import { checkForLastError } from '../../../shared/modules/browser-runtime.utils';
-import { logStreamDisconnectWarning, MessageType } from './stream-utils';
 import { connectPhishingChannelToWarningSystem } from './phishing-stream';
+import type { MessageType } from './stream-utils';
+import { logStreamDisconnectWarning } from './stream-utils';
 
 let legacyExtMux: ObjectMultiplex,
   legacyExtChannel: Substream,
@@ -237,7 +239,7 @@ const destroyLegacyExtensionStreams = () => {
  * @param msg.name - custom property and name to identify the message received
  * @returns
  */
-const onMessageSetUpExtensionStreams = (msg: MessageType) => {
+const onMessageSetUpExtensionStreams = async (msg: MessageType) => {
   if (msg.name === EXTENSION_MESSAGES.READY) {
     if (!extensionStream) {
       setupExtensionStreams();

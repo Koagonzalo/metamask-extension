@@ -1,7 +1,7 @@
 import { platform } from 'node:os';
 import { argv, stdout } from 'node:process';
 import yargs from 'yargs/yargs';
-import { normalizeSystemArchitecture } from './utils';
+
 import {
   type Checksums,
   type ParsedOptions,
@@ -12,6 +12,7 @@ import {
   Binary,
   Platform,
 } from './types';
+import { normalizeSystemArchitecture } from './utils';
 
 function isVersionString(value: string): value is `v${string}` {
   return /^v\d/u.test(value);
@@ -119,7 +120,7 @@ function getOptions(
       coerce: (
         rawVersion: string,
       ): { version: 'nightly' | `v${string}`; tag: string } => {
-        if (/^nightly/u.test(rawVersion)) {
+        if (rawVersion.startsWith('nightly')) {
           return { version: 'nightly', tag: rawVersion };
           // we don't validate the version much, we just trust the user
         } else if (isVersionString(rawVersion)) {
@@ -132,7 +133,7 @@ function getOptions(
       alias: 'a',
       description: 'Specify the architecture',
       // if `defaultArch` is not a supported Architecture yargs will throw an error
-      default: defaultArch as Architecture,
+      default: defaultArch,
       choices: Object.values(Architecture) as ArchitecturesTuple,
     },
     platform: {

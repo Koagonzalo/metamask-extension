@@ -1,4 +1,5 @@
-import { DelegationEntry } from '@metamask/delegation-controller';
+import type { DelegationEntry } from '@metamask/delegation-controller';
+
 import {
   createDelegation,
   getDelegationHashOffchain,

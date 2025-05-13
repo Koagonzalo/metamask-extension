@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires */
 import { openDapp, unlockWallet } from '../../../helpers';
+import type { TestSuiteArguments } from './shared';
 import {
   confirmDepositTransaction,
   confirmRedesignedContractDeploymentTransaction,
   createContractDeploymentTransaction,
   createDepositTransaction,
-  TestSuiteArguments,
 } from './shared';
 
+const FixtureBuilder = require('../../../fixture-builder');
 const {
-  defaultOptionsForType2Transactions,
+  defaultGanacheOptionsForType2Transactions,
   withFixtures,
 } = require('../../../helpers');
-const FixtureBuilder = require('../../../fixture-builder');
 
 describe('Confirmation Redesign Contract Deployment Component', function () {
   describe('Create a deploy transaction', function () {
@@ -49,7 +49,7 @@ describe('Confirmation Redesign Contract Deployment Component', function () {
           fixtures: new FixtureBuilder()
             .withPermissionControllerConnectedToTestDapp()
             .build(),
-          localNodeOptions: defaultOptionsForType2Transactions,
+          localNodeOptions: defaultGanacheOptionsForType2Transactions,
           title: this.test?.fullTitle(),
         },
         async ({ driver }: TestSuiteArguments) => {

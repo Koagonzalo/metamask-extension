@@ -1,12 +1,13 @@
-import React from 'react';
+import type React from 'react';
+
+import type { AvatarFaviconProps } from '../avatar-favicon';
 import type {
   PolymorphicComponentPropWithRef,
   StyleUtilityProps,
 } from '../box';
-import { AvatarFaviconProps } from '../avatar-favicon';
-import { IconProps } from '../icon';
-import { TextProps } from '../text';
-import { ButtonLinkProps } from '../button-link';
+import type { ButtonLinkProps } from '../button-link';
+import type { IconProps } from '../icon';
+import type { TextProps } from '../text';
 
 // TODO: Convert to a `type` in a future major version.
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -49,13 +50,9 @@ export interface TagUrlStyleUtilityProps extends StyleUtilityProps {
   className?: string;
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export type TagUrlProps<C extends React.ElementType> =
   PolymorphicComponentPropWithRef<C, TagUrlStyleUtilityProps>;
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export type TagUrlComponent = <C extends React.ElementType = 'div'>(
   props: TagUrlProps<C>,
 ) => React.ReactElement | null;

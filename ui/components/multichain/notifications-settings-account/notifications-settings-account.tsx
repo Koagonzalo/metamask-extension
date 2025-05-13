@@ -1,6 +1,6 @@
-import React from 'react';
 import { toChecksumHexAddress } from '@metamask/controller-utils';
-import { AvatarAccount, Box, Text } from '../../component-library';
+import React from 'react';
+
 import {
   BlockSize,
   Display,
@@ -12,14 +12,13 @@ import {
   TextColor,
 } from '../../../helpers/constants/design-system';
 import { shortenAddress } from '../../../helpers/utils/util';
+import { AvatarAccount, Box, Text } from '../../component-library';
 
 export type NotificationsSettingsAccountProps = {
   address: string;
   name?: string;
 };
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export function NotificationsSettingsAccount({
   address,
   name,

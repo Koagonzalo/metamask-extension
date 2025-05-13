@@ -1,6 +1,7 @@
-import { TransactionMeta } from '@metamask/transaction-controller';
-import { Hex } from '@metamask/utils';
+import type { TransactionMeta } from '@metamask/transaction-controller';
+import type { Hex } from '@metamask/utils';
 import React from 'react';
+
 import { Text } from '../../../../../components/component-library';
 import {
   TextColor,
@@ -19,7 +20,7 @@ export const NonContractAddressAlertMessage = (
 
   const networkName =
     currentConfirmation?.chainId &&
-    networkConfigurations[currentConfirmation.chainId as Hex].name;
+    networkConfigurations[currentConfirmation.chainId].name;
   const recipientAddress = ellipsify(currentConfirmation?.txParams.to);
 
   return (

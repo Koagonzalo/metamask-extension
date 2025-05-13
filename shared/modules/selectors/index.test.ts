@@ -1,10 +1,6 @@
 // Mocha type definitions are conflicting with Jest
 import { it as jestIt } from '@jest/globals';
 
-import { createSwapsMockStore } from '../../../test/jest';
-import { CHAIN_IDS } from '../../constants/network';
-import { mockNetworkState } from '../../../test/stub/networks';
-import * as envModule from '../environment';
 import {
   getSmartTransactionsOptInStatusForMetrics,
   getChainSupportsSmartTransactions,
@@ -12,6 +8,10 @@ import {
   getIsSmartTransaction,
   getSmartTransactionsPreferenceEnabled,
 } from '.';
+import { createSwapsMockStore } from '../../../test/jest';
+import { mockNetworkState } from '../../../test/stub/networks';
+import { CHAIN_IDS } from '../../constants/network';
+import * as envModule from '../environment';
 
 describe('Selectors', () => {
   const createMockState = () => {

@@ -3,13 +3,13 @@ import {
   BlockaidResultType,
   SecurityProvider,
 } from '../../../../../shared/constants/security-provider';
-import { Severity } from '../../../../helpers/constants/design-system';
-import {
+import type {
   Alert,
   AlertSeverity,
 } from '../../../../ducks/confirm-alerts/confirm-alerts';
-import { useI18nContext } from '../../../../hooks/useI18nContext';
-import { SecurityAlertResponse } from '../../types/confirm';
+import { Severity } from '../../../../helpers/constants/design-system';
+import type { useI18nContext } from '../../../../hooks/useI18nContext';
+import type { SecurityAlertResponse } from '../../types/confirm';
 
 /** Reason to description translation key mapping. Grouped by translations. */
 export const REASON_TO_DESCRIPTION_TKEY = Object.freeze({
@@ -74,8 +74,6 @@ export function normalizeProviderAlert(
   reportUrl?: string,
 ): Alert {
   return {
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     key: securityAlertResponse.securityAlertId || '',
     reason: t(
       REASON_TO_TITLE_TKEY[

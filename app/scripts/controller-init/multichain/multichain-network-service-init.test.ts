@@ -1,4 +1,5 @@
 import { MultichainNetworkService } from '@metamask/multichain-network-controller';
+
 import { MultichainNetworkServiceInit } from './multichain-network-service-init';
 
 jest.mock('@metamask/multichain-network-controller');

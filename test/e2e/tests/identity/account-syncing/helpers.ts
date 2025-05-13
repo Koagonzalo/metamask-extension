@@ -1,9 +1,10 @@
 import { USER_STORAGE_FEATURE_NAMES } from '@metamask/profile-sync-controller/sdk';
-import {
+
+import type {
   UserStorageMockttpController,
   UserStorageMockttpControllerEvents,
 } from '../../../helpers/identity/user-storage/userStorageMockttpController';
-import { Driver } from '../../../webdriver/driver';
+import type { Driver } from '../../../webdriver/driver';
 
 export type UserStorageAccount = {
   /**

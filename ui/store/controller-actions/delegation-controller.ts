@@ -4,6 +4,7 @@ import {
 } from '@metamask/delegation-controller';
 import type { TransactionMeta } from '@metamask/transaction-controller';
 import type { Hex } from '@metamask/utils';
+
 import type { UnsignedDelegation } from '../../../shared/lib/delegation';
 import { submitRequestToBackground } from '../background-connection';
 

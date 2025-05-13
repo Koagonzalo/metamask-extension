@@ -7,11 +7,12 @@ import {
   TransactionStatus,
   TransactionType,
 } from '@metamask/transaction-controller';
-import { type Hex } from '../../../../shared/lib/delegation/utils';
+
 import {
   getDelegationHashOffchain,
   getDeleGatorEnvironment,
 } from '../../../../shared/lib/delegation';
+import { type Hex } from '../../../../shared/lib/delegation/utils';
 import type { DelegationControllerInitMessenger } from '../messengers/delegation/delegation-controller-messenger';
 import type { ControllerInitFunction } from '../types';
 

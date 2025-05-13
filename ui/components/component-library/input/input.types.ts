@@ -1,9 +1,8 @@
+import type { TextVariant } from '../../../helpers/constants/design-system';
 import type {
   StyleUtilityProps,
   PolymorphicComponentPropWithRef,
 } from '../box';
-
-import { TextVariant } from '../../../helpers/constants/design-system';
 
 export enum InputType {
   Text = 'text',
@@ -101,13 +100,9 @@ export interface InputStyleProps extends StyleUtilityProps {
   value?: string | number;
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export type InputProps<C extends React.ElementType> =
   PolymorphicComponentPropWithRef<C, InputStyleProps>;
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export type InputComponent = <C extends React.ElementType = 'input'>(
   props: InputProps<C>,
 ) => React.ReactElement | null;

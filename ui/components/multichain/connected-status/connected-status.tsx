@@ -1,30 +1,30 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import {
-  BackgroundColor,
-  BorderColor,
-} from '../../../helpers/constants/design-system';
+
+import { isInternalAccountInPermittedAccountIds } from '../../../../shared/lib/multichain/chain-agnostic-permission-utils/caip-accounts';
 import {
   STATUS_CONNECTED,
   STATUS_CONNECTED_TO_ANOTHER_ACCOUNT,
   STATUS_NOT_CONNECTED,
 } from '../../../helpers/constants/connected-sites';
+import {
+  BackgroundColor,
+  BorderColor,
+} from '../../../helpers/constants/design-system';
 import { useI18nContext } from '../../../hooks/useI18nContext';
-import { BadgeStatus } from '../badge-status';
-import { isInternalAccountInPermittedAccountIds } from '../../../../shared/lib/multichain/chain-agnostic-permission-utils/caip-accounts';
 import {
   getAllPermittedAccountsForCurrentTab,
   getInternalAccountByAddress,
 } from '../../../selectors';
+import { BadgeStatus } from '../badge-status';
 
 export type ConnectedStatusProps = {
   address: string;
   isActive?: boolean;
-  showConnectedStatus?: boolean;
 };
 
 export type AddressConnectedSubjectMap = {
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+  // TODO: Replace `any` with type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [address: string]: any;
 };
@@ -32,7 +32,6 @@ export type AddressConnectedSubjectMap = {
 export const ConnectedStatus: React.FC<ConnectedStatusProps> = ({
   address = '',
   isActive,
-  showConnectedStatus = true,
 }): JSX.Element => {
   const t = useI18nContext();
 
@@ -85,7 +84,6 @@ export const ConnectedStatus: React.FC<ConnectedStatusProps> = ({
       badgeBorderColor={badgeBorderColor}
       text={tooltipText}
       isConnectedAndNotActive={connectedAndNotActive}
-      showConnectedStatus={showConnectedStatus}
     />
   );
 };

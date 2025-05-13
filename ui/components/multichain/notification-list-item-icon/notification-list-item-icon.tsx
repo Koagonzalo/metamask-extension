@@ -1,20 +1,7 @@
-import React, { FC } from 'react';
+import type { FC } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
-import { getIpfsGateway, getOpenSeaEnabled } from '../../../selectors';
-import NftDefaultImage from '../../app/assets/nfts/nft-default-image/nft-default-image';
-import { isIpfsURL } from '../../../helpers/utils/notification.util';
 
-import {
-  AvatarIcon,
-  AvatarIconSize,
-  AvatarToken,
-  AvatarTokenSize,
-  BadgeWrapper,
-  BadgeWrapperPosition,
-  Box,
-  IconName,
-  IconSize,
-} from '../../component-library';
 import {
   BackgroundColor,
   BorderColor,
@@ -24,6 +11,20 @@ import {
   IconColor,
   JustifyContent,
 } from '../../../helpers/constants/design-system';
+import { isIpfsURL } from '../../../helpers/utils/notification.util';
+import { getIpfsGateway, getOpenSeaEnabled } from '../../../selectors';
+import NftDefaultImage from '../../app/assets/nfts/nft-default-image/nft-default-image';
+import type { IconName } from '../../component-library';
+import {
+  AvatarIcon,
+  AvatarIconSize,
+  AvatarToken,
+  AvatarTokenSize,
+  BadgeWrapper,
+  BadgeWrapperPosition,
+  Box,
+  IconSize,
+} from '../../component-library';
 
 export enum NotificationListItemIconType {
   Token = 'token',
@@ -100,8 +101,6 @@ const getBadge = (badge: BadgeProps, children: JSX.Element): JSX.Element => {
   return (
     <BadgeWrapper
       data-testid="badge-wrapper"
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       position={badge.position || BadgeWrapperPosition.bottomRight}
       badge={
         <AvatarIcon

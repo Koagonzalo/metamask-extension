@@ -1,8 +1,10 @@
-import React from 'react';
-import { fireEvent, screen } from '@testing-library/react';
-import configureMockStore from 'redux-mock-store';
-import { NetworkConfiguration } from '@metamask/network-controller';
 import { toEvmCaipChainId } from '@metamask/multichain-network-controller';
+import type { NetworkConfiguration } from '@metamask/network-controller';
+import { fireEvent, screen } from '@testing-library/react';
+import React from 'react';
+import configureMockStore from 'redux-mock-store';
+
+import { CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP } from '../../../../../shared/constants/network';
 import { renderWithProvider } from '../../../../../test/lib/render-helpers';
 import {
   updateNetwork,
@@ -10,7 +12,6 @@ import {
   setEditedNetwork,
   toggleNetworkMenu,
 } from '../../../../store/actions';
-import { CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP } from '../../../../../shared/constants/network';
 import { stripProtocol } from '../rpc-list-item';
 import { SelectRpcUrlModal } from './select-rpc-url-modal'; // Adjust the path as needed
 
@@ -117,12 +118,13 @@ describe('SelectRpcUrlModal Component', () => {
       stripProtocol(networkConfiguration.rpcEndpoints[1].url),
     );
     fireEvent.click(rpcEndpoint);
-    const network = {
-      ...networkConfiguration,
-      defaultRpcEndpointIndex: 1,
-    };
 
-    expect(mockDispatch).toHaveBeenCalledWith(updateNetwork(network));
+    expect(mockDispatch).toHaveBeenCalledWith(
+      updateNetwork({
+        ...networkConfiguration,
+        defaultRpcEndpointIndex: 1,
+      }),
+    );
     expect(mockDispatch).toHaveBeenCalledWith(setActiveNetwork('flashbots'));
     expect(mockDispatch).toHaveBeenCalledWith(setEditedNetwork());
     expect(mockDispatch).toHaveBeenCalledWith(toggleNetworkMenu());
@@ -184,7 +186,6 @@ describe('SelectRpcUrlModal Component', () => {
     expect(mockDispatch).toHaveBeenCalledWith(setEditedNetwork());
     expect(mockOnNetworkChange).toHaveBeenCalledWith(
       toEvmCaipChainId(updatedNetwork.chainId),
-      'flashbots',
     );
   });
 });

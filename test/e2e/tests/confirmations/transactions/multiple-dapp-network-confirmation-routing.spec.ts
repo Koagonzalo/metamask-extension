@@ -8,8 +8,8 @@ import {
   WINDOW_TITLES,
   withFixtures,
 } from '../../../helpers';
-import TestDapp from '../../../page-objects/pages/test-dapp';
 import ConnectAccountConfirmation from '../../../page-objects/pages/confirmations/redesign/connect-account-confirmation';
+import TestDapp from '../../../page-objects/pages/test-dapp';
 
 describe('Routing confirmstions from Multiple Dapps and different networks', function () {
   it('Confirmation requests from different DAPPS and networks should be in same queue, it is possible to navigate the queue.', async function () {

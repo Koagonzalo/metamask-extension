@@ -1,8 +1,9 @@
-import React from 'react';
 import { ApprovalType } from '@metamask/controller-utils';
 import { isArray } from 'lodash';
-import { Display } from '../../../../helpers/constants/design-system';
+import React from 'react';
+
 import { IconName } from '../../../../components/component-library';
+import { Display } from '../../../../helpers/constants/design-system';
 import ConfirmationPage from '../confirmation';
 import { PendingApproval } from './util';
 
@@ -108,7 +109,6 @@ export const TemplateStory = () => {
                 borderRadius: '10px',
                 boxShadow: 'var(--shadow-size-lg) var(--color-shadow-default)',
               },
-              key: 'snapAccountSuccessMessage',
             },
             children: [
               {
@@ -168,7 +168,7 @@ export const TemplateStory = () => {
         header: [
           {
             name: 'SnapAuthorshipHeader',
-            key: 'snapAccountSuccessMessage',
+            key: 'snapHeader',
             properties: { snapId: 'npm:@test/test-snap' },
           },
         ],

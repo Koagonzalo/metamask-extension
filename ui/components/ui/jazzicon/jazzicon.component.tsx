@@ -1,10 +1,11 @@
-import React, { useEffect, useRef } from 'react';
 import jazzicon from '@metamask/jazzicon';
 import { KnownCaipNamespace, stringToBytes } from '@metamask/utils';
+import React, { useEffect, useRef } from 'react';
+
+import { getCaipNamespaceFromAddress } from '../../../../shared/lib/multichain/accounts';
 import iconFactoryGenerator, {
   IconFactory,
 } from '../../../helpers/utils/icon-factory';
-import { getCaipNamespaceFromAddress } from '../../../../shared/lib/multichain/accounts';
 
 /**
  * Generates a seed for Jazzicon based on the provided address.
@@ -38,16 +39,12 @@ const multichainIconFactory = new IconFactory(jazzicon, generateSeed);
  * @param props.namespace - Optional. The namespace to use for the seed generation. Defaults to 'eip155'.
  * @returns A React component displaying a Jazzicon or custom icon.
  */
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function Jazzicon({
   address,
   className,
   diameter = 46,
   style,
   tokenList = {},
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   namespace: namespace_,
 }: {
   address: string;

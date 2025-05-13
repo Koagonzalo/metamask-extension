@@ -1,16 +1,15 @@
 /* eslint-disable jest/require-top-level-describe */
 import React from 'react';
-import { fireEvent, renderWithProvider, waitFor } from '../../../../test/jest';
-import configureStore from '../../../store/store';
-import mockState from '../../../../test/data/mock-state.json';
-// TODO: Remove restricted import
-// eslint-disable-next-line import/no-restricted-paths
+
 import messages from '../../../../app/_locales/en/messages.json';
 import { ETH_EOA_METHODS } from '../../../../shared/constants/eth-methods';
-import {
-  CreateNamedSnapAccount,
-  CreateNamedSnapAccountProps,
-} from './create-named-snap-account';
+import mockState from '../../../../test/data/mock-state.json';
+import { fireEvent, renderWithProvider, waitFor } from '../../../../test/jest';
+import configureStore from '../../../store/store';
+// TODO: Remove restricted import
+// eslint-disable-next-line import/no-restricted-paths
+import type { CreateNamedSnapAccountProps } from './create-named-snap-account';
+import { CreateNamedSnapAccount } from './create-named-snap-account';
 
 const mockSnapSuggestedAccountName = 'Suggested Account Name';
 
@@ -75,8 +74,6 @@ const render = (
             metadata: {
               ...mockSnapAccount1.metadata,
               name:
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-                // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
                 overrideAccountNames?.[mockSnapAccount1.id] ||
                 mockSnapAccount1.metadata.name,
             },
@@ -86,8 +83,6 @@ const render = (
             metadata: {
               ...mockSnapAccount2.metadata,
               name:
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-                // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
                 overrideAccountNames?.[mockSnapAccount2.id] ||
                 mockSnapAccount2.metadata.name,
             },

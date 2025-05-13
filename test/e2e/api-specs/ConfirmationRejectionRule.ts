@@ -1,14 +1,15 @@
-import Rule from '@open-rpc/test-coverage/build/rules/rule';
-import { Call } from '@open-rpc/test-coverage/build/coverage';
-import {
+import type {
   ContentDescriptorObject,
   ExampleObject,
   ExamplePairingObject,
   MethodObject,
 } from '@open-rpc/meta-schema';
+import type { Call } from '@open-rpc/test-coverage/build/coverage';
+import type Rule from '@open-rpc/test-coverage/build/rules/rule';
 import paramsToObj from '@open-rpc/test-coverage/build/utils/params-to-obj';
-import { Driver } from '../webdriver/driver';
+
 import { WINDOW_TITLES, switchToOrOpenDapp } from '../helpers';
+import type { Driver } from '../webdriver/driver';
 import { addToQueue } from './helpers';
 
 type ConfirmationsRejectRuleOptions = {
@@ -20,11 +21,11 @@ type ConfirmationsRejectRuleOptions = {
 // it also validates that the JSON-RPC response is an error with
 // error code 4001 (user rejected request)
 export class ConfirmationsRejectRule implements Rule {
-  private driver: Driver;
+  private readonly driver: Driver;
 
-  private only: string[];
+  private readonly only: string[];
 
-  private requiresEthAccountsPermission: string[];
+  private readonly requiresEthAccountsPermission: string[];
 
   constructor(options: ConfirmationsRejectRuleOptions) {
     this.driver = options.driver;
@@ -49,8 +50,6 @@ export class ConfirmationsRejectRule implements Rule {
               const requestPermissionsRequest = JSON.stringify({
                 jsonrpc: '2.0',
                 method: 'wallet_requestPermissions',
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                // eslint-disable-next-line @typescript-eslint/naming-convention
                 params: [{ eth_accounts: {} }],
               });
 
@@ -193,8 +192,6 @@ export class ConfirmationsRejectRule implements Rule {
               const revokePermissionsRequest = JSON.stringify({
                 jsonrpc: '2.0',
                 method: 'wallet_revokePermissions',
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                // eslint-disable-next-line @typescript-eslint/naming-convention
                 params: [{ eth_accounts: {} }],
               });
 

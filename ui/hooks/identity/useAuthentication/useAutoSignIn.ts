@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
+
 import {
   getCompletedOnboarding,
   getIsUnlocked,
@@ -9,7 +10,7 @@ import {
   getUseExternalServices,
 } from '../../../selectors';
 import { selectIsSignedIn } from '../../../selectors/identity/authentication';
-import { selectIsBackupAndSyncEnabled } from '../../../selectors/identity/backup-and-sync';
+import { selectIsProfileSyncingEnabled } from '../../../selectors/identity/profile-syncing';
 import { selectIsMetamaskNotificationsEnabled } from '../../../selectors/metamask-notifications/metamask-notifications';
 import { useSignIn } from './useSignIn';
 
@@ -44,7 +45,7 @@ export function useAutoSignIn(): {
   );
 
   // Auth dependent features
-  const isBackupAndSyncEnabled = useSelector(selectIsBackupAndSyncEnabled);
+  const isProfileSyncingEnabled = useSelector(selectIsProfileSyncingEnabled);
   const isParticipateInMetaMetrics = useSelector(getParticipateInMetaMetrics);
   const isNotificationServicesEnabled = useSelector(
     selectIsMetamaskNotificationsEnabled,
@@ -52,11 +53,11 @@ export function useAutoSignIn(): {
 
   const isAtLeastOneAuthDependentFeatureEnabled = useMemo(
     () =>
-      isBackupAndSyncEnabled ||
+      isProfileSyncingEnabled ||
       isParticipateInMetaMetrics ||
       isNotificationServicesEnabled,
     [
-      isBackupAndSyncEnabled,
+      isProfileSyncingEnabled,
       isParticipateInMetaMetrics,
       isNotificationServicesEnabled,
     ],

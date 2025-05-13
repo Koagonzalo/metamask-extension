@@ -1,7 +1,5 @@
-import {
-  TransactionMeta,
-  TransactionType,
-} from '@metamask/transaction-controller';
+import type { TransactionMeta } from '@metamask/transaction-controller';
+import { TransactionType } from '@metamask/transaction-controller';
 import React, { memo, useMemo } from 'react';
 
 import { TokenStandard } from '../../../../../../shared/constants/transaction';
@@ -16,21 +14,20 @@ import useAlerts from '../../../../../hooks/useAlerts';
 import { useI18nContext } from '../../../../../hooks/useI18nContext';
 import { TypedSignSignaturePrimaryTypes } from '../../../constants';
 import { useConfirmContext } from '../../../context/confirm';
+import { useSignatureEventFragment } from '../../../hooks/useSignatureEventFragment';
+import { useTransactionEventFragment } from '../../../hooks/useTransactionEventFragment';
 import { useTypedSignSignatureInfo } from '../../../hooks/useTypedSignSignatureInfo';
-import { Confirmation, SignatureRequestType } from '../../../types/confirm';
+import type {
+  Confirmation,
+  SignatureRequestType,
+} from '../../../types/confirm';
 import { isSIWESignatureRequest } from '../../../utils';
 import { useIsNFT } from '../info/approve/hooks/use-is-nft';
 import { useTokenTransactionData } from '../info/hooks/useTokenTransactionData';
 import { getIsRevokeSetApprovalForAll } from '../info/utils';
 import { getIsRevokeDAIPermit } from '../utils';
-import { useSignatureEventFragment } from '../../../hooks/useSignatureEventFragment';
-import { useTransactionEventFragment } from '../../../hooks/useTransactionEventFragment';
-import { NestedTransactionTag } from '../../transactions/nested-transaction-tag';
-import { useIsUpgradeTransaction } from '../info/hooks/useIsUpgradeTransaction';
 import { useCurrentSpendingCap } from './hooks/useCurrentSpendingCap';
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function ConfirmBannerAlert({ ownerId }: { ownerId: string }) {
   const { generalAlerts } = useAlerts(ownerId);
   const { updateSignatureEventFragment } = useSignatureEventFragment();
@@ -43,8 +40,6 @@ function ConfirmBannerAlert({ ownerId }: { ownerId: string }) {
   const onClickSupportLink = () => {
     const properties = {
       properties: {
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         external_link_clicked: 'security_alert_support_link',
       },
     };
@@ -85,7 +80,6 @@ const getTitle = (
   pending?: boolean,
   primaryType?: keyof typeof TypedSignSignaturePrimaryTypes,
   tokenStandard?: string,
-  isUpgrade?: boolean,
 ) => {
   if (pending) {
     return '';
@@ -93,11 +87,7 @@ const getTitle = (
 
   switch (confirmation?.type) {
     case TransactionType.contractInteraction:
-      return t('confirmTitleTransaction');
     case TransactionType.batch:
-      if (isUpgrade) {
-        return t('confirmTitleAccountTypeSwitch');
-      }
       return t('confirmTitleTransaction');
     case TransactionType.deployContract:
       return t('confirmTitleDeployContract');
@@ -107,7 +97,7 @@ const getTitle = (
       }
       return t('confirmTitleSignature');
     case TransactionType.revokeDelegation:
-      return t('confirmTitleAccountTypeSwitch');
+      return t('confirmTitleDelegationRevoke');
     case TransactionType.signTypedData:
       if (primaryType === TypedSignSignaturePrimaryTypes.PERMIT) {
         const isRevokeDAIPermit = getIsRevokeDAIPermit(
@@ -153,7 +143,6 @@ const getDescription = (
   pending?: boolean,
   primaryType?: keyof typeof TypedSignSignaturePrimaryTypes,
   tokenStandard?: string,
-  isUpgrade?: boolean,
 ) => {
   if (pending) {
     return '';
@@ -161,11 +150,7 @@ const getDescription = (
 
   switch (confirmation?.type) {
     case TransactionType.contractInteraction:
-      return '';
     case TransactionType.batch:
-      if (isUpgrade) {
-        return t('confirmTitleDescDelegationUpgrade');
-      }
       return '';
     case TransactionType.deployContract:
       return t('confirmTitleDescDeployContract');
@@ -216,7 +201,6 @@ const getDescription = (
 const ConfirmTitle: React.FC = memo(() => {
   const t = useI18nContext();
   const { currentConfirmation } = useConfirmContext();
-  const { isUpgrade } = useIsUpgradeTransaction();
 
   const { isNFT } = useIsNFT(currentConfirmation as TransactionMeta);
 
@@ -245,7 +229,6 @@ const ConfirmTitle: React.FC = memo(() => {
         spendingCapPending,
         primaryType,
         tokenStandard,
-        isUpgrade,
       ),
     [
       currentConfirmation,
@@ -256,7 +239,6 @@ const ConfirmTitle: React.FC = memo(() => {
       primaryType,
       t,
       tokenStandard,
-      isUpgrade,
     ],
   );
 
@@ -271,7 +253,6 @@ const ConfirmTitle: React.FC = memo(() => {
         spendingCapPending,
         primaryType,
         tokenStandard,
-        isUpgrade,
       ),
     [
       currentConfirmation,
@@ -282,7 +263,6 @@ const ConfirmTitle: React.FC = memo(() => {
       primaryType,
       t,
       tokenStandard,
-      isUpgrade,
     ],
   );
 
@@ -303,7 +283,6 @@ const ConfirmTitle: React.FC = memo(() => {
           {title}
         </Text>
       )}
-      <NestedTransactionTag />
       {description !== '' && (
         <Text
           paddingBottom={4}

@@ -1,5 +1,9 @@
 import { hashMessage } from '@ethersproject/hash';
 import { verifyMessage } from '@ethersproject/wallet';
+import type {
+  JsonRpcEngineEndCallback,
+  JsonRpcEngineNextCallback,
+} from '@metamask/json-rpc-engine';
 import type { NetworkController } from '@metamask/network-controller';
 import { rpcErrors } from '@metamask/rpc-errors';
 import type {
@@ -7,19 +11,17 @@ import type {
   JsonRpcParams,
   JsonRpcResponse,
   Hex,
+  JsonRpcRequest,
 } from '@metamask/utils';
-import { hasProperty, isObject, JsonRpcRequest } from '@metamask/utils';
-import type {
-  JsonRpcEngineEndCallback,
-  JsonRpcEngineNextCallback,
-} from '@metamask/json-rpc-engine';
+import { hasProperty, isObject } from '@metamask/utils';
+
+import { MESSAGE_TYPE } from '../../../../shared/constants/app';
 import {
   EXPERIENCES_TO_VERIFY,
   getExperience,
   TX_SIG_LEN,
   TRUSTED_SIGNERS,
 } from '../../../../shared/constants/verification';
-import { MESSAGE_TYPE } from '../../../../shared/constants/app';
 import { getCurrentChainId } from '../../../../shared/modules/selectors/networks';
 
 export type TxParams = {
@@ -43,8 +45,8 @@ export function createTxVerificationMiddleware(
   trustedSigners = TRUSTED_SIGNERS,
 ) {
   return function txVerificationMiddleware(
-    req: JsonRpcRequest<JsonRpcParams>,
-    _res: JsonRpcResponse<Json>,
+    req: JsonRpcRequest,
+    _res: JsonRpcResponse,
     next: JsonRpcEngineNextCallback,
     end: JsonRpcEngineEndCallback,
   ) {

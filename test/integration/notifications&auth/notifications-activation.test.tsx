@@ -5,13 +5,14 @@ import {
   screen,
   within,
 } from '@testing-library/react';
-import { integrationTestRender } from '../../lib/render-helpers';
-import * as backgroundConnection from '../../../ui/store/background-connection';
-import { createMockImplementation } from '../helpers';
+
 import {
   MetaMetricsEventCategory,
   MetaMetricsEventName,
 } from '../../../shared/constants/metametrics';
+import * as backgroundConnection from '../../../ui/store/background-connection';
+import { integrationTestRender } from '../../lib/render-helpers';
+import { createMockImplementation } from '../helpers';
 import { getMockedNotificationsState } from './data/notification-state';
 
 jest.mock('../../../ui/store/background-connection', () => ({
@@ -47,11 +48,7 @@ const trackNotificationsActivatedMetaMetricsEvent = async (
         event: MetaMetricsEventName.NotificationsActivated,
         category: MetaMetricsEventCategory.NotificationsActivationFlow,
         properties: {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           action_type: actionType,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           is_profile_syncing_enabled: profileSyncEnabled,
         },
       }),

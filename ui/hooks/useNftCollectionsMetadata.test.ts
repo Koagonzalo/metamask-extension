@@ -1,4 +1,5 @@
 import { renderHook } from '@testing-library/react-hooks';
+
 import { TokenStandard } from '../../shared/constants/transaction';
 import {
   getNFTContractInfo,
@@ -11,7 +12,7 @@ type TokenStandardResponse = {
 };
 
 jest.mock('react-redux', () => ({
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+  // TODO: Replace `any` with type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   useSelector: (selector: any) => selector(),
 }));

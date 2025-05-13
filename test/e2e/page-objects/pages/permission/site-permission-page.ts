@@ -1,11 +1,11 @@
-import { Driver } from '../../../webdriver/driver';
+import type { Driver } from '../../../webdriver/driver';
 
 /**
  * Represents the site permission page.
  * This page allows users to view and manage permissions for a connected site.
  */
 class SitePermissionPage {
-  private driver: Driver;
+  private readonly driver: Driver;
 
   private readonly confirmDisconnectButton = '[data-testid="disconnect-all"]';
 
@@ -58,8 +58,6 @@ class SitePermissionPage {
    *
    * @param site - Site to check
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_pageIsLoaded(site: string): Promise<void> {
     try {
       await this.driver.waitForSelector(this.connectedAccountsInfo);
@@ -129,8 +127,6 @@ class SitePermissionPage {
    *
    * @param number - Expected number of connected accounts
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_connectedAccountsNumber(number: number): Promise<void> {
     console.log(`Check that the number of connected accounts is: ${number}`);
     await this.driver.waitForSelector({
@@ -144,8 +140,6 @@ class SitePermissionPage {
    *
    * @param number - Expected number of connected networks
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_connectedNetworksNumber(number: number): Promise<void> {
     console.log(`Check that the number of connected networks is: ${number}`);
     await this.driver.waitForSelector({

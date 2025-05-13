@@ -1,14 +1,15 @@
 import { strict as assert } from 'assert';
-import { Suite } from 'mocha';
-import { Driver } from '../../webdriver/driver';
-import { withFixtures } from '../../helpers';
+import type { Suite } from 'mocha';
+
 import FixtureBuilder from '../../fixture-builder';
+import { withFixtures } from '../../helpers';
 import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
-import HeaderNavbar from '../../page-objects/pages/header-navbar';
 import SelectNetwork from '../../page-objects/pages/dialog/select-network';
-import { SMART_CONTRACTS } from '../../seeder/smart-contracts';
-import SendTokenPage from '../../page-objects/pages/send/send-token-page';
+import HeaderNavbar from '../../page-objects/pages/header-navbar';
 import AssetListPage from '../../page-objects/pages/home/asset-list';
+import SendTokenPage from '../../page-objects/pages/send/send-token-page';
+import { SMART_CONTRACTS } from '../../seeder/smart-contracts';
+import type { Driver } from '../../webdriver/driver';
 
 const NETWORK_NAME_MAINNET = 'Ethereum Mainnet';
 const LINEA_NAME_MAINNET = 'Linea Mainnet';

@@ -1,10 +1,7 @@
 import * as FetchWithCacheModule from '../../../../../shared/lib/fetch-with-cache';
 import { renderHookWithProviderTyped } from '../../../../../test/lib/render-helpers';
-import {
-  rpcIdentifierUtility,
-  SafeChain,
-  useSafeChains,
-} from './use-safe-chains';
+import type { SafeChain } from './use-safe-chains';
+import { rpcIdentifierUtility, useSafeChains } from './use-safe-chains';
 
 describe('rpcIdentifierUtility', () => {
   let safeChains: SafeChain[];

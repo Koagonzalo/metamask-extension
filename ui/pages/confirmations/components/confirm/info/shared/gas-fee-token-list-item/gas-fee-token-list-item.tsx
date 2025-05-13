@@ -1,8 +1,9 @@
-import React from 'react';
-import { GasFeeToken } from '@metamask/transaction-controller';
+import type { GasFeeToken } from '@metamask/transaction-controller';
+import type { Hex } from '@metamask/utils';
 import classnames from 'classnames';
-import { Hex } from '@metamask/utils';
+import React from 'react';
 import { useSelector } from 'react-redux';
+
 import {
   Box,
   Icon,
@@ -10,6 +11,7 @@ import {
   IconSize,
   Text,
 } from '../../../../../../../components/component-library';
+import { getCurrentCurrency } from '../../../../../../../ducks/metamask/metamask';
 import {
   AlignItems,
   BackgroundColor,
@@ -24,12 +26,11 @@ import {
   TextVariant,
 } from '../../../../../../../helpers/constants/design-system';
 import { useI18nContext } from '../../../../../../../hooks/useI18nContext';
+import { useInsufficientBalanceAlerts } from '../../../../../hooks/alerts/transactions/useInsufficientBalanceAlerts';
 import {
   NATIVE_TOKEN_ADDRESS,
   useGasFeeToken,
 } from '../../hooks/useGasFeeToken';
-import { useInsufficientBalanceAlerts } from '../../../../../hooks/alerts/transactions/useInsufficientBalanceAlerts';
-import { getCurrentCurrency } from '../../../../../../../ducks/metamask/metamask';
 import { GasFeeTokenIcon, GasFeeTokenIconSize } from '../gas-fee-token-icon';
 
 export type GasFeeTokenListItemProps = {
@@ -38,8 +39,6 @@ export type GasFeeTokenListItemProps = {
   onClick?: (token: GasFeeToken) => void;
 };
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export function GasFeeTokenListItem({
   tokenAddress,
   isSelected,
@@ -80,8 +79,6 @@ export function GasFeeTokenListItem({
   );
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function ListItem({
   image,
   leftPrimary,
@@ -103,7 +100,7 @@ function ListItem({
 }) {
   return (
     <Box
-      data-testid={`gas-fee-token-list-item-${leftPrimary}`}
+      data-testid="gas-fee-token-list-item"
       display={Display.Flex}
       flexDirection={FlexDirection.Row}
       justifyContent={JustifyContent.spaceBetween}
@@ -130,7 +127,6 @@ function ListItem({
             gap={2}
           >
             <Text
-              data-testid="gas-fee-token-list-item-symbol"
               as="button"
               variant={TextVariant.bodyMdMedium}
               backgroundColor={BackgroundColor.transparent}
@@ -141,7 +137,6 @@ function ListItem({
             {warning}
           </Box>
           <Text
-            data-testid="gas-fee-token-list-item-balance"
             variant={TextVariant.bodySmMedium}
             color={TextColor.textAlternative}
           >
@@ -150,14 +145,8 @@ function ListItem({
         </Box>
       </Box>
       <Box textAlign={TextAlign.Right} paddingRight={2}>
+        <Text variant={TextVariant.bodyMdMedium}>{rightPrimary}</Text>
         <Text
-          data-testid="gas-fee-token-list-item-amount-fiat"
-          variant={TextVariant.bodyMdMedium}
-        >
-          {rightPrimary}
-        </Text>
-        <Text
-          data-testid="gas-fee-token-list-item-amount-token"
           variant={TextVariant.bodySmMedium}
           color={TextColor.textAlternative}
         >
@@ -168,8 +157,6 @@ function ListItem({
   );
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function InsufficientBalanceIndicator() {
   const t = useI18nContext();
 
@@ -195,8 +182,6 @@ function InsufficientBalanceIndicator() {
   );
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function SelectedIndicator() {
   return (
     <Box

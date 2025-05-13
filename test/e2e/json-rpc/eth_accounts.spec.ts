@@ -1,8 +1,9 @@
 import { strict as assert } from 'assert';
-import { withFixtures } from '../helpers';
-import { Driver } from '../webdriver/driver';
+
 import FixtureBuilder from '../fixture-builder';
+import { withFixtures } from '../helpers';
 import { loginWithBalanceValidation } from '../page-objects/flows/login.flow';
+import type { Driver } from '../webdriver/driver';
 
 describe('eth_accounts', function () {
   it('executes a eth_accounts json rpc call', async function () {

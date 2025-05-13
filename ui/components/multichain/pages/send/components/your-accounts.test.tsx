@@ -1,11 +1,12 @@
-import React from 'react';
 import { BtcAccountType } from '@metamask/keyring-api';
-import configureStore from '../../../../../store/store';
+import React from 'react';
+
+import { SendPageYourAccounts } from '.';
+import { MultichainNativeAssets } from '../../../../../../shared/constants/multichain/assets';
 import mockState from '../../../../../../test/data/mock-state.json';
 import { fireEvent, renderWithProvider } from '../../../../../../test/jest';
 import { createMockInternalAccount } from '../../../../../../test/jest/mocks';
-import { MultichainNativeAssets } from '../../../../../../shared/constants/multichain/assets';
-import { SendPageYourAccounts } from '.';
+import configureStore from '../../../../../store/store';
 
 const mockUpdateRecipient = jest.fn();
 const mockAddHistoryEntry = jest.fn();
@@ -25,8 +26,6 @@ const render = (props = {}, state = {}) => {
       ...state,
       permissionHistory: {
         'https://test.dapp': {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           eth_accounts: {
             accounts: {
               '0x0dcd5d886577d5081b0c52e242ef29e70be3e7bc': 1709225290848,

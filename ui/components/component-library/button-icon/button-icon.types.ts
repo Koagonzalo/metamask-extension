@@ -1,6 +1,9 @@
-import { IconName, IconProps } from '../icon';
-import { IconColor } from '../../../helpers/constants/design-system';
-import { PolymorphicComponentPropWithRef, StyleUtilityProps } from '../box';
+import type { IconColor } from '../../../helpers/constants/design-system';
+import type {
+  PolymorphicComponentPropWithRef,
+  StyleUtilityProps,
+} from '../box';
+import type { IconName, IconProps } from '../icon';
 
 export enum ButtonIconSize {
   Sm = 'sm',
@@ -12,8 +15,6 @@ export enum ButtonIconSize {
  * Makes all props optional so that if a prop object is used not ALL required props need to be passed
  * TODO: Move to appropriate place in app as this will be highly reusable
  */
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 type MakePropsOptional<T> = {
   [K in keyof T]?: T[K];
 };
@@ -61,13 +62,9 @@ export interface ButtonIconStyleUtilityProps extends StyleUtilityProps {
   size?: ButtonIconSize;
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export type ButtonIconProps<C extends React.ElementType> =
   PolymorphicComponentPropWithRef<C, ButtonIconStyleUtilityProps>;
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export type ButtonIconComponent = <C extends React.ElementType = 'button'>(
   props: ButtonIconProps<C>,
 ) => React.ReactElement | null;

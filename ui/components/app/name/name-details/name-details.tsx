@@ -1,5 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
+import type {
+  NameControllerState,
+  NameEntry,
+  UpdateProposedNamesResult,
+} from '@metamask/name-controller';
+import { NameType } from '@metamask/name-controller';
+import { toChecksumAddress } from 'ethereumjs-util';
+import { isEqual } from 'lodash';
 import React, {
   useCallback,
   useEffect,
@@ -7,15 +15,25 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {
-  NameControllerState,
-  NameEntry,
-  NameType,
-  UpdateProposedNamesResult,
-} from '@metamask/name-controller';
 import { useDispatch, useSelector } from 'react-redux';
-import { isEqual } from 'lodash';
-import { toChecksumAddress } from 'ethereumjs-util';
+
+import {
+  AlignItems,
+  BlockSize,
+  Display,
+  FlexDirection,
+  IconColor,
+  JustifyContent,
+} from '../../../../helpers/constants/design-system';
+import { useCopyToClipboard } from '../../../../hooks/useCopyToClipboard';
+import { useDisplayName } from '../../../../hooks/useDisplayName';
+import { useI18nContext } from '../../../../hooks/useI18nContext';
+import { useName } from '../../../../hooks/useName';
+import { getNameSources } from '../../../../selectors';
+import {
+  setName as saveName,
+  updateProposedNames,
+} from '../../../../store/actions';
 import {
   Box,
   Button,
@@ -34,28 +52,10 @@ import {
   ModalFooter,
   ButtonSize,
 } from '../../../component-library';
-import {
-  AlignItems,
-  BlockSize,
-  Display,
-  FlexDirection,
-  IconColor,
-  JustifyContent,
-} from '../../../../helpers/constants/design-system';
-import FormComboField, {
-  FormComboFieldOption,
-} from '../../../ui/form-combo-field/form-combo-field';
-import { getNameSources } from '../../../../selectors';
-import {
-  setName as saveName,
-  updateProposedNames,
-} from '../../../../store/actions';
-import { useCopyToClipboard } from '../../../../hooks/useCopyToClipboard';
-import { useName } from '../../../../hooks/useName';
-import { useDisplayName } from '../../../../hooks/useDisplayName';
-import { useI18nContext } from '../../../../hooks/useI18nContext';
-import NameDisplay from './name-display';
+import FormComboField from '../../../ui/form-combo-field/form-combo-field';
+import type { FormComboFieldOption } from '../../../ui/form-combo-field/form-combo-field';
 import { usePetnamesMetrics } from './metrics';
+import NameDisplay from './name-display';
 
 const UPDATE_DELAY = 1000 * 2; // 2 Seconds
 
@@ -162,7 +162,7 @@ function useProposedNames(value: string, type: NameType, variation: string) {
   const dispatch = useDispatch();
   const { proposedNames } = useName(value, type, variation);
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+  // TODO: Replace `any` with type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const updateInterval = useRef<any>();
 
@@ -183,8 +183,7 @@ function useProposedNames(value: string, type: NameType, variation: string) {
           onlyUpdateAfterDelay: true,
           variation,
         }),
-
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+        // TODO: Replace `any` with type
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       )) as any as UpdateProposedNamesResult;
 
@@ -205,8 +204,6 @@ function useProposedNames(value: string, type: NameType, variation: string) {
   return { proposedNames, initialSources };
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export default function NameDetails({
   onClose,
   type,

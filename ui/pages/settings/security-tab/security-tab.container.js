@@ -1,6 +1,15 @@
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'redux';
+
+import { getNetworkConfigurationsByChainId } from '../../../../shared/modules/selectors/networks';
+import { openBasicFunctionalityModal } from '../../../ducks/app/app';
+import { getMetaMaskHdKeyrings } from '../../../selectors';
+import {
+  getIsSecurityAlertsEnabled,
+  getMetaMetricsDataDeletionId,
+  getHDEntropyIndex,
+} from '../../../selectors/selectors';
 import {
   setIpfsGateway,
   setIsIpfsGatewayEnabled,
@@ -21,14 +30,6 @@ import {
   setSecurityAlertsEnabled,
   updateDataDeletionTaskStatus,
 } from '../../../store/actions';
-import {
-  getIsSecurityAlertsEnabled,
-  getMetaMetricsDataDeletionId,
-  getHDEntropyIndex,
-} from '../../../selectors/selectors';
-import { getNetworkConfigurationsByChainId } from '../../../../shared/modules/selectors/networks';
-import { openBasicFunctionalityModal } from '../../../ducks/app/app';
-import { getMetaMaskHdKeyrings } from '../../../selectors';
 import SecurityTab from './security-tab.component';
 
 const mapStateToProps = (state) => {

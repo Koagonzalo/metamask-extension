@@ -1,5 +1,5 @@
-const { withFixtures, unlockWallet, WINDOW_TITLES } = require('../helpers');
 const FixtureBuilder = require('../fixture-builder');
+const { withFixtures, unlockWallet, WINDOW_TITLES } = require('../helpers');
 const { TEST_SNAPS_WEBSITE_URL } = require('./enums');
 
 describe('Test Snap manageState', function () {
@@ -40,7 +40,6 @@ describe('Test Snap manageState', function () {
           text: 'Connect',
           tag: 'button',
         });
-
         await driver.clickElement({
           text: 'Connect',
           tag: 'button',
@@ -48,10 +47,6 @@ describe('Test Snap manageState', function () {
 
         // wait for and click confirm
         await driver.waitForSelector({ text: 'Confirm' });
-
-        // click and dismiss possible scroll element
-        await driver.clickElementSafe('[data-testid="snap-install-scroll"]');
-
         await driver.clickElement({
           text: 'Confirm',
           tag: 'button',
@@ -189,7 +184,6 @@ describe('Test Snap manageState', function () {
           text: 'Connect',
           tag: 'button',
         });
-
         await driver.clickElement({
           text: 'Connect',
           tag: 'button',
@@ -197,10 +191,6 @@ describe('Test Snap manageState', function () {
 
         // wait for and click confirm
         await driver.waitForSelector({ text: 'Confirm' });
-
-        // click and dismiss possible scroll element
-        await driver.clickElementSafe('[data-testid="snap-install-scroll"]');
-
         await driver.clickElement({
           text: 'Confirm',
           tag: 'button',

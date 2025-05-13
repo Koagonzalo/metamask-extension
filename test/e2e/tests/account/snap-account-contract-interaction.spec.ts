@@ -1,18 +1,19 @@
-import { Suite } from 'mocha';
-import { Driver } from '../../webdriver/driver';
+import type { Suite } from 'mocha';
+
 import FixtureBuilder from '../../fixture-builder';
-import { Anvil } from '../../seeder/anvil';
-import { Ganache } from '../../seeder/ganache';
-import ContractAddressRegistry from '../../seeder/contract-address-registry';
 import { PRIVATE_KEY_TWO, withFixtures, WINDOW_TITLES } from '../../helpers';
-import { SMART_CONTRACTS } from '../../seeder/smart-contracts';
-import ActivityListPage from '../../page-objects/pages/home/activity-list';
+import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
+import { installSnapSimpleKeyring } from '../../page-objects/flows/snap-simple-keyring.flow';
 import HeaderNavbar from '../../page-objects/pages/header-navbar';
+import ActivityListPage from '../../page-objects/pages/home/activity-list';
 import HomePage from '../../page-objects/pages/home/homepage';
 import SnapSimpleKeyringPage from '../../page-objects/pages/snap-simple-keyring-page';
 import TestDapp from '../../page-objects/pages/test-dapp';
-import { installSnapSimpleKeyring } from '../../page-objects/flows/snap-simple-keyring.flow';
-import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
+import type { Anvil } from '../../seeder/anvil';
+import ContractAddressRegistry from '../../seeder/contract-address-registry';
+import { Ganache } from '../../seeder/ganache';
+import { SMART_CONTRACTS } from '../../seeder/smart-contracts';
+import type { Driver } from '../../webdriver/driver';
 
 describe('Snap Account Contract interaction', function (this: Suite) {
   const smartContract = SMART_CONTRACTS.PIGGYBANK;
@@ -54,9 +55,9 @@ describe('Snap Account Contract interaction', function (this: Suite) {
 
         // Open Dapp with contract
         const testDapp = new TestDapp(driver);
-        const contractAddress = await (
-          contractRegistry as ContractAddressRegistry
-        ).getContractAddress(smartContract);
+        const contractAddress = await contractRegistry.getContractAddress(
+          smartContract,
+        );
         await testDapp.openTestDappPage({ contractAddress });
         await testDapp.check_pageIsLoaded();
         await testDapp.createDepositTransaction();

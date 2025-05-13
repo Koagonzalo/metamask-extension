@@ -1,11 +1,12 @@
+import type { JsonRpcRequest } from '@metamask/utils';
 import { strict as assert } from 'assert';
-import { JsonRpcRequest } from '@metamask/utils';
-import { MockedEndpoint } from 'mockttp';
+import type { MockedEndpoint } from 'mockttp';
+
 import FixtureBuilder from '../../fixture-builder';
 import { veryLargeDelayMs, withFixtures } from '../../helpers';
-import { Mockttp } from '../../mock-e2e';
-import HomePage from '../../page-objects/pages/home/homepage';
+import type { Mockttp } from '../../mock-e2e';
 import { loginWithoutBalanceValidation } from '../../page-objects/flows/login.flow';
+import HomePage from '../../page-objects/pages/home/homepage';
 
 async function mockInfura(mockServer: Mockttp): Promise<MockedEndpoint[]> {
   const blockNumber = { value: 0 };

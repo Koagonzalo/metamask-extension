@@ -1,6 +1,7 @@
 import { ApprovalType, detectSIWE } from '@metamask/controller-utils';
 import { errorCodes } from '@metamask/rpc-errors';
 import { isValidAddress } from 'ethereumjs-util';
+
 import { MESSAGE_TYPE, ORIGIN_METAMASK } from '../../../shared/constants/app';
 import {
   MetaMetricsEventCategory,
@@ -8,8 +9,6 @@ import {
   MetaMetricsEventUiCustomization,
   MetaMetricsRequestedThrough,
 } from '../../../shared/constants/metametrics';
-import { parseTypedDataMessage } from '../../../shared/modules/transaction.utils';
-
 import {
   BlockaidResultType,
   BlockaidReason,
@@ -19,7 +18,9 @@ import {
   PRIMARY_TYPES_PERMIT,
 } from '../../../shared/constants/signatures';
 import { SIGNING_METHODS } from '../../../shared/constants/transaction';
+import { shouldUseRedesignForSignatures } from '../../../shared/lib/confirmation.utils';
 import { getErrorMessage } from '../../../shared/modules/error';
+import { parseTypedDataMessage } from '../../../shared/modules/transaction.utils';
 import {
   generateSignatureUniqueId,
   getBlockaidMetricsProps,
@@ -28,7 +29,6 @@ import {
 } from '../../../ui/helpers/utils/metrics';
 // TODO: Remove restricted import
 // eslint-disable-next-line import/no-restricted-paths
-import { shouldUseRedesignForSignatures } from '../../../shared/lib/confirmation.utils';
 import { getSnapAndHardwareInfoForMetrics } from './snap-keyring/metrics';
 
 /**
@@ -323,7 +323,7 @@ export default function createRPCMethodTrackingMiddleware({
     const eventType = EVENT_NAME_MAP[invokedMethod];
 
     const eventProperties = {
-      requested_through: requestedThrough,
+      api_source: requestedThrough,
     };
 
     if (multichainApiRequestScope) {

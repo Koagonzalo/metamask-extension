@@ -1,16 +1,21 @@
-import * as React from 'react';
+import type { NetworkConfiguration } from '@metamask/network-controller';
+import type { TransactionMeta } from '@metamask/transaction-controller';
+import { TransactionStatus } from '@metamask/transaction-controller';
 import type { Hex } from '@metamask/utils';
-import {
-  type TransactionMeta,
-  TransactionStatus,
-} from '@metamask/transaction-controller';
-import {
-  type BridgeHistoryItem,
-  ActionTypes,
-} from '@metamask/bridge-status-controller';
-import { StatusTypes, type Step } from '@metamask/bridge-controller';
-import { Box, Text } from '../../../components/component-library';
+import * as React from 'react';
+
+import type { AllowedBridgeChainIds } from '../../../../shared/constants/bridge';
+import { NETWORK_TO_SHORT_NETWORK_NAME_MAP } from '../../../../shared/constants/bridge';
 import { Numeric } from '../../../../shared/modules/Numeric';
+import type {
+  BridgeHistoryItem,
+  Step,
+} from '../../../../shared/types/bridge-status';
+import {
+  ActionTypes,
+  StatusTypes,
+} from '../../../../shared/types/bridge-status';
+import { Box, Text } from '../../../components/component-library';
 import {
   AlignItems,
   Display,
@@ -18,10 +23,6 @@ import {
   TextColor,
 } from '../../../helpers/constants/design-system';
 import { useI18nContext } from '../../../hooks/useI18nContext';
-import {
-  type AllowedBridgeChainIds,
-  NETWORK_TO_SHORT_NETWORK_NAME_MAP,
-} from '../../../../shared/constants/bridge';
 
 type I18nFunction = (
   key: string,
@@ -36,19 +37,25 @@ type I18nFunction = (
  * @param t - The i18n context return value to get translations
  * @param stepStatus - The status of the step
  * @param step - The step to be rendered
+ * @param networkConfigurationsByChainId - The network configurations by chain id
  */
 const getBridgeActionText = (
   t: I18nFunction,
   stepStatus: StatusTypes | null,
   step: Step,
+  networkConfigurationsByChainId: Record<`0x${string}`, NetworkConfiguration>,
 ) => {
   const hexDestChainId = step.destChainId
     ? (new Numeric(step.destChainId, 10).toPrefixedHexString() as Hex)
     : undefined;
+  const destNetworkConfiguration = hexDestChainId
+    ? networkConfigurationsByChainId[hexDestChainId]
+    : undefined;
 
-  const destChainName = hexDestChainId
-    ? NETWORK_TO_SHORT_NETWORK_NAME_MAP[hexDestChainId as AllowedBridgeChainIds]
-    : '';
+  const destChainName =
+    NETWORK_TO_SHORT_NETWORK_NAME_MAP[
+      destNetworkConfiguration?.chainId as AllowedBridgeChainIds
+    ];
 
   const destSymbol = step.destAsset?.symbol;
 
@@ -143,6 +150,7 @@ export const getStepStatus = ({
 
 type BridgeStepProps = {
   step: Step;
+  networkConfigurationsByChainId: Record<`0x${string}`, NetworkConfiguration>;
   time?: string;
   stepStatus: StatusTypes | null;
 };
@@ -151,10 +159,9 @@ type BridgeStepProps = {
 // 1. Bridge: usually for cases like Optimism ETH to Arbitrum ETH
 // 2. Swap > Bridge
 // 3. Swap > Bridge > Swap: e.g. Optimism ETH to Avalanche USDC
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export default function BridgeStepDescription({
   step,
+  networkConfigurationsByChainId,
   time,
   stepStatus,
 }: BridgeStepProps) {
@@ -181,7 +188,12 @@ export default function BridgeStepDescription({
         }
       >
         {step.action === ActionTypes.BRIDGE &&
-          getBridgeActionText(t, stepStatus, step)}
+          getBridgeActionText(
+            t,
+            stepStatus,
+            step,
+            networkConfigurationsByChainId,
+          )}
         {step.action === ActionTypes.SWAP &&
           getSwapActionText(t, stepStatus, step)}
       </Text>

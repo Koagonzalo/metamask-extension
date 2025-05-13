@@ -1,26 +1,27 @@
-import {
+import type {
   MultichainAssetsControllerState,
   MultichainAssetsRatesControllerState,
 } from '@metamask/assets-controllers';
-import { CaipAssetId } from '@metamask/keyring-api';
-import {
-  CaipAssetType,
-  CaipChainId,
-  Hex,
-  parseCaipAssetType,
-} from '@metamask/utils';
+import type { CaipAssetId } from '@metamask/keyring-api';
+import type { InternalAccount } from '@metamask/keyring-internal-api';
+import type { CaipAssetType, CaipChainId, Hex } from '@metamask/utils';
+import { parseCaipAssetType } from '@metamask/utils';
 import { BigNumber } from 'bignumber.js';
 import { groupBy } from 'lodash';
-import { InternalAccount } from '@metamask/keyring-internal-api';
+
 import { TEST_CHAINS } from '../../shared/constants/network';
 import { createDeepEqualSelector } from '../../shared/modules/selectors/util';
-import { Token, TokenWithFiatAmount } from '../components/app/assets/types';
+import type {
+  Token,
+  TokenWithFiatAmount,
+} from '../components/app/assets/types';
 import { calculateTokenBalance } from '../components/app/assets/util/calculateTokenBalance';
 import { calculateTokenFiatAmount } from '../components/app/assets/util/calculateTokenFiatAmount';
 import { getTokenBalances } from '../ducks/metamask/metamask';
 import { findAssetByAddress } from '../pages/asset/util';
 import { getSelectedInternalAccount } from './accounts';
 import { getMultichainBalances, getMultichainIsEvm } from './multichain';
+import { getSelectedMultichainNetworkConfiguration } from './multichain/networks';
 import {
   getCurrencyRates,
   getCurrentNetwork,
@@ -31,7 +32,6 @@ import {
   getSelectedAccountTokensAcrossChains,
   getTokensAcrossChainsByAccountAddressSelector,
 } from './selectors';
-import { getSelectedMultichainNetworkConfiguration } from './multichain/networks';
 
 export type AssetsState = {
   metamask: MultichainAssetsControllerState;
@@ -210,8 +210,11 @@ export const getMultiChainAssets = createDeepEqualSelector(
       const { chainId, assetNamespace } = parseCaipAssetType(assetId);
       const isNative = assetNamespace === 'slip44';
       const balance = balances?.[assetId] || { amount: '0', unit: '' };
-      const rate = assetRates?.[assetId]?.rate || '0';
-      const balanceInFiat = new BigNumber(balance.amount).times(rate);
+      const rate = assetRates?.[assetId]?.rate;
+
+      const balanceInFiat = rate
+        ? new BigNumber(balance.amount).times(rate).toNumber()
+        : null;
 
       const assetMetadataFallback = {
         name: balance.unit,
@@ -232,9 +235,9 @@ export const getMultiChainAssets = createDeepEqualSelector(
           chainId,
           isNative,
           primary: balance.amount,
-          secondary: balanceInFiat.toNumber(),
+          secondary: balanceInFiat,
           string: '',
-          tokenFiatAmount: balanceInFiat.toNumber(), // for now we are keeping this is to satisfy sort, this should be fiat amount
+          tokenFiatAmount: balanceInFiat,
           isStakeable: false,
         });
       }

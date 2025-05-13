@@ -1,5 +1,5 @@
-import { Driver } from '../../../webdriver/driver';
 import messages from '../../../../../app/_locales/en/messages.json';
+import type { Driver } from '../../../webdriver/driver';
 
 class ExperimentalSettings {
   private readonly driver: Driver;
@@ -26,8 +26,6 @@ class ExperimentalSettings {
     this.driver = driver;
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_pageIsLoaded(): Promise<void> {
     try {
       await this.driver.waitForSelector(this.experimentalPageTitle);

@@ -1,12 +1,13 @@
+import type { InternalAccount } from '@metamask/keyring-internal-api';
 import React, { useContext, useEffect } from 'react';
-import { InternalAccount } from '@metamask/keyring-internal-api';
-import { useI18nContext } from '../../hooks/useI18nContext';
-import { MetaMetricsContext } from '../../contexts/metametrics';
+
 import {
   MetaMetricsEventCategory,
   MetaMetricsEventName,
   MetaMetricsEventAccountType,
 } from '../../../shared/constants/metametrics';
+import { MetaMetricsContext } from '../../contexts/metametrics';
+import { useI18nContext } from '../../hooks/useI18nContext';
 
 const SnapAccountTransactionLoadingScreen = ({
   internalAccount,

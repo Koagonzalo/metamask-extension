@@ -1,7 +1,8 @@
-import EventEmitter from 'events';
 import { Messenger } from '@metamask/base-controller';
-import { InternalAccount } from '@metamask/keyring-internal-api';
-import { BlockTracker, Provider } from '@metamask/network-controller';
+import type { InternalAccount } from '@metamask/keyring-internal-api';
+import type { BlockTracker } from '@metamask/network-controller';
+import { Provider } from '@metamask/network-controller';
+import EventEmitter from 'events';
 
 import { flushPromises } from '../../../test/lib/timer-helpers';
 import { createTestProviderTools } from '../../../test/stub/provider';
@@ -98,14 +99,8 @@ async function withController<ReturnValue>(
   } = rest;
   const { provider } = createTestProviderTools({
     scaffold: {
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       eth_getBalance: UPDATE_BALANCE,
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       eth_call: ETHERS_CONTRACT_BALANCES_ETH_CALL_RETURN,
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       eth_getBlockByNumber: { gasLimit: GAS_LIMIT },
     },
     networkId: currentNetworkId,
@@ -128,14 +123,8 @@ async function withController<ReturnValue>(
 
   const { provider: providerFromHook } = createTestProviderTools({
     scaffold: {
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       eth_getBalance: UPDATE_BALANCE_HOOK,
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       eth_call: ETHERS_CONTRACT_BALANCES_ETH_CALL_RETURN,
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       eth_getBlockByNumber: { gasLimit: GAS_LIMIT_HOOK },
     },
     networkId: 'selectedNetworkId',
@@ -183,7 +172,7 @@ async function withController<ReturnValue>(
 
   const controller = new AccountTrackerController({
     state: getDefaultAccountTrackerControllerState(),
-    provider: provider as Provider,
+    provider,
     blockTracker: blockTrackerStub as unknown as BlockTracker,
     getNetworkIdentifier: jest.fn(),
     messenger: messenger.getRestricted({
@@ -520,14 +509,8 @@ describe('AccountTrackerController', () => {
       });
       const providerFromHook = createTestProviderTools({
         scaffold: {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           eth_getBalance: UPDATE_BALANCE_HOOK,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           eth_call: ETHERS_CONTRACT_BALANCES_ETH_CALL_RETURN,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           eth_getBlockByNumber: { gasLimit: GAS_LIMIT_HOOK },
         },
         networkId: '0x1',

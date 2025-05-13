@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   isSolanaChainId,
   BRIDGE_MM_FEE_RATE,
   formatChainIdToHex,
   formatEtaInMinutes,
+  UnifiedSwapBridgeEventName,
+  getNativeAssetForChainId,
 } from '@metamask/bridge-controller';
 import type { ChainId } from '@metamask/bridge-controller';
 import {
@@ -22,6 +24,8 @@ import {
   getFromChain,
   getToChain,
   getIsBridgeTx,
+  getToToken,
+  getFromToken,
 } from '../../../ducks/bridge/selectors';
 import { useI18nContext } from '../../../hooks/useI18nContext';
 import { formatCurrencyAmount, formatTokenAmount } from '../utils/quote';
@@ -44,7 +48,9 @@ import {
   MULTICHAIN_TOKEN_IMAGE_MAP,
   MultichainNetworks,
 } from '../../../../shared/constants/multichain/networks';
+import { trackUnifiedSwapBridgeEvent } from '../../../ducks/bridge/actions';
 import { getIntlLocale } from '../../../ducks/locale/locale';
+import { getSmartTransactionsEnabled } from '../../../../shared/modules/selectors';
 import { BridgeQuotesModal } from './bridge-quotes-modal';
 
 export const MultichainBridgeQuoteCard = () => {
@@ -61,6 +67,10 @@ export const MultichainBridgeQuoteCard = () => {
   const toChain = useSelector(getToChain);
   const locale = useSelector(getIntlLocale);
   const isBridgeTx = useSelector(getIsBridgeTx);
+  const isStxEnabled = useSelector(getSmartTransactionsEnabled);
+  const fromToken = useSelector(getFromToken);
+  const toToken = useSelector(getToToken);
+  const dispatch = useDispatch();
 
   const [showAllQuotes, setShowAllQuotes] = useState(false);
 
@@ -206,6 +216,35 @@ export const MultichainBridgeQuoteCard = () => {
                         ...quoteListProperties,
                       },
                     });
+                  fromChain?.chainId &&
+                    activeQuote &&
+                    dispatch(
+                      trackUnifiedSwapBridgeEvent(
+                        UnifiedSwapBridgeEventName.AllQuotesOpened,
+                        {
+                          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+                          // eslint-disable-next-line @typescript-eslint/naming-convention
+                          stx_enabled: isStxEnabled,
+                          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+                          // eslint-disable-next-line @typescript-eslint/naming-convention
+                          token_symbol_source:
+                            fromToken?.symbol ??
+                            getNativeAssetForChainId(fromChain.chainId).symbol,
+                          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+                          // eslint-disable-next-line @typescript-eslint/naming-convention
+                          token_symbol_destination: toToken?.symbol ?? null,
+                          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+                          // eslint-disable-next-line @typescript-eslint/naming-convention
+                          price_impact: Number(
+                            activeQuote.quote?.bridgePriceData?.priceImpact ??
+                              0,
+                          ),
+                          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+                          // eslint-disable-next-line @typescript-eslint/naming-convention
+                          gas_included: false,
+                        },
+                      ),
+                    );
                   setShowAllQuotes(true);
                 }}
               >

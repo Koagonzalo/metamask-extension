@@ -1,16 +1,17 @@
 import { strict as assert } from 'assert';
-import { Suite } from 'mocha';
+import type { Suite } from 'mocha';
+
 import FixtureBuilder from '../fixture-builder';
 import { withFixtures } from '../helpers';
-import { Driver } from '../webdriver/driver';
-import AccountDetailsModal from '../page-objects/pages/dialog/account-details-modal';
-import AccountListPage from '../page-objects/pages/account-list-page';
-import ExperimentalSettings from '../page-objects/pages/settings/experimental-settings';
-import HeaderNavbar from '../page-objects/pages/header-navbar';
-import HomePage from '../page-objects/pages/home/homepage';
-import SettingsPage from '../page-objects/pages/settings/settings-page';
 import { loginWithBalanceValidation } from '../page-objects/flows/login.flow';
 import { watchEoaAddress } from '../page-objects/flows/watch-account.flow';
+import AccountListPage from '../page-objects/pages/account-list-page';
+import AccountDetailsModal from '../page-objects/pages/dialog/account-details-modal';
+import HeaderNavbar from '../page-objects/pages/header-navbar';
+import HomePage from '../page-objects/pages/home/homepage';
+import ExperimentalSettings from '../page-objects/pages/settings/experimental-settings';
+import SettingsPage from '../page-objects/pages/settings/settings-page';
+import type { Driver } from '../webdriver/driver';
 
 const ACCOUNT_1 = '0x5CfE73b6021E818B776b421B1c4Db2474086a7e1';
 const EOA_ADDRESS = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045';
@@ -191,7 +192,7 @@ describe('Account-watcher snap', function (this: Suite) {
           // open account details modal in header navbar
           const headerNavbar = new HeaderNavbar(driver);
           await headerNavbar.check_accountLabel(DEFAULT_WATCHED_ACCOUNT_NAME);
-          await headerNavbar.openAccountDetailsModalDetailsTab();
+          await headerNavbar.openAccountDetailsModal();
 
           // check 'Show private key' button should not be displayed
           const accountDetailsModal = new AccountDetailsModal(driver);

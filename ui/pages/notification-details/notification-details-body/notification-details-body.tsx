@@ -1,11 +1,12 @@
 import React from 'react';
+
 import { Box } from '../../../components/component-library';
 import {
   Display,
   FlexDirection,
 } from '../../../helpers/constants/design-system';
+import type { Notification } from '../../notifications/notification-components/types/notifications/notifications';
 import {
-  Notification,
   NotificationComponentType,
   type NotificationComponent,
 } from '../../notifications/notification-components/types/notifications/notifications';

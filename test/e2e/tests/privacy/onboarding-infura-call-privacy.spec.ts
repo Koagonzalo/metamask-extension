@@ -1,13 +1,14 @@
 import assert from 'assert';
-import { Mockttp, MockedEndpoint } from 'mockttp';
-import { withFixtures, regularDelayMs } from '../../helpers';
+import type { Mockttp, MockedEndpoint } from 'mockttp';
+
 import FixtureBuilder from '../../fixture-builder';
-import HomePage from '../../page-objects/pages/home/homepage';
-import OnboardingCompletePage from '../../page-objects/pages/onboarding/onboarding-complete-page';
+import { withFixtures, regularDelayMs } from '../../helpers';
 import {
   importSRPOnboardingFlow,
   createNewWalletOnboardingFlow,
 } from '../../page-objects/flows/onboarding.flow';
+import HomePage from '../../page-objects/pages/home/homepage';
+import OnboardingCompletePage from '../../page-objects/pages/onboarding/onboarding-complete-page';
 
 // Mock function implementation for Infura requests
 async function mockInfura(mockServer: Mockttp): Promise<MockedEndpoint[]> {

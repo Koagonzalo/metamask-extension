@@ -1,14 +1,11 @@
+import type { RenderResult } from '@testing-library/react';
+import { createEvent, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
-import {
-  createEvent,
-  fireEvent,
-  RenderResult,
-  waitFor,
-} from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { renderWithProvider } from '../../../../../test/jest/rendering';
+
 import mockState from '../../../../../test/data/mock-state.json';
+import { renderWithProvider } from '../../../../../test/jest/rendering';
 import * as actions from '../../../../store/actions';
 import { ImportSrp } from './import-srp';
 

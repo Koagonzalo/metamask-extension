@@ -1,8 +1,24 @@
-import React, { useContext } from 'react';
-import { getAccountLink } from '@metamask/etherscan-link';
 import { formatChainIdToCaip } from '@metamask/bridge-controller';
+import { getAccountLink } from '@metamask/etherscan-link';
 import { TransactionStatus } from '@metamask/transaction-controller';
+import React, { useContext } from 'react';
+
+import { CHAINID_DEFAULT_BLOCK_EXPLORER_URL_MAP } from '../../../../shared/constants/common';
+import {
+  MetaMetricsEventCategory,
+  MetaMetricsEventName,
+  MetaMetricsEventLinkType,
+} from '../../../../shared/constants/metametrics';
+import {
+  MULTICHAIN_PROVIDER_CONFIGS,
+  MultichainNetworks,
+  SOLANA_TOKEN_IMAGE_URL,
+  MULTICHAIN_NETWORK_BLOCK_EXPLORER_FORMAT_URLS_MAP,
+} from '../../../../shared/constants/multichain/networks';
+import { CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP } from '../../../../shared/constants/network';
 import { getBridgeStatusKey } from '../../../../shared/lib/bridge-status/utils';
+import { formatBlockExplorerTransactionUrl } from '../../../../shared/lib/multichain/networks';
+import { MetaMetricsContext } from '../../../contexts/metametrics';
 import {
   Display,
   FlexDirection,
@@ -15,7 +31,13 @@ import {
   TextAlign,
   BorderColor,
 } from '../../../helpers/constants/design-system';
+import { getURLHostName } from '../../../helpers/utils/util';
+import type {
+  ExtendedTransaction,
+  BridgeOriginatedItem,
+} from '../../../hooks/bridge/useSolanaBridgeTransactionMapping';
 import { useI18nContext } from '../../../hooks/useI18nContext';
+import { KEYRING_TRANSACTION_STATUS_KEY } from '../../../hooks/useMultichainTransactionDisplay';
 import {
   ModalOverlay,
   ModalContent,
@@ -35,41 +57,18 @@ import {
   AvatarNetwork,
   AvatarNetworkSize,
 } from '../../component-library';
-import {
-  MetaMetricsEventCategory,
-  MetaMetricsEventName,
-  MetaMetricsEventLinkType,
-} from '../../../../shared/constants/metametrics';
-import { MetaMetricsContext } from '../../../contexts/metametrics';
 import { ConfirmInfoRowDivider as Divider } from '../confirm/info/row';
-import { getURLHostName } from '../../../helpers/utils/util';
-import { KEYRING_TRANSACTION_STATUS_KEY } from '../../../hooks/useMultichainTransactionDisplay';
 import {
   formatTimestamp,
   getTransactionUrl,
   shortenTransactionId,
 } from '../multichain-transaction-details-modal/helpers';
-import { formatBlockExplorerTransactionUrl } from '../../../../shared/lib/multichain/networks';
-import {
-  MULTICHAIN_PROVIDER_CONFIGS,
-  MultichainNetworks,
-  SOLANA_TOKEN_IMAGE_URL,
-  MULTICHAIN_NETWORK_BLOCK_EXPLORER_FORMAT_URLS_MAP,
-} from '../../../../shared/constants/multichain/networks';
-import { CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP } from '../../../../shared/constants/network';
-import { CHAINID_DEFAULT_BLOCK_EXPLORER_URL_MAP } from '../../../../shared/constants/common';
-import {
-  ExtendedTransaction,
-  BridgeOriginatedItem,
-} from '../../../hooks/bridge/useSolanaBridgeTransactionMapping';
 
 type MultichainBridgeTransactionDetailsModalProps = {
   transaction: ExtendedTransaction | BridgeOriginatedItem;
   onClose: () => void;
 };
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function MultichainBridgeTransactionDetailsModal({
   transaction,
   onClose,
@@ -86,17 +85,13 @@ function MultichainBridgeTransactionDetailsModal({
   // Use TransactionStatus.submitted as the default
   const sourceTxRawStatus = isBridgeOriginated
     ? TransactionStatus.submitted
-    : (transaction as ExtendedTransaction).status;
+    : transaction.status;
   const assetData = from?.[0]?.asset;
   const baseFeeAsset = isBridgeOriginated
     ? null
-    : (transaction as ExtendedTransaction).fees?.find(
-        (fee) => fee.type === 'base',
-      )?.asset;
+    : transaction.fees?.find((fee) => fee.type === 'base')?.asset;
   // --- End direct extraction ---
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const currentBridgeInfo = bridgeInfo || {};
 
   const sourceTxStatusKey = KEYRING_TRANSACTION_STATUS_KEY[sourceTxRawStatus];
@@ -419,8 +414,6 @@ function MultichainBridgeTransactionDetailsModal({
                   <AvatarNetwork
                     size={AvatarNetworkSize.Sm}
                     className="solana-bridge-transaction-details-modal__network-badge"
-                    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-                    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
                     name={currentBridgeInfo?.destChainName || ''}
                     src={
                       CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP[
@@ -430,8 +423,6 @@ function MultichainBridgeTransactionDetailsModal({
                     borderColor={BorderColor.backgroundDefault}
                   />
                   <Text variant={TextVariant.bodyMd}>
-                    {/* TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880 */}
-                    {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
                     {bridgeInfo?.destChainName || ''}
                   </Text>
                 </Box>
@@ -557,12 +548,8 @@ function MultichainBridgeTransactionDetailsModal({
                 event: MetaMetricsEventName.ExternalLinkClicked,
                 category: MetaMetricsEventCategory.Navigation,
                 properties: {
-                  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                  // eslint-disable-next-line @typescript-eslint/naming-convention
                   link_type: MetaMetricsEventLinkType.AccountTracker,
                   location: 'Transaction Details',
-                  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                  // eslint-disable-next-line @typescript-eslint/naming-convention
                   url_domain: getURLHostName(getTransactionUrl(id, chain)),
                 },
               });

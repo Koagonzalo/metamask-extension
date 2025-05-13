@@ -1,19 +1,20 @@
 import { Messenger } from '@metamask/base-controller';
 import { ORIGIN_METAMASK } from '@metamask/controller-utils';
+import InstitutionalWalletSnap from '@metamask/institutional-wallet-snap/dist/preinstalled-snap.json';
 import { HandlerType } from '@metamask/snaps-utils';
-import {
-  TransactionStatus,
+import type {
   TransactionEnvelopeType,
   TransactionMeta,
 } from '@metamask/transaction-controller';
-import InstitutionalWalletSnap from '@metamask/institutional-wallet-snap/dist/preinstalled-snap.json';
-import {
-  InstitutionalSnapController,
+import { TransactionStatus } from '@metamask/transaction-controller';
+
+import type {
   InstitutionalSnapControllerMessenger,
   AllowedActions,
   InstitutionalSnapControllerPublishHookAction,
   InstitutionalSnapControllerBeforeCheckPendingTransactionHookAction,
 } from './InstitutionalSnapController';
+import { InstitutionalSnapController } from './InstitutionalSnapController';
 
 describe('InstitutionalSnapController', () => {
   let controller: InstitutionalSnapController;

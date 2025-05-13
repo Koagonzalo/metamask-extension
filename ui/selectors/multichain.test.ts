@@ -1,38 +1,40 @@
 import { Cryptocurrency } from '@metamask/assets-controllers';
-import { Hex } from '@metamask/utils';
-import { NetworkConfiguration } from '@metamask/network-controller';
-import { InternalAccount } from '@metamask/keyring-internal-api';
 import { BtcScope } from '@metamask/keyring-api';
+import type { InternalAccount } from '@metamask/keyring-internal-api';
 import {
   type SupportedCaipChainId,
   AVAILABLE_MULTICHAIN_NETWORK_CONFIGURATIONS,
 } from '@metamask/multichain-network-controller';
-import {
-  getCurrentCurrency,
-  getNativeCurrency,
-} from '../ducks/metamask/metamask';
+import type { NetworkConfiguration } from '@metamask/network-controller';
+import type { Hex } from '@metamask/utils';
+
+import { getSelectedAccountCachedBalance, getShouldShowFiat } from '.';
+import { MultichainNativeAssets } from '../../shared/constants/multichain/assets';
+import type { MultichainProviderConfig } from '../../shared/constants/multichain/networks';
 import {
   MULTICHAIN_PROVIDER_CONFIGS,
   MultichainNetworks,
-  MultichainProviderConfig,
 } from '../../shared/constants/multichain/networks';
+import {
+  CHAIN_IDS,
+  ETH_TOKEN_IMAGE_URL,
+  MAINNET_DISPLAY_NAME,
+} from '../../shared/constants/network';
+import { getProviderConfig } from '../../shared/modules/selectors/networks';
 import {
   MOCK_ACCOUNTS,
   MOCK_ACCOUNT_EOA,
   MOCK_ACCOUNT_BIP122_P2WPKH,
   MOCK_ACCOUNT_BIP122_P2WPKH_TESTNET,
 } from '../../test/data/mock-accounts';
-import {
-  CHAIN_IDS,
-  ETH_TOKEN_IMAGE_URL,
-  MAINNET_DISPLAY_NAME,
-} from '../../shared/constants/network';
-import { MultichainNativeAssets } from '../../shared/constants/multichain/assets';
 import { mockNetworkState } from '../../test/stub/networks';
-import { getProviderConfig } from '../../shared/modules/selectors/networks';
-import { AccountsState } from './accounts';
 import {
-  MultichainState,
+  getCurrentCurrency,
+  getNativeCurrency,
+} from '../ducks/metamask/metamask';
+import type { AccountsState } from './accounts';
+import type { MultichainState } from './multichain';
+import {
   getMultichainCurrentChainId,
   getMultichainCurrentCurrency,
   getMultichainDefaultToken,
@@ -48,7 +50,6 @@ import {
   getMultichainSelectedAccountCachedBalanceIsZero,
   getMultichainIsTestnet,
 } from './multichain';
-import { getSelectedAccountCachedBalance, getShouldShowFiat } from '.';
 
 type TestState = MultichainState &
   AccountsState & {
@@ -316,10 +317,25 @@ describe('Multichain Selectors', () => {
       expect(getMultichainShouldShowFiat(state)).toBe(getShouldShowFiat(state));
     });
 
-    it('returns true if account is non-EVM', () => {
-      const state = getNonEvmState();
-
+    it('returns true if account is non-EVM and setting currencyRateCheck is true', () => {
+      const state = {
+        metamask: {
+          ...getNonEvmState().metamask,
+          useCurrencyRateCheck: true,
+        },
+      };
       expect(getMultichainShouldShowFiat(state)).toBe(true);
+    });
+    it('returns false if account is non-EVM and setting currencyRateCheck is false', () => {
+      const state = {
+        ...getNonEvmState(),
+        metamask: {
+          ...getNonEvmState().metamask,
+          useCurrencyRateCheck: false,
+        },
+      };
+
+      expect(getMultichainShouldShowFiat(state)).toBe(false);
     });
   });
 

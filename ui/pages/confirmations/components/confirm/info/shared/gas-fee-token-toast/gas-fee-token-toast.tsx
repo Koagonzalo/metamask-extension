@@ -1,6 +1,6 @@
+import type { Hex } from '@metamask/utils';
 import React, { useCallback, useState } from 'react';
 
-import { Hex } from '@metamask/utils';
 import { Box } from '../../../../../../../components/component-library';
 import { Toast } from '../../../../../../../components/multichain';
 import { useI18nContext } from '../../../../../../../hooks/useI18nContext';
@@ -13,8 +13,6 @@ import { GasFeeTokenIcon } from '../gas-fee-token-icon';
 
 const TOAST_TIMEOUT_MILLISECONDS = 5 * 1000; // 5 Seconds
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export function GasFeeTokenToast() {
   const t = useI18nContext();
   const [showToast, setShowToast] = useState(false);

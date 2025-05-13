@@ -1,16 +1,18 @@
+import type { TransactionMeta } from '@metamask/transaction-controller';
+import { CHAIN_IDS } from '@metamask/transaction-controller';
+import type { Hex } from '@metamask/utils';
 import { act } from 'react-dom/test-utils';
 import { useDispatch } from 'react-redux';
-import { CHAIN_IDS, TransactionMeta } from '@metamask/transaction-controller';
-import { Hex } from '@metamask/utils';
+
+import { genUnapprovedContractInteractionConfirmation } from '../../../../test/data/confirmations/contract-interaction';
+import { getMockConfirmStateForTransaction } from '../../../../test/data/confirmations/helper';
+import { renderHookWithConfirmContextProvider } from '../../../../test/lib/confirmations/render-helpers';
+import { mockNetworkState } from '../../../../test/stub/networks';
 import {
   fetchSmartTransactionsLiveness,
   setSwapsFeatureFlags,
   setSmartTransactionsRefreshInterval,
 } from '../../../store/actions';
-import { renderHookWithConfirmContextProvider } from '../../../../test/lib/confirmations/render-helpers';
-import { genUnapprovedContractInteractionConfirmation } from '../../../../test/data/confirmations/contract-interaction';
-import { getMockConfirmStateForTransaction } from '../../../../test/data/confirmations/helper';
-import { mockNetworkState } from '../../../../test/stub/networks';
 import { fetchSwapsFeatureFlags } from '../../swaps/swaps.util';
 import { useSmartTransactionFeatureFlags } from './useSmartTransactionFeatureFlags';
 
@@ -81,7 +83,9 @@ describe('useSmartTransactionFeatureFlags', () => {
     jest.resetAllMocks();
     useDispatchMock.mockReturnValue(jest.fn());
     fetchSwapsFeatureFlagsMock.mockResolvedValue({});
-    fetchSmartTransactionsLivenessMock.mockReturnValue(() => Promise.resolve());
+    fetchSmartTransactionsLivenessMock.mockReturnValue(async () =>
+      Promise.resolve(),
+    );
   });
 
   it('updates feature flags', async () => {

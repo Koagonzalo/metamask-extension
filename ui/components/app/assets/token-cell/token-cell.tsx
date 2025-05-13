@@ -1,13 +1,25 @@
-import React, { useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { useTokenDisplayInfo } from '../hooks';
+
+import {
+  MetaMetricsEventCategory,
+  MetaMetricsEventName,
+} from '../../../../../shared/constants/metametrics';
+import { hexToDecimal } from '../../../../../shared/modules/conversion.utils';
+import { MetaMetricsContext } from '../../../../contexts/metametrics';
 import {
   BlockSize,
   Display,
   FlexDirection,
   JustifyContent,
 } from '../../../../helpers/constants/design-system';
+import { NETWORKS_ROUTE } from '../../../../helpers/constants/routes';
+import { useI18nContext } from '../../../../hooks/useI18nContext';
+import type { SafeChain } from '../../../../pages/settings/networks-tab/networks-form/use-safe-chains';
+import { useSafeChains } from '../../../../pages/settings/networks-tab/networks-form/use-safe-chains';
+import { getMultichainIsEvm } from '../../../../selectors/multichain';
+import { setEditedNetwork } from '../../../../store/actions';
 import {
   Box,
   ButtonSecondary,
@@ -18,16 +30,8 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '../../../component-library';
-import { getMultichainIsEvm } from '../../../../selectors/multichain';
-import { useI18nContext } from '../../../../hooks/useI18nContext';
-import { hexToDecimal } from '../../../../../shared/modules/conversion.utils';
-import { NETWORKS_ROUTE } from '../../../../helpers/constants/routes';
-import { setEditedNetwork } from '../../../../store/actions';
-import {
-  SafeChain,
-  useSafeChains,
-} from '../../../../pages/settings/networks-tab/networks-form/use-safe-chains';
-import { TokenWithFiatAmount } from '../types';
+import { useTokenDisplayInfo } from '../hooks';
+import type { TokenWithFiatAmount } from '../types';
 import {
   TokenCellBadge,
   TokenCellTitle,
@@ -39,28 +43,21 @@ import {
 export type TokenCellProps = {
   token: TokenWithFiatAmount;
   privacyMode?: boolean;
+  onClick?: (chainId: string, address: string) => void;
   disableHover?: boolean;
-  onClick?: () => void;
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  TokenCellPrimaryDisplayOverride?: React.ComponentType;
-  fixCurrencyToUSD?: boolean;
 };
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export default function TokenCell({
   token,
   privacyMode = false,
   onClick,
   disableHover = false,
-  TokenCellPrimaryDisplayOverride,
-  fixCurrencyToUSD = false,
 }: TokenCellProps) {
   const dispatch = useDispatch();
   const history = useHistory();
   const t = useI18nContext();
   const isEvm = useSelector(getMultichainIsEvm);
+  const trackEvent = useContext(MetaMetricsContext);
   const { safeChains } = useSafeChains();
   const [showScamWarningModal, setShowScamWarningModal] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -76,8 +73,38 @@ export default function TokenCell({
 
   const tokenDisplayInfo = useTokenDisplayInfo({
     token,
-    fixCurrencyToUSD,
   });
+
+  const handleClick = useCallback(
+    (e?: React.MouseEvent<HTMLAnchorElement>) => {
+      e?.preventDefault();
+
+      // If the scam warning modal is open, do nothing
+      if (showScamWarningModal) {
+        return;
+      }
+
+      // Ensure token has a valid chainId before proceeding
+      if (!onClick || !token.chainId) {
+        return;
+      }
+
+      // Call the onClick handler with chainId and address if needed
+      onClick(token.chainId, token.address);
+
+      // Track the event
+      trackEvent({
+        category: MetaMetricsEventCategory.Tokens,
+        event: MetaMetricsEventName.TokenDetailsOpened,
+        properties: {
+          location: 'Home',
+          chain_id: token.chainId, // FIXME: Ensure this is a number for EVM accounts
+          token_symbol: token.symbol,
+        },
+      });
+    },
+    [onClick, token, showScamWarningModal, trackEvent],
+  );
 
   const handleScamWarningModal = (arg: boolean) => {
     setShowScamWarningModal(arg);
@@ -86,16 +113,6 @@ export default function TokenCell({
   if (!token.chainId) {
     return null;
   }
-
-  const PrimaryDisplay = () =>
-    TokenCellPrimaryDisplayOverride ? (
-      <TokenCellPrimaryDisplayOverride />
-    ) : (
-      <TokenCellPrimaryDisplay
-        token={{ ...token, ...tokenDisplayInfo }}
-        privacyMode={privacyMode}
-      />
-    );
 
   return (
     <Box
@@ -107,15 +124,7 @@ export default function TokenCell({
     >
       <Box
         as="a"
-        onClick={(e?: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-          e?.preventDefault();
-
-          if (!onClick || showScamWarningModal) {
-            return;
-          }
-
-          onClick();
-        }}
+        onClick={handleClick}
         display={Display.Flex}
         flexDirection={FlexDirection.Row}
         paddingTop={2}
@@ -163,7 +172,10 @@ export default function TokenCell({
             justifyContent={JustifyContent.spaceBetween}
           >
             <TokenCellPercentChange token={{ ...token, ...tokenDisplayInfo }} />
-            <PrimaryDisplay />
+            <TokenCellPrimaryDisplay
+              token={{ ...token, ...tokenDisplayInfo }}
+              privacyMode={privacyMode}
+            />
           </Box>
         </Box>
       </Box>
@@ -178,8 +190,6 @@ export default function TokenCell({
             <ModalBody marginTop={4} marginBottom={4}>
               {t('nativeTokenScamWarningDescription', [
                 token.symbol,
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-                // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
                 safeChainDetails?.nativeCurrency?.symbol ||
                   t('nativeTokenScamWarningDescriptionExpectedTokenFallback'), // never render "undefined" string value
               ])}

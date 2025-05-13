@@ -1,6 +1,8 @@
 /**
  * @jest-environment node
  */
+import { ApprovalRequestNotFoundError } from '@metamask/approval-controller';
+import { PermissionsRequestNotFoundError } from '@metamask/permission-controller';
 import {
   ListNames,
   METAMASK_STALELIST_URL,
@@ -9,9 +11,8 @@ import {
   METAMASK_STALELIST_FILE,
   METAMASK_HOTLIST_DIFF_FILE,
 } from '@metamask/phishing-controller';
-import { ApprovalRequestNotFoundError } from '@metamask/approval-controller';
-import { PermissionsRequestNotFoundError } from '@metamask/permission-controller';
 import nock from 'nock';
+
 import mockEncryptor from '../../test/lib/mock-encryptor';
 import MetaMaskController from './metamask-controller';
 
@@ -259,12 +260,8 @@ describe('MetaMaskController', function () {
 
     it('two parallel calls with same token details give same result', async function () {
       const [token1, token2] = await Promise.all([
-        metamaskController
-          .getApi()
-          .addToken({ address, symbol, decimals, networkClientId: 'sepolia' }),
-        metamaskController
-          .getApi()
-          .addToken({ address, symbol, decimals, networkClientId: 'sepolia' }),
+        metamaskController.getApi().addToken({ address, symbol, decimals }),
+        metamaskController.getApi().addToken({ address, symbol, decimals }),
       ]);
       expect(token1).toStrictEqual(token2);
     });
@@ -272,17 +269,7 @@ describe('MetaMaskController', function () {
     it('networkClientId is used when provided', async function () {
       const callSpy = jest
         .spyOn(metamaskController.controllerMessenger, 'call')
-        .mockReturnValueOnce({
-          configuration: { chainId: '0xa' },
-        })
-        .mockReturnValueOnce({
-          networkConfigurationsByChainId: {
-            '0xa': {
-              nativeCurrency: 'ETH',
-              chainId: '0xa',
-            },
-          },
-        });
+        .mockReturnValue({ configuration: { chainId: '0xa' } });
 
       await metamaskController.getApi().addToken({
         address,

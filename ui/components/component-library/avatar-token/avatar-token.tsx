@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
 import classnames from 'classnames';
-import { AvatarBase, AvatarBaseProps } from '../avatar-base';
+import React, { useState, useEffect } from 'react';
+
 import {
   Display,
   AlignItems,
@@ -8,13 +8,16 @@ import {
   TextColor,
   BackgroundColor,
 } from '../../../helpers/constants/design-system';
+import type { AvatarBaseProps } from '../avatar-base';
+import { AvatarBase } from '../avatar-base';
 import type { PolymorphicRef } from '../box';
-import type { AvatarTokenComponent } from './avatar-token.types';
-import { AvatarTokenProps, AvatarTokenSize } from './avatar-token.types';
+import type {
+  AvatarTokenComponent,
+  AvatarTokenProps,
+} from './avatar-token.types';
+import { AvatarTokenSize } from './avatar-token.types';
 
 export const AvatarToken: AvatarTokenComponent = React.forwardRef(
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   <C extends React.ElementType = 'div'>(
     {
       size = AvatarTokenSize.Md,

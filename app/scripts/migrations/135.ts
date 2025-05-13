@@ -1,23 +1,19 @@
-import { hasProperty, isObject } from '@metamask/utils';
-import { cloneDeep } from 'lodash';
 import type { SmartTransaction } from '@metamask/smart-transactions-controller/dist/types';
 import { CHAIN_IDS } from '@metamask/transaction-controller';
+import { hasProperty, isObject } from '@metamask/utils';
+import { cloneDeep } from 'lodash';
 
 export type VersionedData = {
   meta: {
     version: number;
   };
   data: {
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     PreferencesController?: {
       preferences?: {
         smartTransactionsOptInStatus?: boolean | null;
         smartTransactionsMigrationApplied?: boolean;
       };
     };
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     SmartTransactionsController?: {
       smartTransactionsState: {
         smartTransactions: Record<string, SmartTransaction[]>;

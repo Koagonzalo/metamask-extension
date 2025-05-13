@@ -8,6 +8,7 @@ import {
   within,
 } from '@testing-library/react';
 import nock from 'nock';
+
 import {
   MetaMetricsEventCategory,
   MetaMetricsEventLocation,
@@ -147,7 +148,6 @@ describe('Contract Deployment Confirmation', () => {
     const DEPOSIT_HEX_SIG = '0xd0e30db0';
     mock4byte(DEPOSIT_HEX_SIG);
     mockedAssetDetails.mockImplementation(() => ({
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       decimals: '4' as any,
     }));
@@ -225,11 +225,7 @@ describe('Contract Deployment Confirmation', () => {
           properties: {
             action: 'Confirm Screen',
             location: MetaMetricsEventLocation.Transaction,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             transaction_type: TransactionType.deployContract,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             hd_entropy_index: 0,
           },
         }),

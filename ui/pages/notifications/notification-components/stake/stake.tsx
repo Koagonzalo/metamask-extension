@@ -1,15 +1,15 @@
-import React from 'react';
 import { NotificationServicesController } from '@metamask/notification-services-controller';
+import React from 'react';
+
 // TODO: Remove restricted import
 // eslint-disable-next-line import/no-restricted-paths
 import { t } from '../../../../../app/scripts/translate';
-import { CHAIN_IDS } from '../../../../../shared/constants/network';
-import { type ExtractedNotification, isOfTypeNodeGuard } from '../node-guard';
+import type { CHAIN_IDS } from '../../../../../shared/constants/network';
+import { decimalToHex } from '../../../../../shared/modules/conversion.utils';
 import {
-  NotificationComponentType,
-  type NotificationComponent,
-} from '../types/notifications/notifications';
-
+  BadgeWrapperPosition,
+  IconName,
+} from '../../../../components/component-library';
 import {
   NotificationListItem,
   NotificationDetailInfo,
@@ -22,10 +22,10 @@ import {
 } from '../../../../components/multichain';
 import { NotificationListItemIconType } from '../../../../components/multichain/notification-list-item-icon/notification-list-item-icon';
 import {
-  BadgeWrapperPosition,
-  IconName,
-} from '../../../../components/component-library';
-
+  TextVariant,
+  BackgroundColor,
+  TextColor,
+} from '../../../../helpers/constants/design-system';
 import {
   createTextItems,
   getAmount,
@@ -33,12 +33,11 @@ import {
   getNetworkDetailsByChainId,
   getUsdAmount,
 } from '../../../../helpers/utils/notification.util';
-import { decimalToHex } from '../../../../../shared/modules/conversion.utils';
+import { type ExtractedNotification, isOfTypeNodeGuard } from '../node-guard';
 import {
-  TextVariant,
-  BackgroundColor,
-  TextColor,
-} from '../../../../helpers/constants/design-system';
+  NotificationComponentType,
+  type NotificationComponent,
+} from '../types/notifications/notifications';
 
 const { TRIGGER_TYPES } = NotificationServicesController.Constants;
 
@@ -83,8 +82,6 @@ const STAKING_PROVIDER_MAP = {
 };
 
 const getTitle = (n: StakeNotification) => {
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const items = createTextItems([TITLE_MAP[n.type] || ''], TextVariant.bodySm);
   return items;
 };
@@ -160,8 +157,6 @@ export const components: NotificationComponent<StakeNotification> = {
         }
         return (
           <NotificationDetailAddress
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
             side={t('account') || ''}
             address={notification.address}
           />
@@ -184,12 +179,8 @@ export const components: NotificationComponent<StakeNotification> = {
             }}
             label={
               direction === 'staked'
-                ? // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-                  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-                  t('notificationItemStaked') || ''
-                : // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-                  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-                  t('notificationItemUnStaked') || ''
+                ? t('notificationItemStaked') || ''
+                : t('notificationItemUnStaked') || ''
             }
             detail={notification.data.stake_in.symbol}
             fiatValue={`$${getUsdAmount(
@@ -219,8 +210,6 @@ export const components: NotificationComponent<StakeNotification> = {
                 position: BadgeWrapperPosition.topRight,
               },
             }}
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
             label={t('notificationItemReceived') || ''}
             detail={notification.data.stake_out.symbol}
             fiatValue={`$${getUsdAmount(
@@ -243,18 +232,12 @@ export const components: NotificationComponent<StakeNotification> = {
             color: TextColor.successDefault,
             backgroundColor: BackgroundColor.successMuted,
           }}
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-          // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
           label={t('notificationItemStatus') || ''}
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-          // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
           detail={t('notificationItemConfirmed') || ''}
           action={
             <NotificationDetailCopyButton
               notification={notification}
               text={notification.tx_hash}
-              // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
               displayText={t('notificationItemTransactionId') || ''}
             />
           }
@@ -275,8 +258,6 @@ export const components: NotificationComponent<StakeNotification> = {
                     : notification.data.stake_in.image,
               },
             }}
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
             label={t('notificationItemStakingProvider') || ''}
             detail={provider}
           />

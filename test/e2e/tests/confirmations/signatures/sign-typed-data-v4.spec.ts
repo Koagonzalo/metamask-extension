@@ -1,20 +1,20 @@
 import { TransactionEnvelopeType } from '@metamask/transaction-controller';
-import { Suite } from 'mocha';
-import { MockedEndpoint } from 'mockttp';
+import type { Suite } from 'mocha';
+import type { MockedEndpoint } from 'mockttp';
+
+import { DEFAULT_FIXTURE_ACCOUNT } from '../../../constants';
 import { unlockWallet, WINDOW_TITLES } from '../../../helpers';
-import { Driver } from '../../../webdriver/driver';
+import SignTypedData from '../../../page-objects/pages/confirmations/redesign/sign-typed-data-confirmation';
+import TestDapp from '../../../page-objects/pages/test-dapp';
+import TestDappIndividualRequest from '../../../page-objects/pages/test-dapp-individual-request';
+import type { Driver } from '../../../webdriver/driver';
 import {
   mockSignatureApproved,
   mockSignatureRejected,
   scrollAndConfirmAndAssertConfirm,
   withTransactionEnvelopeTypeFixtures,
 } from '../helpers';
-import { TestSuiteArguments } from '../transactions/shared';
-import { DEFAULT_FIXTURE_ACCOUNT } from '../../../constants';
-import SignTypedData from '../../../page-objects/pages/confirmations/redesign/sign-typed-data-confirmation';
-import TestDapp from '../../../page-objects/pages/test-dapp';
-import TestDappIndividualRequest from '../../../page-objects/pages/test-dapp-individual-request';
-import { MetaMetricsRequestedThrough } from '../../../../../shared/constants/metametrics';
+import type { TestSuiteArguments } from '../transactions/shared';
 import {
   assertAccountDetailsMetrics,
   assertHeaderInfoBalance,
@@ -28,56 +28,6 @@ import {
   openDappAndTriggerSignature,
   SignatureType,
 } from './signature-helpers';
-
-const signatureMessageWithoutVerifyingContract = [
-  DEFAULT_FIXTURE_ACCOUNT,
-  {
-    types: {
-      EIP712Domain: [
-        { name: 'name', type: 'string' },
-        { name: 'chainId', type: 'uint256' },
-        { name: 'version', type: 'string' },
-      ],
-      Person: [
-        { name: 'name', type: 'string' },
-        { name: 'wallets', type: 'address[]' },
-      ],
-      Mail: [
-        { name: 'from', type: 'Person' },
-        { name: 'to', type: 'Person[]' },
-        { name: 'contents', type: 'string' },
-        { name: 'attachment', type: 'bytes' },
-      ],
-    },
-    primaryType: 'Mail',
-    domain: {
-      chainId: '0x539',
-      name: 'Ether Mail',
-      version: '1',
-    },
-    message: {
-      contents: 'Hello, Bob!',
-      from: {
-        name: 'Cow',
-        wallets: [
-          '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826',
-          '0xDeaDbeefdEAdbeefdEadbEEFdeadbeEFdEaDbeeF',
-        ],
-      },
-      to: [
-        {
-          name: 'Bob',
-          wallets: [
-            '0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB',
-            '0xB0BdaBea57B0BDABeA57b0bdABEA57b0BDabEa57',
-            '0xB0B0b0b0b0b0B000000000000000000000000000',
-          ],
-        },
-      ],
-      attachment: '0x',
-    },
-  },
-];
 
 describe('Confirmation Signature - Sign Typed Data V4', function (this: Suite) {
   it('initiates and confirms', async function () {
@@ -119,7 +69,6 @@ describe('Confirmation Signature - Sign Typed Data V4', function (this: Suite) {
           signatureType: 'eth_signTypedData_v4',
           primaryType: 'Mail',
           withAnonEvents: true,
-          requestedThrough: MetaMetricsRequestedThrough.EthereumProvider,
         });
 
         await assertVerifiedResults(driver, publicAddress);
@@ -154,7 +103,6 @@ describe('Confirmation Signature - Sign Typed Data V4', function (this: Suite) {
           signatureType: 'eth_signTypedData_v4',
           primaryType: 'Mail',
           location: 'confirmation',
-          requestedThrough: MetaMetricsRequestedThrough.EthereumProvider,
         });
 
         await driver.switchToWindowWithTitle(WINDOW_TITLES.TestDApp);
@@ -225,3 +173,53 @@ async function assertVerifiedResults(driver: Driver, publicAddress: string) {
     '0xcd2f9c55840f5e1bcf61812e93c1932485b524ca673b36355482a4fbdf52f692684f92b4f4ab6f6c8572dacce46bd107da154be1c06939b855ecce57a1616ba71b',
   );
 }
+
+const signatureMessageWithoutVerifyingContract = [
+  DEFAULT_FIXTURE_ACCOUNT,
+  {
+    types: {
+      EIP712Domain: [
+        { name: 'name', type: 'string' },
+        { name: 'chainId', type: 'uint256' },
+        { name: 'version', type: 'string' },
+      ],
+      Person: [
+        { name: 'name', type: 'string' },
+        { name: 'wallets', type: 'address[]' },
+      ],
+      Mail: [
+        { name: 'from', type: 'Person' },
+        { name: 'to', type: 'Person[]' },
+        { name: 'contents', type: 'string' },
+        { name: 'attachment', type: 'bytes' },
+      ],
+    },
+    primaryType: 'Mail',
+    domain: {
+      chainId: '0x539',
+      name: 'Ether Mail',
+      version: '1',
+    },
+    message: {
+      contents: 'Hello, Bob!',
+      from: {
+        name: 'Cow',
+        wallets: [
+          '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826',
+          '0xDeaDbeefdEAdbeefdEadbEEFdeadbeEFdEaDbeeF',
+        ],
+      },
+      to: [
+        {
+          name: 'Bob',
+          wallets: [
+            '0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB',
+            '0xB0BdaBea57B0BDABeA57b0bdABEA57b0BDabEa57',
+            '0xB0B0b0b0b0b0B000000000000000000000000000',
+          ],
+        },
+      ],
+      attachment: '0x',
+    },
+  },
+];

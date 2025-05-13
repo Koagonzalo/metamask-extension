@@ -1,17 +1,18 @@
-import React from 'react';
-import { screen } from '@testing-library/react';
 import { NameType } from '@metamask/name-controller';
-import { Hex } from '@metamask/utils';
-import { TokenStandard } from '../../../../../shared/constants/transaction';
-import Name from '../../../../components/app/name';
-import { renderWithProvider } from '../../../../../test/lib/render-helpers';
-import configureStore from '../../../../store/store';
+import type { Hex } from '@metamask/utils';
+import { screen } from '@testing-library/react';
+import React from 'react';
+
 import { CHAIN_IDS } from '../../../../../shared/constants/network';
-import { AvatarNetwork } from '../../../../components/component-library/avatar-network';
-import { mockNetworkState } from '../../../../../test/stub/networks';
+import { TokenStandard } from '../../../../../shared/constants/transaction';
 import mockState from '../../../../../test/data/mock-state.json';
+import { renderWithProvider } from '../../../../../test/lib/render-helpers';
+import { mockNetworkState } from '../../../../../test/stub/networks';
+import Name from '../../../../components/app/name';
+import { AvatarNetwork } from '../../../../components/component-library/avatar-network';
+import configureStore from '../../../../store/store';
 import { AssetPill } from './asset-pill';
-import { NativeAssetIdentifier, TokenAssetIdentifier } from './types';
+import type { NativeAssetIdentifier, TokenAssetIdentifier } from './types';
 
 jest.mock('../../../../components/component-library/avatar-network', () => ({
   AvatarNetworkSize: { Sm: 'Sm' },
@@ -19,8 +20,6 @@ jest.mock('../../../../components/component-library/avatar-network', () => ({
 }));
 
 jest.mock('../../../../components/app/name', () => ({
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   __esModule: true,
   default: jest.fn(() => null),
 }));
@@ -50,7 +49,6 @@ describe('AssetPill', () => {
       },
     ];
 
-    // @ts-expect-error This is missing from the Mocha type definitions
     it.each(cases)(
       'renders chain $chainId',
       ({

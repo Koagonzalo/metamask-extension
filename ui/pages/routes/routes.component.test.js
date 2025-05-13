@@ -1,22 +1,23 @@
+import { BtcAccountType, SolAccountType } from '@metamask/keyring-api';
+import { act } from '@testing-library/react';
 import React from 'react';
 import configureMockStore from 'redux-mock-store';
-import { act } from '@testing-library/react';
 import thunk from 'redux-thunk';
-import { BtcAccountType, SolAccountType } from '@metamask/keyring-api';
+
+import Routes from '.';
+import { CHAIN_IDS } from '../../../shared/constants/network';
+import mockSendState from '../../../test/data/mock-send-state.json';
+import mockState from '../../../test/data/mock-state.json';
+import { renderWithProvider } from '../../../test/jest';
+import { createMockInternalAccount } from '../../../test/jest/mocks';
+import { mockNetworkState } from '../../../test/stub/networks';
 import { SEND_STAGES } from '../../ducks/send';
 import {
   CONFIRMATION_V_NEXT_ROUTE,
   DEFAULT_ROUTE,
 } from '../../helpers/constants/routes';
-import { renderWithProvider } from '../../../test/jest';
-import mockSendState from '../../../test/data/mock-send-state.json';
-import mockState from '../../../test/data/mock-state.json';
 import { useIsOriginalNativeTokenSymbol } from '../../hooks/useIsOriginalNativeTokenSymbol';
-import { createMockInternalAccount } from '../../../test/jest/mocks';
-import { CHAIN_IDS } from '../../../shared/constants/network';
-import { mockNetworkState } from '../../../test/stub/networks';
 import useMultiPolling from '../../hooks/useMultiPolling';
-import Routes from '.';
 
 const middlewares = [thunk];
 
@@ -307,6 +308,21 @@ describe('toast display', () => {
             },
           },
         },
+      },
+      conversionRates: {
+        'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp/slip44:105': {
+          conversionTime: 1745405595549,
+          currency: 'swift:0/iso4217:USD',
+          expirationTime: 1745409195549,
+          rate: '151.36',
+        },
+        'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp/token:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v':
+          {
+            conversionTime: 1745405595549,
+            currency: 'swift:0/iso4217:USD',
+            expirationTime: 1745409195549,
+            rate: '1.00',
+          },
       },
     },
     activeTab: {

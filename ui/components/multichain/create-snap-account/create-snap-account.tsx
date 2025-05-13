@@ -1,10 +1,14 @@
-import React, { useCallback } from 'react';
-import { CaipChainId } from '@metamask/utils';
-import { CreateAccount } from '../create-account';
+import { KeyringTypes } from '@metamask/keyring-controller';
+import type { CaipChainId } from '@metamask/utils';
+import React, { useCallback, useRef } from 'react';
+
+import { MultichainNetworks } from '../../../../shared/constants/multichain/networks';
 import {
   WalletClientType,
   useMultichainWalletSnapClient,
 } from '../../../hooks/accounts/useMultichainWalletSnapClient';
+import { getNextAvailableAccountName } from '../../../store/actions';
+import { CreateAccount } from '../create-account';
 
 type CreateSnapAccountProps = {
   /**
@@ -27,10 +31,6 @@ type CreateSnapAccountProps = {
    * The chain ID to create the account
    */
   chainId: CaipChainId;
-  /**
-   * Whether to set the newly created account as the selected account
-   */
-  setNewlyCreatedAccountAsSelected?: boolean;
 };
 
 export const CreateSnapAccount = ({
@@ -39,29 +39,57 @@ export const CreateSnapAccount = ({
   selectedKeyringId,
   clientType,
   chainId,
-  setNewlyCreatedAccountAsSelected,
 }: CreateSnapAccountProps) => {
-  const client = useMultichainWalletSnapClient(clientType);
+  const snapClient = useMultichainWalletSnapClient(clientType);
+  const isCreatingAccount = useRef(false);
 
   const onCreateAccount = useCallback(
-    async (accountNameSuggestion?: string) => {
-      await client.createAccount(
-        {
+    async (_accountNameSuggestion?: string) => {
+      if (isCreatingAccount.current) {
+        return;
+      }
+
+      try {
+        isCreatingAccount.current = true;
+        await snapClient.createAccount({
           scope: chainId,
           entropySource: selectedKeyringId,
-          accountNameSuggestion,
-        },
-        { setSelectedAccount: setNewlyCreatedAccountAsSelected },
-      );
-      onActionComplete(true);
+          accountNameSuggestion: _accountNameSuggestion,
+        });
+        onActionComplete(true);
+      } catch (error) {
+        onActionComplete(false);
+      } finally {
+        isCreatingAccount.current = false;
+      }
     },
-    [client, chainId, selectedKeyringId, onActionComplete],
+    [snapClient, chainId, selectedKeyringId, onActionComplete],
   );
 
   const getNextAccountName = async () => {
-    return await client.getNextAvailableAccountName({
-      chainId,
-    });
+    const defaultSnapAccountName = await getNextAvailableAccountName(
+      KeyringTypes.snap,
+    );
+
+    // FIXME: This is a temporary workaround to suggest a different account name for a first party snap.
+    const accountNumber = defaultSnapAccountName.trim().split(' ').pop();
+
+    switch (clientType) {
+      case WalletClientType.Bitcoin: {
+        if (chainId === MultichainNetworks.BITCOIN_TESTNET) {
+          return `Bitcoin Testnet Account ${accountNumber}`;
+        }
+        return `Bitcoin Account ${accountNumber}`;
+      }
+      case WalletClientType.Solana: {
+        // Solana accounts should have in their scope the 3 networks
+        // mainnet, testnet, and devnet. Therefore, we can use this name
+        // for all 3 networks.
+        return `Solana Account ${accountNumber}`;
+      }
+      default:
+        return defaultSnapAccountName;
+    }
   };
 
   return (
@@ -69,7 +97,6 @@ export const CreateSnapAccount = ({
       onActionComplete={onActionComplete}
       onCreateAccount={onCreateAccount}
       getNextAvailableAccountName={getNextAccountName}
-      scope={chainId}
       onSelectSrp={onSelectSrp}
       selectedKeyringId={selectedKeyringId}
     />

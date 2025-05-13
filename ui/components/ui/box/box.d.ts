@@ -1,6 +1,6 @@
-import * as React from 'react';
+import type * as React from 'react';
 
-import {
+import type {
   AlignItems,
   BlockSize,
   BLOCK_SIZES,
@@ -21,7 +21,7 @@ import {
   BorderRadius,
 } from '../../../helpers/constants/design-system';
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+// TODO: Replace `any` with type
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type BoxChildren = React.ReactNode | ((...args: any[]) => any);
 

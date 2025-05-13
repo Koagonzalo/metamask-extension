@@ -1,8 +1,9 @@
-import {
+import type {
   LedgerBridge,
   LedgerSignTypedDataParams,
   LedgerSignTypedDataResponse,
 } from '@metamask/eth-ledger-bridge-keyring';
+
 import {
   LedgerAction,
   OffscreenCommunicationEvents,
@@ -38,7 +39,7 @@ export class LedgerOffscreenBridge
 {
   isDeviceConnected = false;
 
-  init() {
+  async init() {
     chrome.runtime.onMessage.addListener((msg) => {
       if (
         msg.target === OffscreenCommunicationTarget.extension &&
@@ -51,20 +52,20 @@ export class LedgerOffscreenBridge
     return Promise.resolve();
   }
 
-  destroy() {
+  async destroy() {
     // TODO: remove listener
     return Promise.resolve();
   }
 
-  getOptions() {
+  async getOptions() {
     return Promise.resolve({});
   }
 
-  setOptions() {
+  async setOptions() {
     return Promise.resolve();
   }
 
-  attemptMakeApp(): Promise<boolean> {
+  async attemptMakeApp(): Promise<boolean> {
     return this.#sendMessage(
       {
         action: LedgerAction.makeApp,
@@ -73,7 +74,7 @@ export class LedgerOffscreenBridge
     );
   }
 
-  updateTransportMethod(transportType: string): Promise<boolean> {
+  async updateTransportMethod(transportType: string): Promise<boolean> {
     return this.#sendMessage(
       {
         action: LedgerAction.updateTransport,
@@ -83,7 +84,7 @@ export class LedgerOffscreenBridge
     );
   }
 
-  getPublicKey(params: { hdPath: string }): Promise<{
+  async getPublicKey(params: { hdPath: string }): Promise<{
     publicKey: string;
     address: string;
     chainCode?: string;
@@ -94,7 +95,7 @@ export class LedgerOffscreenBridge
     });
   }
 
-  deviceSignTransaction(params: { hdPath: string; tx: string }): Promise<{
+  async deviceSignTransaction(params: { hdPath: string; tx: string }): Promise<{
     v: string;
     s: string;
     r: string;
@@ -105,7 +106,7 @@ export class LedgerOffscreenBridge
     });
   }
 
-  deviceSignMessage(params: {
+  async deviceSignMessage(params: {
     hdPath: string;
     message: string;
   }): Promise<{ v: number; s: string; r: string }> {
@@ -115,7 +116,7 @@ export class LedgerOffscreenBridge
     });
   }
 
-  deviceSignTypedData(
+  async deviceSignTypedData(
     params: LedgerSignTypedDataParams,
   ): Promise<LedgerSignTypedDataResponse> {
     return this.#sendMessage({

@@ -1,13 +1,5 @@
-import {
-  withFixtures,
-  unlockWallet,
-  switchToNotificationWindow,
-  WINDOW_TITLES,
-  sendTransaction,
-  convertETHToHexGwei,
-  createDappTransaction,
-} from '../helpers';
-import FixtureBuilder from '../fixture-builder';
+import { SWAP_TEST_ETH_USDC_TRADES_MOCK } from '../../data/mock-data';
+import type { Bundler } from '../bundler';
 import {
   BUNDLER_URL,
   ENTRYPOINT,
@@ -19,12 +11,20 @@ import {
   SIMPLE_ACCOUNT_FACTORY,
   VERIFYING_PAYMASTER,
 } from '../constants';
-import { buildQuote, reviewQuote } from '../tests/swaps/shared';
-import { Driver } from '../webdriver/driver';
-import { Bundler } from '../bundler';
-import { SWAP_TEST_ETH_USDC_TRADES_MOCK } from '../../data/mock-data';
-import { Mockttp } from '../mock-e2e';
+import FixtureBuilder from '../fixture-builder';
+import {
+  withFixtures,
+  unlockWallet,
+  switchToNotificationWindow,
+  WINDOW_TITLES,
+  sendTransaction,
+  convertETHToHexGwei,
+  createDappTransaction,
+} from '../helpers';
+import type { Mockttp } from '../mock-e2e';
 import TestDapp from '../page-objects/pages/test-dapp';
+import { buildQuote, reviewQuote } from '../tests/swaps/shared';
+import type { Driver } from '../webdriver/driver';
 
 enum TransactionDetailRowIndex {
   Nonce = 0,
@@ -205,7 +205,7 @@ async function withAccountSnap(
     paymaster,
     localNodeOptions,
   }: { title?: string; paymaster?: string; localNodeOptions?: object },
-  testCallback: (driver: Driver, bundlerServer: Bundler) => Promise<void>,
+  test: (driver: Driver, bundlerServer: Bundler) => Promise<void>,
 ) {
   await withFixtures(
     {
@@ -252,7 +252,7 @@ async function withAccountSnap(
         WINDOW_TITLES.ExtensionInFullScreenView,
       );
 
-      await testCallback(driver, bundlerServer);
+      await test(driver, bundlerServer);
     },
   );
 }

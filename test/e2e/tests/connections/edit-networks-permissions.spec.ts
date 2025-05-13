@@ -1,12 +1,12 @@
-import { withFixtures, WINDOW_TITLES } from '../../helpers';
 import { DEFAULT_FIXTURE_ACCOUNT, DAPP_HOST_ADDRESS } from '../../constants';
 import FixtureBuilder from '../../fixture-builder';
+import { withFixtures, WINDOW_TITLES } from '../../helpers';
+import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
 import HeaderNavbar from '../../page-objects/pages/header-navbar';
 import Homepage from '../../page-objects/pages/home/homepage';
-import TestDapp from '../../page-objects/pages/test-dapp';
 import PermissionListPage from '../../page-objects/pages/permission/permission-list-page';
 import SitePermissionPage from '../../page-objects/pages/permission/site-permission-page';
-import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
+import TestDapp from '../../page-objects/pages/test-dapp';
 
 describe('Edit Networks Permissions', function () {
   it('should be able to edit networks', async function () {

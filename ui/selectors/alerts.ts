@@ -1,5 +1,6 @@
 import { createSelector } from 'reselect';
-import {
+
+import type {
   Alert,
   ConfirmAlertsState,
 } from '../ducks/confirm-alerts/confirm-alerts';

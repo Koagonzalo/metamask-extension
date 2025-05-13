@@ -1,15 +1,17 @@
-import { Hex, createProjectLogger } from '@metamask/utils';
 import type { Provider } from '@metamask/network-controller';
-import {
+import type { Hex } from '@metamask/utils';
+import { createProjectLogger } from '@metamask/utils';
+
+import type {
   DecodedTransactionDataMethod,
   DecodedTransactionDataParam,
   DecodedTransactionDataResponse,
-  DecodedTransactionDataSource,
 } from '../../../../../shared/types/transaction-decode';
-import { decodeUniswapRouterTransactionData } from './uniswap';
-import { decodeTransactionDataWithSourcify } from './sourcify';
-import { getContractProxyAddress } from './proxy';
+import { DecodedTransactionDataSource } from '../../../../../shared/types/transaction-decode';
 import { decodeTransactionDataWithFourByte } from './four-byte';
+import { getContractProxyAddress } from './proxy';
+import { decodeTransactionDataWithSourcify } from './sourcify';
+import { decodeUniswapRouterTransactionData } from './uniswap';
 
 const log = createProjectLogger('transaction-decode');
 

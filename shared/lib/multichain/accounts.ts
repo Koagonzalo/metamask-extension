@@ -1,13 +1,13 @@
+import { isEvmAccountType } from '@metamask/keyring-api';
+import type { InternalAccount } from '@metamask/keyring-internal-api';
+import type { CaipNamespace } from '@metamask/utils';
 import {
-  CaipNamespace,
   isCaipChainId,
   KnownCaipNamespace,
   parseCaipChainId,
 } from '@metamask/utils';
-import { validate, Network } from 'bitcoin-address-validation';
 import { isAddress } from '@solana/addresses';
-import { isEvmAccountType } from '@metamask/keyring-api';
-import { InternalAccount } from '@metamask/keyring-internal-api';
+import { validate, Network } from 'bitcoin-address-validation';
 
 /**
  * Returns whether an address is on the Bitcoin mainnet.

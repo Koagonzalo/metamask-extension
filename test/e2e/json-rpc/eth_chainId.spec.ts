@@ -1,8 +1,9 @@
 import { strict as assert } from 'assert';
-import { withFixtures } from '../helpers';
+
 import FixtureBuilder from '../fixture-builder';
-import { Driver } from '../webdriver/driver';
+import { withFixtures } from '../helpers';
 import { loginWithBalanceValidation } from '../page-objects/flows/login.flow';
+import type { Driver } from '../webdriver/driver';
 
 describe('eth_chainId', function () {
   it('returns the chain ID of the current network', async function () {

@@ -1,23 +1,24 @@
-import { Mockttp } from 'mockttp';
 import { USER_STORAGE_FEATURE_NAMES } from '@metamask/profile-sync-controller/sdk';
-import { withFixtures } from '../../../helpers';
-import FixtureBuilder from '../../../fixture-builder';
+import type { Mockttp } from 'mockttp';
+
 import { ACCOUNT_TYPE } from '../../../constants';
-import { mockIdentityServices } from '../mocks';
-import { IDENTITY_TEAM_PASSWORD } from '../constants';
+import FixtureBuilder from '../../../fixture-builder';
+import { withFixtures } from '../../../helpers';
 import {
   UserStorageMockttpController,
   UserStorageMockttpControllerEvents,
 } from '../../../helpers/identity/user-storage/userStorageMockttpController';
-import HeaderNavbar from '../../../page-objects/pages/header-navbar';
 import AccountListPage from '../../../page-objects/pages/account-list-page';
+import HeaderNavbar from '../../../page-objects/pages/header-navbar';
 import HomePage from '../../../page-objects/pages/home/homepage';
 import PrivacySettings from '../../../page-objects/pages/settings/privacy-settings';
 import SettingsPage from '../../../page-objects/pages/settings/settings-page';
+import { IDENTITY_TEAM_PASSWORD } from '../constants';
 import {
   completeNewWalletFlowIdentity,
   completeOnboardFlowIdentity,
 } from '../flows';
+import { mockIdentityServices } from '../mocks';
 import { arrangeTestUtils } from './helpers';
 
 describe('Account syncing - New User', function () {
@@ -35,7 +36,7 @@ describe('Account syncing - New User', function () {
         {
           fixtures: new FixtureBuilder({ onboarding: true }).build(),
           title: this.test?.fullTitle(),
-          testSpecificMock: (server: Mockttp) => {
+          testSpecificMock: async (server: Mockttp) => {
             userStorageMockttpController.setupPath(
               USER_STORAGE_FEATURE_NAMES.accounts,
               server,
@@ -56,10 +57,7 @@ describe('Account syncing - New User', function () {
 
           const accountListPage = new AccountListPage(driver);
           await accountListPage.check_pageIsLoaded();
-          await accountListPage.check_numberOfAvailableAccounts(
-            1,
-            ACCOUNT_TYPE.Ethereum,
-          );
+          await accountListPage.check_numberOfAvailableAccounts(1);
           await accountListPage.check_accountDisplayedInAccountList(
             defaultAccountOneName,
           );
@@ -108,7 +106,7 @@ describe('Account syncing - New User', function () {
         {
           fixtures: new FixtureBuilder({ onboarding: true }).build(),
           title: this.test?.fullTitle(),
-          testSpecificMock: (server: Mockttp) => {
+          testSpecificMock: async (server: Mockttp) => {
             userStorageMockttpController.setupPath(
               USER_STORAGE_FEATURE_NAMES.accounts,
               server,
@@ -130,10 +128,7 @@ describe('Account syncing - New User', function () {
           const accountListPage = new AccountListPage(driver);
           await accountListPage.check_pageIsLoaded();
 
-          await accountListPage.check_numberOfAvailableAccounts(
-            2,
-            ACCOUNT_TYPE.Ethereum,
-          );
+          await accountListPage.check_numberOfAvailableAccounts(2);
 
           await accountListPage.check_accountDisplayedInAccountList(
             defaultAccountOneName,

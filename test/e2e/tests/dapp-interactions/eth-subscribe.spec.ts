@@ -1,7 +1,7 @@
-import { DAPP_ONE_URL, withFixtures } from '../../helpers';
 import FixtureBuilder from '../../fixture-builder';
-import TestDapp from '../../page-objects/pages/test-dapp';
+import { DAPP_ONE_URL, withFixtures } from '../../helpers';
 import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
+import TestDapp from '../../page-objects/pages/test-dapp';
 
 describe('eth_subscribe', function () {
   it('only broadcasts subscription notifications on the page that registered the subscription', async function () {

@@ -1,6 +1,7 @@
-import { TransactionMeta } from '@metamask/transaction-controller';
+import type { TransactionMeta } from '@metamask/transaction-controller';
 import { renderHook } from '@testing-library/react-hooks';
 import { useEffect, useState } from 'react';
+
 import { genUnapprovedTokenTransferConfirmation } from '../../../../../../../test/data/confirmations/token-transfer';
 import { useTransactionEventFragment } from '../../../../hooks/useTransactionEventFragment';
 import { useSendingValueMetric } from './useSendingValueMetric';
@@ -26,7 +27,7 @@ describe('useSimulationMetrics', () => {
   const useStateMock = jest.mocked(useState);
   const useEffectMock = jest.mocked(useEffect);
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+  // TODO: Replace `any` with type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let updateTransactionEventFragmentMock: jest.MockedFunction<any>;
 
@@ -39,12 +40,12 @@ describe('useSimulationMetrics', () => {
       updateTransactionEventFragment: updateTransactionEventFragmentMock,
     });
 
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+    // TODO: Replace `any` with type
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     useStateMock.mockImplementation(((initialValue: any) => [
       initialValue,
       jest.fn(),
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+      // TODO: Replace `any` with type
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ]) as any);
 
@@ -64,8 +65,6 @@ describe('useSimulationMetrics', () => {
       expect(updateTransactionEventFragmentMock).toHaveBeenCalledWith(
         expect.objectContaining({
           properties: expect.objectContaining({
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             sending_value: MOCK_FIAT_VALUE,
           }),
         }),
@@ -90,7 +89,7 @@ describe('useSimulationMetrics', () => {
     });
 
     it('Does not updates the event property if fiat value is empty string', async () => {
-      const MOCK_FIAT_VALUE = '' as const;
+      const MOCK_FIAT_VALUE = '';
       const transactionMeta = genUnapprovedTokenTransferConfirmation(
         {},
       ) as TransactionMeta;

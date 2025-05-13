@@ -1,19 +1,15 @@
-import {
+import type {
   File as FileObject,
   FormState,
   InterfaceState,
   State,
-  UserInputEventType,
 } from '@metamask/snaps-sdk';
+import { UserInputEventType } from '@metamask/snaps-sdk';
 import { encodeBase64 } from '@metamask/snaps-utils';
-import React, {
-  FunctionComponent,
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-} from 'react';
+import type { FunctionComponent } from 'react';
+import React, { createContext, useContext, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
+
 import {
   handleSnapRequest as handleSnapRequestFunction,
   updateInterfaceState,
@@ -111,7 +107,7 @@ export const SnapInterfaceContextProvider: FunctionComponent<
           id: interfaceId,
         },
       },
-    }).then(() => forceUpdateMetamaskState(dispatch));
+    }).then(async () => forceUpdateMetamaskState(dispatch));
   };
 
   const updateState = (state: InterfaceState) =>
@@ -171,7 +167,7 @@ export const SnapInterfaceContextProvider: FunctionComponent<
           id: interfaceId,
         },
       },
-    }).then(() => forceUpdateMetamaskState(dispatch));
+    }).then(async () => forceUpdateMetamaskState(dispatch));
   };
 
   /**
@@ -186,7 +182,7 @@ export const SnapInterfaceContextProvider: FunctionComponent<
       file
         .arrayBuffer()
         .then((arrayBuffer) => new Uint8Array(arrayBuffer))
-        .then((uint8Array) => encodeBase64(uint8Array))
+        .then(async (uint8Array) => encodeBase64(uint8Array))
         .then((base64) => {
           const fileObject: FileObject = {
             name: file.name,

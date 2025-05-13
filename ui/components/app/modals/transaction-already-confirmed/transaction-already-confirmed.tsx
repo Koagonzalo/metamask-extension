@@ -1,13 +1,19 @@
-import React, { useContext } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { getBlockExplorerLink } from '@metamask/etherscan-link';
 import { type TransactionMeta } from '@metamask/transaction-controller';
+import React, { useContext } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { I18nContext } from '../../../../contexts/i18n';
+import {
+  AlignItems,
+  FlexDirection,
+} from '../../../../helpers/constants/design-system';
+import { useModalProps } from '../../../../hooks/useModalProps';
 import {
   getRpcPrefsForCurrentProvider,
   getTransaction,
 } from '../../../../selectors';
-import { useModalProps } from '../../../../hooks/useModalProps';
-
+import type { MetaMaskReduxState } from '../../../../store/store';
 import {
   Modal,
   ModalOverlay,
@@ -17,15 +23,7 @@ import {
   Text,
   ModalFooter,
 } from '../../../component-library';
-import {
-  AlignItems,
-  FlexDirection,
-} from '../../../../helpers/constants/design-system';
-import { I18nContext } from '../../../../contexts/i18n';
-import { MetaMaskReduxState } from '../../../../store/store';
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export default function TransactionAlreadyConfirmed() {
   const {
     hideModal,
@@ -35,7 +33,7 @@ export default function TransactionAlreadyConfirmed() {
   const dispatch = useDispatch();
   const transaction: TransactionMeta = useSelector(
     (state: MetaMaskReduxState) =>
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+      // TODO: Replace `any` with type
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (getTransaction as any)(state, originalTransactionId),
   );
@@ -44,7 +42,7 @@ export default function TransactionAlreadyConfirmed() {
   const viewTransaction = () => {
     // TODO: Fix getBlockExplorerLink arguments compatible with the actual controller types
     const blockExplorerLink = getBlockExplorerLink(
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+      // TODO: Replace `any` with type
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       transaction as any,
       rpcPrefs,

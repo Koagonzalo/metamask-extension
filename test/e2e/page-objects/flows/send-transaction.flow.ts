@@ -1,9 +1,9 @@
-import HomePage from '../pages/home/homepage';
-import SendTokenPage from '../pages/send/send-token-page';
-import { Driver } from '../../webdriver/driver';
-import SnapSimpleKeyringPage from '../pages/snap-simple-keyring-page';
+import type { Driver } from '../../webdriver/driver';
 import TransactionConfirmation from '../pages/confirmations/redesign/transaction-confirmation';
 import ActivityListPage from '../pages/home/activity-list';
+import HomePage from '../pages/home/homepage';
+import SendTokenPage from '../pages/send/send-token-page';
+import SnapSimpleKeyringPage from '../pages/snap-simple-keyring-page';
 
 /**
  * This function initiates the steps required to send a transaction from the homepage to final confirmation.

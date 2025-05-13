@@ -1,8 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { Text } from '../../component-library';
+import PropTypes from 'prop-types';
+import React from 'react';
+
 import { TextVariant } from '../../../helpers/constants/design-system';
+import { Text } from '../../component-library';
 import Tooltip from '../tooltip/tooltip';
 
 const defaultRender = (inner) => inner;
@@ -33,6 +34,7 @@ export default function IconButton(props) {
       {renderWrapper(
         <>
           <div
+            data-theme="light"
             className={classNames('icon-button__circle', iconButtonClassName)}
           >
             {Icon}
@@ -42,7 +44,7 @@ export default function IconButton(props) {
               <Text
                 className="icon-button__label-large"
                 ellipsis
-                variant={TextVariant.bodySmMedium}
+                variant={TextVariant.bodySm}
               >
                 {label}
               </Text>
@@ -51,7 +53,7 @@ export default function IconButton(props) {
             <Text
               className="icon-button__label"
               ellipsis
-              variant={TextVariant.bodySmMedium}
+              variant={TextVariant.bodySm}
             >
               {label}
             </Text>

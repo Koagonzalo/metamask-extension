@@ -1,13 +1,14 @@
-import { Mockttp } from 'mockttp';
-import { Context } from 'mocha';
 import { zeroAddress } from 'ethereumjs-util';
+import { Context } from 'mocha';
+import type { Mockttp } from 'mockttp';
 import { Browser } from 'selenium-webdriver';
+
 import { CHAIN_IDS } from '../../../../shared/constants/network';
 import FixtureBuilder from '../../fixture-builder';
 import { unlockWallet, withFixtures } from '../../helpers';
-import { Driver } from '../../webdriver/driver';
-import HomePage from '../../page-objects/pages/home/homepage';
 import AssetListPage from '../../page-objects/pages/home/asset-list';
+import HomePage from '../../page-objects/pages/home/homepage';
+import type { Driver } from '../../webdriver/driver';
 import {
   mockEmptyHistoricalPrices,
   mockEmptyPrices,
@@ -34,7 +35,7 @@ describe('Token List', function () {
     await withFixtures(
       {
         ...fixtures,
-        title: (this as Context).test?.fullTitle(),
+        title: this.test?.fullTitle(),
         testSpecificMock: async (mockServer: Mockttp) => [
           await mockEmptyPrices(mockServer, chainId),
           await mockEmptyPrices(mockServer, lineaChainId),
@@ -80,7 +81,7 @@ describe('Token List', function () {
     await withFixtures(
       {
         ...fixtures,
-        title: (this as Context).test?.fullTitle(),
+        title: this.test?.fullTitle(),
         ethConversionInUsd,
         testSpecificMock: async (mockServer: Mockttp) => [
           await mockSpotPrices(mockServer, chainId, {

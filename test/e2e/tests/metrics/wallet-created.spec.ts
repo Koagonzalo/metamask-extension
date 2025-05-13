@@ -1,10 +1,11 @@
 import { strict as assert } from 'assert';
+import type { Mockttp } from 'mockttp';
 import { Browser } from 'selenium-webdriver';
-import { Mockttp } from 'mockttp';
-import { getEventPayloads, withFixtures } from '../../helpers';
-import FixtureBuilder from '../../fixture-builder';
-import { completeCreateNewWalletOnboardingFlow } from '../../page-objects/flows/onboarding.flow';
+
 import { MOCK_META_METRICS_ID } from '../../constants';
+import FixtureBuilder from '../../fixture-builder';
+import { getEventPayloads, withFixtures } from '../../helpers';
+import { completeCreateNewWalletOnboardingFlow } from '../../page-objects/flows/onboarding.flow';
 
 /**
  * Mocks the segment API multiple times for specific payloads that we expect to
@@ -63,16 +64,10 @@ describe('Wallet Created Events', function () {
         assert.equal(events.length, 2);
         if (process.env.SELENIUM_BROWSER === Browser.FIREFOX) {
           assert.deepStrictEqual(events[0].properties, {
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             account_type: 'metamask',
             category: 'Onboarding',
             locale: 'en',
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             chain_id: '0x539',
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             environment_type: 'fullscreen',
           });
         }
@@ -80,17 +75,9 @@ describe('Wallet Created Events', function () {
           method: 'create',
           category: 'Onboarding',
           locale: 'en',
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           chain_id: '0x539',
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           environment_type: 'fullscreen',
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           is_profile_syncing_enabled: true,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           hd_entropy_index: 0,
         });
       },

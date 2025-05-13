@@ -1,41 +1,42 @@
-import { v4 as uuid } from 'uuid';
-import log from 'loglevel';
-import { ApprovalType } from '@metamask/controller-utils';
-import { KeyringControllerQRKeyringStateChangeEvent } from '@metamask/keyring-controller';
-import {
-  BaseController,
+import type {
+  AcceptRequest,
+  AddApprovalRequest,
+} from '@metamask/approval-controller';
+import { BaseController } from '@metamask/base-controller';
+import type {
   ControllerGetStateAction,
   ControllerStateChangeEvent,
   RestrictedMessenger,
 } from '@metamask/base-controller';
-import {
-  AcceptRequest,
-  AddApprovalRequest,
-} from '@metamask/approval-controller';
-import { Json } from '@metamask/utils';
-import { Browser } from 'webextension-polyfill';
-import { MINUTE } from '../../../shared/constants/time';
+import { ApprovalType } from '@metamask/controller-utils';
+import type { KeyringControllerQRKeyringStateChangeEvent } from '@metamask/keyring-controller';
+import type { Json } from '@metamask/utils';
+import log from 'loglevel';
+import { v4 as uuid } from 'uuid';
+import type { Browser } from 'webextension-polyfill';
+
 import { AUTO_LOCK_TIMEOUT_ALARM } from '../../../shared/constants/alarms';
-import { isManifestV3 } from '../../../shared/modules/mv3.utils';
 // TODO: Remove restricted import
 // eslint-disable-next-line import/no-restricted-paths
-import { isBeta } from '../../../ui/helpers/utils/build-types';
 import {
   ENVIRONMENT_TYPE_BACKGROUND,
   POLLING_TOKEN_ENVIRONMENT_TYPES,
   ORIGIN_METAMASK,
 } from '../../../shared/constants/app';
-import { DEFAULT_AUTO_LOCK_TIME_LIMIT } from '../../../shared/constants/preferences';
-import { LastInteractedConfirmationInfo } from '../../../shared/types/confirm';
-import { SecurityAlertResponse } from '../lib/ppom/types';
-import {
+import type {
   AccountOverviewTabKey,
   CarouselSlide,
 } from '../../../shared/constants/app-state';
+import { DEFAULT_AUTO_LOCK_TIME_LIMIT } from '../../../shared/constants/preferences';
+import { MINUTE } from '../../../shared/constants/time';
+import { isManifestV3 } from '../../../shared/modules/mv3.utils';
+import type { LastInteractedConfirmationInfo } from '../../../shared/types/confirm';
 import type {
   ThrottledOrigins,
   ThrottledOrigin,
 } from '../../../shared/types/origin-throttling';
+import { isBeta } from '../../../ui/helpers/utils/build-types';
+import type { SecurityAlertResponse } from '../lib/ppom/types';
 import type {
   Preferences,
   PreferencesControllerGetStateAction,
@@ -69,8 +70,6 @@ export type AppStateControllerState = {
   // This key is only used for checking if the user had set advancedGasFee
   // prior to Migration 92.3 where we split out the setting to support
   // multiple networks.
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   hadAdvancedGasFeesSetPriorToMigration92_3: boolean;
   qrHardware: Json;
   nftsDropdownState: Json;
@@ -196,8 +195,6 @@ const getDefaultAppStateControllerState = (): AppStateControllerState => ({
   isRampCardClosed: false,
   newPrivacyPolicyToastClickedOrClosed: null,
   newPrivacyPolicyToastShownDate: null,
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   hadAdvancedGasFeesSetPriorToMigration92_3: false,
   surveyLinkLastClickedOrClosed: null,
   switchedNetworkNeverShowMessage: false,
@@ -309,8 +306,6 @@ const controllerMetadata = {
     persist: true,
     anonymous: true,
   },
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   hadAdvancedGasFeesSetPriorToMigration92_3: {
     persist: true,
     anonymous: true,
@@ -462,7 +457,7 @@ export class AppStateController extends BaseController<
    * @returns A promise that resolves when the extension is
    * unlocked, or immediately if the extension is already unlocked.
    */
-  getUnlockPromise(shouldShowUnlockRequest: boolean): Promise<void> {
+  async getUnlockPromise(shouldShowUnlockRequest: boolean): Promise<void> {
     return new Promise((resolve) => {
       if (this.isUnlocked()) {
         resolve();

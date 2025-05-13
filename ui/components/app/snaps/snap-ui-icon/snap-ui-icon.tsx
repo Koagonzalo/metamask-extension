@@ -1,6 +1,8 @@
 import React from 'react';
-import { Icon, IconName, IconSize } from '../../../component-library/icon';
-import { IconColor } from '../../../../helpers/constants/design-system';
+
+import type { IconColor } from '../../../../helpers/constants/design-system';
+import type { IconName, IconSize } from '../../../component-library/icon';
+import { Icon } from '../../../component-library/icon';
 
 export type SnapUIIconProps = {
   name: IconName;

@@ -1,21 +1,21 @@
 import { TransactionEnvelopeType } from '@metamask/transaction-controller';
-import { Suite } from 'mocha';
-import { MockedEndpoint } from 'mockttp';
+import type { Suite } from 'mocha';
+import type { MockedEndpoint } from 'mockttp';
+
+import {
+  BlockaidReason,
+  BlockaidResultType,
+} from '../../../../../shared/constants/security-provider';
 import { WINDOW_TITLES } from '../../../helpers';
-import { Driver } from '../../../webdriver/driver';
+import PersonalSignConfirmation from '../../../page-objects/pages/confirmations/redesign/personal-sign-confirmation';
+import type { Driver } from '../../../webdriver/driver';
 import {
   mockSignatureApproved,
   mockSignatureRejected,
   scrollAndConfirmAndAssertConfirm,
   withTransactionEnvelopeTypeFixtures,
 } from '../helpers';
-import { TestSuiteArguments } from '../transactions/shared';
-import PersonalSignConfirmation from '../../../page-objects/pages/confirmations/redesign/personal-sign-confirmation';
-import {
-  BlockaidReason,
-  BlockaidResultType,
-} from '../../../../../shared/constants/security-provider';
-import { MetaMetricsRequestedThrough } from '../../../../../shared/constants/metametrics';
+import type { TestSuiteArguments } from '../transactions/shared';
 import {
   assertAccountDetailsMetrics,
   assertHeaderInfoBalance,
@@ -79,7 +79,6 @@ describe('Confirmation Signature - SIWE', function (this: Suite) {
           ],
           securityAlertReason: BlockaidReason.notApplicable,
           securityAlertResponse: BlockaidResultType.NotApplicable,
-          requestedThrough: MetaMetricsRequestedThrough.EthereumProvider,
         });
       },
       mockSignatureApproved,
@@ -112,7 +111,6 @@ describe('Confirmation Signature - SIWE', function (this: Suite) {
             'sign_in_with_ethereum',
           ],
           location: 'confirmation',
-          requestedThrough: MetaMetricsRequestedThrough.EthereumProvider,
           securityAlertReason: BlockaidReason.notApplicable,
           securityAlertResponse: BlockaidResultType.NotApplicable,
         });

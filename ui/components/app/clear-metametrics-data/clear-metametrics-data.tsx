@@ -1,10 +1,25 @@
 import React, { useContext } from 'react';
 import { useDispatch } from 'react-redux';
+
+import {
+  MetaMetricsEventCategory,
+  MetaMetricsEventName,
+} from '../../../../shared/constants/metametrics';
+import { MetaMetricsContext } from '../../../contexts/metametrics';
 import {
   hideDeleteMetaMetricsDataModal,
   openDataDeletionErrorModal,
 } from '../../../ducks/app/app';
+import {
+  AlignItems,
+  BlockSize,
+  Display,
+  FlexDirection,
+  JustifyContent,
+  TextVariant,
+} from '../../../helpers/constants/design-system';
 import { useI18nContext } from '../../../hooks/useI18nContext';
+import { createMetaMetricsDataDeletionTask } from '../../../store/actions';
 import {
   Box,
   Button,
@@ -17,23 +32,7 @@ import {
   ModalOverlay,
   Text,
 } from '../../component-library';
-import {
-  AlignItems,
-  BlockSize,
-  Display,
-  FlexDirection,
-  JustifyContent,
-  TextVariant,
-} from '../../../helpers/constants/design-system';
-import { createMetaMetricsDataDeletionTask } from '../../../store/actions';
-import { MetaMetricsContext } from '../../../contexts/metametrics';
-import {
-  MetaMetricsEventCategory,
-  MetaMetricsEventName,
-} from '../../../../shared/constants/metametrics';
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export default function ClearMetaMetricsData() {
   const t = useI18nContext();
   const dispatch = useDispatch();

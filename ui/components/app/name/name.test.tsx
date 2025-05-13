@@ -1,15 +1,16 @@
-import * as React from 'react';
 import { NameType } from '@metamask/name-controller';
+import * as React from 'react';
 import configureStore from 'redux-mock-store';
-import { renderWithProvider } from '../../../../test/lib/render-helpers';
-import { MetaMetricsContext } from '../../../contexts/metametrics';
+
 import {
   MetaMetricsEventCategory,
   MetaMetricsEventName,
 } from '../../../../shared/constants/metametrics';
-import { useDisplayName } from '../../../hooks/useDisplayName';
-import { mockNetworkState } from '../../../../test/stub/networks';
 import { CHAIN_IDS } from '../../../../shared/constants/network';
+import { renderWithProvider } from '../../../../test/lib/render-helpers';
+import { mockNetworkState } from '../../../../test/stub/networks';
+import { MetaMetricsContext } from '../../../contexts/metametrics';
+import { useDisplayName } from '../../../hooks/useDisplayName';
 import Name from './name';
 
 jest.mock('../../../hooks/useDisplayName');
@@ -130,7 +131,6 @@ describe('Name', () => {
   });
 
   describe('metrics', () => {
-    // @ts-expect-error This is missing from the Mocha type definitions
     it.each([
       ['saved', ADDRESS_SAVED_NAME_MOCK, true],
       ['not saved', ADDRESS_NO_SAVED_NAME_MOCK, false],
@@ -159,11 +159,7 @@ describe('Name', () => {
           event: MetaMetricsEventName.PetnameDisplayed,
           category: MetaMetricsEventCategory.Petnames,
           properties: {
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             petname_category: NameType.ETHEREUM_ADDRESS,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             has_petname: hasPetname,
           },
         });

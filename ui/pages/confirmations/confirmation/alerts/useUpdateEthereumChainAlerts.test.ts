@@ -1,11 +1,10 @@
-import { ApprovalRequest } from '@metamask/approval-controller';
+import type { ApprovalRequest } from '@metamask/approval-controller';
 import { ApprovalType } from '@metamask/controller-utils';
 
-import mockState from '../../../../../test/data/mock-state.json';
 import { getMockPersonalSignConfirmState } from '../../../../../test/data/confirmations/helper';
+import mockState from '../../../../../test/data/mock-state.json';
 import { renderHookWithProvider } from '../../../../../test/lib/render-helpers';
-import * as AlertActions from '../../../../ducks/confirm-alerts/confirm-alerts';
-
+import type * as AlertActions from '../../../../ducks/confirm-alerts/confirm-alerts';
 import { useUpdateEthereumChainAlerts } from './useUpdateEthereumChainAlerts';
 
 jest.mock('react-redux', () => ({
@@ -18,7 +17,7 @@ const PENDING_APPROVAL_MOCK = {
   requestData: { testProperty: 'testValue' },
   type: ApprovalType.AddEthereumChain,
   origin: 'https://metamask.github.io',
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+  // TODO: Replace `any` with type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 } as ApprovalRequest<any>;
 
@@ -30,7 +29,7 @@ const PERMISSION_MOCK = {
   },
   type: ApprovalType.WalletRequestPermissions,
   origin: 'https://metamask.github.io',
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+  // TODO: Replace `any` with type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 } as unknown as ApprovalRequest<any>;
 

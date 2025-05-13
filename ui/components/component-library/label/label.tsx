@@ -1,7 +1,6 @@
-import React from 'react';
 import classnames from 'classnames';
-import { Text } from '../text';
-import type { TextProps } from '../text';
+import React from 'react';
+
 import {
   FontWeight,
   TextVariant,
@@ -9,11 +8,11 @@ import {
   AlignItems,
 } from '../../../helpers/constants/design-system';
 import type { PolymorphicRef } from '../box';
-import { LabelProps, LabelComponent } from './label.types';
+import { Text } from '../text';
+import type { TextProps } from '../text';
+import type { LabelProps, LabelComponent } from './label.types';
 
 export const Label: LabelComponent = React.forwardRef(
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   <C extends React.ElementType = 'label'>(
     { htmlFor, className, children, ...props }: LabelProps<C>,
     ref?: PolymorphicRef<C>,

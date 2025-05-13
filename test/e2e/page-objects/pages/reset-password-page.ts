@@ -1,15 +1,15 @@
-import { Driver } from '../../webdriver/driver';
+import type { Driver } from '../../webdriver/driver';
 
 class ResetPasswordPage {
-  private driver: Driver;
+  private readonly driver: Driver;
 
-  private seedPhraseInput: string;
+  private readonly seedPhraseInput: string;
 
-  private passwordInput: string;
+  private readonly passwordInput: string;
 
-  private confirmPasswordInput: string;
+  private readonly confirmPasswordInput: string;
 
-  private restoreButton: string;
+  private readonly restoreButton: string;
 
   constructor(driver: Driver) {
     this.driver = driver;
@@ -19,8 +19,6 @@ class ResetPasswordPage {
     this.restoreButton = '[data-testid="create-new-vault-submit-button"]';
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_pageIsLoaded(): Promise<void> {
     try {
       await this.driver.waitForMultipleSelectors([

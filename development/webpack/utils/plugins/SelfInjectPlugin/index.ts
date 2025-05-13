@@ -1,6 +1,7 @@
 import { dirname, relative } from 'node:path';
-import { ModuleFilenameHelpers, Compilation, sources } from 'webpack';
 import { validate } from 'schema-utils';
+import { ModuleFilenameHelpers, Compilation, sources } from 'webpack';
+
 import { schema } from './schema';
 import type { SelfInjectPluginOptions, Source, Compiler } from './types';
 
@@ -60,7 +61,7 @@ const defaultOptions = {
  * ```
  */
 export class SelfInjectPlugin {
-  private options: SelfInjectPluginOptions & typeof defaultOptions;
+  private readonly options: SelfInjectPluginOptions & typeof defaultOptions;
 
   constructor(options: SelfInjectPluginOptions) {
     validate(schema, options, { name: SelfInjectPlugin.name });

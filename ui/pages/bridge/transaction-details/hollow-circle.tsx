@@ -1,19 +1,17 @@
-import * as React from 'react';
 import classnames from 'classnames';
-import {
-  Box,
+import * as React from 'react';
+
+import type {
   IconProps,
-  IconSize,
   PolymorphicRef,
 } from '../../../components/component-library';
+import { Box, IconSize } from '../../../components/component-library';
 import {
   BackgroundColor,
   Display,
 } from '../../../helpers/constants/design-system';
 
 const HollowCircle = React.forwardRef(
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   <C extends React.ElementType = 'span'>(
     { size = IconSize.Md, color, className = '', style }: IconProps<C>,
     ref?: PolymorphicRef<C>,

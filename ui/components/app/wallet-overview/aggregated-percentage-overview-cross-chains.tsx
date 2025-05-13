@@ -1,9 +1,22 @@
+import { getNativeTokenAddress } from '@metamask/assets-controllers';
+import type { Hex } from '@metamask/utils';
+import { toChecksumAddress } from 'ethereumjs-util';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
-import { toChecksumAddress } from 'ethereumjs-util';
-import { getNativeTokenAddress } from '@metamask/assets-controllers';
-import { Hex } from '@metamask/utils';
+// TODO: Remove restricted import
+// eslint-disable-next-line import/no-restricted-paths
+import { formatValue, isValidAmount } from '../../../../app/scripts/lib/util';
+import { getIntlLocale } from '../../../ducks/locale/locale';
+import { getCurrentCurrency } from '../../../ducks/metamask/metamask';
+import {
+  Display,
+  TextColor,
+  TextVariant,
+} from '../../../helpers/constants/design-system';
+import { getCalculatedTokenAmount1dAgo } from '../../../helpers/utils/util';
+import { useAccountTotalCrossChainFiatBalance } from '../../../hooks/useAccountTotalCrossChainFiatBalance';
+import { useGetFormattedTokensPerChain } from '../../../hooks/useGetFormattedTokensPerChain';
 import {
   getSelectedAccount,
   getShouldHideZeroBalanceTokens,
@@ -11,22 +24,8 @@ import {
   getMarketData,
   getChainIdsToPoll,
 } from '../../../selectors';
-import { getCurrentCurrency } from '../../../ducks/metamask/metamask';
-
-// TODO: Remove restricted import
-// eslint-disable-next-line import/no-restricted-paths
-import { formatValue, isValidAmount } from '../../../../app/scripts/lib/util';
-import { getIntlLocale } from '../../../ducks/locale/locale';
-import {
-  Display,
-  TextColor,
-  TextVariant,
-} from '../../../helpers/constants/design-system';
 import { Box, SensitiveText } from '../../component-library';
-import { getCalculatedTokenAmount1dAgo } from '../../../helpers/utils/util';
-import { useAccountTotalCrossChainFiatBalance } from '../../../hooks/useAccountTotalCrossChainFiatBalance';
-import { useGetFormattedTokensPerChain } from '../../../hooks/useGetFormattedTokensPerChain';
-import { TokenWithBalance } from '../assets/types';
+import type { TokenWithBalance } from '../assets/types';
 
 export const AggregatedPercentageOverviewCrossChains = () => {
   const locale = useSelector(getIntlLocale);
@@ -122,8 +121,7 @@ export const AggregatedPercentageOverviewCrossChains = () => {
 
   let formattedAmountChangeCrossChains = '';
   if (isValidAmount(amountChangeCrossChains)) {
-    formattedAmountChangeCrossChains =
-      (amountChangeCrossChains as number) >= 0 ? '+' : '';
+    formattedAmountChangeCrossChains = amountChangeCrossChains >= 0 ? '+' : '';
 
     const options = {
       notation: 'compact',
@@ -137,23 +135,23 @@ export const AggregatedPercentageOverviewCrossChains = () => {
         ...options,
         style: 'currency',
         currency: fiatCurrency,
-      }).format(amountChangeCrossChains as number)} `;
+      }).format(amountChangeCrossChains)} `;
     } catch {
       // Non-standard Currency Codes
       formattedAmountChangeCrossChains += `${Intl.NumberFormat(locale, {
         ...options,
         minimumFractionDigits: 2,
         style: 'decimal',
-      }).format(amountChangeCrossChains as number)} `;
+      }).format(amountChangeCrossChains)} `;
     }
   }
 
   let color = TextColor.textDefault;
 
   if (!privacyMode && isValidAmount(amountChangeCrossChains)) {
-    if ((amountChangeCrossChains as number) === 0) {
+    if (amountChangeCrossChains === 0) {
       color = TextColor.textDefault;
-    } else if ((amountChangeCrossChains as number) > 0) {
+    } else if (amountChangeCrossChains > 0) {
       color = TextColor.successDefault;
     } else {
       color = TextColor.errorDefault;

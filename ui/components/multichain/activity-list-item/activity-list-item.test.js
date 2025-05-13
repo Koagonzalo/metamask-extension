@@ -1,5 +1,6 @@
-import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
+import React from 'react';
+
 import { Icon, IconName, IconSize } from '../../component-library';
 import { ActivityListItem } from './activity-list-item';
 
@@ -20,7 +21,7 @@ describe('ActivityListItem', () => {
     rightContent: RIGHT_CONTENT,
     midContent: MID_CONTENT,
     topContent: TOP_CONTENT,
-    icon: <Icon name={IconName.Accessibility} size={IconSize.Xs} />,
+    icon: <Icon name={IconName.Custody} size={IconSize.Xs} />,
     onClick: jest.fn(),
   };
 

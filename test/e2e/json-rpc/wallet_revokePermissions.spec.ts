@@ -1,9 +1,10 @@
+import type { PermissionConstraint } from '@metamask/permission-controller';
 import { strict as assert } from 'assert';
-import { PermissionConstraint } from '@metamask/permission-controller';
-import { withFixtures } from '../helpers';
+
 import FixtureBuilder from '../fixture-builder';
-import TestDapp from '../page-objects/pages/test-dapp';
+import { withFixtures } from '../helpers';
 import { loginWithBalanceValidation } from '../page-objects/flows/login.flow';
+import TestDapp from '../page-objects/pages/test-dapp';
 
 describe('Revoke Dapp Permissions', function () {
   it('should revoke "eth_accounts" and "endowment:permitted-chains" when the dapp revokes permissions for just "eth_accounts"', async function () {
@@ -40,8 +41,6 @@ describe('Revoke Dapp Permissions', function () {
           method: 'wallet_revokePermissions',
           params: [
             {
-              // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-              // eslint-disable-next-line @typescript-eslint/naming-convention
               eth_accounts: {},
             },
           ],
@@ -158,8 +157,6 @@ describe('Revoke Dapp Permissions', function () {
           method: 'wallet_revokePermissions',
           params: [
             {
-              // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-              // eslint-disable-next-line @typescript-eslint/naming-convention
               eth_accounts: {},
               'endowment:permitted-chains': {},
             },
@@ -206,8 +203,6 @@ describe('Revoke Dapp Permissions', function () {
             method: 'wallet_revokePermissions',
             params: [
               {
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                // eslint-disable-next-line @typescript-eslint/naming-convention
                 eth_accounts: {},
               },
             ],

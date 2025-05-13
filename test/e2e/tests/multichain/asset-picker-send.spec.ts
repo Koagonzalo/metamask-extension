@@ -1,5 +1,6 @@
 import { strict as assert } from 'assert';
-import { Context } from 'mocha';
+import type { Context } from 'mocha';
+
 import { CHAIN_IDS } from '../../../../shared/constants/network';
 import FixtureBuilder from '../../fixture-builder';
 import {
@@ -7,7 +8,7 @@ import {
   unlockWallet,
   withFixtures,
 } from '../../helpers';
-import { Driver } from '../../webdriver/driver';
+import type { Driver } from '../../webdriver/driver';
 import { RECIPIENT_ADDRESS_MOCK } from '../simulation-details/types';
 
 describe('AssetPickerSendFlow', function () {
@@ -26,7 +27,7 @@ describe('AssetPickerSendFlow', function () {
     await withFixtures(
       {
         ...fixtures,
-        title: (this as Context).test?.fullTitle(),
+        title: this.test?.fullTitle(),
         ethConversionInUsd,
       },
       async ({ driver }: { driver: Driver }) => {

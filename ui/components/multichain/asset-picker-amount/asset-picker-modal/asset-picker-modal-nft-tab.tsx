@@ -1,33 +1,7 @@
 import React, { useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import {
-  Box,
-  Text,
-  ButtonLink,
-  ButtonLinkSize,
-} from '../../../component-library';
-import {
-  TextColor,
-  TextVariant,
-  TextAlign,
-  Display,
-  JustifyContent,
-  AlignItems,
-  FlexDirection,
-} from '../../../../helpers/constants/design-system';
-import { useI18nContext } from '../../../../hooks/useI18nContext';
-import ZENDESK_URLS from '../../../../helpers/constants/zendesk-url';
-import Spinner from '../../../ui/spinner';
-import {
-  getIsMainnet,
-  getNftIsStillFetchingIndication,
-  getUseNftDetection,
-} from '../../../../selectors';
-import NFTsDetectionNoticeNFTsTab from '../../../app/assets/nfts/nfts-detection-notice-nfts-tab/nfts-detection-notice-nfts-tab';
-import NftGrid from '../../../app/assets/nfts/nft-grid/nft-grid';
-import { useNfts } from '../../../../hooks/useNfts';
-import { SEND_ROUTE } from '../../../../helpers/constants/routes';
+
 import { MetaMetricsContext } from '../../../../contexts/metametrics';
 import {
   MetaMetricsEventCategory,
@@ -38,8 +12,35 @@ import {
   getSendAnalyticProperties,
   updateSendAsset,
 } from '../../../../ducks/send';
+import {
+  TextColor,
+  TextVariant,
+  TextAlign,
+  Display,
+  JustifyContent,
+  AlignItems,
+  FlexDirection,
+} from '../../../../helpers/constants/design-system';
+import { SEND_ROUTE } from '../../../../helpers/constants/routes';
+import ZENDESK_URLS from '../../../../helpers/constants/zendesk-url';
 import { getNftImage } from '../../../../helpers/utils/nfts';
-import { NFT } from './types';
+import { useI18nContext } from '../../../../hooks/useI18nContext';
+import { useNfts } from '../../../../hooks/useNfts';
+import {
+  getIsMainnet,
+  getNftIsStillFetchingIndication,
+  getUseNftDetection,
+} from '../../../../selectors';
+import NftGrid from '../../../app/assets/nfts/nft-grid/nft-grid';
+import NFTsDetectionNoticeNFTsTab from '../../../app/assets/nfts/nfts-detection-notice-nfts-tab/nfts-detection-notice-nfts-tab';
+import {
+  Box,
+  Text,
+  ButtonLink,
+  ButtonLinkSize,
+} from '../../../component-library';
+import Spinner from '../../../ui/spinner';
+import type { NFT } from './types';
 
 export type PreviouslyOwnedCollections = {
   collectionName: string;
@@ -52,8 +53,6 @@ type AssetPickerModalNftTabProps = {
   renderSearch: () => void;
 };
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export function AssetPickerModalNftTab({
   searchQuery,
   onClose,
@@ -95,20 +94,12 @@ export function AssetPickerModalNftTab({
         event: MetaMetricsEventName.sendAssetSelected,
         category: MetaMetricsEventCategory.Send,
         properties: {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           is_destination_asset_picker_modal: false,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           is_nft: true,
         },
         sensitiveProperties: {
           ...sendAnalytics,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           new_asset_symbol: nft.name,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           new_asset_address: nft.address,
         },
       },

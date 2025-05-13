@@ -1,34 +1,32 @@
 import { Key } from 'selenium-webdriver';
-import { Driver } from '../../../../webdriver/driver';
-import { RawLocator } from '../../../common';
+
+import type { Driver } from '../../../../webdriver/driver';
+import type { RawLocator } from '../../../common';
 
 class Confirmation {
   protected driver: Driver;
 
-  private scrollToBottomButton: RawLocator;
+  private readonly scrollToBottomButton: RawLocator;
 
-  private footerConfirmButton: RawLocator;
+  private readonly footerConfirmButton: RawLocator;
 
-  private headerAccountDetailsButton: RawLocator;
+  private readonly headerAccountDetailsButton: RawLocator;
 
-  private footerCancelButton: RawLocator;
+  private readonly footerCancelButton: RawLocator;
 
-  private sectionCollapseButton = '[data-testid="sectionCollapseButton"]';
+  private readonly sectionCollapseButton =
+    '[data-testid="sectionCollapseButton"]';
 
-  private inlineAlertButton = {
+  private readonly inlineAlertButton = {
     css: '[data-testid="inline-alert"]',
     text: 'Alert',
   };
 
-  private nextPageButton: RawLocator;
+  private readonly nextPageButton: RawLocator;
 
-  private previousPageButton: RawLocator;
+  private readonly previousPageButton: RawLocator;
 
-  private navigationTitle: RawLocator;
-
-  private rejectAllButton: RawLocator;
-
-  private confirmationHeadingTitle: RawLocator;
+  private readonly navigationTitle: RawLocator;
 
   constructor(driver: Driver) {
     this.driver = driver;
@@ -42,8 +40,6 @@ class Confirmation {
     this.previousPageButton =
       '[data-testid="confirm-nav__previous-confirmation"]';
     this.navigationTitle = '[data-testid="confirm-page-nav-position"]';
-    this.rejectAllButton = '[data-testid="confirm-nav__reject-all"]';
-    this.confirmationHeadingTitle = { text: 'Confirmation Dialog' };
   }
 
   async clickScrollToBottomButton() {
@@ -83,8 +79,6 @@ class Confirmation {
     await this.driver.clickElement(this.previousPageButton);
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_pageNumbers(
     currentPage: number,
     totalPages: number,
@@ -98,15 +92,6 @@ class Confirmation {
       console.log('Timeout while waiting for navigation page numbers', e);
       throw e;
     }
-  }
-
-  async clickRejectAll(): Promise<void> {
-    await this.driver.clickElementAndWaitForWindowToClose(this.rejectAllButton);
-  }
-
-  async verifyConfirmationHeadingTitle(): Promise<void> {
-    console.log('Verify confirmation heading title is Confirmation Dialog');
-    await this.driver.waitForSelector(this.confirmationHeadingTitle);
   }
 }
 

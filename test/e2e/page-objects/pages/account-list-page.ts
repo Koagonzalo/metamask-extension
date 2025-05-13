@@ -1,9 +1,9 @@
-import { Driver } from '../../webdriver/driver';
-import { largeDelayMs, regularDelayMs } from '../../helpers';
 import messages from '../../../../app/_locales/en/messages.json';
 import { ACCOUNT_TYPE } from '../../constants';
-import PrivacySettings from './settings/privacy-settings';
+import { largeDelayMs, regularDelayMs } from '../../helpers';
+import type { Driver } from '../../webdriver/driver';
 import HeaderNavbar from './header-navbar';
+import PrivacySettings from './settings/privacy-settings';
 import SettingsPage from './settings/settings-page';
 
 class AccountListPage {
@@ -23,8 +23,6 @@ class AccountListPage {
 
   private readonly accountMenuButton =
     '[data-testid="account-list-menu-details"]';
-
-  private readonly accountDetailsTab = { text: 'Details', tag: 'button' };
 
   private readonly accountNameInput = '#account-name';
 
@@ -173,8 +171,6 @@ class AccountListPage {
     this.driver = driver;
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_pageIsLoaded(): Promise<void> {
     try {
       await this.driver.waitForMultipleSelectors([
@@ -418,7 +414,6 @@ class AccountListPage {
     );
     await this.openAccountOptionsInAccountList(accountLabel);
     await this.driver.clickElement(this.accountMenuButton);
-    await this.driver.clickElementSafe(this.accountDetailsTab);
   }
 
   /**
@@ -453,8 +448,6 @@ class AccountListPage {
    *
    * @param expectedValueAndSuffix - The expected value and suffix to check.
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_accountValueAndSuffixDisplayed(
     expectedValueAndSuffix: string,
   ): Promise<void> {
@@ -473,8 +466,6 @@ class AccountListPage {
     );
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_addBitcoinAccountAvailable(
     expectedAvailability: boolean,
   ): Promise<void> {
@@ -570,8 +561,6 @@ class AccountListPage {
     await this.driver.clickElement(this.pinUnpinAccountButton);
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_accountAddressDisplayedInAccountList(
     expectedAddress: string,
   ): Promise<void> {
@@ -589,8 +578,6 @@ class AccountListPage {
    *
    * @param expectedBalance - The expected balance to check.
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_accountBalanceDisplayed(expectedBalance: string): Promise<void> {
     console.log(
       `Check that account balance ${expectedBalance} is displayed in account list`,
@@ -601,8 +588,6 @@ class AccountListPage {
     });
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_accountDisplayedInAccountList(
     expectedLabel: string = 'Account',
   ): Promise<void> {
@@ -615,8 +600,6 @@ class AccountListPage {
     });
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_accountNotDisplayedInAccountList(
     expectedLabel: string = 'Account',
   ): Promise<void> {
@@ -634,8 +617,6 @@ class AccountListPage {
    *
    * @param expectedLabel - The label of the account that should not be displayed.
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_accountIsNotDisplayedInAccountList(
     expectedLabel: string,
   ): Promise<void> {
@@ -648,29 +629,21 @@ class AccountListPage {
     });
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_accountIsPinned(): Promise<void> {
     console.log(`Check that account is pinned`);
     await this.driver.waitForSelector(this.pinnedIcon);
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_accountIsUnpinned(): Promise<void> {
     console.log(`Check that account is unpinned`);
     await this.driver.assertElementNotPresent(this.pinnedIcon);
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_addAccountSnapButtonIsDisplayed(): Promise<void> {
     console.log('Check add account snap button is displayed');
     await this.driver.waitForSelector(this.addSnapAccountButton);
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_addAccountSnapButtonNotPresent(): Promise<void> {
     console.log('Check add account snap button is not present');
     await this.driver.assertElementNotPresent(this.addSnapAccountButton);
@@ -681,8 +654,6 @@ class AccountListPage {
    *
    * @param expectedAvailability - Whether the add watch account button is expected to be displayed.
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_addWatchAccountAvailable(
     expectedAvailability: boolean,
   ): Promise<void> {
@@ -703,8 +674,6 @@ class AccountListPage {
    * Verifies that all occurrences of the account balance value and symbol are displayed as private.
    *
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_balanceIsPrivateEverywhere(): Promise<void> {
     console.log(`Verify all account balance occurrences are private`);
     const balanceSelectors = {
@@ -714,8 +683,6 @@ class AccountListPage {
     await this.driver.elementCountBecomesN(balanceSelectors, 6);
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_currentAccountIsImported(): Promise<void> {
     console.log(`Check that current account is an imported account`);
     await this.driver.waitForSelector({
@@ -724,8 +691,6 @@ class AccountListPage {
     });
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_hiddenAccountsListExists(): Promise<void> {
     console.log(`Check that hidden accounts list is displayed in account list`);
     await this.driver.waitForSelector(this.hiddenAccountsList);
@@ -735,18 +700,12 @@ class AccountListPage {
    * Verifies number of accounts currently showing in the accounts menu.
    *
    * @param expectedNumberOfAccounts - The expected number of accounts showing.
-   * @param accountType - Optional account type to filter by. If not provided, counts all accounts.
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_numberOfAvailableAccounts(
     expectedNumberOfAccounts: number,
-    accountType?: ACCOUNT_TYPE,
   ): Promise<void> {
     console.log(
-      `Verify the number of ${
-        accountType ? ACCOUNT_TYPE[accountType] : 'all'
-      } accounts in the account menu is: ${expectedNumberOfAccounts}`,
+      `Verify the number of accounts in the account menu is: ${expectedNumberOfAccounts}`,
     );
 
     await this.driver.waitForSelector(this.accountListItem);
@@ -754,39 +713,9 @@ class AccountListPage {
       const internalAccounts = await this.driver.findElements(
         this.accountListItem,
       );
-
-      let filteredAccounts = internalAccounts;
-      if (accountType !== undefined) {
-        // Filter accounts based on type
-        filteredAccounts = await Promise.all(
-          internalAccounts.map(async (account) => {
-            const accountText = await account.getText();
-            switch (accountType) {
-              case ACCOUNT_TYPE.Ethereum:
-                return (
-                  !accountText.includes('Bitcoin') &&
-                  !accountText.includes('Solana')
-                );
-              case ACCOUNT_TYPE.Bitcoin:
-                return accountText.includes('Bitcoin');
-              case ACCOUNT_TYPE.Solana:
-                return accountText.includes('Solana');
-              default:
-                return true;
-            }
-          }),
-        ).then((results) =>
-          internalAccounts.filter((_, index) => results[index]),
-        );
-      }
-
-      const isValid = filteredAccounts.length === expectedNumberOfAccounts;
+      const isValid = internalAccounts.length === expectedNumberOfAccounts;
       console.log(
-        `Number of ${
-          accountType ? ACCOUNT_TYPE[accountType] : 'all'
-        } accounts: ${
-          filteredAccounts.length
-        } is equal to ${expectedNumberOfAccounts}? ${isValid}`,
+        `Number of accounts: ${internalAccounts.length} is equal to ${expectedNumberOfAccounts}? ${isValid}`,
       );
       return isValid;
     }, 20000);
@@ -797,8 +726,6 @@ class AccountListPage {
    *
    * @param accountLabel - The label of the account to check.
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_removeAccountButtonIsNotDisplayed(
     accountLabel: string,
   ): Promise<void> {
@@ -832,8 +759,6 @@ class AccountListPage {
     await this.driver.clickElement(this.exportSrpButton);
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_accountBelongsToSrp(
     accountName: string,
     srpIndex: number,

@@ -1,17 +1,18 @@
 import { strict as assert } from 'assert';
-import { Suite } from 'mocha';
-import { Driver } from '../../webdriver/driver';
-import { withFixtures } from '../../helpers';
+import type { Suite } from 'mocha';
+
 import FixtureBuilder from '../../fixture-builder';
+import { withFixtures } from '../../helpers';
 import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
-import { SMART_CONTRACTS } from '../../seeder/smart-contracts';
-import HeaderNavbar from '../../page-objects/pages/header-navbar';
-import SelectNetwork from '../../page-objects/pages/dialog/select-network';
-import HomePage from '../../page-objects/pages/home/homepage';
-import SettingsPage from '../../page-objects/pages/settings/settings-page';
 import AccountListPage from '../../page-objects/pages/account-list-page';
+import SelectNetwork from '../../page-objects/pages/dialog/select-network';
+import HeaderNavbar from '../../page-objects/pages/header-navbar';
 import AssetListPage from '../../page-objects/pages/home/asset-list';
+import HomePage from '../../page-objects/pages/home/homepage';
 import SendTokenPage from '../../page-objects/pages/send/send-token-page';
+import SettingsPage from '../../page-objects/pages/settings/settings-page';
+import { SMART_CONTRACTS } from '../../seeder/smart-contracts';
+import type { Driver } from '../../webdriver/driver';
 
 const EXPECTED_MAINNET_BALANCE_USD = '$84,985.04';
 const EXPECTED_CURRENT_NETWORK_BALANCE_USD = '$42,492.52';

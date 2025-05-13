@@ -1,22 +1,30 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { I18nContext } from '../../../../contexts/i18n';
-import { useModalProps } from '../../../../hooks/useModalProps';
-import { useMetamaskNotificationsContext } from '../../../../contexts/metamask-notifications/metamask-notifications';
-import { MetaMetricsContext } from '../../../../contexts/metametrics';
+
 import {
   MetaMetricsEventCategory,
   MetaMetricsEventName,
 } from '../../../../../shared/constants/metametrics';
+import { I18nContext } from '../../../../contexts/i18n';
+import { useMetamaskNotificationsContext } from '../../../../contexts/metamask-notifications/metamask-notifications';
+import { MetaMetricsContext } from '../../../../contexts/metametrics';
+import {
+  AlignItems,
+  BlockSize,
+  BorderRadius,
+  FlexDirection,
+  FontWeight,
+  TextColor,
+} from '../../../../helpers/constants/design-system';
+import { NOTIFICATIONS_ROUTE } from '../../../../helpers/constants/routes';
+import { useEnableNotifications } from '../../../../hooks/metamask-notifications/useNotifications';
+import { useModalProps } from '../../../../hooks/useModalProps';
+import { selectIsProfileSyncingEnabled } from '../../../../selectors/identity/profile-syncing';
 import {
   selectIsMetamaskNotificationsEnabled,
   getIsUpdatingMetamaskNotifications,
 } from '../../../../selectors/metamask-notifications/metamask-notifications';
-import { selectIsBackupAndSyncEnabled } from '../../../../selectors/identity/backup-and-sync';
-import { useEnableNotifications } from '../../../../hooks/metamask-notifications/useNotifications';
-import { NOTIFICATIONS_ROUTE } from '../../../../helpers/constants/routes';
-
 import {
   Box,
   Modal,
@@ -27,17 +35,7 @@ import {
   Text,
   ModalFooter,
 } from '../../../component-library';
-import {
-  AlignItems,
-  BlockSize,
-  BorderRadius,
-  FlexDirection,
-  FontWeight,
-  TextColor,
-} from '../../../../helpers/constants/design-system';
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export default function TurnOnMetamaskNotifications() {
   const { hideModal } = useModalProps();
   const history = useHistory();
@@ -51,7 +49,7 @@ export default function TurnOnMetamaskNotifications() {
   const isUpdatingMetamaskNotifications = useSelector(
     getIsUpdatingMetamaskNotifications,
   );
-  const isBackupAndSyncEnabled = useSelector(selectIsBackupAndSyncEnabled);
+  const isProfileSyncingEnabled = useSelector(selectIsProfileSyncingEnabled);
 
   const [isLoading, setIsLoading] = useState<boolean>(
     isUpdatingMetamaskNotifications,
@@ -65,11 +63,7 @@ export default function TurnOnMetamaskNotifications() {
       category: MetaMetricsEventCategory.NotificationsActivationFlow,
       event: MetaMetricsEventName.NotificationsActivated,
       properties: {
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         is_profile_syncing_enabled: true,
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         action_type: 'activated',
       },
     });
@@ -84,11 +78,7 @@ export default function TurnOnMetamaskNotifications() {
           category: MetaMetricsEventCategory.NotificationsActivationFlow,
           event: MetaMetricsEventName.NotificationsActivated,
           properties: {
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            is_profile_syncing_enabled: isBackupAndSyncEnabled,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
+            is_profile_syncing_enabled: isProfileSyncingEnabled,
             action_type: 'dismissed',
           },
         });
@@ -103,7 +93,7 @@ export default function TurnOnMetamaskNotifications() {
       hideModal();
       listNotifications();
     }
-  }, [isNotificationEnabled, error, history, hideModal, listNotifications]);
+  }, [isNotificationEnabled, error]);
 
   const privacyLink = (
     <Text
@@ -157,7 +147,7 @@ export default function TurnOnMetamaskNotifications() {
         </ModalBody>
         <ModalFooter
           paddingTop={4}
-          onSubmit={() => handleTurnOnNotifications()}
+          onSubmit={async () => handleTurnOnNotifications()}
           containerProps={{
             flexDirection: FlexDirection.Column,
             alignItems: AlignItems.stretch,

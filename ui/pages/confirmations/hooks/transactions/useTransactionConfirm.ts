@@ -1,25 +1,22 @@
-import { TransactionMeta } from '@metamask/transaction-controller';
-import { useDispatch, useSelector } from 'react-redux';
+import type { TransactionMeta } from '@metamask/transaction-controller';
 import { cloneDeep } from 'lodash';
 import { useCallback, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { getIsSmartTransaction } from '../../../../../shared/modules/selectors';
 import { getCustomNonceValue } from '../../../../selectors';
-import { useConfirmContext } from '../../context/confirm';
-import { useSelectedGasFeeToken } from '../../components/confirm/info/hooks/useGasFeeToken';
 import { updateAndApproveTx } from '../../../../store/actions';
-import {
-  getIsSmartTransaction,
-  type SmartTransactionsState,
-} from '../../../../../shared/modules/selectors';
+import { useSelectedGasFeeToken } from '../../components/confirm/info/hooks/useGasFeeToken';
+import { useConfirmContext } from '../../context/confirm';
 
 export function useTransactionConfirm() {
   const dispatch = useDispatch();
   const customNonceValue = useSelector(getCustomNonceValue);
   const selectedGasFeeToken = useSelectedGasFeeToken();
+  const isSmartTransaction = useSelector(getIsSmartTransaction);
+
   const { currentConfirmation: transactionMeta } =
     useConfirmContext<TransactionMeta>();
-  const isSmartTransaction = useSelector((state: SmartTransactionsState) =>
-    getIsSmartTransaction(state, transactionMeta?.chainId),
-  );
 
   const newTransactionMeta = useMemo(
     () => cloneDeep(transactionMeta),
@@ -59,13 +56,12 @@ export function useTransactionConfirm() {
     await dispatch(updateAndApproveTx(newTransactionMeta, true, ''));
     ///: END:ONLY_INCLUDE_IF
   }, [
-    customNonceValue,
     dispatch,
     handleGasless7702,
     handleSmartTransaction,
     isSmartTransaction,
     newTransactionMeta,
-    selectedGasFeeToken,
+    customNonceValue,
   ]);
 
   return {

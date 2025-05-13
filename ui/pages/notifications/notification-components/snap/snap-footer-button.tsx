@@ -1,14 +1,15 @@
 import React, { useCallback, useContext, useState } from 'react';
-import useSnapNavigation from '../../../../hooks/snaps/useSnapNavigation';
-import SnapLinkWarning from '../../../../components/app/snaps/snap-link-warning';
-import { NotificationDetailButton } from '../../../../components/multichain';
-import { ButtonVariant } from '../../../../components/component-library';
-import { MetaMetricsContext } from '../../../../contexts/metametrics';
+
 import {
   MetaMetricsEventCategory,
   MetaMetricsEventName,
 } from '../../../../../shared/constants/metametrics';
-import { DetailedViewData, SnapNotification } from './types';
+import SnapLinkWarning from '../../../../components/app/snaps/snap-link-warning';
+import { ButtonVariant } from '../../../../components/component-library';
+import { NotificationDetailButton } from '../../../../components/multichain';
+import { MetaMetricsContext } from '../../../../contexts/metametrics';
+import useSnapNavigation from '../../../../hooks/snaps/useSnapNavigation';
+import type { DetailedViewData, SnapNotification } from './types';
 
 export const SnapFooterButton = (props: { notification: SnapNotification }) => {
   const trackEvent = useContext(MetaMetricsContext);
@@ -28,14 +29,8 @@ export const SnapFooterButton = (props: { notification: SnapNotification }) => {
         category: MetaMetricsEventCategory.NotificationInteraction,
         event: MetaMetricsEventName.NotificationDetailClicked,
         properties: {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           notification_id: props.notification.id,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           notification_type: props.notification.type,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           clicked_item: isExternal ? 'external_link' : 'internal_link',
         },
       });

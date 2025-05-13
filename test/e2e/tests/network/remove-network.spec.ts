@@ -1,9 +1,12 @@
-import { strict as assert } from 'assert';
-import { Suite } from 'mocha';
-import {
+import type {
   CaveatConstraint,
   PermissionConstraint,
 } from '@metamask/permission-controller';
+import { strict as assert } from 'assert';
+import type { Suite } from 'mocha';
+
+import { PermissionNames } from '../../../../app/scripts/controllers/permissions';
+import { CaveatTypes } from '../../../../shared/constants/permissions';
 import FixtureBuilder from '../../fixture-builder';
 import {
   openDapp,
@@ -12,9 +15,7 @@ import {
   WINDOW_TITLES,
   withFixtures,
 } from '../../helpers';
-import { Driver } from '../../webdriver/driver';
-import { PermissionNames } from '../../../../app/scripts/controllers/permissions';
-import { CaveatTypes } from '../../../../shared/constants/permissions';
+import type { Driver } from '../../webdriver/driver';
 
 const getPermittedChains = async (driver: Driver) => {
   const getPermissionsRequest = JSON.stringify({

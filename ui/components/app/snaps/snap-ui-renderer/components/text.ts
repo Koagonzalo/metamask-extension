@@ -1,14 +1,15 @@
-import { JSXElement, TextElement } from '@metamask/snaps-sdk/jsx';
+import type { JSXElement, TextElement } from '@metamask/snaps-sdk/jsx';
 import { getJsxChildren } from '@metamask/snaps-utils';
-import { NonEmptyArray } from '@metamask/utils';
-import { mapTextToTemplate } from '../utils';
+import type { NonEmptyArray } from '@metamask/utils';
+
 import {
   TextVariant,
   OverflowWrap,
   TextColor,
   FontWeight,
 } from '../../../../../helpers/constants/design-system';
-import { UIComponentFactory } from './types';
+import { mapTextToTemplate } from '../utils';
+import type { UIComponentFactory } from './types';
 
 function getTextColor(color: TextElement['props']['color']) {
   switch (color) {

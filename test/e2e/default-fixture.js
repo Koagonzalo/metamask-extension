@@ -1,9 +1,10 @@
 const {
   ETHERSCAN_SUPPORTED_CHAIN_IDS,
 } = require('@metamask/preferences-controller');
-const { mockNetworkStateOld } = require('../stub/networks');
+
 const { CHAIN_IDS } = require('../../shared/constants/network');
 const { FirstTimeFlowType } = require('../../shared/constants/onboarding');
+const { mockNetworkStateOld } = require('../stub/networks');
 
 // TODO: Should we bump this?
 // The e2e tests currently configure state in the schema of migration 74.
@@ -120,7 +121,44 @@ function defaultFixture(inputChainId = CHAIN_IDS.LOCALHOST) {
         newPrivacyPolicyToastShownDate: Date.now(),
         snapsInstallPrivacyWarningShown: true,
       },
-      BridgeController: {},
+      BridgeController: {
+        bridgeFeatureFlags: {
+          mobileConfig: {
+            support: false,
+            chains: {
+              'eip155:1': {
+                isActiveSrc: true,
+                isActiveDest: true,
+              },
+              'eip155:10': {
+                isActiveSrc: true,
+                isActiveDest: true,
+              },
+              'eip155:59144': {
+                isActiveSrc: true,
+                isActiveDest: true,
+              },
+            },
+          },
+          extensionConfig: {
+            support: false,
+            chains: {
+              'eip155:1': {
+                isActiveSrc: true,
+                isActiveDest: true,
+              },
+              'eip155:10': {
+                isActiveSrc: true,
+                isActiveDest: true,
+              },
+              'eip155:59144': {
+                isActiveSrc: true,
+                isActiveDest: true,
+              },
+            },
+          },
+        },
+      },
       CurrencyController: {
         currentCurrency: 'usd',
         currencyRates: {

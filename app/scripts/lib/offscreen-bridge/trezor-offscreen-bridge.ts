@@ -1,4 +1,4 @@
-import { TrezorBridge } from '@metamask/eth-trezor-keyring';
+import type { TrezorBridge } from '@metamask/eth-trezor-keyring';
 import type {
   EthereumSignMessage,
   EthereumSignTransaction,
@@ -11,6 +11,7 @@ import type {
   PROTO,
   EthereumSignTypedHash,
 } from '@trezor/connect-web';
+
 import {
   OffscreenCommunicationEvents,
   OffscreenCommunicationTarget,
@@ -32,7 +33,7 @@ export class TrezorOffscreenBridge implements TrezorBridge {
 
   minorVersion: number | undefined;
 
-  init(
+  async init(
     settings: {
       manifest: Manifest;
     } & Partial<ConnectSettings>,
@@ -61,7 +62,7 @@ export class TrezorOffscreenBridge implements TrezorBridge {
     });
   }
 
-  dispose() {
+  async dispose() {
     return new Promise<void>((resolve) => {
       chrome.runtime.sendMessage(
         {
@@ -75,7 +76,7 @@ export class TrezorOffscreenBridge implements TrezorBridge {
     });
   }
 
-  getPublicKey(params: { path: string; coin: string }) {
+  async getPublicKey(params: { path: string; coin: string }) {
     return new Promise((resolve) => {
       chrome.runtime.sendMessage(
         {
@@ -90,7 +91,7 @@ export class TrezorOffscreenBridge implements TrezorBridge {
     }) as TrezorResponse<{ publicKey: string; chainCode: string }>;
   }
 
-  ethereumSignTransaction(params: Params<EthereumSignTransaction>) {
+  async ethereumSignTransaction(params: Params<EthereumSignTransaction>) {
     return new Promise((resolve) => {
       chrome.runtime.sendMessage(
         {
@@ -105,7 +106,7 @@ export class TrezorOffscreenBridge implements TrezorBridge {
     }) as TrezorResponse<EthereumSignedTx>;
   }
 
-  ethereumSignMessage(params: Params<EthereumSignMessage>) {
+  async ethereumSignMessage(params: Params<EthereumSignMessage>) {
     return new Promise((resolve) => {
       chrome.runtime.sendMessage(
         {
@@ -120,9 +121,7 @@ export class TrezorOffscreenBridge implements TrezorBridge {
     }) as TrezorResponse<PROTO.MessageSignature>;
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  ethereumSignTypedData<T extends EthereumSignTypedDataTypes>(
+  async ethereumSignTypedData<T extends EthereumSignTypedDataTypes>(
     params: Params<EthereumSignTypedHash<T>>,
   ) {
     return new Promise((resolve) => {

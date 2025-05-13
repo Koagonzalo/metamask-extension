@@ -1,7 +1,7 @@
 import { type Locator, type Page } from '@playwright/test';
 
 export class SwapPage {
-  private page: Page;
+  private readonly page: Page;
 
   private swapQty: string;
 

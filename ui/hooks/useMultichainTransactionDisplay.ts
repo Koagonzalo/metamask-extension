@@ -1,15 +1,16 @@
+import type { Transaction } from '@metamask/keyring-api';
 import {
-  Transaction,
   TransactionStatus as KeyringTransactionStatus,
   TransactionType,
 } from '@metamask/keyring-api';
-import { TransactionStatus } from '@metamask/transaction-controller';
 import { MULTICHAIN_NETWORK_DECIMAL_PLACES } from '@metamask/multichain-network-controller';
+import { TransactionStatus } from '@metamask/transaction-controller';
 import { useSelector } from 'react-redux';
+
+import type { MultichainProviderConfig } from '../../shared/constants/multichain/networks';
+import { TransactionGroupStatus } from '../../shared/constants/transaction';
 import { formatWithThreshold } from '../components/app/assets/util/formatWithThreshold';
 import { getIntlLocale } from '../ducks/locale/locale';
-import { TransactionGroupStatus } from '../../shared/constants/transaction';
-import type { MultichainProviderConfig } from '../../shared/constants/multichain/networks';
 import { useI18nContext } from './useI18nContext';
 
 export const KEYRING_TRANSACTION_STATUS_KEY = {
@@ -87,9 +88,7 @@ export function useMultichainTransactionDisplay(
     baseFee,
     priorityFee,
     isRedeposit:
-      Boolean(from) === true &&
-      Boolean(to) === false &&
-      transaction.type === TransactionType.Send,
+      Boolean(from) && !to && transaction.type === TransactionType.Send,
   };
 }
 
@@ -130,8 +129,6 @@ function parseAsset(
   isNegative: boolean,
   decimals?: number,
 ) {
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const threshold = 1 / 10 ** (decimals || 8); // Smallest unit to display given the decimals.
   const displayAmount = formatWithThreshold(
     movement.amount,
@@ -139,8 +136,6 @@ function parseAsset(
     locale,
     {
       minimumFractionDigits: 0,
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       maximumFractionDigits: decimals || 8,
     },
   );

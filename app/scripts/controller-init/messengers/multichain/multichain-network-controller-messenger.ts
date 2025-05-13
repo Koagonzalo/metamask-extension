@@ -1,8 +1,8 @@
-import { Messenger } from '@metamask/base-controller';
-import {
+import type {
   AccountsControllerListMultichainAccountsAction,
   AccountsControllerSelectedAccountChangeEvent,
 } from '@metamask/accounts-controller';
+import type { Messenger } from '@metamask/base-controller';
 import {
   type NetworkControllerSetActiveNetworkAction,
   type NetworkControllerGetStateAction,

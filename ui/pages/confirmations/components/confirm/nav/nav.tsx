@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
-
 import { useDispatch } from 'react-redux';
+
+import { QueueType } from '../../../../../../shared/constants/metametrics';
 import {
   Box,
   Button,
@@ -25,8 +26,9 @@ import {
 } from '../../../../../helpers/constants/design-system';
 import { useI18nContext } from '../../../../../hooks/useI18nContext';
 import { rejectAllApprovals } from '../../../../../store/actions';
-import { useConfirmationNavigation } from '../../../hooks/useConfirmationNavigation';
 import { useConfirmContext } from '../../../context/confirm';
+import { useConfirmationNavigation } from '../../../hooks/useConfirmationNavigation';
+import { useQueuedConfirmationsEvent } from '../../../hooks/useQueuedConfirmationEvents';
 
 export type NavProps = {
   confirmationId?: string;
@@ -50,6 +52,8 @@ export const Nav = ({ confirmationId }: NavProps) => {
   const onRejectAll = useCallback(async () => {
     await dispatch(rejectAllApprovals());
   }, [dispatch]);
+
+  useQueuedConfirmationsEvent(QueueType.NavigationHeader);
 
   if (count <= 1) {
     return null;

@@ -8,6 +8,7 @@ import {
   within,
 } from '@testing-library/react';
 import nock from 'nock';
+
 import {
   MetaMetricsEventCategory,
   MetaMetricsEventLocation,
@@ -167,7 +168,6 @@ describe('Contract Interaction Confirmation', () => {
     const MINT_NFT_HEX_SIG = '0x3b4b1381';
     mock4byte(MINT_NFT_HEX_SIG);
     mockedAssetDetails.mockImplementation(() => ({
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       decimals: '4' as any,
     }));
@@ -245,11 +245,7 @@ describe('Contract Interaction Confirmation', () => {
             properties: {
               action: 'Confirm Screen',
               location: MetaMetricsEventLocation.Transaction,
-              // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-              // eslint-disable-next-line @typescript-eslint/naming-convention
               transaction_type: TransactionType.contractInteraction,
-              // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-              // eslint-disable-next-line @typescript-eslint/naming-convention
               hd_entropy_index: 0,
             },
           }),
@@ -533,8 +529,6 @@ describe('Contract Interaction Confirmation', () => {
       expect.arrayContaining([
         expect.objectContaining({
           properties: expect.objectContaining({
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             external_link_clicked: 'security_alert_support_link',
           }),
         }),

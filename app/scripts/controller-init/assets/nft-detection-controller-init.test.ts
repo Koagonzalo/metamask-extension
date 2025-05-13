@@ -1,12 +1,11 @@
-import {
-  NftDetectionController,
-  NftDetectionControllerMessenger,
-} from '@metamask/assets-controllers';
+import type { NftDetectionControllerMessenger } from '@metamask/assets-controllers';
+import { NftDetectionController } from '@metamask/assets-controllers';
 import { Messenger } from '@metamask/base-controller';
-import { PreferencesController } from '@metamask/preferences-controller';
-import { buildControllerInitRequestMock } from '../test/utils';
-import { ControllerInitRequest } from '../types';
+import type { PreferencesController } from '@metamask/preferences-controller';
+
 import { getNftDetectionControllerMessenger } from '../messengers/assets';
+import { buildControllerInitRequestMock } from '../test/utils';
+import type { ControllerInitRequest } from '../types';
 import { NftDetectionControllerInit } from './nft-detection-controller-init';
 
 jest.mock('@metamask/assets-controllers');

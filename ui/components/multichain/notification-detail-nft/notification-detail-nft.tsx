@@ -1,11 +1,13 @@
-import React, { FC } from 'react';
-import { Box } from '../../component-library';
-import { NftItem } from '../nft-item';
+import type { FC } from 'react';
+import React from 'react';
+
 import {
   AlignItems,
   Display,
   JustifyContent,
 } from '../../../helpers/constants/design-system';
+import { Box } from '../../component-library';
+import { NftItem } from '../nft-item';
 
 export type NotificationDetailNftProps = {
   networkName: string;

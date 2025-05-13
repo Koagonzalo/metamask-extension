@@ -1,8 +1,5 @@
-import {
-  RECIPIENT_ADDRESS_MOCK,
-  MockRequestResponse,
-  SENDER_ADDRESS_MOCK,
-} from './types';
+import type { MockRequestResponse } from './types';
+import { RECIPIENT_ADDRESS_MOCK, SENDER_ADDRESS_MOCK } from './types';
 
 export const INSUFFICIENT_GAS_TRANSACTION_MOCK = {
   from: SENDER_ADDRESS_MOCK,

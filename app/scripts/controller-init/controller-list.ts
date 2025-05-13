@@ -1,17 +1,6 @@
-import { GasFeeController } from '@metamask/gas-fee-controller';
-import { KeyringController } from '@metamask/keyring-controller';
-import { NetworkController } from '@metamask/network-controller';
-import {
-  CaveatSpecificationConstraint,
-  PermissionController,
-  PermissionSpecificationConstraint,
-} from '@metamask/permission-controller';
-import { PPOMController } from '@metamask/ppom-validator';
-import SmartTransactionsController from '@metamask/smart-transactions-controller';
-import { TransactionController } from '@metamask/transaction-controller';
-import { TransactionUpdateController } from '@metamask-institutional/transaction-update';
-import { AccountsController } from '@metamask/accounts-controller';
-import {
+import type { TransactionUpdateController } from '@metamask-institutional/transaction-update';
+import type { AccountsController } from '@metamask/accounts-controller';
+import type {
   AssetsContractController,
   DeFiPositionsController,
   MultichainAssetsController,
@@ -21,9 +10,28 @@ import {
   NftDetectionController,
   TokenRatesController,
 } from '@metamask/assets-controllers';
-import { MultichainNetworkController } from '@metamask/multichain-network-controller';
-import { MultichainTransactionsController } from '@metamask/multichain-transactions-controller';
-import {
+import type { DelegationController } from '@metamask/delegation-controller';
+import type { GasFeeController } from '@metamask/gas-fee-controller';
+import type { KeyringController } from '@metamask/keyring-controller';
+import type { MultichainNetworkController } from '@metamask/multichain-network-controller';
+import type { MultichainTransactionsController } from '@metamask/multichain-transactions-controller';
+import type { NetworkController } from '@metamask/network-controller';
+import type { Controller as NotificationServicesController } from '@metamask/notification-services-controller/notification-services';
+import type { Controller as NotificationServicesPushController } from '@metamask/notification-services-controller/push-services';
+import type {
+  CaveatSpecificationConstraint,
+  PermissionController,
+  PermissionSpecificationConstraint,
+} from '@metamask/permission-controller';
+import type { PPOMController } from '@metamask/ppom-validator';
+import type { Controller as AuthenticationController } from '@metamask/profile-sync-controller/auth';
+import type {
+  RateLimitController,
+  RateLimitedApiMap,
+} from '@metamask/rate-limit-controller';
+import SmartTransactionsController from '@metamask/smart-transactions-controller';
+import { TransactionController } from '@metamask/transaction-controller';
+import type {
   CronjobController,
   ExecutionService,
   JsonSnapsRegistry,
@@ -31,20 +39,12 @@ import {
   SnapInsightsController,
   SnapInterfaceController,
 } from '@metamask/snaps-controllers';
-import {
-  RateLimitController,
-  RateLimitedApiMap,
-} from '@metamask/rate-limit-controller';
-import { Controller as AuthenticationController } from '@metamask/profile-sync-controller/auth';
-import { Controller as UserStorageController } from '@metamask/profile-sync-controller/user-storage';
-import { Controller as NotificationServicesController } from '@metamask/notification-services-controller/notification-services';
-import { Controller as NotificationServicesPushController } from '@metamask/notification-services-controller/push-services';
-import { DelegationController } from '@metamask/delegation-controller';
+import type { Controller as UserStorageController } from '@metamask/profile-sync-controller/user-storage';
 
-import OnboardingController from '../controllers/onboarding';
-import { PreferencesController } from '../controllers/preferences-controller';
-import SwapsController from '../controllers/swaps';
-import { InstitutionalSnapController } from '../controllers/institutional-snap/InstitutionalSnapController';
+import type { InstitutionalSnapController } from '../controllers/institutional-snap/InstitutionalSnapController';
+import type OnboardingController from '../controllers/onboarding';
+import type { PreferencesController } from '../controllers/preferences-controller';
+import type SwapsController from '../controllers/swaps';
 
 /**
  * Union of all controllers supporting or required by modular initialization.

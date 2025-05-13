@@ -1,8 +1,5 @@
 import { createSelector } from 'reselect';
-import {
-  getAllowedSmartTransactionsChainIds,
-  SKIP_STX_RPC_URL_CHECK_CHAIN_IDS,
-} from '../../constants/smartTransactions';
+
 import {
   accountSupportsSmartTx,
   getPreferences,
@@ -10,9 +7,14 @@ import {
   // TODO: Remove restricted import
   // eslint-disable-next-line import/no-restricted-paths
 } from '../../../ui/selectors/selectors'; // TODO: Migrate shared selectors to this file.
+import {
+  getAllowedSmartTransactionsChainIds,
+  SKIP_STX_RPC_URL_CHECK_CHAIN_IDS,
+} from '../../constants/smartTransactions';
 import { isProduction } from '../environment';
 import { getFeatureFlagsByChainId } from './feature-flags';
-import { getCurrentChainId, NetworkState } from './networks';
+import type { NetworkState } from './networks';
+import { getCurrentChainId } from './networks';
 
 export type SmartTransactionsMetaMaskState = {
   metamask: {
@@ -54,9 +56,6 @@ export type SmartTransactionsMetaMaskState = {
     };
   };
 };
-
-export type SmartTransactionsState = SmartTransactionsMetaMaskState &
-  NetworkState;
 
 /**
  * Returns the user's explicit opt-in status for the smart transactions feature.
@@ -173,7 +172,7 @@ const getIsAllowedRpcUrlForSmartTransactions = (
 };
 
 export const getSmartTransactionsEnabled = (
-  state: SmartTransactionsState,
+  state: SmartTransactionsMetaMaskState & NetworkState,
   chainId?: string,
 ): boolean => {
   const supportedAccount = accountSupportsSmartTx(state);
@@ -194,7 +193,7 @@ export const getSmartTransactionsEnabled = (
 };
 
 export const getIsSmartTransaction = (
-  state: SmartTransactionsState,
+  state: SmartTransactionsMetaMaskState & NetworkState,
   chainId?: string,
 ): boolean => {
   const smartTransactionsPreferenceEnabled =

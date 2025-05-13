@@ -1,11 +1,6 @@
 import React, { useCallback, useState } from 'react';
-import {
-  Box,
-  ButtonIcon,
-  ButtonIconSize,
-  IconName,
-  Text,
-} from '../../../component-library';
+
+import type { Alert } from '../../../../ducks/confirm-alerts/confirm-alerts';
 import {
   AlignItems,
   BackgroundColor,
@@ -16,10 +11,16 @@ import {
   TextColor,
   TextVariant,
 } from '../../../../helpers/constants/design-system';
-import { useI18nContext } from '../../../../hooks/useI18nContext';
 import useAlerts from '../../../../hooks/useAlerts';
+import { useI18nContext } from '../../../../hooks/useI18nContext';
+import {
+  Box,
+  ButtonIcon,
+  ButtonIconSize,
+  IconName,
+  Text,
+} from '../../../component-library';
 import { AlertModal } from '../alert-modal';
-import { Alert } from '../../../../ducks/confirm-alerts/confirm-alerts';
 
 export type MultipleAlertModalProps = {
   /** The key of the initial alert to display. */
@@ -38,8 +39,6 @@ export type MultipleAlertModalProps = {
   skipAlertNavigation?: boolean;
 };
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function PreviousButton({
   selectedIndex,
   onBackButtonClick,
@@ -68,8 +67,6 @@ function PreviousButton({
   );
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function NextButton({
   selectedIndex,
   alertsLength,
@@ -100,8 +97,6 @@ function NextButton({
   );
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function PageNumber({
   selectedIndex,
   alertsLength,
@@ -122,8 +117,6 @@ function PageNumber({
   );
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function PageNavigation({
   alerts,
   onBackButtonClick,
@@ -154,8 +147,6 @@ function PageNavigation({
   );
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export function MultipleAlertModal({
   alertKey,
   displayAllAlerts = false,

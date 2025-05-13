@@ -1,8 +1,9 @@
-import {
+import type {
   TransactionMeta,
   TransactionParams,
-  UserFeeLevel,
 } from '@metamask/transaction-controller';
+import { UserFeeLevel } from '@metamask/transaction-controller';
+
 import { GasEstimateTypes } from '../../../../../../shared/constants/gas';
 import { genUnapprovedContractInteractionConfirmation } from '../../../../../../test/data/confirmations/contract-interaction';
 import {
@@ -10,11 +11,11 @@ import {
   getMockConfirmStateForTransaction,
 } from '../../../../../../test/data/confirmations/helper';
 import { renderHookWithConfirmContextProvider } from '../../../../../../test/lib/confirmations/render-helpers';
-import { Severity } from '../../../../../helpers/constants/design-system';
 import {
   AlertActionKey,
   RowAlertKey,
 } from '../../../../../components/app/confirm/info/row/constants';
+import { Severity } from '../../../../../helpers/constants/design-system';
 import { useNoGasPriceAlerts } from './useNoGasPriceAlerts';
 
 const CONFIRMATION_MOCK = genUnapprovedContractInteractionConfirmation({

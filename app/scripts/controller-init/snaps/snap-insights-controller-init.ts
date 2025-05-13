@@ -1,6 +1,7 @@
 import { SnapInsightsController } from '@metamask/snaps-controllers';
-import { ControllerInitFunction } from '../types';
-import { SnapInsightsControllerMessenger } from '../messengers/snaps';
+
+import type { SnapInsightsControllerMessenger } from '../messengers/snaps';
+import type { ControllerInitFunction } from '../types';
 
 /**
  * Initialize the Snap insights controller.

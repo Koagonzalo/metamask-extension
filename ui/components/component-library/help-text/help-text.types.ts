@@ -1,7 +1,9 @@
-import PropTypes from 'prop-types';
-import type { TextStyleUtilityProps } from '../text';
+import type PropTypes from 'prop-types';
+
+import type { TextColor } from '../../../helpers/constants/design-system';
+import { Severity } from '../../../helpers/constants/design-system';
 import type { PolymorphicComponentPropWithRef } from '../box';
-import { Severity, TextColor } from '../../../helpers/constants/design-system';
+import type { TextStyleUtilityProps } from '../text';
 
 export enum HelpTextSeverity {
   Danger = Severity.Danger,
@@ -29,13 +31,9 @@ export interface HelpTextStyleUtilityProps extends TextStyleUtilityProps {
   className?: string;
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export type HelpTextProps<C extends React.ElementType> =
   PolymorphicComponentPropWithRef<C, HelpTextStyleUtilityProps>;
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export type HelpTextComponent = <C extends React.ElementType = 'span'>(
   props: HelpTextProps<C>,
 ) => React.ReactElement | null;

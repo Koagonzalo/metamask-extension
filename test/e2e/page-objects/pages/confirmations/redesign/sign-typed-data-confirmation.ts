@@ -1,6 +1,7 @@
 import { strict as assert } from 'assert';
+
 import { DAPP_HOST_ADDRESS } from '../../../../constants';
-import { Driver } from '../../../../webdriver/driver';
+import type { Driver } from '../../../../webdriver/driver';
 import Confirmation from './confirmation';
 
 export default class SignTypedData extends Confirmation {
@@ -10,29 +11,33 @@ export default class SignTypedData extends Confirmation {
     this.driver = driver;
   }
 
-  private signatureHeadingTitle = { text: 'Signature request' };
+  private readonly origin = { text: DAPP_HOST_ADDRESS };
 
-  private origin = { text: DAPP_HOST_ADDRESS };
+  private readonly signTypedDataMessage = { text: 'Hi, Alice!' };
 
-  private signTypedDataMessage = { text: 'Hi, Alice!' };
+  private readonly contract = { css: '.name__value', text: '0xCcCCc...ccccC' };
 
-  private contract = { css: '.name__value', text: '0xCcCCc...ccccC' };
+  private readonly primaryType = { text: 'Mail' };
 
-  private primaryType = { text: 'Mail' };
+  private readonly fromName = { text: 'Cow' };
 
-  private fromName = { text: 'Cow' };
+  private readonly fromAddress = {
+    css: '.name__value',
+    text: '0xCD2a3...DD826',
+  };
 
-  private fromAddress = { css: '.name__value', text: '0xCD2a3...DD826' };
+  private readonly toName = { text: 'Bob' };
 
-  private toName = { text: 'Bob' };
+  private readonly toAddress = { css: '.name__value', text: '0xbBbBB...bBBbB' };
 
-  private toAddress = { css: '.name__value', text: '0xbBbBB...bBBbB' };
+  private readonly contents = { text: 'Hello, Bob!' };
 
-  private contents = { text: 'Hello, Bob!' };
+  private readonly attachment = { text: '0x' };
 
-  private attachment = { text: '0x' };
-
-  private toAddressNum2 = { css: '.name__value', text: '0xB0B0b...00000' };
+  private readonly toAddressNum2 = {
+    css: '.name__value',
+    text: '0xB0B0b...00000',
+  };
 
   async verifyOrigin() {
     const origin = await this.driver.findElement(this.origin);
@@ -90,10 +95,5 @@ export default class SignTypedData extends Confirmation {
   async verifyToAddressNum2() {
     const toAddressNum2 = await this.driver.findElement(this.toAddressNum2);
     assert.ok(toAddressNum2, 'To Address num2 element is missing or incorrect');
-  }
-
-  async verifyConfirmationHeadingTitle() {
-    console.log('Verify confirmation heading title is Signature request');
-    await this.driver.waitForSelector(this.signatureHeadingTitle);
   }
 }

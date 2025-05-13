@@ -1,18 +1,18 @@
 import { TransactionEnvelopeType } from '@metamask/transaction-controller';
-import { Suite } from 'mocha';
-import { MockedEndpoint } from 'mockttp';
+import type { Suite } from 'mocha';
+import type { MockedEndpoint } from 'mockttp';
+
 import { WINDOW_TITLES } from '../../../helpers';
-import { Driver } from '../../../webdriver/driver';
+import PermitConfirmation from '../../../page-objects/pages/confirmations/redesign/permit-confirmation';
+import TestDapp from '../../../page-objects/pages/test-dapp';
+import type { Driver } from '../../../webdriver/driver';
 import {
   mockSignatureApprovedWithDecoding,
   mockSignatureRejectedWithDecoding,
   scrollAndConfirmAndAssertConfirm,
   withTransactionEnvelopeTypeFixtures,
 } from '../helpers';
-import { TestSuiteArguments } from '../transactions/shared';
-import PermitConfirmation from '../../../page-objects/pages/confirmations/redesign/permit-confirmation';
-import TestDapp from '../../../page-objects/pages/test-dapp';
-import { MetaMetricsRequestedThrough } from '../../../../../shared/constants/metametrics';
+import type { TestSuiteArguments } from '../transactions/shared';
 import {
   assertAccountDetailsMetrics,
   assertPastedAddress,
@@ -75,7 +75,6 @@ describe('Confirmation Signature - NFT Permit', function (this: Suite) {
           decodingChangeTypes: ['LISTING', 'RECEIVE'],
           decodingResponse: 'CHANGE',
           decodingDescription: null,
-          requestedThrough: MetaMetricsRequestedThrough.EthereumProvider,
         });
 
         await assertVerifiedResults(driver, publicAddress);
@@ -120,7 +119,6 @@ describe('Confirmation Signature - NFT Permit', function (this: Suite) {
           decodingChangeTypes: ['LISTING', 'RECEIVE'],
           decodingResponse: 'CHANGE',
           decodingDescription: null,
-          requestedThrough: MetaMetricsRequestedThrough.EthereumProvider,
         });
       },
       mockSignatureRejectedWithDecoding,

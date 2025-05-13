@@ -1,5 +1,9 @@
+import type {
+  Token,
+  TokensControllerState,
+} from '@metamask/assets-controllers';
 import { cloneDeep } from 'lodash';
-import { Token, TokensControllerState } from '@metamask/assets-controllers';
+
 import { migrate, version } from './133.1';
 
 const sentryCaptureExceptionMock = jest.fn();
@@ -204,7 +208,6 @@ describe(`migration #${version}`, () => {
     },
   ];
 
-  // @ts-expect-error 'each' function is not recognized by TypeScript types
   it.each(invalidState)(
     'captures error when state is invalid due to: $label',
     async ({

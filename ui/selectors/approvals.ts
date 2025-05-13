@@ -1,10 +1,11 @@
-import {
+import type {
   ApprovalControllerState,
   ApprovalRequest,
 } from '@metamask/approval-controller';
 import { ApprovalType } from '@metamask/controller-utils';
+import type { Json } from '@metamask/utils';
 import { createSelector } from 'reselect';
-import { Json } from '@metamask/utils';
+
 import { createDeepEqualSelector } from '../../shared/modules/selectors/util';
 
 export type ApprovalsMetaMaskState = {

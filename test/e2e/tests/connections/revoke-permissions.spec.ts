@@ -1,11 +1,11 @@
-import { withFixtures } from '../../helpers';
-import FixtureBuilder from '../../fixture-builder';
 import { DAPP_HOST_ADDRESS, DEFAULT_FIXTURE_ACCOUNT } from '../../constants';
+import FixtureBuilder from '../../fixture-builder';
+import { withFixtures } from '../../helpers';
+import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
 import HeaderNavbar from '../../page-objects/pages/header-navbar';
 import PermissionListPage from '../../page-objects/pages/permission/permission-list-page';
 import SitePermissionPage from '../../page-objects/pages/permission/site-permission-page';
 import TestDapp from '../../page-objects/pages/test-dapp';
-import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
 
 describe('Revoke Permissions', function () {
   it('should disconnect when click on Disconnect button in connections page', async function () {

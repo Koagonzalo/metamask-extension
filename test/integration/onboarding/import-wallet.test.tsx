@@ -1,19 +1,21 @@
+import { BridgeBackgroundAction } from '@metamask/bridge-controller';
 import { waitFor } from '@testing-library/react';
 import nock from 'nock';
-import mockMetaMaskState from '../data/onboarding-completion-route.json';
-import { integrationTestRender } from '../../lib/render-helpers';
-import * as backgroundConnection from '../../../ui/store/background-connection';
+
 import {
   MetaMetricsEventCategory,
   MetaMetricsEventName,
 } from '../../../shared/constants/metametrics';
+import { FirstTimeFlowType } from '../../../shared/constants/onboarding';
+import * as backgroundConnection from '../../../ui/store/background-connection';
+import { integrationTestRender } from '../../lib/render-helpers';
+import mockMetaMaskState from '../data/onboarding-completion-route.json';
 import {
   clickElementById,
   createMockImplementation,
   waitForElementById,
   waitForElementByText,
 } from '../helpers';
-import { FirstTimeFlowType } from '../../../shared/constants/onboarding';
 
 jest.mock('../../../ui/store/background-connection', () => ({
   ...jest.requireActual('../../../ui/store/background-connection'),
@@ -37,6 +39,7 @@ const setupSubmitRequestToBackgroundMocks = (
 ) => {
   mockedBackgroundConnection.submitRequestToBackground.mockImplementation(
     createMockImplementation({
+      [BridgeBackgroundAction.SET_FEATURE_FLAGS]: undefined,
       ...mockRequests,
     }),
   );
@@ -91,11 +94,7 @@ describe('Import Wallet Events', () => {
           event: MetaMetricsEventName.OnboardingWalletCreationComplete,
           properties: {
             method: FirstTimeFlowType.import,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             is_profile_syncing_enabled: true,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             hd_entropy_index: 0,
           },
         }),

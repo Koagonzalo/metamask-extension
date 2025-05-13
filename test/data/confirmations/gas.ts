@@ -1,5 +1,5 @@
 import { toHex } from '@metamask/controller-utils';
-import { GasFeeToken } from '@metamask/transaction-controller';
+import type { GasFeeToken } from '@metamask/transaction-controller';
 
 export const GAS_FEE_TOKEN_MOCK: GasFeeToken = {
   amount: toHex(1000),

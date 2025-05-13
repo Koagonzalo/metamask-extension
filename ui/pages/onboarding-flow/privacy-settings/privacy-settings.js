@@ -1,26 +1,29 @@
+import { BACKUPANDSYNC_FEATURES } from '@metamask/profile-sync-controller/user-storage';
+import { ButtonVariant } from '@metamask/snaps-sdk';
+import classnames from 'classnames';
 import React, { useContext, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import classnames from 'classnames';
-import { ButtonVariant } from '@metamask/snaps-sdk';
-import { BACKUPANDSYNC_FEATURES } from '@metamask/profile-sync-controller/user-storage';
+
 // TODO: Remove restricted import
 // eslint-disable-next-line import/no-restricted-paths
 import { addUrlProtocolPrefix } from '../../../../app/scripts/lib/util';
-import { useBackupAndSync } from '../../../hooks/identity/useBackupAndSync';
 import {
   MetaMetricsEventCategory,
   MetaMetricsEventName,
 } from '../../../../shared/constants/metametrics';
+import {
+  CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP,
+  TEST_CHAINS,
+} from '../../../../shared/constants/network';
 import {
   COINGECKO_LINK,
   CRYPTOCOMPARE_LINK,
   PRIVACY_POLICY_LINK,
   TRANSACTION_SIMULATIONS_LEARN_MORE_LINK,
 } from '../../../../shared/lib/ui-utils';
-import ZENDESK_URLS from '../../../helpers/constants/zendesk-url';
-import Button from '../../../components/ui/button';
-
+import { getNetworkConfigurationsByChainId } from '../../../../shared/modules/selectors/networks';
+import { BackupAndSyncToggle } from '../../../components/app/identity/backup-and-sync-toggle/backup-and-sync-toggle';
 import {
   Box,
   Text,
@@ -32,6 +35,7 @@ import {
   IconSize,
   Icon,
 } from '../../../components/component-library';
+import Button from '../../../components/ui/button';
 import { MetaMetricsContext } from '../../../contexts/metametrics';
 import {
   Display,
@@ -44,13 +48,15 @@ import {
   FlexDirection,
   BlockSize,
 } from '../../../helpers/constants/design-system';
+import ZENDESK_URLS from '../../../helpers/constants/zendesk-url';
+import { useBackupAndSync } from '../../../hooks/identity/useBackupAndSync';
 import { ONBOARDING_COMPLETION_ROUTE } from '../../../helpers/constants/routes';
 import { useI18nContext } from '../../../hooks/useI18nContext';
 import {
   getUseExternalNameSources,
   getExternalServicesOnboardingToggleState,
 } from '../../../selectors';
-import { getNetworkConfigurationsByChainId } from '../../../../shared/modules/selectors/networks';
+import { selectIsBackupAndSyncEnabled } from '../../../selectors/identity/backup-and-sync';
 import {
   setIpfsGateway,
   setUseCurrencyRateCheck,
@@ -67,12 +73,6 @@ import {
   onboardingToggleBasicFunctionalityOn,
   openBasicFunctionalityModal,
 } from '../../../ducks/app/app';
-import {
-  CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP,
-  TEST_CHAINS,
-} from '../../../../shared/constants/network';
-import { selectIsBackupAndSyncEnabled } from '../../../selectors/identity/backup-and-sync';
-import { BackupAndSyncToggle } from '../../../components/app/identity/backup-and-sync-toggle/backup-and-sync-toggle';
 import { Setting } from './setting';
 
 const ANIMATION_TIME = 500;
@@ -424,7 +424,7 @@ export default function PrivacySettings() {
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            ,{t('privacyMsg')}
+                            {t('privacyMsg')}
                           </a>,
                           <a
                             href={ZENDESK_URLS.ADD_SOLANA_ACCOUNTS}

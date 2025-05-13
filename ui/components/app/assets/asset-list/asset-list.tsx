@@ -1,5 +1,6 @@
 import React, { useCallback, useContext } from 'react';
 import { useSelector } from 'react-redux';
+
 import {
   MetaMetricsEventCategory,
   MetaMetricsEventName,
@@ -12,11 +13,10 @@ import {
   usePrimaryCurrencyProperties,
 } from '../hooks';
 import TokenList from '../token-list';
-import { trace, TraceName } from '../../../../../shared/lib/trace';
 import AssetListControlBar from './asset-list-control-bar';
 import AssetListFundingModals from './asset-list-funding-modals';
 
-export type AssetListProps = {
+type AssetListProps = {
   onClickAsset: (chainId: string, address: string) => void;
   showTokensLinks?: boolean;
 };
@@ -28,14 +28,11 @@ const TokenListContainer = React.memo(
 
     const onTokenClick = useCallback(
       (chainId: string, tokenAddress: string) => {
-        trace({ name: TraceName.AssetDetails });
         onClickAsset(chainId, tokenAddress);
         trackEvent({
           event: MetaMetricsEventName.TokenScreenOpened,
           category: MetaMetricsEventCategory.Navigation,
           properties: {
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             token_symbol: primaryCurrencyProperties.suffix,
             location: 'Home',
           },

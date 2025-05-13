@@ -1,3 +1,4 @@
+const { DAPP_URL } = require('../../constants');
 const FixtureBuilder = require('../../fixture-builder');
 const {
   logInWithBalanceValidation,
@@ -7,11 +8,10 @@ const {
   switchToNotificationWindow,
 } = require('../../helpers');
 const { SMART_CONTRACTS } = require('../../seeder/smart-contracts');
-const { DAPP_URL } = require('../../constants');
 
 describe('Request Queue SwitchChain -> WatchAsset', function () {
   const smartContract = SMART_CONTRACTS.HST;
-  it('should not clear subsequent watchAsset after switching chain', async function () {
+  it('should clear subsequent watchAsset after switching chain', async function () {
     const port = 8546;
     const chainId = 1338;
     await withFixtures(
@@ -89,7 +89,6 @@ describe('Request Queue SwitchChain -> WatchAsset', function () {
           text: 'Use your enabled networks',
           tag: 'p',
         });
-
         // Switch back to test dapp
         await driver.switchToWindowWithTitle(WINDOW_TITLES.TestDApp);
 
@@ -107,7 +106,7 @@ describe('Request Queue SwitchChain -> WatchAsset', function () {
         });
         await driver.clickElement({ text: 'Confirm', tag: 'button' });
 
-        await driver.waitUntilXWindowHandles(3);
+        await driver.waitUntilXWindowHandles(2);
       },
     );
   });

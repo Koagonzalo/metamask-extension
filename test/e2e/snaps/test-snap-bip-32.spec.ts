@@ -1,10 +1,10 @@
-import { TestSnaps } from '../page-objects/pages/test-snaps';
-import { Driver } from '../webdriver/driver';
-import { loginWithoutBalanceValidation } from '../page-objects/flows/login.flow';
 import FixtureBuilder from '../fixture-builder';
 import { withFixtures } from '../helpers';
-import { switchAndApproveDialogSwitchToTestSnap } from '../page-objects/flows/snap-permission.flow';
 import { openTestSnapClickButtonAndInstall } from '../page-objects/flows/install-test-snap.flow';
+import { loginWithoutBalanceValidation } from '../page-objects/flows/login.flow';
+import { switchAndApproveDialogSwitchToTestSnap } from '../page-objects/flows/snap-permission.flow';
+import { TestSnaps } from '../page-objects/pages/test-snaps';
+import type { Driver } from '../webdriver/driver';
 
 const bip32PublicKey =
   '"0x043e98d696ae15caef75fa8dd204a7c5c08d1272b2218ba3c20feeb4c691eec366606ece56791c361a2320e7fad8bcbb130f66d51c591fc39767ab2856e93f8dfb"';
@@ -34,9 +34,11 @@ describe('Test Snap bip-32', function () {
         const testSnaps = new TestSnaps(driver);
 
         // Navigate to `test-snaps` page, click bip32, connect and approve
-        await openTestSnapClickButtonAndInstall(driver, 'connectBip32Button', {
-          withWarning: true,
-        });
+        await openTestSnapClickButtonAndInstall(
+          driver,
+          'connectBip32Button',
+          true,
+        );
 
         // check the installation status
         await testSnaps.check_installationComplete(

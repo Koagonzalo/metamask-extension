@@ -1,11 +1,10 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { NotificationListItemIconType } from '../notification-list-item-icon/notification-list-item-icon';
+import React from 'react';
+
 import { TextVariant } from '../../../helpers/constants/design-system';
-import {
-  NotificationListItem,
-  NotificationListItemProps,
-} from './notification-list-item';
+import { NotificationListItemIconType } from '../notification-list-item-icon/notification-list-item-icon';
+import type { NotificationListItemProps } from './notification-list-item';
+import { NotificationListItem } from './notification-list-item';
 
 describe('NotificationListItem', () => {
   const defaultProps: NotificationListItemProps = {

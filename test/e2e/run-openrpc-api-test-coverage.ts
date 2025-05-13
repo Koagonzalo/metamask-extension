@@ -1,17 +1,14 @@
-import testCoverage from '@open-rpc/test-coverage';
+import { MetaMaskOpenRPCDocument } from '@metamask/api-specs';
+import type { OpenrpcDocument } from '@open-rpc/meta-schema';
 import { parseOpenRPCDocument } from '@open-rpc/schema-utils-js';
+import testCoverage from '@open-rpc/test-coverage';
 import HtmlReporter from '@open-rpc/test-coverage/build/reporters/html-reporter';
 import ExamplesRule from '@open-rpc/test-coverage/build/rules/examples-rule';
 import JsonSchemaFakerRule from '@open-rpc/test-coverage/build/rules/json-schema-faker-rule';
 
-import { OpenrpcDocument } from '@open-rpc/meta-schema';
-import { MetaMaskOpenRPCDocument } from '@metamask/api-specs';
 import { ConfirmationsRejectRule } from './api-specs/ConfirmationRejectionRule';
-
-import { Driver, PAGES } from './webdriver/driver';
-
 import { createDriverTransport } from './api-specs/helpers';
-
+import transformOpenRPCDocument from './api-specs/transform';
 import FixtureBuilder from './fixture-builder';
 import {
   withFixtures,
@@ -20,7 +17,8 @@ import {
   DAPP_URL,
   ACCOUNT_1,
 } from './helpers';
-import transformOpenRPCDocument from './api-specs/transform';
+import type { Driver } from './webdriver/driver';
+import { PAGES } from './webdriver/driver';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const mockServer = require('@open-rpc/mock-server/build/index').default;
@@ -36,6 +34,14 @@ async function main() {
       title: 'api-specs coverage',
     },
     async ({ driver }: { driver: Driver }) => {
+      await unlockWallet(driver);
+
+      // Navigate to extension home screen
+      await driver.navigate(PAGES.HOME);
+
+      // Open Dapp
+      await openDapp(driver, undefined, DAPP_URL);
+
       const transport = createDriverTransport(driver);
       const [doc, filteredMethods, methodsWithConfirmations] =
         transformOpenRPCDocument(
@@ -47,14 +53,6 @@ async function main() {
 
       const server = mockServer(port, parsedDoc);
       server.start();
-
-      await unlockWallet(driver);
-
-      // Navigate to extension home screen
-      await driver.navigate(PAGES.HOME);
-
-      // Open Dapp
-      await openDapp(driver, undefined, DAPP_URL);
 
       const testCoverageResults = await testCoverage({
         openrpcDocument: parsedDoc,

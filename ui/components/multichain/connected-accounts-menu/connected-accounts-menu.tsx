@@ -1,5 +1,17 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
+import {
+  IconColor,
+  TextColor,
+  TextVariant,
+} from '../../../helpers/constants/design-system';
+import { useI18nContext } from '../../../hooks/useI18nContext';
+import { getPermissionsForActiveTab } from '../../../selectors';
+import {
+  removePermittedAccount,
+  setSelectedAccount,
+} from '../../../store/actions';
 import {
   PopoverRole,
   PopoverPosition,
@@ -10,21 +22,10 @@ import {
   Box,
 } from '../../component-library';
 import { MenuItem } from '../../ui/menu';
-import {
-  IconColor,
-  TextColor,
-  TextVariant,
-} from '../../../helpers/constants/design-system';
-import { useI18nContext } from '../../../hooks/useI18nContext';
-import {
-  removePermittedAccount,
-  setSelectedAccount,
-} from '../../../store/actions';
-import { getPermissionsForActiveTab } from '../../../selectors';
 import { PermissionDetailsModal } from '../permission-details-modal/permission-details-modal';
-import { Identity } from './connected-accounts-menu.types';
+import type { Identity } from './connected-accounts-menu.types';
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+// TODO: Replace `any` with type
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const TsMenuItem = MenuItem as any;
 

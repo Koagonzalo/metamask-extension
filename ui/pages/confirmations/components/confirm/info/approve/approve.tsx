@@ -1,8 +1,7 @@
-import {
-  TransactionMeta,
-  TransactionType,
-} from '@metamask/transaction-controller';
+import type { TransactionMeta } from '@metamask/transaction-controller';
+import { TransactionType } from '@metamask/transaction-controller';
 import React, { useState } from 'react';
+
 import { useConfirmContext } from '../../../../context/confirm';
 import { useAssetDetails } from '../../../../hooks/useAssetDetails';
 import { AdvancedDetails } from '../shared/advanced-details/advanced-details';

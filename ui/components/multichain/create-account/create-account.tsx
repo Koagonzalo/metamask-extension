@@ -1,46 +1,39 @@
-import React, {
-  ChangeEvent,
-  KeyboardEvent,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import type { KeyringTypes } from '@metamask/keyring-controller';
+import type { InternalAccount } from '@metamask/keyring-internal-api';
+import type { ChangeEvent, KeyboardEvent } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { InternalAccount } from '@metamask/keyring-internal-api';
-import { CaipChainId } from '@metamask/utils';
-import { KeyringTypes } from '@metamask/keyring-controller';
 
-import {
-  Box,
-  ButtonPrimary,
-  ButtonSecondary,
-  FormTextFieldSize,
-  PolymorphicComponentPropWithRef,
-  PolymorphicRef,
-} from '../../component-library';
-import { FormTextField } from '../../component-library/form-text-field/form-text-field';
-import { useI18nContext } from '../../../hooks/useI18nContext';
-import { getAccountNameErrorMessage } from '../../../helpers/utils/accounts';
-import {
-  getMetaMaskAccountsOrdered,
-  getMetaMaskHdKeyrings,
-  getSelectedKeyringByIdOrDefault,
-  getHdKeyringIndexByIdOrDefault,
-} from '../../../selectors';
-import { getHDEntropyIndex } from '../../../selectors/selectors';
-import { getMostRecentOverviewPage } from '../../../ducks/history/history';
 import {
   MetaMetricsEventAccountType,
   MetaMetricsEventCategory,
   MetaMetricsEventName,
 } from '../../../../shared/constants/metametrics';
 import { MetaMetricsContext } from '../../../contexts/metametrics';
+import { getMostRecentOverviewPage } from '../../../ducks/history/history';
 import { Display } from '../../../helpers/constants/design-system';
-import { SelectSrp } from '../multi-srp/select-srp/select-srp';
+import { getAccountNameErrorMessage } from '../../../helpers/utils/accounts';
+import { useI18nContext } from '../../../hooks/useI18nContext';
+import {
+  getMetaMaskAccountsOrdered,
+  getMetaMaskHdKeyrings,
+  getSelectedKeyringByIdOrDefault,
+  getHdKeyringIndexByIdOrDefault,
+} from '../../../selectors';
 import { getSnapAccountsByKeyringId } from '../../../selectors/multi-srp/multi-srp';
-import { endTrace, trace, TraceName } from '../../../../shared/lib/trace';
+import { getHDEntropyIndex } from '../../../selectors/selectors';
+import type {
+  PolymorphicComponentPropWithRef,
+  PolymorphicRef} from '../../component-library';
+import {
+  Box,
+  ButtonPrimary,
+  ButtonSecondary,
+  FormTextFieldSize
+} from '../../component-library';
+import { FormTextField } from '../../component-library/form-text-field/form-text-field';
+import { SelectSrp } from '../multi-srp/select-srp/select-srp';
 
 type Props = {
   /**
@@ -59,32 +52,21 @@ type Props = {
   onActionComplete: (completed: boolean) => Promise<void>;
 
   /**
-   * The scope of the account
-   */
-  scope?: CaipChainId;
-
-  /**
    * Callback to select the SRP
    */
   onSelectSrp?: () => void;
   selectedKeyringId?: string;
 };
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 type CreateAccountProps<C extends React.ElementType> =
   PolymorphicComponentPropWithRef<C, Props>;
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 type CreateAccountComponent = <C extends React.ElementType = 'form'>(
   props: CreateAccountProps<C>,
 ) => React.ReactElement | null;
 
 export const CreateAccount: CreateAccountComponent = React.memo(
   React.forwardRef(
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     <C extends React.ElementType = 'form'>(
       {
         getNextAvailableAccountName,
@@ -92,7 +74,6 @@ export const CreateAccount: CreateAccountComponent = React.memo(
         onSelectSrp,
         selectedKeyringId,
         onActionComplete,
-        scope,
       }: CreateAccountProps<C>,
       ref?: PolymorphicRef<C>,
     ) => {
@@ -147,68 +128,27 @@ export const CreateAccount: CreateAccountComponent = React.memo(
           setLoading(true);
           event.preventDefault();
           try {
-            trace({ name: TraceName.CreateAccount });
             await onCreateAccount(trimmedAccountName || defaultAccountName);
             trackEvent({
               category: MetaMetricsEventCategory.Accounts,
               event: MetaMetricsEventName.AccountAdded,
               properties: {
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                // eslint-disable-next-line @typescript-eslint/naming-convention
                 account_type: MetaMetricsEventAccountType.Default,
                 location: 'Home',
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                // eslint-disable-next-line @typescript-eslint/naming-convention
                 hd_entropy_index: hdEntropyIndex,
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                // eslint-disable-next-line @typescript-eslint/naming-convention
-                chain_id_caip: scope,
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                // eslint-disable-next-line @typescript-eslint/naming-convention
-                is_suggested_name:
-                  !trimmedAccountName ||
-                  trimmedAccountName === defaultAccountName,
               },
             });
             history.push(mostRecentOverviewPage);
           } catch (error) {
-            if (selectedKeyringId) {
-              trackEvent({
-                category: MetaMetricsEventCategory.Accounts,
-                event: MetaMetricsEventName.AccountImportFailed,
-                properties: {
-                  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                  // eslint-disable-next-line @typescript-eslint/naming-convention
-                  account_type: MetaMetricsEventAccountType.Imported,
-                  error: (error as Error).message,
-                  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                  // eslint-disable-next-line @typescript-eslint/naming-convention
-                  hd_entropy_index: hdEntropyIndex,
-                  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                  // eslint-disable-next-line @typescript-eslint/naming-convention
-                  chain_id_caip: scope,
-                },
-              });
-            } else {
-              trackEvent({
-                category: MetaMetricsEventCategory.Accounts,
-                event: MetaMetricsEventName.AccountAddFailed,
-                properties: {
-                  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                  // eslint-disable-next-line @typescript-eslint/naming-convention
-                  account_type: MetaMetricsEventAccountType.Default,
-                  error: (error as Error).message,
-                  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                  // eslint-disable-next-line @typescript-eslint/naming-convention
-                  hd_entropy_index: hdEntropyIndex,
-                  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                  // eslint-disable-next-line @typescript-eslint/naming-convention
-                  chain_id_caip: scope,
-                },
-              });
-            }
-          } finally {
-            endTrace({ name: TraceName.CreateAccount });
+            trackEvent({
+              category: MetaMetricsEventCategory.Accounts,
+              event: MetaMetricsEventName.AccountAddFailed,
+              properties: {
+                account_type: MetaMetricsEventAccountType.Default,
+                error: (error as Error).message,
+                hd_entropy_index: hdEntropyIndex,
+              },
+            });
           }
         },
         [trimmedAccountName, defaultAccountName, mostRecentOverviewPage],

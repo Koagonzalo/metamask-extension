@@ -1,7 +1,8 @@
+import type { TransactionDescription } from '@ethersproject/abi';
 import { TransactionType } from '@metamask/transaction-controller';
 import React from 'react';
 import configureMockStore from 'redux-mock-store';
-import { TransactionDescription } from '@ethersproject/abi';
+
 import { getMockTokenTransferConfirmState } from '../../../../../../../test/data/confirmations/helper';
 import { renderWithConfirmContextProvider } from '../../../../../../../test/lib/confirmations/render-helpers';
 import { useTokenTransactionData } from '../hooks/useTokenTransactionData';
@@ -29,8 +30,6 @@ describe('<TransactionFlowSection />', () => {
     useTokenTransactionDataMock.mockReturnValue({
       name: TransactionType.tokenMethodTransfer,
       args: {
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         _to: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
       },
     } as unknown as TransactionDescription);

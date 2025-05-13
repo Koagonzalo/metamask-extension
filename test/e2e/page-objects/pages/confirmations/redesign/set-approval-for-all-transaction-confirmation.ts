@@ -1,14 +1,14 @@
 import { tEn } from '../../../../../lib/i18n-helpers';
-import { Driver } from '../../../../webdriver/driver';
-import { RawLocator } from '../../../common';
+import type { Driver } from '../../../../webdriver/driver';
+import type { RawLocator } from '../../../common';
 import TransactionConfirmation from './transaction-confirmation';
 
 class SetApprovalForAllTransactionConfirmation extends TransactionConfirmation {
-  private setApprovalForAllTitleElement: RawLocator;
+  private readonly setApprovalForAllTitleElement: RawLocator;
 
-  private setApprovalForAllSubHeadingElement: RawLocator;
+  private readonly setApprovalForAllSubHeadingElement: RawLocator;
 
-  private revokeSetApprovalForAllTitleElement: RawLocator;
+  private readonly revokeSetApprovalForAllTitleElement: RawLocator;
 
   constructor(driver: Driver) {
     super(driver);
@@ -29,20 +29,14 @@ class SetApprovalForAllTransactionConfirmation extends TransactionConfirmation {
     };
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_setApprovalForAllTitle() {
     await this.driver.waitForSelector(this.setApprovalForAllTitleElement);
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_setApprovalForAllSubHeading() {
     await this.driver.waitForSelector(this.setApprovalForAllSubHeadingElement);
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_revokeSetApprovalForAllTitle() {
     await this.driver.waitForSelector(this.revokeSetApprovalForAllTitleElement);
   }

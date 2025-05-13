@@ -1,24 +1,25 @@
-import testCoverage from '@open-rpc/test-coverage';
-import { parseOpenRPCDocument } from '@open-rpc/schema-utils-js';
-import HtmlReporter from '@open-rpc/test-coverage/build/reporters/html-reporter';
 import {
   MultiChainOpenRPCDocument,
   MetaMaskOpenRPCDocument,
 } from '@metamask/api-specs';
-
-import { MethodObject, OpenrpcDocument } from '@open-rpc/meta-schema';
-import JsonSchemaFakerRule from '@open-rpc/test-coverage/build/rules/json-schema-faker-rule';
+import type { InternalScopeString } from '@metamask/chain-agnostic-permission';
+import type { MethodObject, OpenrpcDocument } from '@open-rpc/meta-schema';
+import { parseOpenRPCDocument } from '@open-rpc/schema-utils-js';
+import testCoverage from '@open-rpc/test-coverage';
+import type { Call, IOptions } from '@open-rpc/test-coverage/build/coverage';
+import HtmlReporter from '@open-rpc/test-coverage/build/reporters/html-reporter';
 import ExamplesRule from '@open-rpc/test-coverage/build/rules/examples-rule';
-import { Call, IOptions } from '@open-rpc/test-coverage/build/coverage';
-import { InternalScopeString } from '@metamask/chain-agnostic-permission';
-import { Mockttp } from 'mockttp';
-import { Driver, PAGES } from './webdriver/driver';
+import JsonSchemaFakerRule from '@open-rpc/test-coverage/build/rules/json-schema-faker-rule';
+import type { Mockttp } from 'mockttp';
 
+import { ConfirmationsRejectRule } from './api-specs/ConfirmationRejectionRule';
 import {
   createCaip27DriverTransport,
   createMultichainDriverTransport,
 } from './api-specs/helpers';
-
+import { MultichainAuthorizationConfirmation } from './api-specs/MultichainAuthorizationConfirmation';
+import { MultichainAuthorizationConfirmationErrors } from './api-specs/MultichainAuthorizationConfirmationErrors';
+import transformOpenRPCDocument from './api-specs/transform';
 import FixtureBuilder from './fixture-builder';
 import {
   withFixtures,
@@ -27,9 +28,8 @@ import {
   DAPP_URL,
   ACCOUNT_1,
 } from './helpers';
-import transformOpenRPCDocument from './api-specs/transform';
-import { MultichainAuthorizationConfirmationErrors } from './api-specs/MultichainAuthorizationConfirmationErrors';
-import { ConfirmationsRejectRule } from './api-specs/ConfirmationRejectionRule';
+import type { Driver } from './webdriver/driver';
+import { PAGES } from './webdriver/driver';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const mockServer = require('@open-rpc/mock-server/build/index').default;
@@ -84,21 +84,14 @@ async function main() {
     wallet: walletRpcMethods,
   };
 
-  const reverseScopeMap = Object.entries(scopeMap).reduce(
-    (acc, [scope, methods]: [string, string[]]) => {
-      methods.forEach((method) => {
-        acc[method] = scope;
-      });
-      return acc;
-    },
-    {} as { [method: string]: string },
-  );
-
-  const mockedServer = mockServer(
-    port,
-    await parseOpenRPCDocument(transformedDoc),
-  );
-  mockedServer.start();
+  const reverseScopeMap = Object.entries(scopeMap).reduce<{
+    [method: string]: string;
+  }>((acc, [scope, methods]: [string, string[]]) => {
+    methods.forEach((method) => {
+      acc[method] = scope;
+    });
+    return acc;
+  }, {});
 
   // Multichain API excluding `wallet_invokeMethod`
   await withFixtures(
@@ -122,6 +115,12 @@ async function main() {
 
       // Open Dapp
       await openDapp(driver, undefined, DAPP_URL);
+
+      const server = mockServer(
+        port,
+        await parseOpenRPCDocument(transformedDoc),
+      );
+      server.start();
 
       const getSession = doc.methods.find(
         (m) => (m as MethodObject).name === 'wallet_getSession',

@@ -1,16 +1,17 @@
-import {
+import type {
   BatchTransactionParams,
   SimulationTokenBalanceChange,
-  SimulationTokenStandard,
   TransactionMeta,
 } from '@metamask/transaction-controller';
+import { SimulationTokenStandard } from '@metamask/transaction-controller';
 import { add0x } from '@metamask/utils';
-import { useConfirmContext } from '../../../../context/confirm';
+
+import { parseApprovalTransactionData } from '../../../../../../../shared/modules/transaction.utils';
 import { useAsyncResult } from '../../../../../../hooks/useAsync';
 import { getTokenStandardAndDetails } from '../../../../../../store/actions';
-import { parseApprovalTransactionData } from '../../../../../../../shared/modules/transaction.utils';
+import { useConfirmContext } from '../../../../context/confirm';
+import type { BalanceChange } from '../../../simulation-details/types';
 import { useBalanceChanges } from '../../../simulation-details/useBalanceChanges';
-import { BalanceChange } from '../../../simulation-details/types';
 import { isSpendingCapUnlimited } from '../approve/hooks/use-approve-token-simulation';
 
 type ApprovalSimulationBalanceChange = SimulationTokenBalanceChange & {

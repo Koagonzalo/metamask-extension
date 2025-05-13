@@ -1,24 +1,24 @@
 import React from 'react';
-import { CaipAssetType } from '@metamask/utils';
-import { Box, Text } from '../../../../component-library';
-import {
-  Display,
-  TextColor,
-  TextVariant,
-} from '../../../../../helpers/constants/design-system';
+
 import {
   formatValue,
   isValidAmount,
   // TODO: Remove restricted import
   // eslint-disable-next-line import/no-restricted-paths
 } from '../../../../../../app/scripts/lib/util';
+import {
+  Display,
+  TextColor,
+  TextVariant,
+} from '../../../../../helpers/constants/design-system';
+import { Box, Text } from '../../../../component-library';
 
 export const PercentageChange = ({
   value,
   address,
 }: {
   value: number | null | undefined;
-  address: `0x${string}` | CaipAssetType;
+  address: `0x${string}`;
 }) => {
   let color = TextColor.textDefault;
 

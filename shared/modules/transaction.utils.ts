@@ -1,4 +1,3 @@
-import { isHexString } from 'ethereumjs-util';
 import { Interface } from '@ethersproject/abi';
 import {
   abiERC721,
@@ -6,16 +5,17 @@ import {
   abiERC1155,
   abiFiatTokenV2,
 } from '@metamask/metamask-eth-abis';
-import log from 'loglevel';
-import {
-  TransactionMeta,
-  TransactionType,
-} from '@metamask/transaction-controller';
-import type { TransactionParams } from '@metamask/transaction-controller';
 import type { Provider } from '@metamask/network-controller';
-
-import { Hex } from '@metamask/utils';
+import { TransactionType } from '@metamask/transaction-controller';
+import type {
+  TransactionParams,
+  TransactionMeta,
+} from '@metamask/transaction-controller';
+import type { Hex } from '@metamask/utils';
 import { BigNumber } from 'bignumber.js';
+import { isHexString } from 'ethereumjs-util';
+import log from 'loglevel';
+
 import { AssetType, TokenStandard } from '../constants/transaction';
 import { readAddressAsContract } from './contract-utils';
 import { isEqualCaseInsensitive } from './string-utils';

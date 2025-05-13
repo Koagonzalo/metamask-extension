@@ -1,29 +1,15 @@
-import React from 'react';
 import { NotificationServicesController } from '@metamask/notification-services-controller';
+import React from 'react';
+
 // TODO: Remove restricted import
 // eslint-disable-next-line import/no-restricted-paths
 import { t } from '../../../../../app/scripts/translate';
-import { CHAIN_IDS } from '../../../../../shared/constants/network';
-import { type ExtractedNotification, isOfTypeNodeGuard } from '../node-guard';
-import {
-  NotificationComponentType,
-  type NotificationComponent,
-} from '../types/notifications/notifications';
-
+import type { CHAIN_IDS } from '../../../../../shared/constants/network';
 import { decimalToHex } from '../../../../../shared/modules/conversion.utils';
-import { shortenAddress } from '../../../../helpers/utils/util';
 import {
-  createTextItems,
-  formatAmount,
-  formatIsoDateString,
-  getNetworkDetailsByChainId,
-} from '../../../../helpers/utils/notification.util';
-import {
-  TextVariant,
-  BackgroundColor,
-  TextColor,
-} from '../../../../helpers/constants/design-system';
-
+  BadgeWrapperPosition,
+  IconName,
+} from '../../../../components/component-library';
 import {
   NotificationListItem,
   NotificationDetailTitle,
@@ -36,9 +22,22 @@ import {
 } from '../../../../components/multichain';
 import { NotificationListItemIconType } from '../../../../components/multichain/notification-list-item-icon/notification-list-item-icon';
 import {
-  BadgeWrapperPosition,
-  IconName,
-} from '../../../../components/component-library';
+  TextVariant,
+  BackgroundColor,
+  TextColor,
+} from '../../../../helpers/constants/design-system';
+import {
+  createTextItems,
+  formatAmount,
+  formatIsoDateString,
+  getNetworkDetailsByChainId,
+} from '../../../../helpers/utils/notification.util';
+import { shortenAddress } from '../../../../helpers/utils/util';
+import { type ExtractedNotification, isOfTypeNodeGuard } from '../node-guard';
+import {
+  NotificationComponentType,
+  type NotificationComponent,
+} from '../types/notifications/notifications';
 
 const { TRIGGER_TYPES } = NotificationServicesController.Constants;
 
@@ -66,8 +65,6 @@ const getNativeCurrency = (n: ETHNotification) => {
 
 const getTitle = (n: ETHNotification) => {
   const address = shortenAddress(isSent(n) ? n.data.to : n.data.from);
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const items = createTextItems([title(n) || '', address], TextVariant.bodySm);
   return items;
 };
@@ -149,18 +146,12 @@ export const components: NotificationComponent<ETHNotification> = {
             color: TextColor.successDefault,
             backgroundColor: BackgroundColor.successMuted,
           }}
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-          // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
           label={t('notificationItemStatus') || ''}
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-          // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
           detail={t('notificationItemConfirmed') || ''}
           action={
             <NotificationDetailCopyButton
               notification={notification}
               text={notification.tx_hash}
-              // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
               displayText={t('notificationItemTransactionId') || ''}
             />
           }
@@ -179,8 +170,6 @@ export const components: NotificationComponent<ETHNotification> = {
                 position: BadgeWrapperPosition.topRight,
               },
             }}
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
             label={t('asset') || ''}
             detail={nativeCurrencySymbol}
             fiatValue={`$${formatAmount(
@@ -205,8 +194,6 @@ export const components: NotificationComponent<ETHNotification> = {
             icon={{
               src: nativeCurrencyLogo,
             }}
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
             label={t('notificationDetailNetwork') || ''}
             detail={nativeCurrencyName}
           />

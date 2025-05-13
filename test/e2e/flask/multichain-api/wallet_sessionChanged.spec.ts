@@ -1,4 +1,6 @@
 import { strict as assert } from 'assert';
+
+import FixtureBuilder from '../../fixture-builder';
 import {
   ACCOUNT_1,
   ACCOUNT_2,
@@ -7,9 +9,8 @@ import {
   WINDOW_TITLES,
   withFixtures,
 } from '../../helpers';
-import { Driver } from '../../webdriver/driver';
-import FixtureBuilder from '../../fixture-builder';
 import TestDappMultichain from '../../page-objects/pages/test-dapp-multichain';
+import type { Driver } from '../../webdriver/driver';
 import {
   addAccountInWalletAndAuthorize,
   DEFAULT_MULTICHAIN_TEST_DAPP_FIXTURE_OPTIONS,

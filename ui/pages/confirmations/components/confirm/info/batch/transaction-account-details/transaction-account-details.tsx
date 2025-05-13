@@ -1,7 +1,6 @@
+import type { TransactionMeta } from '@metamask/transaction-controller';
 import React from 'react';
-import { TransactionMeta } from '@metamask/transaction-controller';
 
-import { isBatchTransaction } from '../../../../../../../../shared/lib/transactions.utils';
 import {
   ConfirmInfoRow,
   ConfirmInfoRowAddress,
@@ -10,24 +9,18 @@ import {
 import { ConfirmInfoSection } from '../../../../../../../components/app/confirm/info/row/section';
 import { useI18nContext } from '../../../../../../../hooks/useI18nContext';
 import { useConfirmContext } from '../../../../../context/confirm';
-import { ConfirmInfoAlertRow } from '../../../../../../../components/app/confirm/info/row/alert-row/alert-row';
-import { RowAlertKey } from '../../../../../../../components/app/confirm/info/row/constants';
 import {
   useIsDowngradeTransaction,
   useIsUpgradeTransaction,
 } from '../../hooks/useIsUpgradeTransaction';
-import { RecipientRow } from '../../shared/transaction-details/transaction-details';
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export function TransactionAccountDetails() {
   const t = useI18nContext();
   const { currentConfirmation } = useConfirmContext<TransactionMeta>();
-  const { isUpgrade, isUpgradeOnly } = useIsUpgradeTransaction();
+  const isUpgrade = useIsUpgradeTransaction();
   const isDowngrade = useIsDowngradeTransaction();
-  const { chainId, nestedTransactions, txParams, id } = currentConfirmation;
+  const { chainId, txParams } = currentConfirmation;
   const { from } = txParams;
-  const isBatch = isBatchTransaction(nestedTransactions);
 
   if (!isUpgrade && !isDowngrade) {
     return null;
@@ -35,39 +28,27 @@ export function TransactionAccountDetails() {
 
   return (
     <ConfirmInfoSection>
-      {(isUpgradeOnly || isDowngrade) && (
-        <ConfirmInfoRow label={t('account')}>
-          <ConfirmInfoRowAddress chainId={chainId} address={from} />
-        </ConfirmInfoRow>
-      )}
+      <ConfirmInfoRow label={t('account')}>
+        <ConfirmInfoRowAddress chainId={chainId} address={from} />
+      </ConfirmInfoRow>
       {isUpgrade && (
-        <>
-          <ConfirmInfoAlertRow
-            alertKey={RowAlertKey.AccountTypeUpgrade}
-            label={t('confirmInfoAccountNow')}
-            ownerId={id}
-          >
-            <ConfirmInfoRowText
-              text={t('confirmAccountTypeStandard')}
-              data-testid="tx-type"
-            />
-          </ConfirmInfoAlertRow>
-          <ConfirmInfoRow label={t('confirmInfoSwitchingTo')}>
-            <ConfirmInfoRowText text={t('confirmAccountTypeSmartContract')} />
-          </ConfirmInfoRow>
-        </>
+        <ConfirmInfoRow label={t('confirmAccountType')}>
+          <ConfirmInfoRowText
+            text={t('confirmAccountTypeSmartContract')}
+            data-testid="tx-type"
+          />
+        </ConfirmInfoRow>
       )}
       {isDowngrade && (
         <>
-          <ConfirmInfoRow label={t('confirmInfoAccountNow')}>
+          <ConfirmInfoRow label="Current Type">
             <ConfirmInfoRowText text={t('confirmAccountTypeSmartContract')} />
           </ConfirmInfoRow>
-          <ConfirmInfoRow label={t('confirmInfoSwitchingTo')}>
+          <ConfirmInfoRow label="New Type">
             <ConfirmInfoRowText text={t('confirmAccountTypeStandard')} />
           </ConfirmInfoRow>
         </>
       )}
-      {(isBatch || isUpgrade) && <RecipientRow />}
     </ConfirmInfoSection>
   );
 }

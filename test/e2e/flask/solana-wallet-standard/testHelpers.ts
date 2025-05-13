@@ -1,14 +1,13 @@
-import * as path from 'path';
 import { strict as assert } from 'assert';
+import * as path from 'path';
 import { By } from 'selenium-webdriver';
 import nacl from 'tweetnacl';
+
 import { largeDelayMs, regularDelayMs, WINDOW_TITLES } from '../../helpers';
-import { Driver } from '../../webdriver/driver';
-import { TestDappSolana } from '../../page-objects/pages/test-dapp-solana';
-import {
-  SOLANA_DEVNET_URL,
-  withSolanaAccountSnap,
-} from '../../tests/solana/common-solana';
+import type { TestDappSolana } from '../../page-objects/pages/test-dapp-solana';
+import type { withSolanaAccountSnap } from '../../tests/solana/common-solana';
+import { SOLANA_DEVNET_URL } from '../../tests/solana/common-solana';
+import type { Driver } from '../../webdriver/driver';
 
 export type FixtureCallbackArgs = { driver: Driver; extensionId: string };
 

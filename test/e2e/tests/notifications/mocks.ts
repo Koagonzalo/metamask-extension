@@ -1,10 +1,11 @@
-import { Mockttp, RequestRuleBuilder } from 'mockttp';
 import {
   NotificationServicesController,
   NotificationServicesPushController,
 } from '@metamask/notification-services-controller';
-import { USER_STORAGE_FEATURE_NAMES } from '@metamask/profile-sync-controller/sdk';
 import { AuthenticationController } from '@metamask/profile-sync-controller';
+import { USER_STORAGE_FEATURE_NAMES } from '@metamask/profile-sync-controller/sdk';
+import type { Mockttp, RequestRuleBuilder } from 'mockttp';
+
 import { UserStorageMockttpController } from '../../helpers/identity/user-storage/userStorageMockttpController';
 
 const NotificationMocks = NotificationServicesController.Mocks;

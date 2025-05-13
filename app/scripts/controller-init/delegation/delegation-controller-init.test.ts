@@ -1,19 +1,20 @@
-import { DelegationController } from '@metamask/delegation-controller';
 import { Messenger } from '@metamask/base-controller';
+import { DelegationController } from '@metamask/delegation-controller';
 import {
   type TransactionMeta,
   TransactionStatus,
   TransactionType,
 } from '@metamask/transaction-controller';
+
 import { type Hex } from '../../../../shared/lib/delegation/utils';
-import { buildControllerInitRequestMock } from '../test/utils';
-import type { ControllerInitRequest } from '../types';
 import {
   type DelegationControllerMessenger,
   type DelegationControllerInitMessenger,
   getDelegationControllerMessenger,
   getDelegationControllerInitMessenger,
 } from '../messengers/delegation/delegation-controller-messenger';
+import { buildControllerInitRequestMock } from '../test/utils';
+import type { ControllerInitRequest } from '../types';
 import {
   DelegationControllerInit,
   awaitDeleteDelegationEntry,

@@ -1,18 +1,16 @@
+import { toHex } from '@metamask/controller-utils';
+import type { GasFeeToken } from '@metamask/transaction-controller';
+import { act } from '@testing-library/react';
 import React from 'react';
 
-import { GasFeeToken } from '@metamask/transaction-controller';
-import { toHex } from '@metamask/controller-utils';
-import { act } from '@testing-library/react';
-import { getMockConfirmStateForTransaction } from '../../../../../../../../test/data/confirmations/helper';
-import configureStore from '../../../../../../../store/store';
-
 import { genUnapprovedContractInteractionConfirmation } from '../../../../../../../../test/data/confirmations/contract-interaction';
+import { getMockConfirmStateForTransaction } from '../../../../../../../../test/data/confirmations/helper';
 import { renderWithConfirmContextProvider } from '../../../../../../../../test/lib/confirmations/render-helpers';
 import {
   updateBatchTransactions,
   updateSelectedGasFeeToken,
 } from '../../../../../../../store/controller-actions/transaction-controller';
-import { GAS_FEE_TOKEN_MOCK as GAS_FEE_TOKEN_MOCK_BASE } from '../../../../../../../../test/data/confirmations/gas';
+import configureStore from '../../../../../../../store/store';
 import { GasFeeTokenModal } from './gas-fee-token-modal';
 
 jest.mock(
@@ -20,8 +18,16 @@ jest.mock(
 );
 
 const GAS_FEE_TOKEN_MOCK: GasFeeToken = {
-  ...GAS_FEE_TOKEN_MOCK_BASE,
+  amount: toHex(1000),
+  balance: toHex(2345),
+  decimals: 3,
+  gas: '0x3',
+  maxFeePerGas: '0x4',
+  maxPriorityFeePerGas: '0x5',
+  rateWei: toHex('1798170000000000000'),
+  recipient: '0x1234567890123456789012345678901234567891',
   symbol: 'USDC',
+  tokenAddress: '0x1234567890123456789012345678901234567892',
 };
 
 const GAS_FEE_TOKEN_2_MOCK: GasFeeToken = {
@@ -29,7 +35,6 @@ const GAS_FEE_TOKEN_2_MOCK: GasFeeToken = {
   balance: toHex(43210),
   decimals: 4,
   gas: '0x3',
-  gasTransfer: '0x3a',
   maxFeePerGas: '0x4',
   maxPriorityFeePerGas: '0x5',
   rateWei: toHex('1798170000000000000'),
@@ -95,7 +100,7 @@ describe('GasFeeTokenModal', () => {
       store,
     );
 
-    expect(result.getByTestId('gas-fee-token-list-item-USDC')).toHaveClass(
+    expect(result.queryAllByTestId('gas-fee-token-list-item')[1]).toHaveClass(
       'gas-fee-token-list-item--selected',
     );
   });
@@ -106,7 +111,7 @@ describe('GasFeeTokenModal', () => {
       configureStore(getState({ noSelectedGasFeeToken: true })),
     );
 
-    expect(result.getByTestId('gas-fee-token-list-item-ETH')).toHaveClass(
+    expect(result.queryAllByTestId('gas-fee-token-list-item')[0]).toHaveClass(
       'gas-fee-token-list-item--selected',
     );
   });
@@ -118,7 +123,7 @@ describe('GasFeeTokenModal', () => {
     );
 
     await act(async () => {
-      result.getByTestId('gas-fee-token-list-item-WETH').click();
+      result.queryAllByTestId('gas-fee-token-list-item')[2].click();
     });
 
     expect(updateSelectedGasFeeTokenMock).toHaveBeenCalledTimes(1);

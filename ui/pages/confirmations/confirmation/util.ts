@@ -1,4 +1,4 @@
-import { ResultComponent } from '@metamask/approval-controller';
+import type { ResultComponent } from '@metamask/approval-controller';
 
 export type TemplateRendererComponent = {
   key: string;
@@ -22,8 +22,6 @@ export function processError(
   input: undefined | string | ResultComponent | ResultComponent[],
   fallback: string,
 ): TemplateRendererComponent | (string | TemplateRendererComponent)[] {
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const currentInput = convertResultComponents(input) || fallback;
 
   if (typeof currentInput !== 'string') {
@@ -49,8 +47,6 @@ export function processString(
   input: undefined | string | ResultComponent | ResultComponent[],
   fallback: string,
 ): TemplateRendererComponent | (string | TemplateRendererComponent)[] {
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const currentInput = convertResultComponents(input) || fallback;
 
   if (typeof currentInput !== 'string') {
@@ -124,7 +120,7 @@ function findMarkdown(
 
     elements.push(formattedElement);
 
-    position = (match.index as number) + match[0].length;
+    position = match.index + match[0].length;
     index += 1;
   }
 

@@ -1,8 +1,16 @@
 import React from 'react';
+
+import type { SecurityProvider } from '../../../../../shared/constants/security-provider';
+import { SECURITY_PROVIDER_CONFIG } from '../../../../../shared/constants/security-provider';
+import type { TextAlign } from '../../../../helpers/constants/design-system';
 import {
-  SECURITY_PROVIDER_CONFIG,
-  SecurityProvider,
-} from '../../../../../shared/constants/security-provider';
+  AlignItems,
+  Display,
+  IconColor,
+  TextColor,
+  TextVariant,
+} from '../../../../helpers/constants/design-system';
+import { useI18nContext } from '../../../../hooks/useI18nContext';
 import {
   Box,
   ButtonLink,
@@ -12,16 +20,7 @@ import {
   IconSize,
   Text,
 } from '../../../component-library';
-import { SizeNumber } from '../../../component-library/box/box.types';
-import {
-  AlignItems,
-  Display,
-  IconColor,
-  TextAlign,
-  TextColor,
-  TextVariant,
-} from '../../../../helpers/constants/design-system';
-import { useI18nContext } from '../../../../hooks/useI18nContext';
+import type { SizeNumber } from '../../../component-library/box/box.types';
 
 export type AlertProviderProps = {
   provider?: SecurityProvider;
@@ -29,8 +28,6 @@ export type AlertProviderProps = {
   textAlign?: TextAlign;
 };
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export function AlertProvider({
   provider,
   paddingTop = 0,

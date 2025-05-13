@@ -1,9 +1,10 @@
 import { strict as assert } from 'assert';
-import { Driver } from '../../webdriver/driver';
+
 import {
   MOCK_REMOTE_FEATURE_FLAGS_RESPONSE,
   MOCK_CUSTOMIZED_REMOTE_FEATURE_FLAGS,
 } from '../../constants';
+import type { Driver } from '../../webdriver/driver';
 
 class DevelopOptions {
   private readonly driver: Driver;
@@ -24,8 +25,6 @@ class DevelopOptions {
     this.driver = driver;
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_pageIsLoaded(): Promise<void> {
     try {
       await this.driver.waitForSelector(this.developOptionsPageTitle);

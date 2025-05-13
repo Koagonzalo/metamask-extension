@@ -1,37 +1,31 @@
-import { TransactionMeta } from '@metamask/transaction-controller';
 import { JsonRpcError, serializeError } from '@metamask/rpc-errors';
+import type { TransactionMeta } from '@metamask/transaction-controller';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 
+import { EIP5792ErrorCode } from '../../../../shared/constants/transaction';
 import {
-  disableAccountUpgrade,
+  disableAccountUpgradeForChain,
   rejectPendingApproval,
 } from '../../../store/actions';
 import { useConfirmContext } from '../context/confirm';
-import { EIP5792ErrorCode } from '../../../../shared/constants/transaction';
 
 export function useSmartAccountActions() {
   const dispatch = useDispatch();
   const { currentConfirmation } = useConfirmContext<TransactionMeta>();
-  const { id: confirmationId, chainId, txParams } = currentConfirmation ?? {};
-  const { from } = txParams ?? {};
+  const { id: confirmationId, chainId } = currentConfirmation ?? {};
 
   const handleRejectUpgrade = useCallback(async () => {
-    if (!chainId || !from) {
-      return;
-    }
-
     const error = new JsonRpcError(
       EIP5792ErrorCode.RejectedUpgrade,
       'User rejected account upgrade',
     );
-
     const serializedError = serializeError(error);
 
-    await disableAccountUpgrade(chainId as string, from);
+    await disableAccountUpgradeForChain(chainId as string);
 
     dispatch(rejectPendingApproval(confirmationId, serializedError));
-  }, [dispatch, confirmationId, chainId, from]);
+  }, [dispatch, confirmationId, chainId]);
 
   return { handleRejectUpgrade };
 }

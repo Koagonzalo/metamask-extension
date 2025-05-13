@@ -6,7 +6,10 @@ import {
   type QuoteMetadata,
   type QuoteResponse,
   SortOrder,
+  UnifiedSwapBridgeEventName,
   formatEtaInMinutes,
+  formatProviderLabel,
+  getNativeAssetForChainId,
 } from '@metamask/bridge-controller';
 import { BigNumber } from 'bignumber.js';
 import {
@@ -27,10 +30,17 @@ import {
 } from '../../../helpers/constants/design-system';
 import { formatCurrencyAmount, formatTokenAmount } from '../utils/quote';
 import { useI18nContext } from '../../../hooks/useI18nContext';
-import { setSelectedQuote, setSortOrder } from '../../../ducks/bridge/actions';
+import {
+  setSelectedQuote,
+  setSortOrder,
+  trackUnifiedSwapBridgeEvent,
+} from '../../../ducks/bridge/actions';
 import {
   getBridgeQuotes,
   getBridgeSortOrder,
+  getFromChain,
+  getFromToken,
+  getToToken,
 } from '../../../ducks/bridge/selectors';
 import { Column, Row } from '../layout';
 import { getCurrentCurrency } from '../../../ducks/metamask/metamask';
@@ -43,6 +53,7 @@ import { useTradeProperties } from '../../../hooks/bridge/events/useTradePropert
 import { getIntlLocale } from '../../../ducks/locale/locale';
 import { getMultichainNativeCurrency } from '../../../selectors/multichain';
 import { useMultichainSelector } from '../../../hooks/useMultichainSelector';
+import { getSmartTransactionsEnabled } from '../../../../shared/modules/selectors';
 
 export const BridgeQuotesModal = ({
   onClose,
@@ -51,6 +62,10 @@ export const BridgeQuotesModal = ({
   const t = useI18nContext();
   const dispatch = useDispatch();
 
+  const isStxEnabled = useSelector(getSmartTransactionsEnabled);
+  const fromToken = useSelector(getFromToken);
+  const toToken = useSelector(getToToken);
+  const fromChain = useSelector(getFromChain);
   const { sortedQuotes, activeQuote, recommendedQuote } =
     useSelector(getBridgeQuotes);
   const sortOrder = useSelector(getBridgeSortOrder);
@@ -88,6 +103,43 @@ export const BridgeQuotesModal = ({
             <ButtonLink
               key={label}
               onClick={() => {
+                fromChain &&
+                  recommendedQuote &&
+                  dispatch(
+                    trackUnifiedSwapBridgeEvent(
+                      UnifiedSwapBridgeEventName.AllQuotesSorted,
+                      {
+                        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+                        // eslint-disable-next-line @typescript-eslint/naming-convention
+                        sort_order: sortOrder,
+                        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+                        // eslint-disable-next-line @typescript-eslint/naming-convention
+                        price_impact: Number(
+                          recommendedQuote.quote?.bridgePriceData
+                            ?.priceImpact ?? '0',
+                        ),
+                        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+                        // eslint-disable-next-line @typescript-eslint/naming-convention
+                        gas_included: false,
+                        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+                        // eslint-disable-next-line @typescript-eslint/naming-convention
+                        token_symbol_source:
+                          fromToken?.symbol ??
+                          getNativeAssetForChainId(fromChain.chainId).symbol,
+                        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+                        // eslint-disable-next-line @typescript-eslint/naming-convention
+                        token_symbol_destination: toToken?.symbol ?? null,
+                        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+                        // eslint-disable-next-line @typescript-eslint/naming-convention
+                        stx_enabled: isStxEnabled,
+                        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+                        // eslint-disable-next-line @typescript-eslint/naming-convention
+                        best_quote_provider: formatProviderLabel(
+                          recommendedQuote.quote,
+                        ),
+                      },
+                    ),
+                  );
                 quoteRequestProperties &&
                   requestMetadataProperties &&
                   quoteListProperties &&
@@ -168,6 +220,41 @@ export const BridgeQuotesModal = ({
                     isQuoteActive ? BackgroundColor.primaryMuted : undefined
                   }
                   onClick={() => {
+                    quote &&
+                      dispatch(
+                        trackUnifiedSwapBridgeEvent(
+                          UnifiedSwapBridgeEventName.QuoteSelected,
+                          {
+                            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+                            // eslint-disable-next-line @typescript-eslint/naming-convention
+                            is_best_quote: isRecommendedQuote,
+                            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+                            // eslint-disable-next-line @typescript-eslint/naming-convention
+                            best_quote_provider: formatProviderLabel(
+                              quote?.quote,
+                            ),
+                            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+                            // eslint-disable-next-line @typescript-eslint/naming-convention
+                            usd_quoted_gas: Number(quote.gasFee.usd),
+                            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+                            // eslint-disable-next-line @typescript-eslint/naming-convention
+                            quoted_time_minutes:
+                              quote.estimatedProcessingTimeInSeconds / 60,
+                            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+                            // eslint-disable-next-line @typescript-eslint/naming-convention
+                            usd_quoted_return: Number(quote.toTokenAmount.usd),
+                            provider: formatProviderLabel(quote.quote),
+                            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+                            // eslint-disable-next-line @typescript-eslint/naming-convention
+                            price_impact: Number(
+                              quote.quote.bridgePriceData?.priceImpact ?? '0',
+                            ),
+                            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+                            // eslint-disable-next-line @typescript-eslint/naming-convention
+                            gas_included: false,
+                          },
+                        ),
+                      );
                     dispatch(setSelectedQuote(quote));
                     // Emit QuoteSelected event after dispatching setSelectedQuote
                     quoteRequestProperties &&

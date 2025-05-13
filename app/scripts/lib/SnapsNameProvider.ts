@@ -1,25 +1,25 @@
-import {
+import type { RestrictedMessenger } from '@metamask/base-controller';
+import type {
   NameProvider,
   NameProviderMetadata,
   NameProviderRequest,
   NameProviderResult,
   NameProviderSourceResult,
-  NameType,
 } from '@metamask/name-controller';
-import { GetPermissionControllerState } from '@metamask/permission-controller';
-import {
+import { NameType } from '@metamask/name-controller';
+import type { GetPermissionControllerState } from '@metamask/permission-controller';
+import type {
+  GetAllSnaps,
+  GetSnap,
+  HandleSnapRequest,
+} from '@metamask/snaps-controllers';
+import type {
   AddressLookupArgs,
   AddressLookupResult,
   Snap as TruncatedSnap,
 } from '@metamask/snaps-sdk';
 import { HandlerType } from '@metamask/snaps-utils';
 import log from 'loglevel';
-import {
-  GetAllSnaps,
-  GetSnap,
-  HandleSnapRequest,
-} from '@metamask/snaps-controllers';
-import { RestrictedMessenger } from '@metamask/base-controller';
 
 type AllowedActions =
   | GetAllSnaps
@@ -36,7 +36,7 @@ export type SnapsNameProviderMessenger = RestrictedMessenger<
 >;
 
 export class SnapsNameProvider implements NameProvider {
-  #messenger: SnapsNameProviderMessenger;
+  readonly #messenger: SnapsNameProviderMessenger;
 
   constructor({ messenger }: { messenger: SnapsNameProviderMessenger }) {
     this.#messenger = messenger;
@@ -76,7 +76,7 @@ export class SnapsNameProvider implements NameProvider {
     const nameSnaps = this.#getNameLookupSnaps();
 
     const snapResults = await Promise.all(
-      nameSnaps.map((snap) => this.#getSnapProposedName(snap, request)),
+      nameSnaps.map(async (snap) => this.#getSnapProposedName(snap, request)),
     );
 
     const results = snapResults.reduce(

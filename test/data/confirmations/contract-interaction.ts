@@ -1,15 +1,18 @@
-import {
+import type {
   AuthorizationList,
   BatchTransactionParams,
-  CHAIN_IDS,
   GasFeeToken,
   SimulationData,
   TransactionMeta,
+} from '@metamask/transaction-controller';
+import {
+  CHAIN_IDS,
   TransactionStatus,
   TransactionType,
 } from '@metamask/transaction-controller';
-import { Hex } from '@metamask/utils';
-import {
+import type { Hex } from '@metamask/utils';
+
+import type {
   Confirmation,
   SignatureRequestType,
 } from '../../../ui/pages/confirmations/types/confirm';
@@ -74,8 +77,6 @@ export const genUnapprovedContractInteractionConfirmation = ({
         origin: 'https://metamask.github.io',
         securityAlertResponse: {
           reason: 'loading',
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           result_type: 'validation_in_progress',
         },
         sendFlowHistory: [],
@@ -154,8 +155,6 @@ export const genUnapprovedContractInteractionConfirmation = ({
     securityAlertResponse: {
       features: [],
       reason: '',
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       result_type: 'Benign',
     },
     selectedGasFeeToken,

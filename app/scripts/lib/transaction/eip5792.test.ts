@@ -1,26 +1,27 @@
-import {
-  TransactionController,
-  TransactionControllerGetStateAction,
-  TransactionControllerState,
-  TransactionStatus,
-} from '@metamask/transaction-controller';
-import {
+import type { AccountsControllerGetSelectedAccountAction } from '@metamask/accounts-controller';
+import { Messenger } from '@metamask/base-controller';
+import type {
+  SendCalls,
+  SendCallsParams,
+} from '@metamask/eth-json-rpc-middleware';
+import { GetCallsStatusCode } from '@metamask/eth-json-rpc-middleware';
+import type { InternalAccount } from '@metamask/keyring-internal-api';
+import type {
   AutoManagedNetworkClient,
   CustomNetworkClientConfiguration,
   NetworkControllerGetNetworkClientByIdAction,
 } from '@metamask/network-controller';
-import {
-  GetCallsStatusCode,
-  SendCalls,
-  SendCallsParams,
-} from '@metamask/eth-json-rpc-middleware';
-import { Hex, JsonRpcRequest } from '@metamask/utils';
-import { Messenger } from '@metamask/base-controller';
-import { AccountsControllerGetSelectedAccountAction } from '@metamask/accounts-controller';
-import { InternalAccount } from '@metamask/keyring-internal-api';
+import type {
+  TransactionController,
+  TransactionControllerGetStateAction,
+  TransactionControllerState,
+} from '@metamask/transaction-controller';
+import { TransactionStatus } from '@metamask/transaction-controller';
+import type { Hex, JsonRpcRequest } from '@metamask/utils';
+
+import type { EIP5792Messenger } from './eip5792';
 import {
   AtomicCapabilityStatus,
-  EIP5792Messenger,
   getCallsStatus,
   getCapabilities,
   processSendCalls,
@@ -483,7 +484,6 @@ describe('EIP-5792', () => {
       );
     });
 
-    // @ts-expect-error This function is missing from the Mocha type definitions
     it.each([
       TransactionStatus.approved,
       TransactionStatus.signed,

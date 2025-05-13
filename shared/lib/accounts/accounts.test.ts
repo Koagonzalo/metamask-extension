@@ -1,27 +1,26 @@
-import { JsonRpcRequest, SnapId } from '@metamask/snaps-sdk';
-import {
-  BtcScope,
-  CaipChainId,
-  DiscoverAccountsRequest,
-  SolScope,
-} from '@metamask/keyring-api';
-import {
+import type { AccountsControllerActions } from '@metamask/accounts-controller';
+import { Messenger } from '@metamask/base-controller';
+import type {
   SnapKeyring,
   SnapKeyringInternalOptions,
 } from '@metamask/eth-snap-keyring';
-import { Messenger } from '@metamask/base-controller';
-import { AccountsControllerActions } from '@metamask/accounts-controller';
-import { SnapControllerActions } from '@metamask/snaps-controllers';
+import type {
+  CaipChainId,
+  DiscoverAccountsRequest,
+} from '@metamask/keyring-api';
+import { BtcScope, SolScope } from '@metamask/keyring-api';
+import type { SnapControllerActions } from '@metamask/snaps-controllers';
+import type { JsonRpcRequest, SnapId } from '@metamask/snaps-sdk';
+
 import { createMockInternalAccount } from '../../../test/jest/mocks';
+import type { SnapAccountNameOptions, WalletSnapOptions } from './accounts';
 import {
   getNextAvailableSnapAccountName,
   getUniqueAccountName,
   MultichainWalletSnapClient,
-  SnapAccountNameOptions,
-  WalletSnapOptions,
 } from './accounts';
-import { SOLANA_WALLET_SNAP_ID } from './solana-wallet-snap';
 import { BITCOIN_WALLET_SNAP_ID } from './bitcoin-wallet-snap';
+import { SOLANA_WALLET_SNAP_ID } from './solana-wallet-snap';
 
 const SOLANA_SCOPES = [SolScope.Mainnet, SolScope.Testnet, SolScope.Devnet];
 

@@ -1,11 +1,12 @@
 import { strict as assert } from 'assert';
+import type { Mockttp } from 'mockttp';
 import { Browser } from 'selenium-webdriver';
-import { Mockttp } from 'mockttp';
-import { getEventPayloads, withFixtures } from '../../helpers';
+
+import { MOCK_META_METRICS_ID } from '../../constants';
 import FixtureBuilder from '../../fixture-builder';
+import { getEventPayloads, withFixtures } from '../../helpers';
 import OnboardingMetricsPage from '../../page-objects/pages/onboarding/onboarding-metrics-page';
 import StartOnboardingPage from '../../page-objects/pages/onboarding/start-onboarding-page';
-import { MOCK_META_METRICS_ID } from '../../constants';
 
 /**
  * Mocks the segment API multiple times for specific payloads that we expect to
@@ -70,11 +71,7 @@ describe('App Installed Events', function () {
         assert.deepStrictEqual(events[0].properties, {
           category: 'App',
           locale: 'en',
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           chain_id: '0x539',
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           environment_type: 'background',
         });
       },

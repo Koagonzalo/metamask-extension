@@ -1,7 +1,7 @@
-import { Driver } from '../../../webdriver/driver';
+import type { Driver } from '../../../webdriver/driver';
 
 class SecureWalletPage {
-  private driver: Driver;
+  private readonly driver: Driver;
 
   private readonly confirmPasswordButton = {
     text: 'Confirm',
@@ -67,8 +67,6 @@ class SecureWalletPage {
     this.driver = driver;
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_pageIsLoaded(): Promise<void> {
     try {
       await this.driver.waitForMultipleSelectors([

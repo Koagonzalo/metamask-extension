@@ -1,13 +1,13 @@
-import { withFixtures } from '../../helpers';
-import FixtureBuilder from '../../fixture-builder';
-import { Driver } from '../../webdriver/driver';
 import { E2E_SRP } from '../../default-fixture';
-import { Anvil } from '../../seeder/anvil';
-import { Ganache } from '../../seeder/ganache';
+import FixtureBuilder from '../../fixture-builder';
+import { withFixtures } from '../../helpers';
+import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
 import HomePage from '../../page-objects/pages/home/homepage';
 import LoginPage from '../../page-objects/pages/login-page';
 import ResetPasswordPage from '../../page-objects/pages/reset-password-page';
-import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
+import type { Anvil } from '../../seeder/anvil';
+import type { Ganache } from '../../seeder/ganache';
+import type { Driver } from '../../webdriver/driver';
 
 const newPassword = 'this is the best password ever';
 

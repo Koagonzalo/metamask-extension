@@ -1,11 +1,12 @@
-import React from 'react';
 import { render } from '@testing-library/react';
 import { BigNumber } from 'bignumber.js';
+import React from 'react';
+
 import { TokenStandard } from '../../../../../shared/constants/transaction';
 import Tooltip from '../../../../components/ui/tooltip';
 import { TOKEN_VALUE_UNLIMITED_THRESHOLD } from '../confirm/info/shared/constants';
 import { AmountPill } from './amount-pill';
-import {
+import type {
   AssetIdentifier,
   NativeAssetIdentifier,
   TokenAssetIdentifier,
@@ -20,8 +21,6 @@ jest.mock('../../../../ducks/locale/locale', () => ({
 }));
 
 jest.mock('../../../../components/ui/tooltip', () => ({
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   __esModule: true,
   default: jest.fn(({ children }) => children),
 }));
@@ -136,7 +135,6 @@ describe('AmountPill', () => {
   ];
 
   describe('Native', () => {
-    // @ts-expect-error This is missing from the Mocha type definitions
     it.each(nativeAndErc20Cases)(
       'renders the correct sign and amount for $amount',
       ({
@@ -152,7 +150,6 @@ describe('AmountPill', () => {
   });
 
   describe('ERC20', () => {
-    // @ts-expect-error This is missing from the Mocha type definitions
     it.each(nativeAndErc20Cases)(
       'renders the correct sign and amount for $amount',
       ({
@@ -185,7 +182,6 @@ describe('AmountPill', () => {
       },
     ];
 
-    // @ts-expect-error This is missing from the Mocha type definitions
     it.each(cases)(
       'renders the token ID with just a plus or minus for $expected.text',
       ({
@@ -225,7 +221,6 @@ describe('AmountPill', () => {
       },
     ];
 
-    // @ts-expect-error This is missing from the Mocha type definitions
     it.each(cases)(
       'renders the correct sign, amount, and token ID for $expected.text',
       ({

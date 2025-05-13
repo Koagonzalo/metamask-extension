@@ -12,8 +12,9 @@
  * 4) The test runs, and the built extension can call getManifestFlags() to get the custom flags
  * 5) A global afterEach hook restores the backup copy of the manifest, so that the next test gets the normal manifest
  */
-import fs from 'fs';
 import { hasProperty } from '@metamask/utils';
+import fs from 'fs';
+
 import { folder, getManifestVersion } from './set-manifest-flags';
 
 process.env.ENABLE_MV3 = getManifestVersion() === 3 ? 'true' : 'false';

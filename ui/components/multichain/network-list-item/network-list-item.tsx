@@ -1,12 +1,8 @@
-import React, {
-  ReactNode,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
+import type { ReactNode } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+
 import {
   AlignItems,
   BackgroundColor,
@@ -20,6 +16,8 @@ import {
   TextVariant,
   BorderColor,
 } from '../../../helpers/constants/design-system';
+import { getAvatarNetworkColor } from '../../../helpers/utils/accounts';
+import { useI18nContext } from '../../../hooks/useI18nContext';
 import {
   AvatarNetwork,
   AvatarNetworkSize,
@@ -31,8 +29,6 @@ import {
   IconSize,
   Text,
 } from '../../component-library';
-import { useI18nContext } from '../../../hooks/useI18nContext';
-import { getAvatarNetworkColor } from '../../../helpers/utils/accounts';
 import Tooltip from '../../ui/tooltip/tooltip';
 import { NetworkListItemMenu } from '../network-list-item-menu';
 
@@ -84,8 +80,6 @@ export const NetworkListItem = ({
     useState();
 
   // I can't find a type that satisfies this.
-
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const setNetworkListItemMenuRef = (ref: any) => {
     setNetworkListItemMenuElement(ref);
@@ -93,8 +87,6 @@ export const NetworkListItem = ({
   const [networkOptionsMenuOpen, setNetworkOptionsMenuOpen] = useState(false);
 
   const renderButton = useCallback(() => {
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     return onDeleteClick || onEditClick || onDiscoverClick ? (
       <ButtonIcon
         iconName={IconName.MoreVertical}

@@ -1,4 +1,4 @@
-import {
+import type {
   AccountsControllerChangeEvent,
   AccountsControllerGetAccountByAddressAction,
   AccountsControllerGetSelectedAccountAction,
@@ -6,20 +6,21 @@ import {
   AccountsControllerSetSelectedAccountAction,
   AccountsControllerState,
 } from '@metamask/accounts-controller';
-import { Hex, Json } from '@metamask/utils';
-import {
-  BaseController,
+import type {
   ControllerGetStateAction,
   ControllerStateChangeEvent,
   RestrictedMessenger,
 } from '@metamask/base-controller';
-import { NetworkControllerGetStateAction } from '@metamask/network-controller';
+import { BaseController } from '@metamask/base-controller';
+import type { NetworkControllerGetStateAction } from '@metamask/network-controller';
 import {
   ETHERSCAN_SUPPORTED_CHAIN_IDS,
   type PreferencesState,
 } from '@metamask/preferences-controller';
-import { IPFS_DEFAULT_GATEWAY_URL } from '../../../shared/constants/network';
+import type { Hex, Json } from '@metamask/utils';
+
 import { LedgerTransportTypes } from '../../../shared/constants/hardware-wallets';
+import { IPFS_DEFAULT_GATEWAY_URL } from '../../../shared/constants/network';
 import { ThemeType } from '../../../shared/constants/preferences';
 
 type AccountIdentityEntry = {

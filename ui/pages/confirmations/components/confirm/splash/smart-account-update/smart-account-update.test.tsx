@@ -1,21 +1,20 @@
+import { fireEvent } from '@testing-library/dom';
 import React from 'react';
 import configureMockStore from 'redux-mock-store';
-import { fireEvent } from '@testing-library/dom';
 
-import { flushPromises } from '../../../../../../../test/lib/timer-helpers';
+import { upgradeAccountConfirmation } from '../../../../../../../test/data/confirmations/batch-transaction';
 import { getMockConfirmStateForTransaction } from '../../../../../../../test/data/confirmations/helper';
 import { renderWithConfirmContextProvider } from '../../../../../../../test/lib/confirmations/render-helpers';
-import { upgradeAccountConfirmation } from '../../../../../../../test/data/confirmations/batch-transaction';
-import { Confirmation } from '../../../../types/confirm';
+import { flushPromises } from '../../../../../../../test/lib/timer-helpers';
 import {
-  disableAccountUpgrade,
+  disableAccountUpgradeForChain,
   rejectPendingApproval,
 } from '../../../../../../store/actions';
+import { Confirmation } from '../../../../types/confirm';
 import { SmartAccountUpdate } from './smart-account-update';
 
 jest.mock('../../../../../../store/actions', () => ({
-  disableAccountUpgrade: jest.fn(),
-  setAccountDetailsAddress: jest.fn(),
+  disableAccountUpgradeForChain: jest.fn(),
   rejectPendingApproval: jest.fn().mockReturnValue({}),
 }));
 
@@ -31,9 +30,7 @@ jest.mock('react-redux', () => {
 describe('Splash', () => {
   it('renders correctly', () => {
     const mockStore = configureMockStore([])(
-      getMockConfirmStateForTransaction(
-        upgradeAccountConfirmation as Confirmation,
-      ),
+      getMockConfirmStateForTransaction(upgradeAccountConfirmation),
     );
     const { getByText } = renderWithConfirmContextProvider(
       <SmartAccountUpdate />,
@@ -45,9 +42,7 @@ describe('Splash', () => {
 
   it('closes after acknowledgement', () => {
     const mockStore = configureMockStore([])(
-      getMockConfirmStateForTransaction(
-        upgradeAccountConfirmation as Confirmation,
-      ),
+      getMockConfirmStateForTransaction(upgradeAccountConfirmation),
     );
     const { getAllByRole, container } = renderWithConfirmContextProvider(
       <SmartAccountUpdate />,
@@ -67,9 +62,7 @@ describe('Splash', () => {
 
   it('reject confirmation if user does not accept', async () => {
     const mockStore = configureMockStore([])(
-      getMockConfirmStateForTransaction(
-        upgradeAccountConfirmation as Confirmation,
-      ),
+      getMockConfirmStateForTransaction(upgradeAccountConfirmation),
     );
     const { getByRole } = renderWithConfirmContextProvider(
       <SmartAccountUpdate />,
@@ -81,23 +74,9 @@ describe('Splash', () => {
         name: /Don’t use smart account/iu,
       }),
     );
-    expect(disableAccountUpgrade).toHaveBeenCalledTimes(1);
+    expect(disableAccountUpgradeForChain).toHaveBeenCalledTimes(1);
     await flushPromises();
     expect(rejectPendingApproval).toHaveBeenCalledTimes(1);
-  });
-
-  it('does not render for confirmation not coming from DAPP', () => {
-    const mockStore = configureMockStore([])(
-      getMockConfirmStateForTransaction({
-        ...upgradeAccountConfirmation,
-        origin: 'metamask',
-      } as Confirmation),
-    );
-    const { container } = renderWithConfirmContextProvider(
-      <SmartAccountUpdate />,
-      mockStore,
-    );
-
-    expect(container.firstChild).toBeNull();
+    expect(mockDispatch).toHaveBeenCalledTimes(1);
   });
 });

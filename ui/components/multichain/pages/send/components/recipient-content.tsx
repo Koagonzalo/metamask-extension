@@ -1,3 +1,4 @@
+import type { TokenListMap } from '@metamask/assets-controllers';
 import React, {
   useCallback,
   ///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
@@ -7,21 +8,20 @@ import React, {
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 ///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
-import { TokenListMap } from '@metamask/assets-controllers';
+
 ///: END:ONLY_INCLUDE_IF
-import {
-  BannerAlert,
-  BannerAlertSeverity,
-  Box,
-} from '../../../../component-library';
+import { AssetPickerAmount } from '../../..';
+import { AssetType } from '../../../../../../shared/constants/transaction';
+import { decimalToHex } from '../../../../../../shared/modules/conversion.utils';
+import { isEqualCaseInsensitive } from '../../../../../../shared/modules/string-utils';
 import {
   ///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
   getNativeCurrency,
   ///: END:ONLY_INCLUDE_IF
   getSendHexDataFeatureFlagState,
 } from '../../../../../ducks/metamask/metamask';
+import type { Asset } from '../../../../../ducks/send';
 import {
-  Asset,
   acknowledgeRecipientWarning,
   getBestQuote,
   getCurrentDraftTransaction,
@@ -31,12 +31,11 @@ import {
   ///: END:ONLY_INCLUDE_IF
   getSendAsset,
 } from '../../../../../ducks/send';
-import { AssetType } from '../../../../../../shared/constants/transaction';
+import type { Quote } from '../../../../../ducks/send/swap-and-send-utils';
 import { CONTRACT_ADDRESS_LINK } from '../../../../../helpers/constants/common';
 import { Display } from '../../../../../helpers/constants/design-system';
+import useGetAssetImageUrl from '../../../../../hooks/useGetAssetImageUrl';
 import { useI18nContext } from '../../../../../hooks/useI18nContext';
-import { AssetPickerAmount } from '../../..';
-import { decimalToHex } from '../../../../../../shared/modules/conversion.utils';
 ///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
 import {
   getIpfsGateway,
@@ -45,16 +44,18 @@ import {
   getTokenList,
   getUseExternalServices,
 } from '../../../../../selectors';
-import useGetAssetImageUrl from '../../../../../hooks/useGetAssetImageUrl';
 ///: END:ONLY_INCLUDE_IF
 
-import type { Quote } from '../../../../../ducks/send/swap-and-send-utils';
-import { isEqualCaseInsensitive } from '../../../../../../shared/modules/string-utils';
-import { AssetPicker } from '../../../asset-picker-amount/asset-picker';
+import {
+  BannerAlert,
+  BannerAlertSeverity,
+  Box,
+} from '../../../../component-library';
+import type { AssetPicker } from '../../../asset-picker-amount/asset-picker';
 import { TabName } from '../../../asset-picker-amount/asset-picker-modal/asset-picker-modal-tabs';
-import { SendPageRow } from './send-page-row';
-import { QuoteCard } from './quote-card';
 import { SendHexData } from './hex';
+import { QuoteCard } from './quote-card';
+import { SendPageRow } from './send-page-row';
 
 export const SendPageRecipientContent = ({
   requireContractAddressAcknowledgement,
@@ -174,8 +175,6 @@ export const SendPageRecipientContent = ({
                     (nftImageURL ||
                       tokenList[sendAsset.details.address?.toLowerCase()]
                         ?.iconUrl),
-              // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
               symbol: sendAsset?.details?.symbol || nativeCurrencySymbol,
             }
           }

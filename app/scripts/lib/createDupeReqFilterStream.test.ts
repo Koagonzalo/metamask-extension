@@ -1,9 +1,9 @@
+import type { JsonRpcNotification, JsonRpcRequest } from '@metamask/utils';
 import NodeStream from 'node:stream';
 import OurReadableStream from 'readable-stream';
 import ReadableStream2 from 'readable-stream-2';
 import ReadableStream3 from 'readable-stream-3';
 
-import type { JsonRpcNotification, JsonRpcRequest } from '@metamask/utils';
 import createDupeReqFilterStream, {
   THREE_MINUTES,
 } from './createDupeReqFilterStream';
@@ -25,7 +25,7 @@ function createTestStream(output: JsonRpcRequest[] = [], S = Transform) {
   return transformStream;
 }
 
-function runStreamTest(
+async function runStreamTest(
   requests: (JsonRpcRequest | JsonRpcNotification)[] = [],
   advanceTimersTime = 10,
   S = Transform,

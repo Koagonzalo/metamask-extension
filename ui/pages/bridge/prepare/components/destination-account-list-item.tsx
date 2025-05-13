@@ -1,9 +1,11 @@
-import React from 'react';
+import type { InternalAccount } from '@metamask/keyring-internal-api';
 import classnames from 'classnames';
+import React from 'react';
 import { useSelector } from 'react-redux';
-import { InternalAccount } from '@metamask/keyring-internal-api';
-import { shortenAddress } from '../../../../helpers/utils/util';
 
+// eslint-disable-next-line import/no-restricted-paths
+import { normalizeSafeAddress } from '../../../../../app/scripts/lib/multichain/address';
+import UserPreferencedCurrencyDisplay from '../../../../components/app/user-preferenced-currency-display/user-preferenced-currency-display.component';
 import {
   AvatarAccount,
   AvatarAccountSize,
@@ -13,7 +15,7 @@ import {
   AvatarToken,
   AvatarTokenSize,
 } from '../../../../components/component-library';
-
+import { PRIMARY } from '../../../../helpers/constants/common';
 import {
   AlignItems,
   BackgroundColor,
@@ -25,7 +27,11 @@ import {
   TextAlign,
   FlexDirection,
 } from '../../../../helpers/constants/design-system';
-
+import { shortenAddress } from '../../../../helpers/utils/util';
+import { useAccountTotalCrossChainFiatBalance } from '../../../../hooks/useAccountTotalCrossChainFiatBalance';
+import { useGetFormattedTokensPerChain } from '../../../../hooks/useGetFormattedTokensPerChain';
+import { useMultichainAccountTotalFiatBalance } from '../../../../hooks/useMultichainAccountTotalFiatBalance';
+import { useMultichainSelector } from '../../../../hooks/useMultichainSelector';
 import {
   getUseBlockie,
   getShouldHideZeroBalanceTokens,
@@ -33,14 +39,6 @@ import {
   getChainIdsToPoll,
   getShowFiatInTestnets,
 } from '../../../../selectors';
-// eslint-disable-next-line import/no-restricted-paths
-import { normalizeSafeAddress } from '../../../../../app/scripts/lib/multichain/address';
-import { useMultichainAccountTotalFiatBalance } from '../../../../hooks/useMultichainAccountTotalFiatBalance';
-import { useGetFormattedTokensPerChain } from '../../../../hooks/useGetFormattedTokensPerChain';
-import { useAccountTotalCrossChainFiatBalance } from '../../../../hooks/useAccountTotalCrossChainFiatBalance';
-import UserPreferencedCurrencyDisplay from '../../../../components/app/user-preferenced-currency-display/user-preferenced-currency-display.component';
-import { PRIMARY } from '../../../../helpers/constants/common';
-import { useMultichainSelector } from '../../../../hooks/useMultichainSelector';
 import {
   getMultichainNetwork,
   getMultichainIsTestnet,

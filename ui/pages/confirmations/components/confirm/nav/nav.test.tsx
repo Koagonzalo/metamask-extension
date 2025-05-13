@@ -1,12 +1,12 @@
-import React from 'react';
 import {
   TransactionStatus,
   TransactionType,
 } from '@metamask/transaction-controller';
+import React from 'react';
 
 import { getMockConfirmState } from '../../../../../../test/data/confirmations/helper';
-import { renderWithConfirmContextProvider } from '../../../../../../test/lib/confirmations/render-helpers';
 import { fireEvent } from '../../../../../../test/jest';
+import { renderWithConfirmContextProvider } from '../../../../../../test/lib/confirmations/render-helpers';
 import * as Actions from '../../../../../store/actions';
 import configureStore from '../../../../../store/store';
 import { ConfirmNav } from './nav';
@@ -117,8 +117,7 @@ describe('ConfirmNav', () => {
     const rejectAllButton = getByRole('button', { name: /Reject all/iu });
     const rejectSpy = jest
       .spyOn(Actions, 'rejectAllApprovals')
-
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+      // TODO: Replace `any` with type
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .mockImplementation(() => ({} as any));
     fireEvent.click(rejectAllButton);

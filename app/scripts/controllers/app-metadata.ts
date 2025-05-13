@@ -1,9 +1,9 @@
-import {
-  BaseController,
+import type {
   ControllerGetStateAction,
   ControllerStateChangeEvent,
   RestrictedMessenger,
 } from '@metamask/base-controller';
+import { BaseController } from '@metamask/base-controller';
 
 // Unique name for the controller
 const controllerName = 'AppMetadataController';

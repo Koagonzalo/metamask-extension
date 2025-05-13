@@ -1,18 +1,9 @@
-import React, {
-  ReactElement,
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
-import { TransactionType } from '@metamask/transaction-controller';
-import { useDispatch } from 'react-redux';
+import type { ReactElement } from 'react';
+import React, { createContext, useContext, useMemo, useState } from 'react';
 
-import { setAccountDetailsAddress } from '../../../../store/actions';
-import useCurrentConfirmation from '../../hooks/useCurrentConfirmation';
 import syncConfirmPath from '../../hooks/syncConfirmPath';
-import { Confirmation } from '../../types/confirm';
+import useCurrentConfirmation from '../../hooks/useCurrentConfirmation';
+import type { Confirmation } from '../../types/confirm';
 
 type ConfirmContextType = {
   currentConfirmation: Confirmation;
@@ -31,7 +22,6 @@ export const ConfirmContextProvider: React.FC<{
     useState(true);
   const { currentConfirmation } = useCurrentConfirmation();
   syncConfirmPath(currentConfirmation);
-  const dispatch = useDispatch();
 
   const value = useMemo(
     () => ({
@@ -46,26 +36,11 @@ export const ConfirmContextProvider: React.FC<{
     ],
   );
 
-  // The code below is added to close address details modal when opening confirmation from account details modal
-  // The was account details modal is build has a complexity in routing and closing it from within account details modal
-  // routes it back to home page which also closes confirmation modal.
-  useEffect(() => {
-    if (
-      currentConfirmation &&
-      (currentConfirmation.type === TransactionType.revokeDelegation ||
-        currentConfirmation.type === TransactionType.batch)
-    ) {
-      dispatch(setAccountDetailsAddress(''));
-    }
-  }, [dispatch, currentConfirmation]);
-
   return (
     <ConfirmContext.Provider value={value}>{children}</ConfirmContext.Provider>
   );
 };
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const useConfirmContext = <T = Confirmation,>() => {
   const context = useContext(ConfirmContext);
   if (!context) {

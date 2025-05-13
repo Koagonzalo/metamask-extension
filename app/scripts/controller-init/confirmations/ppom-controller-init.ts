@@ -1,11 +1,10 @@
-import {
-  PPOMController,
-  PPOMControllerMessenger,
-} from '@metamask/ppom-validator';
+import type { PPOMControllerMessenger } from '@metamask/ppom-validator';
+import { PPOMController } from '@metamask/ppom-validator';
+
 import { IndexedDBPPOMStorage } from '../../lib/ppom/indexed-db-backend';
 import * as PPOMModule from '../../lib/ppom/ppom';
-import { ControllerInitFunction } from '../types';
-import { PPOMControllerInitMessenger } from '../messengers/ppom-controller-messenger';
+import type { PPOMControllerInitMessenger } from '../messengers/ppom-controller-messenger';
+import type { ControllerInitFunction } from '../types';
 
 export const PPOMControllerInit: ControllerInitFunction<
   PPOMController,
@@ -31,7 +30,7 @@ export const PPOMControllerInit: ControllerInitFunction<
     ppomProvider: {
       // @ts-expect-error Controller and PPOM wrapper have different argument types in `new` and `validateJsonRpc`
       PPOM: PPOMModule.PPOM,
-      ppomInit: () => PPOMModule.default(process.env.PPOM_URI),
+      ppomInit: async () => PPOMModule.default(process.env.PPOM_URI),
     },
     // @ts-expect-error State type is not `Partial` in controller.
     state: persistedState.PPOMController,

@@ -1,17 +1,3 @@
-import { toUnicode } from 'punycode/punycode.js';
-import { SubjectType } from '@metamask/permission-controller';
-import { ApprovalType } from '@metamask/controller-utils';
-import {
-  stripSnapPrefix,
-  getLocalizedSnapManifest,
-  SnapStatus,
-} from '@metamask/snaps-utils';
-import { memoize } from 'lodash';
-import semver from 'semver';
-import { createSelector } from 'reselect';
-import { NameType } from '@metamask/name-controller';
-import { TransactionStatus } from '@metamask/transaction-controller';
-import { isEvmAccountType } from '@metamask/keyring-api';
 import { RpcEndpointType } from '@metamask/network-controller';
 import {
   SnapEndowments,
@@ -24,20 +10,62 @@ import {
 } from '@metamask/chain-agnostic-permission';
 import { KeyringTypes } from '@metamask/keyring-controller';
 import { selectBridgeFeatureFlags } from '@metamask/bridge-controller';
+import { ApprovalType } from '@metamask/controller-utils';
+import { isEvmAccountType } from '@metamask/keyring-api';
+import { NameType } from '@metamask/name-controller';
+import { SubjectType } from '@metamask/permission-controller';
+import {
+  stripSnapPrefix,
+  getLocalizedSnapManifest,
+  SnapStatus,
+} from '@metamask/snaps-utils';
+import { TransactionStatus } from '@metamask/transaction-controller';
 import {
   KnownCaipNamespace,
   parseCaipAccountId,
   parseCaipChainId,
 } from '@metamask/utils';
-import {
-  getCurrentChainId,
-  getProviderConfig,
-  getSelectedNetworkClientId,
-  getNetworkConfigurationsByChainId,
-} from '../../shared/modules/selectors/networks';
+import { memoize } from 'lodash';
+import { toUnicode } from 'punycode/punycode.js';
+import { createSelector } from 'reselect';
+import semver from 'semver';
+
 // TODO: Remove restricted import
 // eslint-disable-next-line import/no-restricted-paths
 import { addHexPrefix, getEnvironmentType } from '../../app/scripts/lib/util';
+import { TEMPLATED_CONFIRMATION_APPROVAL_TYPES } from '../pages/confirmations/confirmation/templates';
+import { DAY } from '../../shared/constants/time';
+import { TERMS_OF_USE_LAST_UPDATED } from '../../shared/constants/terms';
+import {
+  getConversionRate,
+  isNotEIP1559Network,
+  isEIP1559Network,
+  getLedgerTransportType,
+  isAddressLedger,
+  getIsUnlocked,
+  getCompletedOnboarding,
+} from '../ducks/metamask/metamask';
+import {
+  getLedgerWebHidConnectedStatus,
+  getLedgerTransportStatus,
+} from '../ducks/app/app';
+import { isEqualCaseInsensitive } from '../../shared/modules/string-utils';
+import {
+  getValueFromWeiHex,
+  hexToDecimal,
+} from '../../shared/modules/conversion.utils';
+import { BackgroundColor } from '../helpers/constants/design-system';
+import { NOTIFICATION_SOLANA_ON_METAMASK } from '../../shared/notifications';
+import { ENVIRONMENT_TYPE_POPUP } from '../../shared/constants/app';
+import { ALLOWED_BRIDGE_CHAIN_IDS } from '../../shared/constants/bridge';
+import {
+  WebHIDConnectedStatuses,
+  LedgerTransportTypes,
+  HardwareTransportStates,
+} from '../../shared/constants/hardware-wallets';
+import { KeyringType } from '../../shared/constants/keyring';
+import { TRUNCATED_NAME_CHAR_LIMIT } from '../../shared/constants/labels';
+import { MULTICHAIN_NETWORK_TO_ASSET_TYPES } from '../../shared/constants/multichain/assets';
 import {
   TEST_CHAINS,
   MAINNET_DISPLAY_NAME,
@@ -71,77 +99,45 @@ import {
   NETWORK_TO_NAME_MAP,
 } from '../../shared/constants/network';
 import {
-  WebHIDConnectedStatuses,
-  LedgerTransportTypes,
-  HardwareTransportStates,
-} from '../../shared/constants/hardware-wallets';
-import { KeyringType } from '../../shared/constants/keyring';
-
-import { TRUNCATED_NAME_CHAR_LIMIT } from '../../shared/constants/labels';
-
-import {
   SWAPS_CHAINID_DEFAULT_TOKEN_MAP,
   ALLOWED_PROD_SWAPS_CHAIN_IDS,
   ALLOWED_DEV_SWAPS_CHAIN_IDS,
 } from '../../shared/constants/swaps';
-
-import { ALLOWED_BRIDGE_CHAIN_IDS } from '../../shared/constants/bridge';
+import { STATIC_MAINNET_TOKEN_LIST } from '../../shared/constants/tokens';
 import { AssetType } from '../../shared/constants/transaction';
-
+import { getCaipAccountIdsFromCaip25CaveatValue } from '../../shared/lib/multichain/chain-agnostic-permission-utils/caip-accounts';
+import { getAllScopesFromPermission } from '../../shared/lib/multichain/chain-agnostic-permission-utils/caip-chainids';
+import { getCaip25CaveatFromPermission } from '../../shared/lib/multichain/chain-agnostic-permission-utils/misc-utils';
+import { toChecksumHexAddress } from '../../shared/modules/hexstring-utils';
+import {
+  getCurrentChainId,
+  getProviderConfig,
+  getSelectedNetworkClientId,
+  getNetworkConfigurationsByChainId,
+} from '../../shared/modules/selectors/networks';
+import { createDeepEqualSelector } from '../../shared/modules/selectors/util';
+import { hasTransactionData } from '../../shared/modules/transaction.utils';
+import { isSnapIgnoredInProd } from '../helpers/utils/snaps';
 import {
   shortenAddress,
   getAccountByAddress,
   getURLHostName,
   sortSelectedInternalAccounts,
 } from '../helpers/utils/util';
-
-import { TEMPLATED_CONFIRMATION_APPROVAL_TYPES } from '../pages/confirmations/confirmation/templates';
-import { STATIC_MAINNET_TOKEN_LIST } from '../../shared/constants/tokens';
-import { DAY } from '../../shared/constants/time';
-import { TERMS_OF_USE_LAST_UPDATED } from '../../shared/constants/terms';
-import {
-  getConversionRate,
-  isNotEIP1559Network,
-  isEIP1559Network,
-  getLedgerTransportType,
-  isAddressLedger,
-  getIsUnlocked,
-  getCompletedOnboarding,
-} from '../ducks/metamask/metamask';
-import {
-  getLedgerWebHidConnectedStatus,
-  getLedgerTransportStatus,
-} from '../ducks/app/app';
-import { isEqualCaseInsensitive } from '../../shared/modules/string-utils';
-import {
-  getValueFromWeiHex,
-  hexToDecimal,
-} from '../../shared/modules/conversion.utils';
-import { BackgroundColor } from '../helpers/constants/design-system';
-import { NOTIFICATION_SOLANA_ON_METAMASK } from '../../shared/notifications';
-import { ENVIRONMENT_TYPE_POPUP } from '../../shared/constants/app';
-import { MULTICHAIN_NETWORK_TO_ASSET_TYPES } from '../../shared/constants/multichain/assets';
-import { hasTransactionData } from '../../shared/modules/transaction.utils';
-import { toChecksumHexAddress } from '../../shared/modules/hexstring-utils';
-import { createDeepEqualSelector } from '../../shared/modules/selectors/util';
-import { getAllScopesFromPermission } from '../../shared/lib/multichain/chain-agnostic-permission-utils/caip-chainids';
-import { getCaipAccountIdsFromCaip25CaveatValue } from '../../shared/lib/multichain/chain-agnostic-permission-utils/caip-accounts';
-import { getCaip25CaveatFromPermission } from '../../shared/lib/multichain/chain-agnostic-permission-utils/misc-utils';
-import { isSnapIgnoredInProd } from '../helpers/utils/snaps';
-import {
-  getAllUnapprovedTransactions,
-  getCurrentNetworkTransactions,
-  getUnapprovedTransactions,
-} from './transactions';
 // eslint-disable-next-line import/order
 import { getSelectedInternalAccount, getInternalAccounts } from './accounts';
+import { getApprovalRequestsByType } from './approvals';
 import {
   getMultichainBalances,
   getMultichainNetworkProviders,
   getMultichainNetwork,
 } from './multichain';
 import { getRemoteFeatureFlags } from './remote-feature-flags';
-import { getApprovalRequestsByType } from './approvals';
+import {
+  getAllUnapprovedTransactions,
+  getCurrentNetworkTransactions,
+  getUnapprovedTransactions,
+} from './transactions';
 
 /** `appState` slice selectors */
 
@@ -205,6 +201,10 @@ export function getEditedNetwork(state) {
 
 export function getIsAddingNewNetwork(state) {
   return state.appState.isAddingNewNetwork;
+}
+
+export function getIsAccessedFromDappConnectedSitePopover(state) {
+  return state.appState.isAccessedFromDappConnectedSitePopover;
 }
 
 export function getIsMultiRpcOnboarding(state) {
@@ -536,15 +536,52 @@ export const getInternalAccountsSortedByKeyring = createDeepEqualSelector(
   getMetaMaskKeyrings,
   getMetaMaskAccounts,
   (keyrings, accounts) => {
-    // keep existing keyring order
-    const internalAccounts = keyrings
-      .map(({ accounts: addresses }) => addresses)
-      .flat()
-      .map((address) => {
-        return accounts[address];
-      });
+    const thirdPartySnaps = 'thirdPartySnaps';
+    // Create a map of entropySource map to accounts for quick lookup
+    const entropySourceToAccountsMap = Object.values(accounts).reduce(
+      (map, account) => {
+        if (account.metadata?.keyring?.type === KeyringTypes.snap) {
+          const { entropySource = thirdPartySnaps } = account.options || {};
+          if (!map[entropySource]) {
+            map[entropySource] = [];
+          }
+          map[entropySource].push(account);
+        }
+        return map;
+      },
+      {},
+    );
 
-    return internalAccounts;
+    // keep existing keyring order
+    return keyrings.reduce((internalAccounts, keyring) => {
+      // Get regular accounts for this keyring
+      const keyringAccounts = keyring.accounts.map(
+        (address) => accounts[address],
+      );
+
+      // If it's an HD keyring, add any snap accounts that belong to it
+      if (keyring.type === KeyringTypes.hd) {
+        const snapAccounts =
+          entropySourceToAccountsMap[keyring.metadata.id] || [];
+        internalAccounts.push(...keyringAccounts, ...snapAccounts);
+        return internalAccounts;
+      } else if (keyring.type === KeyringTypes.snap) {
+        const thirdpartySnapAccounts =
+          entropySourceToAccountsMap[thirdPartySnaps] || [];
+        // In a scenario where there are multiple snap keyrings, which isn't the case for today
+        // There would be duplicate third party snap accounts that are being pushed into internalAccounts again
+        // This will only be run once, when there is only one snap keyring
+        const accountsToAdd = thirdpartySnapAccounts.filter(
+          (account) =>
+            !internalAccounts.some((existing) => existing.id === account.id),
+        );
+
+        internalAccounts.push(...accountsToAdd);
+        return internalAccounts;
+      }
+      internalAccounts.push(...keyringAccounts);
+      return internalAccounts;
+    }, []);
   },
 );
 
@@ -577,9 +614,20 @@ export function getHDEntropyIndex(state) {
   const hdKeyrings = keyrings.filter(
     (keyring) => keyring.type === KeyringType.hdKeyTree,
   );
-  const hdEntropyIndex = hdKeyrings.findIndex((keyring) =>
+  let hdEntropyIndex = hdKeyrings.findIndex((keyring) =>
     keyring.accounts.includes(selectedAddress),
   );
+  // if the account is not found in the hd keyring, we should try to get entropySource from the accounts options
+  if (hdEntropyIndex === -1) {
+    const account = getSelectedInternalAccount(state);
+    if (account) {
+      const { entropySource } = account.options;
+      const keyringsMetadata = getMetaMaskKeyringsMetadata(state);
+      hdEntropyIndex = keyringsMetadata.findIndex(
+        (metadata) => metadata.id === entropySource,
+      );
+    }
+  }
   return hdEntropyIndex === -1 ? undefined : hdEntropyIndex;
 }
 
@@ -1161,6 +1209,15 @@ export const selectDefaultRpcEndpointByChainId = createSelector(
     const { defaultRpcEndpointIndex, rpcEndpoints } = networkConfiguration;
     return rpcEndpoints[defaultRpcEndpointIndex];
   },
+);
+
+/**
+ * @type (state: RemoteFeatureFlagsState) => boolean
+ */
+export const getIsRpcFailoverEnabled = createSelector(
+  getRemoteFeatureFlags,
+  (remoteFeatureFlags) =>
+    remoteFeatureFlags.walletFrameworkRpcFailoverEnabled ?? false,
 );
 
 /**

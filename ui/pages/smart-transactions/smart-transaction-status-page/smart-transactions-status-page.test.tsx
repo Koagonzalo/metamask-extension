@@ -1,21 +1,17 @@
+import type { SmartTransaction } from '@metamask/smart-transactions-controller/dist/types';
+import { SmartTransactionStatuses } from '@metamask/smart-transactions-controller/dist/types';
+import { fireEvent } from '@testing-library/react';
 import React from 'react';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import {
-  SmartTransaction,
-  SmartTransactionStatuses,
-} from '@metamask/smart-transactions-controller/dist/types';
 
-import { fireEvent } from '@testing-library/react';
+import { CHAIN_IDS } from '../../../../shared/constants/network';
 import {
   renderWithProvider,
   createSwapsMockStore,
 } from '../../../../test/jest';
-import { CHAIN_IDS } from '../../../../shared/constants/network';
-import {
-  SmartTransactionStatusPage,
-  RequestState,
-} from './smart-transaction-status-page';
+import type { RequestState } from './smart-transaction-status-page';
+import { SmartTransactionStatusPage } from './smart-transaction-status-page';
 
 // Mock the SmartTransactionStatusAnimation component and capture props
 jest.mock('./smart-transaction-status-animation', () => ({

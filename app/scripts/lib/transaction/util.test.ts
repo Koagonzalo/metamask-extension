@@ -1,29 +1,29 @@
-import { InternalAccount } from '@metamask/keyring-internal-api';
-import { TransactionParams } from '@metamask/eth-json-rpc-middleware';
-import {
+import type { TransactionParams } from '@metamask/eth-json-rpc-middleware';
+import type { InternalAccount } from '@metamask/keyring-internal-api';
+import type {
   TransactionController,
   TransactionMeta,
-  TransactionType,
 } from '@metamask/transaction-controller';
-import { UserOperationController } from '@metamask/user-operation-controller';
+import { TransactionType } from '@metamask/transaction-controller';
+import type { UserOperationController } from '@metamask/user-operation-controller';
 import { cloneDeep } from 'lodash';
-import {
-  generateSecurityAlertId,
-  validateRequestWithPPOM,
-} from '../ppom/ppom-util';
+
 import {
   BlockaidReason,
   BlockaidResultType,
 } from '../../../../shared/constants/security-provider';
-import { flushPromises } from '../../../../test/lib/timer-helpers';
 import { createMockInternalAccount } from '../../../../test/jest/mocks';
+import { flushPromises } from '../../../../test/lib/timer-helpers';
 import {
+  generateSecurityAlertId,
+  validateRequestWithPPOM,
+} from '../ppom/ppom-util';
+import type {
   AddDappTransactionRequest,
   AddTransactionOptions,
   AddTransactionRequest,
-  addDappTransaction,
-  addTransaction,
 } from './util';
+import { addDappTransaction, addTransaction } from './util';
 
 jest.mock('../ppom/ppom-util');
 
@@ -262,7 +262,7 @@ describe('Transaction Utils', () => {
           {
             id: TRANSACTION_META_MOCK.id,
             hash: undefined as never,
-            transactionHash: () =>
+            transactionHash: async () =>
               new Promise(() => {
                 /* Intentionally not resolved */
               }),
@@ -285,8 +285,8 @@ describe('Transaction Utils', () => {
         userOperationController.addUserOperationFromTransaction.mockResolvedValue(
           {
             id: TRANSACTION_META_MOCK.id,
-            hash: () => Promise.resolve(TRANSACTION_META_MOCK.hash),
-            transactionHash: () => transactionHashPromise,
+            hash: async () => Promise.resolve(TRANSACTION_META_MOCK.hash),
+            transactionHash: async () => transactionHashPromise,
           },
         );
 
@@ -399,8 +399,6 @@ describe('Transaction Utils', () => {
           ...TRANSACTION_OPTIONS_MOCK,
           securityAlertResponse: {
             reason: BlockaidReason.inProgress,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             result_type: BlockaidResultType.Loading,
             securityAlertId: SECURITY_ALERT_ID_MOCK,
           },

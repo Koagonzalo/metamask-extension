@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires */
 import { TransactionEnvelopeType } from '@metamask/transaction-controller';
+
 import { DAPP_URL } from '../../../constants';
 import {
   unlockWallet,
@@ -10,9 +11,9 @@ import TokenTransferTransactionConfirmation from '../../../page-objects/pages/co
 import HomePage from '../../../page-objects/pages/home/homepage';
 import SendTokenPage from '../../../page-objects/pages/send/send-token-page';
 import TestDapp from '../../../page-objects/pages/test-dapp';
-import { Driver } from '../../../webdriver/driver';
+import type { Driver } from '../../../webdriver/driver';
 import { withTransactionEnvelopeTypeFixtures } from '../helpers';
-import { TestSuiteArguments } from './shared';
+import type { TestSuiteArguments } from './shared';
 
 const TOKEN_RECIPIENT_ADDRESS = '0x2f318C334780961FB129D2a6c30D0763d9a5C970';
 

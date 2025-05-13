@@ -1,12 +1,13 @@
-import { SnapId } from '@metamask/snaps-sdk';
+import type { SnapId } from '@metamask/snaps-sdk';
 import {
   stripSnapPrefix,
   getLocalizedSnapManifest,
 } from '@metamask/snaps-utils';
+
 // eslint-disable-next-line import/no-restricted-paths
-import { SnapKeyringBuilderMessenger } from '../../../app/scripts/lib/snap-keyring/types';
-import { SOLANA_WALLET_SNAP_ID } from './solana-wallet-snap';
+import type { SnapKeyringBuilderMessenger } from '../../../app/scripts/lib/snap-keyring/types';
 import { BITCOIN_WALLET_SNAP_ID } from './bitcoin-wallet-snap';
+import { SOLANA_WALLET_SNAP_ID } from './solana-wallet-snap';
 
 /**
  * A constant array that contains the IDs of whitelisted multichain

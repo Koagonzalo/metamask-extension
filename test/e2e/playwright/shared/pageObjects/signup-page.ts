@@ -88,7 +88,7 @@ export class SignUpPage {
     await this.agreeBtn.click();
 
     const seeds = SEED_PHRASE?.trim().split(/\s+/u);
-    for (const [index, element] of (seeds as string[]).entries()) {
+    for (const [index, element] of seeds.entries()) {
       await this.page
         .locator(`data-testid=import-srp__srp-word-${index}`)
         .fill(element);

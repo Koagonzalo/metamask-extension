@@ -1,16 +1,17 @@
-import { Suite } from 'mocha';
-import { PRIVATE_KEY_TWO, WINDOW_TITLES, withFixtures } from '../../helpers';
+import type { Suite } from 'mocha';
+
 import { DEFAULT_FIXTURE_ACCOUNT } from '../../constants';
-import { Driver } from '../../webdriver/driver';
-import AccountListPage from '../../page-objects/pages/account-list-page';
-import ActivityListPage from '../../page-objects/pages/home/activity-list';
 import FixtureBuilder from '../../fixture-builder';
-import HeaderNavbar from '../../page-objects/pages/header-navbar';
-import HomePage from '../../page-objects/pages/home/homepage';
-import SnapSimpleKeyringPage from '../../page-objects/pages/snap-simple-keyring-page';
-import { installSnapSimpleKeyring } from '../../page-objects/flows/snap-simple-keyring.flow';
+import { PRIVATE_KEY_TWO, WINDOW_TITLES, withFixtures } from '../../helpers';
 import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
 import { sendRedesignedTransactionWithSnapAccount } from '../../page-objects/flows/send-transaction.flow';
+import { installSnapSimpleKeyring } from '../../page-objects/flows/snap-simple-keyring.flow';
+import AccountListPage from '../../page-objects/pages/account-list-page';
+import HeaderNavbar from '../../page-objects/pages/header-navbar';
+import ActivityListPage from '../../page-objects/pages/home/activity-list';
+import HomePage from '../../page-objects/pages/home/homepage';
+import SnapSimpleKeyringPage from '../../page-objects/pages/snap-simple-keyring-page';
+import type { Driver } from '../../webdriver/driver';
 
 describe('Snap Account Transfers', function (this: Suite) {
   it('can import a private key and transfer 1 ETH (sync flow)', async function () {

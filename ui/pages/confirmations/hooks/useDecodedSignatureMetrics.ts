@@ -1,9 +1,9 @@
-import { DecodingDataStateChange } from '@metamask/signature-controller';
+import type { DecodingDataStateChange } from '@metamask/signature-controller';
 import { useEffect } from 'react';
 
-import { SignatureRequestType } from '../types/confirm';
-import { useConfirmContext } from '../context/confirm';
 import { useLoadingTime } from '../components/simulation-details/useLoadingTime';
+import { useConfirmContext } from '../context/confirm';
+import type { SignatureRequestType } from '../types/confirm';
 import { useSignatureEventFragment } from './useSignatureEventFragment';
 
 enum DecodingResponseType {
@@ -40,8 +40,6 @@ export function useDecodedSignatureMetrics(supportedByDecodingAPI: boolean) {
     if (decodingLoading) {
       updateSignatureEventFragment({
         properties: {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           decoding_response: DecodingResponseType.InProgress,
         },
       });
@@ -51,17 +49,9 @@ export function useDecodedSignatureMetrics(supportedByDecodingAPI: boolean) {
 
     updateSignatureEventFragment({
       properties: {
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         decoding_change_types: decodingChangeTypes,
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         decoding_description: decodingData?.error?.message ?? null,
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         decoding_latency: loadingTime ?? null,
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         decoding_response: decodingResponse,
       },
     });

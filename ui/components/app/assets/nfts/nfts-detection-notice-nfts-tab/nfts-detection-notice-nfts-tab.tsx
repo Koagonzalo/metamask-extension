@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { useI18nContext } from '../../../../../hooks/useI18nContext';
 import {
   getAllChainsToPoll,
@@ -13,8 +14,6 @@ import {
 import { BannerAlert } from '../../../../component-library';
 import { setShowNftDetectionEnablementToast } from '../../../toast-master/utils';
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export default function NFTsDetectionNoticeNFTsTab() {
   const t = useI18nContext();
   const dispatch = useDispatch();

@@ -1,25 +1,13 @@
-import React, {
+import classnames from 'classnames';
+import type {
   ChangeEvent,
   // eslint-disable-next-line @typescript-eslint/no-shadow
   DragEvent,
   FunctionComponent,
-  useRef,
-  useState,
 } from 'react';
-import classnames from 'classnames';
+import React, { useRef, useState } from 'react';
+
 import { useSnapInterfaceContext } from '../../../../contexts/snaps';
-import {
-  Box,
-  ButtonIcon,
-  ButtonIconSize,
-  HelpText,
-  HelpTextSeverity,
-  Icon,
-  IconName,
-  IconSize,
-  Label,
-  Text,
-} from '../../../component-library';
 import {
   AlignItems,
   BackgroundColor,
@@ -33,6 +21,18 @@ import {
   TextAlign,
 } from '../../../../helpers/constants/design-system';
 import { useI18nContext } from '../../../../hooks/useI18nContext';
+import {
+  Box,
+  ButtonIcon,
+  ButtonIconSize,
+  HelpText,
+  HelpTextSeverity,
+  Icon,
+  IconName,
+  IconSize,
+  Label,
+  Text,
+} from '../../../component-library';
 
 export type SnapUIFileInputProps = {
   name: string;

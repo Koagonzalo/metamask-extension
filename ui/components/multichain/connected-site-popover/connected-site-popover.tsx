@@ -1,29 +1,29 @@
-import React, { useContext, RefObject } from 'react';
+import type { RefObject } from 'react';
+import React, { useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
+import { I18nContext } from '../../../contexts/i18n';
+import {
+  AlignItems,
+  Display,
+  FlexDirection,
+  TextVariant,
+} from '../../../helpers/constants/design-system';
+import { getURLHost } from '../../../helpers/utils/util';
+import { getCurrentNetwork, getOriginOfCurrentTab } from '../../../selectors';
+import { getImageForChainId } from '../../../selectors/multichain';
+import { toggleNetworkMenu } from '../../../store/actions';
 import {
   AvatarNetwork,
   AvatarNetworkSize,
   Box,
   ButtonLink,
-  ButtonLinkSize,
   ButtonSecondary,
   IconName,
   Popover,
   PopoverPosition,
   Text,
 } from '../../component-library';
-import {
-  AlignItems,
-  Display,
-  FlexDirection,
-  TextColor,
-  TextVariant,
-} from '../../../helpers/constants/design-system';
-import { I18nContext } from '../../../contexts/i18n';
-import { getCurrentNetwork, getOriginOfCurrentTab } from '../../../selectors';
-import { getURLHost } from '../../../helpers/utils/util';
-import { getImageForChainId } from '../../../selectors/multichain';
-import { toggleNetworkMenu } from '../../../store/actions';
 
 type ConnectedSitePopoverProps = {
   isOpen: boolean;
@@ -58,7 +58,7 @@ export const ConnectedSitePopover = ({
       data-testid="connected-site-popover"
       paddingLeft={0}
       paddingRight={0}
-      offset={[8, 8]}
+      offset={[0, 0]}
       position={PopoverPosition.BottomEnd}
       flip
     >
@@ -73,7 +73,7 @@ export const ConnectedSitePopover = ({
           paddingRight={4}
           paddingBottom={2}
         >
-          <Text variant={TextVariant.bodyMdMedium}>{siteName}</Text>
+          <Text variant={TextVariant.bodyMd}>{siteName}</Text>
           {isConnected ? (
             <Box
               display={Display.Flex}
@@ -83,8 +83,6 @@ export const ConnectedSitePopover = ({
             >
               <AvatarNetwork
                 size={AvatarNetworkSize.Xs}
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-                // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
                 name={currentNetwork?.nickname || ''}
                 src={
                   currentNetwork?.chainId
@@ -97,12 +95,7 @@ export const ConnectedSitePopover = ({
               </ButtonLink>
             </Box>
           ) : (
-            <Text
-              variant={TextVariant.bodySmMedium}
-              color={TextColor.textAlternative}
-            >
-              {t('statusNotConnected')}
-            </Text>
+            <Text variant={TextVariant.bodySm}>{t('statusNotConnected')}</Text>
           )}
         </Box>
         {!isConnected && (
@@ -110,28 +103,13 @@ export const ConnectedSitePopover = ({
             <Text variant={TextVariant.bodyMd}>
               {t('connectionPopoverDescription')}
             </Text>
-            <ButtonLink
-              href="https://support.metamask.io/more-web3/dapps/connecting-to-a-dapp/"
-              externalLink
-              size={ButtonLinkSize.Sm}
-            >
-              {t('learnMoreUpperCase')}
-            </ButtonLink>
           </Box>
         )}
         <Box paddingTop={2} paddingLeft={4} paddingRight={4}>
           <ButtonSecondary
             endIconName={IconName.Export}
             block
-            onClick={() => {
-              if (isConnected) {
-                onClick();
-              } else {
-                global.platform.openTab({
-                  url: 'https://portfolio.metamask.io/explore/dapps',
-                });
-              }
-            }}
+            onClick={onClick}
           >
             {isConnected ? t('managePermissions') : t('exploreweb3')}
           </ButtonSecondary>

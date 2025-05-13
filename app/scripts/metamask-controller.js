@@ -1,28 +1,7 @@
-import EventEmitter from 'events';
-import { finished, pipeline } from 'readable-stream';
-import {
-  CurrencyRateController,
-  TokenDetectionController,
-  TokenListController,
-  TokensController,
-  RatesController,
-  fetchMultiExchangeRate,
-  TokenBalancesController,
-} from '@metamask/assets-controllers';
-import { JsonRpcEngine } from '@metamask/json-rpc-engine';
-import { createEngineStream } from '@metamask/json-rpc-middleware-stream';
-import { ObservableStore } from '@metamask/obs-store';
-import { storeAsStream } from '@metamask/obs-store/dist/asStream';
-import { providerAsMiddleware } from '@metamask/eth-json-rpc-middleware';
-import { debounce, throttle, memoize, wrap, pick, uniq } from 'lodash';
-import {
-  KeyringController,
-  KeyringTypes,
-  keyringBuilderFactory,
-} from '@metamask/keyring-controller';
 import createFilterMiddleware from '@metamask/eth-json-rpc-filters';
 import createSubscriptionManager from '@metamask/eth-json-rpc-filters/subscriptionManager';
 import { JsonRpcError, rpcErrors } from '@metamask/rpc-errors';
+
 import { Mutex } from 'await-semaphore';
 import log from 'loglevel';
 import {
@@ -133,14 +112,16 @@ import {
 import { isSnapId } from '@metamask/snaps-utils';
 
 import { Interface } from '@ethersproject/abi';
-import { abiERC1155, abiERC721 } from '@metamask/metamask-eth-abis';
 import {
-  isEvmAccountType,
-  SolAccountType,
-  ///: BEGIN:ONLY_INCLUDE_IF(solana)
-  SolScope,
-  ///: END:ONLY_INCLUDE_IF
-} from '@metamask/keyring-api';
+  CurrencyRateController,
+  TokenDetectionController,
+  TokenListController,
+  TokensController,
+  RatesController,
+  fetchMultiExchangeRate,
+  TokenBalancesController,
+} from '@metamask/assets-controllers';
+import { abiERC1155, abiERC721 } from '@metamask/metamask-eth-abis';
 import {
   hasProperty,
   hexToBigInt,
@@ -177,46 +158,35 @@ import {
   BRIDGE_STATUS_CONTROLLER_NAME,
   BridgeStatusAction,
 } from '@metamask/bridge-status-controller';
+import { providerAsMiddleware } from '@metamask/eth-json-rpc-middleware';
+import { JsonRpcEngine } from '@metamask/json-rpc-engine';
+import { createEngineStream } from '@metamask/json-rpc-middleware-stream';
+import {
+  isEvmAccountType,
+  SolAccountType,
+  ///: BEGIN:ONLY_INCLUDE_IF(solana)
+  SolScope,
+  ///: END:ONLY_INCLUDE_IF
+} from '@metamask/keyring-api';
+import {
+  KeyringController,
+  KeyringTypes,
+  keyringBuilderFactory,
+} from '@metamask/keyring-controller';
+import { ObservableStore } from '@metamask/obs-store';
+import { storeAsStream } from '@metamask/obs-store/dist/asStream';
+import EventEmitter from 'events';
+import { debounce, throttle, memoize, wrap, pick, uniq } from 'lodash';
+import { finished, pipeline } from 'readable-stream';
 
 ///: BEGIN:ONLY_INCLUDE_IF(build-mmi)
-import { toChecksumHexAddress } from '../../shared/modules/hexstring-utils';
 ///: END:ONLY_INCLUDE_IF
 
-import { TokenStandard } from '../../shared/constants/transaction';
-import {
-  GAS_API_BASE_URL,
-  GAS_DEV_API_BASE_URL,
-  SWAPS_CLIENT_ID,
-} from '../../shared/constants/swaps';
-import {
-  CHAIN_IDS,
-  CHAIN_SPEC_URL,
-  NETWORK_TYPES,
-  NetworkStatus,
-  UNSUPPORTED_RPC_METHODS,
-} from '../../shared/constants/network';
-import { getAllowedSmartTransactionsChainIds } from '../../shared/constants/smartTransactions';
-
-import {
-  HardwareDeviceNames,
-  HardwareKeyringType,
-  LedgerTransportTypes,
-} from '../../shared/constants/hardware-wallets';
-import { KeyringType } from '../../shared/constants/keyring';
-import {
-  RestrictedMethods,
-  ExcludedSnapPermissions,
-  ExcludedSnapEndowments,
-  CaveatTypes,
-} from '../../shared/constants/permissions';
-import { UI_NOTIFICATIONS } from '../../shared/notifications';
-import { MILLISECOND, MINUTE, SECOND } from '../../shared/constants/time';
 import {
   ORIGIN_METAMASK,
   POLLING_TOKEN_ENVIRONMENT_TYPES,
   MESSAGE_TYPE,
   SMART_TRANSACTION_CONFIRMATION_TYPES,
-  PLATFORM_FIREFOX,
 } from '../../shared/constants/app';
 import {
   MetaMetricsEventCategory,
@@ -254,33 +224,44 @@ import { ENVIRONMENT } from '../../development/build/constants';
 import fetchWithCache from '../../shared/lib/fetch-with-cache';
 import { MultichainNetworks } from '../../shared/constants/multichain/networks';
 import { BRIDGE_API_BASE_URL } from '../../shared/constants/bridge';
+import {
+  HardwareDeviceNames,
+  HardwareKeyringType,
+  LedgerTransportTypes,
+} from '../../shared/constants/hardware-wallets';
+import { KeyringType } from '../../shared/constants/keyring';
+import {
+  CHAIN_IDS,
+  CHAIN_SPEC_URL,
+  NETWORK_TYPES,
+  NetworkStatus,
+  UNSUPPORTED_RPC_METHODS,
+} from '../../shared/constants/network';
+import {
+  RestrictedMethods,
+  ExcludedSnapPermissions,
+  ExcludedSnapEndowments,
+  CaveatTypes,
+} from '../../shared/constants/permissions';
+import { getAllowedSmartTransactionsChainIds } from '../../shared/constants/smartTransactions';
+import {
+  GAS_API_BASE_URL,
+  GAS_DEV_API_BASE_URL,
+  SWAPS_CLIENT_ID,
+} from '../../shared/constants/swaps';
+import { MILLISECOND, MINUTE, SECOND } from '../../shared/constants/time';
+import { TokenStandard } from '../../shared/constants/transaction';
 ///: BEGIN:ONLY_INCLUDE_IF(solana)
 import { MultichainWalletSnapClient } from '../../shared/lib/accounts';
 import { SOLANA_WALLET_SNAP_ID } from '../../shared/lib/accounts/solana-wallet-snap';
+import { toChecksumHexAddress } from '../../shared/modules/hexstring-utils';
+import { UI_NOTIFICATIONS } from '../../shared/notifications';
 ///: END:ONLY_INCLUDE_IF
-import {
-  ///: BEGIN:ONLY_INCLUDE_IF(build-mmi)
-  handleMMITransactionUpdate,
-  ///: END:ONLY_INCLUDE_IF
-  createTransactionEventFragmentWithTxId,
-} from './lib/transaction/metrics';
 ///: BEGIN:ONLY_INCLUDE_IF(keyring-snaps)
-import { keyringSnapPermissionsBuilder } from './lib/snap-keyring/keyring-snaps-permissions';
 ///: END:ONLY_INCLUDE_IF
 
-import { SnapsNameProvider } from './lib/SnapsNameProvider';
-import { AddressBookPetnamesBridge } from './lib/AddressBookPetnamesBridge';
-import { AccountIdentitiesPetnamesBridge } from './lib/AccountIdentitiesPetnamesBridge';
-import { createPPOMMiddleware } from './lib/ppom/ppom-middleware';
-import {
-  onMessageReceived,
-  checkForMultipleVersionsRunning,
-} from './detect-multiple-instances';
 ///: BEGIN:ONLY_INCLUDE_IF(build-mmi)
-import { MMIController } from './controllers/mmi-controller';
-import { mmiKeyringBuilderFactory } from './mmi-keyring-builder-factory';
 ///: END:ONLY_INCLUDE_IF
-import ComposableObservableStore from './lib/ComposableObservableStore';
 import AccountTrackerController from './controllers/account-tracker-controller';
 import createDupeReqFilterStream from './lib/createDupeReqFilterStream';
 import createLoggerMiddleware from './lib/createLoggerMiddleware';
@@ -313,8 +294,6 @@ import {
   getEnvironmentType,
   getMethodDataName,
   previousValueComparator,
-  initializeRpcProviderDomains,
-  getPlatform,
 } from './lib/util';
 import createMetamaskMiddleware from './lib/createMetamaskMiddleware';
 import { hardwareKeyringBuilderFactory } from './lib/hardware-keyring-builder-factory';
@@ -408,7 +387,6 @@ import {
 } from './controller-init/snaps';
 import { AuthenticationControllerInit } from './controller-init/identity/authentication-controller-init';
 import { UserStorageControllerInit } from './controller-init/identity/user-storage-controller-init';
-import { DeFiPositionsControllerInit } from './controller-init/defi-positions/defi-positions-controller-init';
 import {
   getCallsStatus,
   getCapabilities,
@@ -416,7 +394,24 @@ import {
 } from './lib/transaction/eip5792';
 import { NotificationServicesControllerInit } from './controller-init/notifications/notification-services-controller-init';
 import { NotificationServicesPushControllerInit } from './controller-init/notifications/notification-services-push-controller-init';
-import { DelegationControllerInit } from './controller-init/delegation/delegation-controller-init';
+import { MMIController } from './controllers/mmi-controller';
+import {
+  onMessageReceived,
+  checkForMultipleVersionsRunning,
+} from './detect-multiple-instances';
+import { AccountIdentitiesPetnamesBridge } from './lib/AccountIdentitiesPetnamesBridge';
+import { AddressBookPetnamesBridge } from './lib/AddressBookPetnamesBridge';
+import ComposableObservableStore from './lib/ComposableObservableStore';
+import { createPPOMMiddleware } from './lib/ppom/ppom-middleware';
+import { keyringSnapPermissionsBuilder } from './lib/snap-keyring/keyring-snaps-permissions';
+import { SnapsNameProvider } from './lib/SnapsNameProvider';
+import {
+  ///: BEGIN:ONLY_INCLUDE_IF(build-mmi)
+  handleMMITransactionUpdate,
+  ///: END:ONLY_INCLUDE_IF
+  createTransactionEventFragmentWithTxId,
+} from './lib/transaction/metrics';
+import { mmiKeyringBuilderFactory } from './mmi-keyring-builder-factory';
 
 export const METAMASK_CONTROLLER_EVENTS = {
   // Fired after state changes that impact the extension badge (unapproved msg count)
@@ -500,6 +495,9 @@ export default class MetamaskController extends EventEmitter {
       }),
       state: initState.LoggingController,
     });
+
+    // instance of a class that wraps the extension's storage local API.
+    this.localStoreApiWrapper = opts.persistanceManager;
 
     this.currentMigrationVersion = opts.currentMigrationVersion;
 
@@ -620,31 +618,6 @@ export default class MetamaskController extends EventEmitter {
 
       initialNetworkControllerState.selectedNetworkClientId =
         network.rpcEndpoints[network.defaultRpcEndpointIndex].networkClientId;
-    }
-
-    // Fix the network controller state (selectedNetworkClientId) if it is invalid and report the error
-    if (
-      initialNetworkControllerState.networkConfigurationsByChainId &&
-      !Object.values(
-        initialNetworkControllerState.networkConfigurationsByChainId,
-      )
-        .flatMap((networkConfiguration) =>
-          networkConfiguration.rpcEndpoints.map(
-            (rpcEndpoint) => rpcEndpoint.networkClientId,
-          ),
-        )
-        .includes(initialNetworkControllerState.selectedNetworkClientId)
-    ) {
-      captureException(
-        new Error(
-          `NetworkController state is invalid: \`selectedNetworkClientId\` '${initialNetworkControllerState.selectedNetworkClientId}' does not refer to an RPC endpoint within a network configuration`,
-        ),
-      );
-
-      initialNetworkControllerState.selectedNetworkClientId =
-        initialNetworkControllerState.networkConfigurationsByChainId[
-          CHAIN_IDS.MAINNET
-        ].rpcEndpoints[0].networkClientId;
     }
 
     this.networkController = new NetworkController({
@@ -1600,7 +1573,6 @@ export default class MetamaskController extends EventEmitter {
         'NetworkController:findNetworkClientIdByChainId',
         'TokenRatesController:getState',
         'MultichainAssetsRatesController:getState',
-        'RemoteFeatureFlagController:getState',
         'CurrencyRateController:getState',
       ],
       allowedEvents: [],
@@ -1884,8 +1856,6 @@ export default class MetamaskController extends EventEmitter {
       NotificationServicesController: NotificationServicesControllerInit,
       NotificationServicesPushController:
         NotificationServicesPushControllerInit,
-      DeFiPositionsController: DeFiPositionsControllerInit,
-      DelegationController: DelegationControllerInit,
     };
 
     const {
@@ -1931,12 +1901,10 @@ export default class MetamaskController extends EventEmitter {
       controllersByName.MultichainNetworkController;
     this.authenticationController = controllersByName.AuthenticationController;
     this.userStorageController = controllersByName.UserStorageController;
-    this.delegationController = controllersByName.DelegationController;
     this.notificationServicesController =
       controllersByName.NotificationServicesController;
     this.notificationServicesPushController =
       controllersByName.NotificationServicesPushController;
-    this.deFiPositionsController = controllersByName.DeFiPositionsController;
 
     this.notificationServicesController.init();
 
@@ -2173,7 +2141,6 @@ export default class MetamaskController extends EventEmitter {
       NotificationServicesPushController:
         this.notificationServicesPushController,
       RemoteFeatureFlagController: this.remoteFeatureFlagController,
-      DeFiPositionsController: this.deFiPositionsController,
       ...resetOnRestartStore,
       ...controllerPersistedState,
     });
@@ -2236,7 +2203,6 @@ export default class MetamaskController extends EventEmitter {
         NotificationServicesPushController:
           this.notificationServicesPushController,
         RemoteFeatureFlagController: this.remoteFeatureFlagController,
-        DeFiPositionsController: this.deFiPositionsController,
         ...resetOnRestartStore,
         ...controllerMemState,
       },
@@ -3634,8 +3600,8 @@ export default class MetamaskController extends EventEmitter {
       updateNetwork: this.networkController.updateNetwork.bind(
         this.networkController,
       ),
-      removeNetwork: this.multichainNetworkController.removeNetwork.bind(
-        this.multichainNetworkController,
+      removeNetwork: this.networkController.removeNetwork.bind(
+        this.networkController,
       ),
       getCurrentNetworkEIP1559Compatibility:
         this.networkController.getEIP1559Compatibility.bind(
@@ -4124,6 +4090,11 @@ export default class MetamaskController extends EventEmitter {
       ),
 
       // Bridge
+      [BridgeBackgroundAction.SET_FEATURE_FLAGS]:
+        this.controllerMessenger.call.bind(
+          this.controllerMessenger,
+          `${BRIDGE_CONTROLLER_NAME}:${BridgeBackgroundAction.SET_FEATURE_FLAGS}`,
+        ),
       [BridgeBackgroundAction.RESET_STATE]: this.controllerMessenger.call.bind(
         this.controllerMessenger,
         `${BRIDGE_CONTROLLER_NAME}:${BridgeBackgroundAction.RESET_STATE}`,
@@ -7683,8 +7654,6 @@ export default class MetamaskController extends EventEmitter {
     const cacheKey = `cachedFetch:${CHAIN_SPEC_URL}`;
     const { cachedResponse } = (await getStorageItem(cacheKey)) || {};
     if (cachedResponse) {
-      // Also initialize the known domains when we have chain data cached
-      await initializeRpcProviderDomains();
       return;
     }
     await setStorageItem(cacheKey, {
@@ -7692,8 +7661,6 @@ export default class MetamaskController extends EventEmitter {
       // Cached value is immediately invalidated
       cachedTime: 0,
     });
-    // Initialize domains after setting the chainlist cache
-    await initializeRpcProviderDomains();
   }
 
   /**
@@ -7783,8 +7750,8 @@ export default class MetamaskController extends EventEmitter {
       getTokenStandardAndDetails: this.getTokenStandardAndDetails.bind(this),
       getTransaction: (id) =>
         this.txController.state.transactions.find((tx) => tx.id === id),
-      getIsSmartTransaction: (chainId) => {
-        return getIsSmartTransaction(this._getMetaMaskState(), chainId);
+      getIsSmartTransaction: () => {
+        return getIsSmartTransaction(this._getMetaMaskState());
       },
       getSmartTransactionByMinedTxHash: (txHash) => {
         return this.smartTransactionsController.getSmartTransactionByMinedTxHash(
@@ -7813,37 +7780,6 @@ export default class MetamaskController extends EventEmitter {
           .showConfirmationAdvancedDetails;
       },
       getHDEntropyIndex: this.getHDEntropyIndex.bind(this),
-      getNetworkRpcUrl: (chainId) => {
-        // TODO: Move to @metamask/network-controller
-        try {
-          const networkClientId =
-            this.networkController.findNetworkClientIdByChainId(chainId);
-          const networkConfig =
-            this.networkController.getNetworkConfigurationByNetworkClientId(
-              networkClientId,
-            );
-
-          // Try direct rpcUrl property first
-          if (networkConfig.rpcUrl) {
-            return networkConfig.rpcUrl;
-          }
-
-          // Try rpcEndpoints array
-          if (networkConfig.rpcEndpoints?.length > 0) {
-            const defaultEndpointIndex =
-              networkConfig.defaultRpcEndpointIndex || 0;
-            return (
-              networkConfig.rpcEndpoints[defaultEndpointIndex]?.url ||
-              networkConfig.rpcEndpoints[0].url
-            );
-          }
-
-          return 'unknown';
-        } catch (error) {
-          console.error('Error getting RPC URL:', error);
-          return 'unknown';
-        }
-      },
     };
     return {
       ...controllerActions,
@@ -7988,24 +7924,16 @@ export default class MetamaskController extends EventEmitter {
    * @param {string} origin - the domain to safelist
    */
   safelistPhishingDomain(origin) {
-    const isFirefox = getPlatform() === PLATFORM_FIREFOX;
-    if (!isFirefox) {
-      this.metaMetricsController.trackEvent(
-        {
-          category: MetaMetricsEventCategory.Phishing,
-          event: MetaMetricsEventName.ProceedAnywayClicked,
-          properties: {
-            url: origin,
-            referrer: {
-              url: origin,
-            },
-          },
+    this.metaMetricsController.trackEvent({
+      category: MetaMetricsEventCategory.Phishing,
+      event: MetaMetricsEventName.ProceedAnywayClicked,
+      properties: {
+        url: origin,
+        referrer: {
+          url: origin,
         },
-        {
-          excludeMetaMetricsId: true,
-        },
-      );
-    }
+      },
+    });
 
     return this.phishingController.bypass(origin);
   }

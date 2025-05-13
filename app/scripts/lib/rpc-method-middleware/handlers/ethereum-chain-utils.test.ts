@@ -1,10 +1,11 @@
 import * as Multichain from '@metamask/chain-agnostic-permission';
-import { errorCodes, rpcErrors } from '@metamask/rpc-errors';
 import {
   Caip25CaveatType,
   Caip25EndowmentPermissionName,
 } from '@metamask/chain-agnostic-permission';
-import { Hex } from '@metamask/utils';
+import { errorCodes, rpcErrors } from '@metamask/rpc-errors';
+import type { Hex } from '@metamask/utils';
+
 import * as EthChainUtils from './ethereum-chain-utils';
 
 describe('Ethereum Chain Utils', () => {
@@ -27,7 +28,7 @@ describe('Ethereum Chain Utils', () => {
       ...mks,
     };
     const response: { result?: true } = {};
-    const switchChain = (chainId: Hex, networkClientId: string) =>
+    const switchChain = async (chainId: Hex, networkClientId: string) =>
       EthChainUtils.switchChain(response, end, chainId, networkClientId, mocks);
 
     return {
@@ -253,7 +254,6 @@ describe('Ethereum Chain Utils', () => {
       });
     });
 
-    // @ts-expect-error This function is missing from the Mocha type definitions
     describe.each([
       ['legacy', false],
       ['multichain', true],

@@ -1,61 +1,19 @@
-import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
+import React, { useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  useUnreadNotificationsCounter,
-  useReadNotificationsCounter,
-} from '../../../hooks/metamask-notifications/useCounter';
-import { NotificationsTagCounter } from '../notifications-tag-counter';
-import { NewFeatureTag } from '../../../pages/notifications/NewFeatureTag';
-import {
-  SETTINGS_ROUTE,
-  DEFAULT_ROUTE,
-  NOTIFICATIONS_ROUTE,
-  SNAPS_ROUTE,
-  PERMISSIONS,
-} from '../../../helpers/constants/routes';
-import {
-  lockMetamask,
-  showConfirmTurnOnMetamaskNotifications,
-} from '../../../store/actions';
-import { useI18nContext } from '../../../hooks/useI18nContext';
-import {
-  selectIsMetamaskNotificationsEnabled,
-  selectIsMetamaskNotificationsFeatureSeen,
-} from '../../../selectors/metamask-notifications/metamask-notifications';
-import { selectIsBackupAndSyncEnabled } from '../../../selectors/identity/backup-and-sync';
-import {
-  Box,
-  IconName,
-  Popover,
-  PopoverPosition,
-} from '../../component-library';
+import { useHistory } from 'react-router-dom';
 
-import { MenuItem } from '../../ui/menu';
-// TODO: Remove restricted import
-// eslint-disable-next-line import/no-restricted-paths
+import { AccountDetailsMenuItem, ViewExplorerMenuItem } from '..';
 import { getEnvironmentType } from '../../../../app/scripts/lib/util';
 import { ENVIRONMENT_TYPE_FULLSCREEN } from '../../../../shared/constants/app';
-import { SUPPORT_LINK } from '../../../../shared/lib/ui-utils';
-///: BEGIN:ONLY_INCLUDE_IF(build-beta,build-flask)
-import { SUPPORT_REQUEST_LINK } from '../../../helpers/constants/common';
-///: END:ONLY_INCLUDE_IF
-
-import { MetaMetricsContext } from '../../../contexts/metametrics';
 import {
   MetaMetricsContextProp,
   MetaMetricsEventCategory,
   MetaMetricsEventName,
 } from '../../../../shared/constants/metametrics';
-
-import {
-  getSelectedInternalAccount,
-  getUnapprovedTransactions,
-  getAnySnapUpdateAvailable,
-  getThirdPartyNotifySnaps,
-  getUseExternalServices,
-} from '../../../selectors';
+import { SUPPORT_LINK } from '../../../../shared/lib/ui-utils';
+import { MetaMetricsContext } from '../../../contexts/metametrics';
+import { SUPPORT_REQUEST_LINK } from '../../../helpers/constants/common';
 import {
   AlignItems,
   BlockSize,
@@ -65,7 +23,48 @@ import {
   FlexDirection,
   JustifyContent,
 } from '../../../helpers/constants/design-system';
-import { AccountDetailsMenuItem, ViewExplorerMenuItem } from '..';
+import {
+  SETTINGS_ROUTE,
+  DEFAULT_ROUTE,
+  NOTIFICATIONS_ROUTE,
+  SNAPS_ROUTE,
+  PERMISSIONS,
+} from '../../../helpers/constants/routes';
+import {
+  useUnreadNotificationsCounter,
+  useReadNotificationsCounter,
+} from '../../../hooks/metamask-notifications/useCounter';
+import { NewFeatureTag } from '../../../pages/notifications/NewFeatureTag';
+import {
+  lockMetamask,
+  showConfirmTurnOnMetamaskNotifications,
+} from '../../../store/actions';
+import { useI18nContext } from '../../../hooks/useI18nContext';
+import {
+  selectIsMetamaskNotificationsEnabled,
+  selectIsMetamaskNotificationsFeatureSeen,
+} from '../../../selectors/metamask-notifications/metamask-notifications';
+import { selectIsProfileSyncingEnabled } from '../../../selectors/identity/profile-syncing';
+import {
+  Box,
+  IconName,
+  Popover,
+  PopoverPosition,
+} from '../../component-library';
+import { MenuItem } from '../../ui/menu';
+// TODO: Remove restricted import
+// eslint-disable-next-line import/no-restricted-paths
+///: BEGIN:ONLY_INCLUDE_IF(build-beta,build-flask)
+///: END:ONLY_INCLUDE_IF
+
+import {
+  getSelectedInternalAccount,
+  getUnapprovedTransactions,
+  getAnySnapUpdateAvailable,
+  getThirdPartyNotifySnaps,
+  getUseExternalServices,
+} from '../../../selectors';
+import { NotificationsTagCounter } from '../notifications-tag-counter';
 
 const METRICS_LOCATION = 'Global Menu';
 
@@ -91,7 +90,7 @@ export const GlobalMenu = ({ closeMenu, anchorElement, isOpen }) => {
   const isMetamaskNotificationsEnabled = useSelector(
     selectIsMetamaskNotificationsEnabled,
   );
-  const isBackupAndSyncEnabled = useSelector(selectIsBackupAndSyncEnabled);
+  const isProfileSyncingEnabled = useSelector(selectIsProfileSyncingEnabled);
 
   const hasUnapprovedTransactions =
     Object.keys(unapprovedTransactions).length > 0;
@@ -149,7 +148,7 @@ export const GlobalMenu = ({ closeMenu, anchorElement, isOpen }) => {
         event: MetaMetricsEventName.NotificationsActivated,
         properties: {
           action_type: 'started',
-          is_profile_syncing_enabled: isBackupAndSyncEnabled,
+          is_profile_syncing_enabled: isProfileSyncingEnabled,
         },
       });
       dispatch(showConfirmTurnOnMetamaskNotifications());
@@ -184,7 +183,7 @@ export const GlobalMenu = ({ closeMenu, anchorElement, isOpen }) => {
         minWidth: 225,
       }}
       borderStyle={BorderStyle.none}
-      position={PopoverPosition.Auto}
+      position={PopoverPosition.BottomEnd}
     >
       {basicFunctionality && (
         <>

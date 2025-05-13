@@ -1,29 +1,27 @@
 /* eslint-disable jest/require-top-level-describe */
+import type { KeyringAccountType } from '@metamask/keyring-api';
+import { BtcAccountType, EthAccountType } from '@metamask/keyring-api';
+import { KeyringTypes } from '@metamask/keyring-controller';
+import { merge } from 'lodash';
 import React from 'react';
 import reactRouterDom from 'react-router-dom';
-import {
-  BtcAccountType,
-  EthAccountType,
-  KeyringAccountType,
-} from '@metamask/keyring-api';
-import { merge } from 'lodash';
-import { KeyringTypes } from '@metamask/keyring-controller';
-import { fireEvent, waitFor } from '../../../../test/jest';
-import configureStore from '../../../store/store';
+
+import { AccountListMenu } from '.';
+import messages from '../../../../app/_locales/en/messages.json';
+import { ETH_EOA_METHODS } from '../../../../shared/constants/eth-methods';
 import mockState from '../../../../test/data/mock-state.json';
+import { fireEvent, waitFor } from '../../../../test/jest';
 ///: BEGIN:ONLY_INCLUDE_IF(keyring-snaps)
 // TODO: Remove restricted import
 // eslint-disable-next-line import/no-restricted-paths
-import messages from '../../../../app/_locales/en/messages.json';
+///: END:ONLY_INCLUDE_IF
+import { createMockInternalAccount } from '../../../../test/jest/mocks';
+import { renderWithProvider } from '../../../../test/lib/render-helpers';
 import {
   CONFIRMATION_V_NEXT_ROUTE,
   CONNECT_HARDWARE_ROUTE,
 } from '../../../helpers/constants/routes';
-///: END:ONLY_INCLUDE_IF
-import { ETH_EOA_METHODS } from '../../../../shared/constants/eth-methods';
-import { createMockInternalAccount } from '../../../../test/jest/mocks';
-import { renderWithProvider } from '../../../../test/lib/render-helpers';
-import { AccountListMenu } from '.';
+import configureStore from '../../../store/store';
 
 ///: BEGIN:ONLY_INCLUDE_IF(keyring-snaps)
 const mockOnClose = jest.fn();
@@ -31,7 +29,6 @@ const mockGetEnvironmentType = jest.fn();
 const mockNextAccountName = jest.fn().mockReturnValue('Test Account 2');
 const mockBitcoinClientCreateAccount = jest.fn();
 const mockGenerateNewHdKeyring = jest.fn();
-const mockDetectNfts = jest.fn();
 
 jest.mock('../../../../app/scripts/lib/util', () => ({
   ...jest.requireActual('../../../../app/scripts/lib/util'),
@@ -42,8 +39,8 @@ jest.mock('../../../../app/scripts/lib/util', () => ({
 jest.mock('../../../store/actions', () => {
   return {
     ...jest.requireActual('../../../store/actions'),
+    getNextAvailableAccountName: () => mockNextAccountName(),
     generateNewHdKeyring: () => mockGenerateNewHdKeyring(),
-    detectNfts: () => mockDetectNfts,
   };
 });
 
@@ -58,7 +55,6 @@ jest.mock('../../../hooks/accounts/useMultichainWalletSnapClient', () => ({
   ),
   useMultichainWalletSnapClient: () => ({
     createAccount: mockBitcoinClientCreateAccount,
-    getNextAvailableAccountName: () => mockNextAccountName(),
     getSnapId: () => 'bitcoin-snap-id',
     getSnapName: () => 'bitcoin-snap-name',
   }),
@@ -81,8 +77,6 @@ const render = (
       ...mockState.metamask,
       permissionHistory: {
         'https://test.dapp': {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           eth_accounts: {
             accounts: {
               '0x0dcd5d886577d5081b0c52e242ef29e70be3e7bc': 1596681857076,
@@ -161,7 +155,6 @@ describe('AccountListMenu', () => {
     const listItems = document.querySelectorAll(
       '.multichain-account-list-item',
     );
-
     expect(listItems).toHaveLength(6);
 
     const searchBox = document.querySelector('input[type=search]') as Element;
@@ -226,8 +219,6 @@ describe('AccountListMenu', () => {
         },
         permissionHistory: {
           'https://test.dapp': {
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             eth_accounts: {
               accounts: {
                 '0x0dcd5d886577d5081b0c52e242ef29e70be3e7bc': 1596681857076,
@@ -371,8 +362,6 @@ describe('AccountListMenu', () => {
             ...state,
             permissionHistory: {
               'https://test.dapp': {
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                // eslint-disable-next-line @typescript-eslint/naming-convention
                 eth_accounts: {
                   accounts: {
                     '0x0dcd5d886577d5081b0c52e242ef29e70be3e7bc': 1596681857076,
@@ -477,130 +466,6 @@ describe('AccountListMenu', () => {
       // Check if `openTab` was called
       expect(global.platform.openTab).toHaveBeenCalledTimes(1);
     });
-  });
-
-  it('displays the correct label for unnamed snap accounts', () => {
-    const mockStore = configureStore({
-      activeTab: {
-        title: 'Eth Sign Tests',
-        origin: 'https://remix.ethereum.org',
-        protocol: 'https:',
-        url: 'https://remix.ethereum.org/',
-      },
-      unconnectedAccount: {
-        state: 'OPEN',
-      },
-      metamask: {
-        ...mockState.metamask,
-        permissionHistory: {
-          'https://test.dapp': {
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            eth_accounts: {
-              accounts: {
-                '0x0dcd5d886577d5081b0c52e242ef29e70be3e7bc': 1596681857076,
-              },
-            },
-          },
-        },
-        subjects: {
-          'https://test.dapp': {
-            permissions: {
-              'endowment:caip25': {
-                caveats: [
-                  {
-                    type: 'authorizedScopes',
-                    value: {
-                      requiredScopes: {},
-                      optionalScopes: {
-                        'eip155:1': {
-                          accounts: [
-                            'eip155:1:0x0dcd5d886577d5081b0c52e242ef29e70be3e7bc',
-                          ],
-                        },
-                      },
-                      isMultichainOrigin: false,
-                    },
-                  },
-                ],
-                invoker: 'https://test.dapp',
-                parentCapability: 'endowment:caip25',
-              },
-            },
-          },
-        },
-        internalAccounts: {
-          accounts: {
-            ...mockState.metamask.internalAccounts.accounts,
-            'cf8dace4-9439-4bd4-b3a8-88c821c8fcb3': {
-              ...mockState.metamask.internalAccounts.accounts[
-                'cf8dace4-9439-4bd4-b3a8-88c821c8fcb3'
-              ],
-              metadata: {
-                name: 'Snap Account',
-                keyring: {
-                  type: 'Snap Keyring',
-                },
-                snap: {
-                  id: 'local:snap-id',
-                },
-              },
-            },
-          },
-          selectedAccount: 'cf8dace4-9439-4bd4-b3a8-88c821c8fcb3',
-        },
-      },
-    });
-    renderWithProvider(<AccountListMenu onClose={jest.fn()} />, mockStore);
-    const listItems = document.querySelectorAll(
-      '.multichain-account-list-item',
-    );
-    const tag = listItems[0].querySelector('.mm-tag') as Element;
-    expect(tag.textContent).toBe('mock snap name (Beta)');
-  });
-
-  it('detects NFTs when an account is clicked', () => {
-    const { getAllByTestId } = render();
-    const listItems = document.querySelectorAll(
-      '.multichain-account-list-item',
-    );
-    expect(listItems).toHaveLength(6);
-    const button = getAllByTestId('account-item');
-    button[0].click();
-    expect(mockDetectNfts).toHaveBeenCalled();
-  });
-
-  it('displays the correct label for named snap accounts', () => {
-    render({
-      metamask: {
-        internalAccounts: {
-          accounts: {
-            ...mockState.metamask.internalAccounts.accounts,
-            'cf8dace4-9439-4bd4-b3a8-88c821c8fcb3': {
-              ...mockState.metamask.internalAccounts.accounts[
-                'cf8dace4-9439-4bd4-b3a8-88c821c8fcb3'
-              ],
-              metadata: {
-                name: 'Snap Account',
-                keyring: {
-                  type: 'Snap Keyring',
-                },
-                snap: {
-                  name: 'Test Snap Name',
-                  id: 'local:snap-id',
-                },
-              },
-            },
-          },
-          selectedAccount: 'cf8dace4-9439-4bd4-b3a8-88c821c8fcb3',
-        },
-      },
-    });
-    const listItems = document.querySelectorAll(
-      '.multichain-account-list-item',
-    );
-    const tag = listItems[0].querySelector('.mm-tag') as Element;
-    expect(tag.textContent).toBe('mock snap name (Beta)');
   });
   ///: END:ONLY_INCLUDE_IF
 

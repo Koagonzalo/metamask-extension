@@ -1,9 +1,10 @@
 import { KeyringTypes } from '@metamask/keyring-controller';
+
+import mockState from '../../../test/data/mock-state.json';
+import { createMockInternalAccount } from '../../../test/jest/mocks';
 import { renderHookWithProvider } from '../../../test/lib/render-helpers';
 import { getMetaMaskHdKeyrings } from '../../selectors';
 import { getInternalAccounts } from '../../selectors/accounts';
-import { createMockInternalAccount } from '../../../test/jest/mocks';
-import mockState from '../../../test/data/mock-state.json';
 import { useHdKeyringsWithSnapAccounts } from './useHdKeyringsWithSnapAccounts';
 
 const mockHdAccount = createMockInternalAccount({

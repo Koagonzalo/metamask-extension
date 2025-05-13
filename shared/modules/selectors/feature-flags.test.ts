@@ -1,4 +1,5 @@
 import { RpcEndpointType } from '@metamask/network-controller';
+
 import { CHAIN_IDS } from '../../constants/network';
 // Import the module to spy on
 import * as featureFlags from '../feature-flags';
@@ -6,7 +7,7 @@ import {
   getFeatureFlagsByChainId,
   type SwapsFeatureFlags,
 } from './feature-flags';
-import { ProviderConfigState } from './networks';
+import type { ProviderConfigState } from './networks';
 
 type MockState = ProviderConfigState & {
   metamask: {

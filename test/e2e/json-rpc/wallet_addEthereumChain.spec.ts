@@ -1,18 +1,19 @@
-import { strict as assert } from 'assert';
-import {
+import type {
   CaveatConstraint,
   PermissionConstraint,
 } from '@metamask/permission-controller';
+import { strict as assert } from 'assert';
+
+import { PermissionNames } from '../../../app/scripts/controllers/permissions';
+import { CaveatTypes } from '../../../shared/constants/permissions';
 import FixtureBuilder from '../fixture-builder';
-import { Driver } from '../webdriver/driver';
 import {
   withFixtures,
   openDapp,
   unlockWallet,
   WINDOW_TITLES,
 } from '../helpers';
-import { PermissionNames } from '../../../app/scripts/controllers/permissions';
-import { CaveatTypes } from '../../../shared/constants/permissions';
+import type { Driver } from '../webdriver/driver';
 
 const getPermittedChains = async (driver: Driver) => {
   const getPermissionsRequest = JSON.stringify({

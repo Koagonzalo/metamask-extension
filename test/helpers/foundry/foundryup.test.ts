@@ -1,17 +1,19 @@
+import type { Dir } from 'fs';
+import { readFileSync } from 'fs';
 import fs from 'fs/promises';
-import { Dir, readFileSync } from 'fs';
+import nock from 'nock';
 import { join, relative } from 'path';
 import { parse as parseYaml } from 'yaml';
-import nock from 'nock';
+
 import {
   checkAndDownloadBinaries,
   getBinaryArchiveUrl,
   getCacheDirectory,
 } from './foundryup';
-import { isCodedError } from './utils';
 import { parseArgs } from './options';
 import type { Binary, Checksums } from './types';
 import { Architecture, Platform } from './types';
+import { isCodedError } from './utils';
 
 type OperationDetails = {
   path?: string;
@@ -67,8 +69,6 @@ jest.mock('./options', () => ({
 
 export const mockInstallBinaries = async (
   downloadedBinaries: Dir,
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   BIN_DIR: string,
   cachePath: string,
 ): Promise<{ operation: string; source?: string; target?: string }[]> => {

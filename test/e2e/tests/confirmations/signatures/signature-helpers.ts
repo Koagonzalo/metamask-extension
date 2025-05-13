@@ -99,7 +99,7 @@ type SignatureEventProperty = {
   hd_entropy_index?: number;
   // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  requested_through?: string;
+  api_source?: string;
 };
 
 const signatureAnonProperties = {
@@ -180,7 +180,7 @@ function getSignatureEventProperty(
     hd_entropy_index: 0,
     // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    requested_through: requestedThrough,
+    api_source: requestedThrough,
   };
 
   if (primaryType !== '') {

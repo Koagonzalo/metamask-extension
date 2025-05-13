@@ -1,4 +1,5 @@
 import browser from 'webextension-polyfill';
+
 import ExtensionStore from './extension-store';
 
 const MOCK_STATE = { data: {}, meta: { version: 1 } };
@@ -51,7 +52,7 @@ describe('ExtensionStore', () => {
   describe('set', () => {
     it('throws an error if called in a browser that does not support local storage', async () => {
       const localStore = setup({ localMock: false });
-      await expect(() => localStore.set(MOCK_STATE)).rejects.toThrow(
+      await expect(async () => localStore.set(MOCK_STATE)).rejects.toThrow(
         'Metamask- cannot persist state to local store as this browser does not support this action',
       );
     });
@@ -89,7 +90,7 @@ describe('ExtensionStore', () => {
       const result = await localStore.get();
 
       expect(result).toBe(MOCK_STATE);
-      expect(getMock).toHaveBeenCalledWith(['data', 'meta']);
+      expect(getMock).toHaveBeenCalledWith(null);
     });
   });
 });

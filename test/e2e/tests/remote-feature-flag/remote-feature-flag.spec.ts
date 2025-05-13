@@ -1,17 +1,18 @@
 import { strict as assert } from 'assert';
-import { Suite } from 'mocha';
-import { getCleanAppState, withFixtures } from '../../helpers';
-import FixtureBuilder from '../../fixture-builder';
-import { TestSuiteArguments } from '../confirmations/transactions/shared';
-import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
-import HeaderNavbar from '../../page-objects/pages/header-navbar';
-import SettingsPage from '../../page-objects/pages/settings/settings-page';
-import DevelopOptions from '../../page-objects/pages/developer-options-page';
+import type { Suite } from 'mocha';
+
 import {
   MOCK_CUSTOMIZED_REMOTE_FEATURE_FLAGS,
   MOCK_META_METRICS_ID,
   MOCK_REMOTE_FEATURE_FLAGS_RESPONSE,
 } from '../../constants';
+import FixtureBuilder from '../../fixture-builder';
+import { getCleanAppState, withFixtures } from '../../helpers';
+import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
+import DevelopOptions from '../../page-objects/pages/developer-options-page';
+import HeaderNavbar from '../../page-objects/pages/header-navbar';
+import SettingsPage from '../../page-objects/pages/settings/settings-page';
+import type { TestSuiteArguments } from '../confirmations/transactions/shared';
 
 describe('Remote feature flag', function (this: Suite) {
   it('should be fetched with threshold value when basic functionality toggle is on', async function () {
@@ -72,7 +73,7 @@ describe('Remote feature flag', function (this: Suite) {
         await headerNavbar.openSettingsPage();
         const settingsPage = new SettingsPage(driver);
         await settingsPage.check_pageIsLoaded();
-        await settingsPage.goToDeveloperOptions();
+        await settingsPage.goToDevelopOptionSettings();
 
         const developOptionsPage = new DevelopOptions(driver);
         await developOptionsPage.check_pageIsLoaded();

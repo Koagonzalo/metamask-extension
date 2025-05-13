@@ -1,8 +1,9 @@
-import { Suite } from 'mocha';
-import { withFixtures } from '../../helpers';
+import type { Suite } from 'mocha';
+
 import FixtureBuilder from '../../fixture-builder';
-import TestDapp from '../../page-objects/pages/test-dapp';
+import { withFixtures } from '../../helpers';
 import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
+import TestDapp from '../../page-objects/pages/test-dapp';
 
 describe('Wallet Revoke Permissions', function (this: Suite) {
   it('should revoke "eth_accounts" permissions via test dapp', async function () {

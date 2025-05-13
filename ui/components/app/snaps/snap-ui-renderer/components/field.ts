@@ -1,4 +1,4 @@
-import {
+import type {
   FieldElement,
   InputElement,
   JSXElement,
@@ -10,14 +10,15 @@ import {
   AssetSelectorElement,
 } from '@metamask/snaps-sdk/jsx';
 import { getJsxChildren } from '@metamask/snaps-utils';
+
 import { getPrimaryChildElementIndex, mapToTemplate } from '../utils';
-import { dropdown as dropdownFn } from './dropdown';
-import { radioGroup as radioGroupFn } from './radioGroup';
-import { checkbox as checkboxFn } from './checkbox';
-import { selector as selectorFn } from './selector';
 import { assetSelector as assetSelectorFn } from './asset-selector';
-import { UIComponentFactory, UIComponentParams } from './types';
+import { checkbox as checkboxFn } from './checkbox';
+import { dropdown as dropdownFn } from './dropdown';
 import { constructInputProps } from './input';
+import { radioGroup as radioGroupFn } from './radioGroup';
+import { selector as selectorFn } from './selector';
+import type { UIComponentFactory, UIComponentParams } from './types';
 
 export const field: UIComponentFactory<FieldElement> = ({
   element,
@@ -34,7 +35,7 @@ export const field: UIComponentFactory<FieldElement> = ({
 
   switch (child.type) {
     case 'AddressInput': {
-      const addressInput = child as AddressInputElement;
+      const addressInput = child;
       return {
         element: 'SnapUIAddressInput',
         props: {
@@ -81,7 +82,7 @@ export const field: UIComponentFactory<FieldElement> = ({
         });
       };
 
-      const input = child as InputElement;
+      const input = child;
 
       const leftAccessoryMapped =
         primaryChildIndex > 0 ? getLeftAccessory() : undefined;
@@ -129,7 +130,7 @@ export const field: UIComponentFactory<FieldElement> = ({
     }
 
     case 'Dropdown': {
-      const dropdown = child as DropdownElement;
+      const dropdown = child;
       const dropdownMapped = dropdownFn({
         element: dropdown,
       } as UIComponentParams<DropdownElement>);
@@ -148,7 +149,7 @@ export const field: UIComponentFactory<FieldElement> = ({
     }
 
     case 'RadioGroup': {
-      const radioGroup = child as RadioGroupElement;
+      const radioGroup = child;
       const radioGroupMapped = radioGroupFn({
         element: radioGroup,
       } as UIComponentParams<RadioGroupElement>);
@@ -167,7 +168,7 @@ export const field: UIComponentFactory<FieldElement> = ({
     }
 
     case 'Checkbox': {
-      const checkbox = child as CheckboxElement;
+      const checkbox = child;
       const checkboxMapped = checkboxFn({
         element: checkbox,
       } as UIComponentParams<CheckboxElement>);
@@ -184,7 +185,7 @@ export const field: UIComponentFactory<FieldElement> = ({
     }
 
     case 'Selector': {
-      const selector = child as SelectorElement;
+      const selector = child;
       const selectorMapped = selectorFn({
         ...params,
         element: selector,
@@ -203,7 +204,7 @@ export const field: UIComponentFactory<FieldElement> = ({
     }
 
     case 'AssetSelector': {
-      const assetSelector = child as AssetSelectorElement;
+      const assetSelector = child;
       const assetSelectorMapped = assetSelectorFn({
         ...params,
         element: assetSelector,

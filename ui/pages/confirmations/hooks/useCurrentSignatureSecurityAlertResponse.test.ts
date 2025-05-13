@@ -1,16 +1,14 @@
 import { TransactionType } from '@metamask/transaction-controller';
 
-import { renderHookWithConfirmContextProvider } from '../../../../test/lib/confirmations/render-helpers';
-import { getMockPersonalSignConfirmStateForRequest } from '../../../../test/data/confirmations/helper';
 import { BlockaidResultType } from '../../../../shared/constants/security-provider';
-import { SecurityAlertResponse } from '../types/confirm';
+import { getMockPersonalSignConfirmStateForRequest } from '../../../../test/data/confirmations/helper';
+import { renderHookWithConfirmContextProvider } from '../../../../test/lib/confirmations/render-helpers';
+import type { SecurityAlertResponse } from '../types/confirm';
 import useCurrentSignatureSecurityAlertResponse from './useCurrentSignatureSecurityAlertResponse';
 
 const mockSecurityAlertResponse: SecurityAlertResponse = {
   securityAlertId: 'test-id-mock',
   reason: 'test-reason',
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   result_type: BlockaidResultType.Malicious,
   features: ['Feature 1', 'Feature 2'],
 };

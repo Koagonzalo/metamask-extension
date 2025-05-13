@@ -64,7 +64,7 @@ const expectedEventPropertiesBase = {
   ui_customizations: ['redesigned_confirmation'],
   // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  requested_through: MetaMetricsRequestedThrough.EthereumProvider,
+  api_source: MetaMetricsRequestedThrough.EthereumProvider,
 } as const;
 
 describe('Signature Approved Event', function () {

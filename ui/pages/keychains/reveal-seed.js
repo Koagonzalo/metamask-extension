@@ -2,12 +2,13 @@ import qrCode from 'qrcode-generator';
 import React, { useContext, useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
-import { getErrorMessage } from '../../../shared/modules/error';
+
 import {
   MetaMetricsEventCategory,
   MetaMetricsEventKeyType,
   MetaMetricsEventName,
 } from '../../../shared/constants/metametrics';
+import { getErrorMessage } from '../../../shared/modules/error';
 import HoldToRevealModal from '../../components/app/modals/hold-to-reveal-modal/hold-to-reveal-modal';
 import {
   BUTTON_SIZES,
@@ -38,8 +39,8 @@ import {
 } from '../../helpers/constants/design-system';
 import ZENDESK_URLS from '../../helpers/constants/zendesk-url';
 import { useI18nContext } from '../../hooks/useI18nContext';
-import { requestRevealSeedWords } from '../../store/actions';
 import { getHDEntropyIndex } from '../../selectors/selectors';
+import { requestRevealSeedWords } from '../../store/actions';
 
 const PASSWORD_PROMPT_SCREEN = 'PASSWORD_PROMPT_SCREEN';
 const REVEAL_SEED_SCREEN = 'REVEAL_SEED_SCREEN';

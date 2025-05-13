@@ -1,18 +1,19 @@
-import { InternalAccount } from '@metamask/keyring-internal-api';
-import { CaipChainId } from '@metamask/utils';
-///: BEGIN:ONLY_INCLUDE_IF(multichain)
-import { DiscoveredAccount, KeyringAccount } from '@metamask/keyring-api';
-import { KeyringInternalSnapClient } from '@metamask/keyring-internal-snap-client';
-import {
+import type { AccountsControllerGetNextAvailableAccountNameAction } from '@metamask/accounts-controller';
+import type { Messenger } from '@metamask/base-controller';
+import type {
   SnapKeyring,
   SnapKeyringInternalOptions,
 } from '@metamask/eth-snap-keyring';
+import type { DiscoveredAccount, KeyringAccount } from '@metamask/keyring-api';
 import { KeyringTypes } from '@metamask/keyring-controller';
-import { Messenger } from '@metamask/base-controller';
-import { SnapId } from '@metamask/snaps-sdk';
-import { HandleSnapRequest as SnapControllerHandleRequest } from '@metamask/snaps-controllers';
-import { AccountsControllerGetNextAvailableAccountNameAction } from '@metamask/accounts-controller';
+import type { InternalAccount } from '@metamask/keyring-internal-api';
+///: BEGIN:ONLY_INCLUDE_IF(multichain)
+import { KeyringInternalSnapClient } from '@metamask/keyring-internal-snap-client';
+import type { HandleSnapRequest as SnapControllerHandleRequest } from '@metamask/snaps-controllers';
+import type { SnapId } from '@metamask/snaps-sdk';
+import type { CaipChainId } from '@metamask/utils';
 import { captureException } from '@sentry/browser';
+
 ///: END:ONLY_INCLUDE_IF
 import { MultichainNetworks } from '../../constants/multichain/networks';
 import { BITCOIN_WALLET_SNAP_ID } from './bitcoin-wallet-snap';
@@ -21,11 +22,7 @@ import { SOLANA_WALLET_SNAP_ID } from './solana-wallet-snap';
 /**
  * Supported non-EVM Snaps.
  */
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
-type SUPPORTED_WALLET_SNAP_ID =
-  | typeof SOLANA_WALLET_SNAP_ID
-  | typeof BITCOIN_WALLET_SNAP_ID;
+type SUPPORTED_WALLET_SNAP_ID = typeof SOLANA_WALLET_SNAP_ID;
 
 /**
  * Get the next available account name based on the suggestion and the list of

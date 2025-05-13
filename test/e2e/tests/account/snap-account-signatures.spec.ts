@@ -1,13 +1,7 @@
-import { Suite } from 'mocha';
-import { Driver } from '../../webdriver/driver';
-import { WINDOW_TITLES, withFixtures } from '../../helpers';
+import type { Suite } from 'mocha';
+
 import FixtureBuilder from '../../fixture-builder';
-import ExperimentalSettings from '../../page-objects/pages/settings/experimental-settings';
-import HeaderNavbar from '../../page-objects/pages/header-navbar';
-import SettingsPage from '../../page-objects/pages/settings/settings-page';
-import SnapSimpleKeyringPage from '../../page-objects/pages/snap-simple-keyring-page';
-import TestDapp from '../../page-objects/pages/test-dapp';
-import { installSnapSimpleKeyring } from '../../page-objects/flows/snap-simple-keyring.flow';
+import { WINDOW_TITLES, withFixtures } from '../../helpers';
 import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
 import {
   personalSignWithSnapAccount,
@@ -16,6 +10,13 @@ import {
   signTypedDataV4WithSnapAccount,
   signTypedDataWithSnapAccount,
 } from '../../page-objects/flows/sign.flow';
+import { installSnapSimpleKeyring } from '../../page-objects/flows/snap-simple-keyring.flow';
+import HeaderNavbar from '../../page-objects/pages/header-navbar';
+import ExperimentalSettings from '../../page-objects/pages/settings/experimental-settings';
+import SettingsPage from '../../page-objects/pages/settings/settings-page';
+import SnapSimpleKeyringPage from '../../page-objects/pages/snap-simple-keyring-page';
+import TestDapp from '../../page-objects/pages/test-dapp';
+import type { Driver } from '../../webdriver/driver';
 
 describe('Snap Account Signatures', function (this: Suite) {
   this.timeout(200000); // This test is very long, so we need an unusually high timeout

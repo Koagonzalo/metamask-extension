@@ -1,4 +1,5 @@
 import { EthAccountType, EthScope } from '@metamask/keyring-api';
+
 import { ETH_EOA_METHODS } from '../../shared/constants/eth-methods';
 import {
   MOCK_ACCOUNTS,
@@ -8,8 +9,8 @@ import {
   MOCK_ACCOUNT_BIP122_P2WPKH_TESTNET,
 } from '../../test/data/mock-accounts';
 import mockState from '../../test/data/mock-state.json';
+import type { AccountsState } from './accounts';
 import {
-  AccountsState,
   isSelectedInternalAccountEth,
   isSelectedInternalAccountBtc,
   hasCreatedBtcMainnetAccount,

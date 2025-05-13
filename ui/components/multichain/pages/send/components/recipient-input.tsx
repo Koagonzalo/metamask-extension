@@ -1,8 +1,13 @@
 import React, { useCallback, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Label } from '../../../../component-library';
-import DomainInput from '../../../../../pages/confirmations/send/send-content/add-recipient/domain-input';
+
+import {
+  MetaMetricsEventCategory,
+  MetaMetricsEventName,
+} from '../../../../../../shared/constants/metametrics';
+import { toChecksumHexAddress } from '../../../../../../shared/modules/hexstring-utils';
 import { I18nContext } from '../../../../../contexts/i18n';
+import { MetaMetricsContext } from '../../../../../contexts/metametrics';
 import {
   addHistoryEntry,
   getIsUsingMyAccountForRecipientSearch,
@@ -12,14 +17,10 @@ import {
   updateRecipient,
   updateRecipientUserInput,
 } from '../../../../../ducks/send';
-import { showQrScanner } from '../../../../../store/actions';
-import { MetaMetricsContext } from '../../../../../contexts/metametrics';
-import {
-  MetaMetricsEventCategory,
-  MetaMetricsEventName,
-} from '../../../../../../shared/constants/metametrics';
 import { shortenAddress } from '../../../../../helpers/utils/util';
-import { toChecksumHexAddress } from '../../../../../../shared/modules/hexstring-utils';
+import DomainInput from '../../../../../pages/confirmations/send/send-content/add-recipient/domain-input';
+import { showQrScanner } from '../../../../../store/actions';
+import { Label } from '../../../../component-library';
 import { SendPageRow } from './send-page-row';
 
 export const SendPageRecipientInput = () => {
@@ -75,8 +76,6 @@ export const SendPageRecipientInput = () => {
       category: MetaMetricsEventCategory.Transactions,
       properties: {
         action: 'Edit Screen',
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         legacy_event: true,
       },
     });

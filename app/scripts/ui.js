@@ -12,33 +12,29 @@ import '../../development/wdyr';
 // dev only, "react-devtools" import is skipped in prod builds
 import 'react-devtools';
 
+import { createIdRemapMiddleware } from '@metamask/json-rpc-engine';
+import { StreamProvider } from '@metamask/providers';
 import PortStream from 'extension-port-stream';
+import log from 'loglevel';
 import browser from 'webextension-polyfill';
 
-import { StreamProvider } from '@metamask/providers';
-import { createIdRemapMiddleware } from '@metamask/json-rpc-engine';
-import log from 'loglevel';
 // TODO: Remove restricted import
 // eslint-disable-next-line import/no-restricted-paths
-import launchMetaMaskUi, { updateBackgroundConnection } from '../../ui';
 import {
   ENVIRONMENT_TYPE_FULLSCREEN,
   ENVIRONMENT_TYPE_POPUP,
   PLATFORM_FIREFOX,
 } from '../../shared/constants/app';
-import { isManifestV3 } from '../../shared/modules/mv3.utils';
-import { checkForLastErrorAndLog } from '../../shared/modules/browser-runtime.utils';
-import { SUPPORT_LINK } from '../../shared/lib/ui-utils';
 import { getErrorHtml } from '../../shared/lib/error-utils';
 import { endTrace, trace, TraceName } from '../../shared/lib/trace';
-import {
-  METHOD_DISPLAY_STATE_CORRUPTION_ERROR,
-  displayStateCorruptionError,
-} from './lib/state-corruption-errors';
-import ExtensionPlatform from './platforms/extension';
+import { SUPPORT_LINK } from '../../shared/lib/ui-utils';
+import { checkForLastErrorAndLog } from '../../shared/modules/browser-runtime.utils';
+import { isManifestV3 } from '../../shared/modules/mv3.utils';
+import launchMetaMaskUi, { updateBackgroundConnection } from '../../ui';
+import metaRPCClientFactory from './lib/metaRPCClientFactory';
 import { setupMultiplex } from './lib/stream-utils';
 import { getEnvironmentType, getPlatform } from './lib/util';
-import metaRPCClientFactory from './lib/metaRPCClientFactory';
+import ExtensionPlatform from './platforms/extension';
 
 const PHISHING_WARNING_PAGE_TIMEOUT = 1 * 1000; // 1 Second
 const PHISHING_WARNING_SW_STORAGE_KEY = 'phishing-warning-sw-registered';
@@ -102,18 +98,10 @@ async function start() {
   const messageListener = async (message) => {
     const method = message?.data?.method;
 
-    switch (method) {
-      case METHOD_START_UI_SYNC:
-        await handleStartUISync();
-        break;
-      case METHOD_DISPLAY_STATE_CORRUPTION_ERROR:
-        handleDisplayStateCorruptionError(message.data.params);
-        break;
-      default:
+    if (method !== METHOD_START_UI_SYNC) {
+      return;
     }
-  };
 
-  async function handleStartUISync() {
     endTrace({ name: TraceName.BackgroundConnect });
 
     if (isManifestV3 && isUIInitialised) {
@@ -134,20 +122,7 @@ async function start() {
     } else {
       extensionPort.onMessage.removeListener(messageListener);
     }
-  }
-
-  /**
-   * @typedef {import('./lib/state-corruption-errors').ErrorLike} ErrorLike
-   */
-
-  /**
-   * Updates the DOM with the state corruption error UI.
-   *
-   * @param {{ error: ErrorLike, currentLocale?: string }} params
-   */
-  function handleDisplayStateCorruptionError({ error, currentLocale }) {
-    displayStateCorruptionError(container, error, currentLocale);
-  }
+  };
 
   if (isManifestV3) {
     // resetExtensionStreamAndListeners takes care to remove listeners from closed streams

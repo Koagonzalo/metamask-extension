@@ -1,15 +1,14 @@
-import {
+import type {
   AccountsControllerAccountAddedEvent,
   AccountsControllerListAccountsAction,
 } from '@metamask/accounts-controller';
-import { Messenger } from '@metamask/base-controller';
-import { TransactionControllerTransactionConfirmedEvent } from '@metamask/transaction-controller';
-import {
+import type { Messenger } from '@metamask/base-controller';
+import type {
   KeyringControllerUnlockEvent,
   KeyringControllerLockEvent,
 } from '@metamask/keyring-controller';
-
-import { RemoteFeatureFlagControllerGetStateAction } from '@metamask/remote-feature-flag-controller';
+import type { RemoteFeatureFlagControllerGetStateAction } from '@metamask/remote-feature-flag-controller';
+import type { TransactionControllerTransactionConfirmedEvent } from '@metamask/transaction-controller';
 
 export type DefiPositionsControllerMessenger = ReturnType<
   typeof getDeFiPositionsControllerMessenger

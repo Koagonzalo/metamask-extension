@@ -1,8 +1,9 @@
 import { strict as assert } from 'assert';
+
+import FixtureBuilder from '../fixture-builder';
 import { withFixtures } from '../helpers';
 import { loginWithBalanceValidation } from '../page-objects/flows/login.flow';
-import FixtureBuilder from '../fixture-builder';
-import { Driver } from '../webdriver/driver';
+import type { Driver } from '../webdriver/driver';
 
 describe('eth_gasPrice', function () {
   it('executes gas price json rpc call', async function () {

@@ -1,6 +1,7 @@
 import events from 'events';
 import { WebSocketServer } from 'ws';
-import {
+
+import type {
   MessageType,
   ServerMochaEventEmitterType,
   WindowProperties,
@@ -11,11 +12,11 @@ import {
  * It's used to communicate from the Mocha/Selenium test to the Extension background script (service worker in MV3).
  */
 class ServerMochaToBackground {
-  private server: WebSocketServer;
+  private readonly server: WebSocketServer;
 
   private ws: WebSocket | null = null;
 
-  private eventEmitter;
+  private readonly eventEmitter;
 
   constructor() {
     this.server = new WebSocketServer({ port: 8111 });

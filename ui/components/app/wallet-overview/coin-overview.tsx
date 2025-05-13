@@ -1,3 +1,7 @@
+import { getNativeTokenAddress } from '@metamask/assets-controllers';
+import type { InternalAccount } from '@metamask/keyring-internal-api';
+import type { Hex, CaipChainId } from '@metamask/utils';
+import classnames from 'classnames';
 import React, {
   useContext,
   useState,
@@ -6,23 +10,17 @@ import React, {
   ///: END:ONLY_INCLUDE_IF
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import classnames from 'classnames';
-import { CaipChainId } from '@metamask/utils';
-import type { Hex } from '@metamask/utils';
 
-import { InternalAccount } from '@metamask/keyring-internal-api';
-import { getNativeTokenAddress } from '@metamask/assets-controllers';
+///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
 import {
-  Box,
-  ButtonIcon,
-  ButtonIconSize,
-  ButtonLink,
-  ButtonLinkSize,
-  IconName,
-  Popover,
-  PopoverPosition,
-  Text,
-} from '../../component-library';
+  MetaMetricsEventCategory,
+  MetaMetricsEventName,
+} from '../../../../shared/constants/metametrics';
+///: END:ONLY_INCLUDE_IF
+
+import { I18nContext } from '../../../contexts/i18n';
+import { MetaMetricsContext } from '../../../contexts/metametrics';
+import { PRIMARY } from '../../../helpers/constants/common';
 import {
   AlignItems,
   Display,
@@ -31,19 +29,14 @@ import {
   TextVariant,
   IconColor,
 } from '../../../helpers/constants/design-system';
-///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
 import { getPortfolioUrl } from '../../../helpers/utils/portfolio';
-import { MetaMetricsContext } from '../../../contexts/metametrics';
-import {
-  MetaMetricsEventCategory,
-  MetaMetricsEventName,
-} from '../../../../shared/constants/metametrics';
-///: END:ONLY_INCLUDE_IF
+import { getSpecificSettingsRoute } from '../../../helpers/utils/settings-search';
+import { useI18nContext } from '../../../hooks/useI18nContext';
+import { useAccountTotalCrossChainFiatBalance } from '../../../hooks/useAccountTotalCrossChainFiatBalance';
 
-import { I18nContext } from '../../../contexts/i18n';
-import Tooltip from '../../ui/tooltip';
-import UserPreferencedCurrencyDisplay from '../user-preferenced-currency-display';
-import { PRIMARY } from '../../../helpers/constants/common';
+import { useGetFormattedTokensPerChain } from '../../../hooks/useGetFormattedTokensPerChain';
+import { useMultichainSelector } from '../../../hooks/useMultichainSelector';
+import { useTheme } from '../../../hooks/useTheme';
 import {
   getPreferences,
   getShouldHideZeroBalanceTokens,
@@ -56,12 +49,9 @@ import {
   getDataCollectionForMarketing,
   getMetaMetricsId,
   getParticipateInMetaMetrics,
-  SwapsEthToken,
   ///: END:ONLY_INCLUDE_IF
 } from '../../../selectors';
-import Spinner from '../../ui/spinner';
-
-import { PercentageAndAmountChange } from '../../multichain/token-list-item/price/percentage-and-amount-change/percentage-and-amount-change';
+import type { SwapsEthToken } from '../../../selectors';
 import {
   getMultichainIsEvm,
   getMultichainShouldShowFiat,
@@ -70,18 +60,26 @@ import {
   setAggregatedBalancePopoverShown,
   setPrivacyMode,
 } from '../../../store/actions';
-import { useTheme } from '../../../hooks/useTheme';
-import { getSpecificSettingsRoute } from '../../../helpers/utils/settings-search';
-import { useI18nContext } from '../../../hooks/useI18nContext';
-import { useAccountTotalCrossChainFiatBalance } from '../../../hooks/useAccountTotalCrossChainFiatBalance';
-
-import { useGetFormattedTokensPerChain } from '../../../hooks/useGetFormattedTokensPerChain';
-import { useMultichainSelector } from '../../../hooks/useMultichainSelector';
+import {
+  Box,
+  ButtonIcon,
+  ButtonIconSize,
+  ButtonLink,
+  ButtonLinkSize,
+  IconName,
+  Popover,
+  PopoverPosition,
+  Text,
+} from '../../component-library';
+import { PercentageAndAmountChange } from '../../multichain/token-list-item/price/percentage-and-amount-change/percentage-and-amount-change';
 import { AggregatedBalance } from '../../ui/aggregated-balance/aggregated-balance';
-import WalletOverview from './wallet-overview';
-import CoinButtons from './coin-buttons';
+import Spinner from '../../ui/spinner';
+import Tooltip from '../../ui/tooltip';
+import UserPreferencedCurrencyDisplay from '../user-preferenced-currency-display';
 import { AggregatedPercentageOverview } from './aggregated-percentage-overview';
 import { AggregatedPercentageOverviewCrossChains } from './aggregated-percentage-overview-cross-chains';
+import CoinButtons from './coin-buttons';
+import WalletOverview from './wallet-overview';
 
 export type CoinOverviewProps = {
   account: InternalAccount;
@@ -119,7 +117,7 @@ export const LegacyAggregatedBalance = ({
   const shouldHideZeroBalanceTokens = useSelector(
     getShouldHideZeroBalanceTokens,
   );
-  const allChainIDs = useSelector(getChainIdsToPoll) as string[];
+  const allChainIDs = useSelector(getChainIdsToPoll);
   const shouldShowFiat = useMultichainSelector(
     getMultichainShouldShowFiat,
     account,

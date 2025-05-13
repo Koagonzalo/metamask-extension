@@ -1,5 +1,5 @@
-import { SnapControllerState } from '@metamask/snaps-controllers';
-import { Snap } from '@metamask/snaps-utils';
+import type { SnapControllerState } from '@metamask/snaps-controllers';
+import type { Snap } from '@metamask/snaps-utils';
 
 // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,10 +26,13 @@ function sanitizeSnapData(state: FlattenedUIState) {
     return;
   }
 
-  state.snaps = Object.values(snapsData).reduce((acc, snap) => {
-    acc[snap.id] = stripLargeSnapData(snap) as Snap;
-    return acc;
-  }, {} as SnapControllerState['snaps']);
+  state.snaps = Object.values(snapsData).reduce<SnapControllerState['snaps']>(
+    (acc, snap) => {
+      acc[snap.id] = stripLargeSnapData(snap) as Snap;
+      return acc;
+    },
+    {},
+  );
 }
 
 function stripLargeSnapData(snapData: Snap): Partial<Snap> {

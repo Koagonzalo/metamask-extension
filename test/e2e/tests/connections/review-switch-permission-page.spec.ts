@@ -1,12 +1,13 @@
 import { strict as assert } from 'assert';
+
+import { DEFAULT_FIXTURE_ACCOUNT } from '../../constants';
 import FixtureBuilder from '../../fixture-builder';
 import { withFixtures, WINDOW_TITLES } from '../../helpers';
-import { DEFAULT_FIXTURE_ACCOUNT } from '../../constants';
-import HomePage from '../../page-objects/pages/home/homepage';
-import ReviewPermissionsConfirmation from '../../page-objects/pages/confirmations/redesign/review-permissions-confirmation';
-import TestDapp from '../../page-objects/pages/test-dapp';
 import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
 import { switchToNetworkFlow } from '../../page-objects/flows/network.flow';
+import ReviewPermissionsConfirmation from '../../page-objects/pages/confirmations/redesign/review-permissions-confirmation';
+import HomePage from '../../page-objects/pages/home/homepage';
+import TestDapp from '../../page-objects/pages/test-dapp';
 
 describe('Permissions Page when Dapp Switch to an enabled and non permissioned network', function () {
   it('should switch to the chain when dapp tries to switch network to an enabled network after showing updated permissions page', async function () {

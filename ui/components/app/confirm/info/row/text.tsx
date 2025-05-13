@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+
 import { I18nContext } from '../../../../../contexts/i18n';
 import {
   AlignItems,
@@ -55,8 +56,6 @@ export const ConfirmInfoRowText: React.FC<ConfirmInfoRowTextProps> = ({
     >
       {isEditable ? (
         <ButtonIcon
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-          // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
           className={editIconClassName || undefined}
           color={IconColor.primaryDefault}
           ariaLabel={t('edit')}

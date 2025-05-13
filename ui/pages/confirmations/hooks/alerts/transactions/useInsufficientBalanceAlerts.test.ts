@@ -1,12 +1,13 @@
 import { ApprovalType } from '@metamask/controller-utils';
-import {
+import type {
   TransactionMeta,
   TransactionParams,
-  TransactionType,
 } from '@metamask/transaction-controller';
-import { createMockInternalAccount } from '../../../../../../test/jest/mocks';
-import { getMockConfirmState } from '../../../../../../test/data/confirmations/helper';
+import { TransactionType } from '@metamask/transaction-controller';
+
 import { genUnapprovedContractInteractionConfirmation } from '../../../../../../test/data/confirmations/contract-interaction';
+import { getMockConfirmState } from '../../../../../../test/data/confirmations/helper';
+import { createMockInternalAccount } from '../../../../../../test/jest/mocks';
 import { renderHookWithConfirmContextProvider } from '../../../../../../test/lib/confirmations/render-helpers';
 import { useInsufficientBalanceAlerts } from './useInsufficientBalanceAlerts';
 

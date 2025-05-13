@@ -1,4 +1,4 @@
-import { MockttpServer } from 'mockttp';
+import type { MockttpServer } from 'mockttp';
 
 const CONTRACT_ADDRESS = {
   BalanceCheckerEthereumMainnet: '0xb1f8e55c7f64d203c1400b9d8555d050f94adf39',

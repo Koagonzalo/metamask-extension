@@ -1,10 +1,10 @@
-import { withFixtures, WINDOW_TITLES } from '../../helpers';
 import FixtureBuilder from '../../fixture-builder';
-import { SMART_CONTRACTS } from '../../seeder/smart-contracts';
+import { withFixtures, WINDOW_TITLES } from '../../helpers';
+import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
 import AddTokenConfirmation from '../../page-objects/pages/confirmations/redesign/add-token-confirmations';
 import AssetListPage from '../../page-objects/pages/home/asset-list';
 import TestDapp from '../../page-objects/pages/test-dapp';
-import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
+import { SMART_CONTRACTS } from '../../seeder/smart-contracts';
 
 describe('Add token using wallet_watchAsset', function () {
   const smartContract = SMART_CONTRACTS.HST;

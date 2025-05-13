@@ -1,7 +1,8 @@
 import { ApprovalType } from '@metamask/controller-utils';
+
 import { MESSAGE_TYPE } from '../../../../shared/constants/app';
-import mockMetaMaskState from '../../data/integration-init-state.json';
 import { CHAIN_IDS } from '../../../../shared/constants/network';
+import mockMetaMaskState from '../../data/integration-init-state.json';
 
 const PERMIT_DATA = `{"types":{"EIP712Domain":[{"name":"name","type":"string"},{"name":"version","type":"string"},{"name":"chainId","type":"uint256"},{"name":"verifyingContract","type":"address"}],"Permit":[{"name":"owner","type":"address"},{"name":"spender","type":"address"},{"name":"value","type":"uint256"},{"name":"nonce","type":"uint256"},{"name":"deadline","type":"uint256"}]},"primaryType":"Permit","domain":{"name":"MyToken","version":"1","verifyingContract":"0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC","chainId":1},"message":{"owner":"{ownerAddress}","spender":"0x5B38Da6a701c568545dCfcB03FcB875f56beddC4","value":3000,"nonce":0,"deadline":50000000000}}`;
 
@@ -138,8 +139,6 @@ export const getMetamaskStateWithMaliciousPermit = (accountAddress: string) => {
       ...state.unapprovedTypedMessages[pendingPermitId],
       securityAlertResponse: {
         block: 7596565,
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         result_type: 'Malicious',
         reason: 'permit_farming',
         description:
@@ -160,8 +159,6 @@ export const getMetamaskStateWithMaliciousPermit = (accountAddress: string) => {
     signatureSecurityAlertResponses: {
       'ba944b14-aa65-45b5-ae92-f305cdba64c1': {
         block: 7596565,
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         result_type: 'Malicious',
         reason: 'permit_farming',
         description:

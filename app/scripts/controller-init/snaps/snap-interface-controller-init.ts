@@ -1,6 +1,7 @@
 import { SnapInterfaceController } from '@metamask/snaps-controllers';
-import { ControllerInitFunction } from '../types';
-import { SnapInterfaceControllerMessenger } from '../messengers/snaps';
+
+import type { SnapInterfaceControllerMessenger } from '../messengers/snaps';
+import type { ControllerInitFunction } from '../types';
 
 /**
  * Initialize the Snap interface controller.

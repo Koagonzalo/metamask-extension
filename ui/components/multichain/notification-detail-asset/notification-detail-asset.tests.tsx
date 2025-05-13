@@ -1,9 +1,8 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
-import {
-  NotificationDetailAsset,
-  NotificationDetailAssetProps,
-} from './notification-detail-asset';
+import React from 'react';
+
+import type { NotificationDetailAssetProps } from './notification-detail-asset';
+import { NotificationDetailAsset } from './notification-detail-asset';
 
 describe('NotificationDetailAsset', () => {
   const defaultProps: NotificationDetailAssetProps = {

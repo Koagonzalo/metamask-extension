@@ -1,12 +1,15 @@
 import {
-  invalidParams,
-  RequestedPermissions,
-} from '@metamask/permission-controller';
-import {
   Caip25CaveatType,
   Caip25EndowmentPermissionName,
 } from '@metamask/chain-agnostic-permission';
-import { Json, JsonRpcRequest, PendingJsonRpcResponse } from '@metamask/utils';
+import type { RequestedPermissions } from '@metamask/permission-controller';
+import { invalidParams } from '@metamask/permission-controller';
+import type {
+  Json,
+  JsonRpcRequest,
+  PendingJsonRpcResponse,
+} from '@metamask/utils';
+
 import {
   CaveatTypes,
   RestrictedMethods,
@@ -22,8 +25,6 @@ const getBaseRequest = (overrides = {}) => ({
   origin: 'http://test.com',
   params: [
     {
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       eth_accounts: {},
     },
   ],
@@ -41,11 +42,11 @@ const createMockedHandler = () => {
     .fn()
     .mockReturnValue({});
 
-  const response: PendingJsonRpcResponse<Json> = {
+  const response: PendingJsonRpcResponse = {
     jsonrpc: '2.0' as const,
     id: 0,
   };
-  const handler = (request: unknown) =>
+  const handler = async (request: unknown) =>
     requestPermissionsHandler.implementation(
       request as JsonRpcRequest<[RequestedPermissions]> & { origin: string },
       response,
@@ -480,8 +481,6 @@ describe('requestPermissionsHandler', () => {
           getBaseRequest({
             params: [
               {
-                // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                // eslint-disable-next-line @typescript-eslint/naming-convention
                 eth_accounts: {},
                 'endowment:permitted-chains': {},
                 otherPermissionA: {},
@@ -527,8 +526,6 @@ describe('requestPermissionsHandler', () => {
             getBaseRequest({
               params: [
                 {
-                  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-                  // eslint-disable-next-line @typescript-eslint/naming-convention
                   eth_accounts: {},
                   'endowment:permitted-chains': {},
                   otherPermissionA: {},

@@ -1,12 +1,10 @@
-// PersistenceManager.test.ts
-// node is missing the navigator.locks API so we polyfill it for the tests
-import 'navigator.locks';
+// PersistanceManager.test.ts
 import { captureException } from '@sentry/browser';
 import log from 'loglevel';
 
-import { PersistenceManager } from './persistence-manager';
+import type { MetaMaskStateType } from './base-store';
 import ExtensionStore from './extension-store';
-import { MetaMaskStateType } from './base-store';
+import { PersistenceManager } from './persistence-manager';
 
 const MOCK_DATA = { config: { foo: 'bar' } };
 

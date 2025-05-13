@@ -1,26 +1,27 @@
-import { Mockttp } from 'mockttp';
-import { unlockWallet, withFixtures } from '../../../helpers';
-import FixtureBuilder from '../../../fixture-builder';
-import { mockInfuraAndAccountSync, mockNftApiCall } from '../mocks';
-import {
-  IDENTITY_TEAM_PASSWORD,
-  IDENTITY_TEAM_SEED_PHRASE,
-} from '../constants';
+import type { Mockttp } from 'mockttp';
+
 import { ACCOUNT_TYPE } from '../../../constants';
+import FixtureBuilder from '../../../fixture-builder';
+import { unlockWallet, withFixtures } from '../../../helpers';
 import {
   UserStorageMockttpController,
   UserStorageMockttpControllerEvents,
 } from '../../../helpers/identity/user-storage/userStorageMockttpController';
-import HeaderNavbar from '../../../page-objects/pages/header-navbar';
-import AccountDetailsModal from '../../../page-objects/pages/dialog/account-details-modal';
-import AccountListPage from '../../../page-objects/pages/account-list-page';
-import HomePage from '../../../page-objects/pages/home/homepage';
 import { completeImportSRPOnboardingFlow } from '../../../page-objects/flows/onboarding.flow';
+import AccountListPage from '../../../page-objects/pages/account-list-page';
+import AccountDetailsModal from '../../../page-objects/pages/dialog/account-details-modal';
+import HeaderNavbar from '../../../page-objects/pages/header-navbar';
+import HomePage from '../../../page-objects/pages/home/homepage';
+import {
+  IDENTITY_TEAM_PASSWORD,
+  IDENTITY_TEAM_SEED_PHRASE,
+} from '../constants';
+import { mockInfuraAndAccountSync } from '../mocks';
+import { arrangeTestUtils } from './helpers';
 import {
   accountsToMockForAccountsSync,
   getAccountsSyncMockResponse,
 } from './mock-data';
-import { arrangeTestUtils } from './helpers';
 
 describe('Account syncing - User already has balances on multiple accounts', function () {
   this.timeout(160000); // This test is very long, so we need an unusually high timeout
@@ -126,10 +127,7 @@ describe('Account syncing - User already has balances on multiple accounts', fun
 
           const accountListPage = new AccountListPage(driver);
           await accountListPage.check_pageIsLoaded();
-          await accountListPage.check_numberOfAvailableAccounts(
-            4,
-            ACCOUNT_TYPE.Ethereum,
-          );
+          await accountListPage.check_numberOfAvailableAccounts(4);
 
           // Verify each initial account name
           for (const accountName of EXPECTED_ACCOUNT_NAMES.INITIAL) {
@@ -165,17 +163,11 @@ describe('Account syncing - User already has balances on multiple accounts', fun
             .build(),
           title: this.test?.fullTitle(),
           testSpecificMock: async (server: Mockttp) => {
-            return [
-              await mockInfuraAndAccountSync(
-                server,
-                userStorageMockttpController,
-                { accountsToMockBalances },
-              ),
-              await mockNftApiCall(
-                server,
-                '0x0f205850eac507473aa0e47cc8eb528d875e7498',
-              ),
-            ];
+            await mockInfuraAndAccountSync(
+              server,
+              userStorageMockttpController,
+              { accountsToMockBalances },
+            );
           },
         },
         async ({ driver }) => {
@@ -198,10 +190,7 @@ describe('Account syncing - User already has balances on multiple accounts', fun
 
           const accountListPage = new AccountListPage(driver);
           await accountListPage.check_pageIsLoaded();
-          await accountListPage.check_numberOfAvailableAccounts(
-            6,
-            ACCOUNT_TYPE.Ethereum,
-          );
+          await accountListPage.check_numberOfAvailableAccounts(6);
 
           for (const accountName of EXPECTED_ACCOUNT_NAMES.WITH_NEW_ACCOUNTS) {
             await accountListPage.check_accountDisplayedInAccountList(
@@ -270,10 +259,7 @@ describe('Account syncing - User already has balances on multiple accounts', fun
 
           const accountListPage = new AccountListPage(driver);
           await accountListPage.check_pageIsLoaded();
-          await accountListPage.check_numberOfAvailableAccounts(
-            6,
-            ACCOUNT_TYPE.Ethereum,
-          );
+          await accountListPage.check_numberOfAvailableAccounts(6);
           await accountListPage.check_accountDisplayedInAccountList(
             'My Renamed Account 6',
           );
@@ -289,10 +275,7 @@ describe('Account syncing - User already has balances on multiple accounts', fun
 
           await header.check_pageIsLoaded();
           await header.openAccountMenu();
-          await accountListPage.check_numberOfAvailableAccounts(
-            6,
-            ACCOUNT_TYPE.Ethereum,
-          );
+          await accountListPage.check_numberOfAvailableAccounts(6);
         },
       );
     });

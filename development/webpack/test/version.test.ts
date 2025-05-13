@@ -1,5 +1,6 @@
-import { describe, it, before } from 'node:test';
 import assert from 'node:assert';
+import { describe, it, before } from 'node:test';
+
 import { getExtensionVersion } from '../utils/version';
 
 describe('getMetaMaskVersion', () => {

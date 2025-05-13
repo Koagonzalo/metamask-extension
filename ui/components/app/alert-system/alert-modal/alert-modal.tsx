@@ -1,10 +1,11 @@
 import { ButtonVariant } from '@metamask/snaps-sdk';
 import React, { useCallback, useEffect } from 'react';
+
 import {
   BlockaidReason,
   SecurityProvider,
 } from '../../../../../shared/constants/security-provider';
-import { Alert } from '../../../../ducks/confirm-alerts/confirm-alerts';
+import type { Alert } from '../../../../ducks/confirm-alerts/confirm-alerts';
 import {
   AlignItems,
   BackgroundColor,
@@ -104,8 +105,6 @@ function getSeverityStyle(severity?: Severity) {
   }
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function AlertHeader({
   selectedAlert,
   customTitle,
@@ -140,8 +139,6 @@ function AlertHeader({
   );
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function BlockaidAlertDetails() {
   const t = useI18nContext();
   const { currentConfirmation } = useConfirmContext();
@@ -181,8 +178,6 @@ function BlockaidAlertDetails() {
   );
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function AlertDetails({
   selectedAlert,
   customDetails,
@@ -230,8 +225,6 @@ function AlertDetails({
   );
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export function AcknowledgeCheckboxBase({
   selectedAlert,
   onCheckboxClick,
@@ -243,8 +236,6 @@ export function AcknowledgeCheckboxBase({
   isConfirmed: boolean;
   label?: string;
 }) {
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   if (selectedAlert.isBlocking || selectedAlert.severity !== Severity.Danger) {
     return null;
   }
@@ -272,8 +263,6 @@ export function AcknowledgeCheckboxBase({
   );
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function AcknowledgeButton({
   onAcknowledgeClick,
   isConfirmed,
@@ -301,8 +290,6 @@ function AcknowledgeButton({
   );
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function ActionButton({
   action,
   onClose,
@@ -346,8 +333,6 @@ function ActionButton({
   );
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export function AlertModal({
   ownerId,
   onAcknowledgeClick,

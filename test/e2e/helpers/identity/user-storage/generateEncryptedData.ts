@@ -1,10 +1,11 @@
+import type { UserStoragePathWithFeatureAndKey } from '@metamask/profile-sync-controller/sdk';
 import {
   Encryption,
-  UserStoragePathWithFeatureAndKey,
   createSHA256Hash,
   getFeatureAndKeyFromPath,
 } from '@metamask/profile-sync-controller/sdk';
-import { UserStorageResponseData } from './userStorageMockttpController';
+
+import type { UserStorageResponseData } from './userStorageMockttpController';
 
 /**
  * Encrypts the given data object using the specified storage key.

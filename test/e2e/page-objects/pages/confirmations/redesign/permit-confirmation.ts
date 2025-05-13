@@ -1,6 +1,7 @@
 import { strict as assert } from 'assert';
-import { Driver } from '../../../../webdriver/driver';
+
 import { DAPP_HOST_ADDRESS } from '../../../../constants';
+import type { Driver } from '../../../../webdriver/driver';
 import Confirmation from './confirmation';
 
 export default class PermitConfirmation extends Confirmation {
@@ -10,45 +11,51 @@ export default class PermitConfirmation extends Confirmation {
     this.driver = driver;
   }
 
-  private originSelector = { text: DAPP_HOST_ADDRESS };
+  private readonly originSelector = { text: DAPP_HOST_ADDRESS };
 
-  private contractPetNameSelector = {
+  private readonly contractPetNameSelector = {
     css: '.name__value',
     text: '0xCcCCc...ccccC',
   };
 
-  private primaryTypeSelector = { text: 'Permit' };
+  private readonly primaryTypeSelector = { text: 'Permit' };
 
-  private ownerSelector = { css: '.name__name', text: 'Account 1' };
+  private readonly ownerSelector = { css: '.name__name', text: 'Account 1' };
 
-  private spenderSelector = { css: '.name__value', text: '0x5B38D...eddC4' };
+  private readonly spenderSelector = {
+    css: '.name__value',
+    text: '0x5B38D...eddC4',
+  };
 
-  private valueSelector = { text: '3,000' };
+  private readonly valueSelector = { text: '3,000' };
 
-  private nonceSelector = { text: '0' };
+  private readonly nonceSelector = { text: '0' };
 
-  private deadlineSelector = { text: '09 June 3554, 16:53' };
+  private readonly deadlineSelector = { text: '09 June 3554, 16:53' };
 
-  private nftContractPetNameSelector = {
+  private readonly nftContractPetNameSelector = {
     css: '.name__value',
     text: '0x581c3...45947',
   };
 
-  private nftTitle = { text: 'Withdrawal request' };
+  private readonly nftTitle = { text: 'Withdrawal request' };
 
-  private nftDescription = {
+  private readonly nftDescription = {
     text: 'This site wants permission to withdraw your NFTs',
   };
 
-  private nftPrimaryType = { text: 'Permit' };
+  private readonly nftPrimaryType = { text: 'Permit' };
 
-  private nftSpender = { css: '.name__value', text: '0x581c3...45947' };
+  private readonly nftSpender = {
+    css: '.name__value',
+    text: '0x581c3...45947',
+  };
 
-  private nftTokenId = { text: '3606393' };
+  private readonly nftTokenId = { text: '3606393' };
 
-  private nftNonce = { text: '0' };
+  private readonly nftNonce = { text: '0' };
 
-  private nftDeadline = { text: '23 December 2024, 23:03' };
+  private readonly nftDeadline = { text: '23 December 2024, 23:03' };
 
   async verifyOrigin() {
     const origin = await this.driver.findElement(this.originSelector);

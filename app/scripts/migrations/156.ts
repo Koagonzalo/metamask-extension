@@ -1,5 +1,6 @@
-import { Nft } from '@metamask/assets-controllers';
-import { getErrorMessage, hasProperty, Hex, isObject } from '@metamask/utils';
+import type { Nft } from '@metamask/assets-controllers';
+import type { Hex } from '@metamask/utils';
+import { getErrorMessage, hasProperty, isObject } from '@metamask/utils';
 import { cloneDeep } from 'lodash';
 
 export const version = 156;

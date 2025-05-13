@@ -1,17 +1,13 @@
-/* eslint-disable */
-// This file is a Playwright test, which differs significantly from our regular e2e tests.
-// The structure of this test includes nested tests and multiple global tests, which violate our linting rules.
-
-import { ethers } from 'ethers';
 import { test, expect } from '@playwright/test';
+import { ethers } from 'ethers';
 import log from 'loglevel';
 
-import { ChromeExtensionPage } from '../../shared/pageObjects/extension-page';
-import { SignUpPage } from '../../shared/pageObjects/signup-page';
-import { NetworkController } from '../../shared/pageObjects/network-controller-page';
-import { SwapPage } from '../pageObjects/swap-page';
-import { WalletPage } from '../../shared/pageObjects/wallet-page';
 import { ActivityListPage } from '../../shared/pageObjects/activity-list-page';
+import { ChromeExtensionPage } from '../../shared/pageObjects/extension-page';
+import { NetworkController } from '../../shared/pageObjects/network-controller-page';
+import { SignUpPage } from '../../shared/pageObjects/signup-page';
+import { WalletPage } from '../../shared/pageObjects/wallet-page';
+import { SwapPage } from '../pageObjects/swap-page';
 import { Tenderly, addFundsToAccount } from '../tenderly-network';
 
 let swapPage: SwapPage;

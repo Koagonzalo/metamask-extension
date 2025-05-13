@@ -1,4 +1,4 @@
-import { SnapId } from '@metamask/snaps-sdk';
+import type { SnapId } from '@metamask/snaps-sdk';
 
 export const PREINSTALLED_SNAPS = [
   'npm:@metamask/message-signing-snap',

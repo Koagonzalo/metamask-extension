@@ -1,5 +1,6 @@
-import { AvatarElement } from '@metamask/snaps-sdk/jsx';
-import { UIComponentFactory } from './types';
+import type { AvatarElement } from '@metamask/snaps-sdk/jsx';
+
+import type { UIComponentFactory } from './types';
 
 export const avatar: UIComponentFactory<AvatarElement> = ({ element }) => ({
   element: 'SnapUIAvatar',

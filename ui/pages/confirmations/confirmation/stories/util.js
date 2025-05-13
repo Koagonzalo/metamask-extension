@@ -1,10 +1,11 @@
+import { NetworkStatus } from '@metamask/network-controller';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { NetworkStatus } from '@metamask/network-controller';
-import configureStore from '../../../../store/store';
+
 import testData from '../../../../../.storybook/test-data';
-import { Box } from '../../../../components/component-library';
 import { mockNetworkState } from '../../../../../test/stub/networks';
+import { Box } from '../../../../components/component-library';
+import configureStore from '../../../../store/store';
 
 const STORE_MOCK = {
   ...testData,
@@ -79,29 +80,13 @@ export function PendingApproval({ children, requestData, state, type }) {
     <Provider store={configureStore(mockState)}>
       <Box
         style={{
-          display: 'flex',
-          flexDirection: 'column',
           height: '592px',
           width: '360px',
+          border: '1px solid lightgrey',
           margin: '0 auto',
         }}
       >
-        <Box
-          style={{
-            display: 'flex',
-            height: '100%',
-            flexDirection: 'column',
-          }}
-        >
-          <Box
-            style={{
-              flex: '1 1 auto',
-              display: 'flex',
-            }}
-          >
-            {children}
-          </Box>
-        </Box>
+        {children}
       </Box>
     </Provider>
   );

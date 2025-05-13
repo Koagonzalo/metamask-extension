@@ -1,23 +1,25 @@
-import { TransactionMeta } from '@metamask/transaction-controller';
-import React, { Dispatch, SetStateAction } from 'react';
+import type { TransactionMeta } from '@metamask/transaction-controller';
+import type { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
+
+import { ConfirmInfoAlertRow } from '../../../../../../../components/app/confirm/info/row/alert-row/alert-row';
+import { RowAlertKey } from '../../../../../../../components/app/confirm/info/row/constants';
 import { Box } from '../../../../../../../components/component-library';
 import {
   AlignItems,
   Display,
 } from '../../../../../../../helpers/constants/design-system';
 import { useI18nContext } from '../../../../../../../hooks/useI18nContext';
-import { selectConfirmationAdvancedDetailsOpen } from '../../../../../selectors/preferences';
 import { useConfirmContext } from '../../../../../context/confirm';
+import { useAutomaticGasFeeTokenSelect } from '../../../../../hooks/useAutomaticGasFeeTokenSelect';
+import { selectConfirmationAdvancedDetailsOpen } from '../../../../../selectors/preferences';
 import GasTiming from '../../../../gas-timing/gas-timing.component';
 import { useEIP1559TxFees } from '../../hooks/useEIP1559TxFees';
 import { useFeeCalculations } from '../../hooks/useFeeCalculations';
 import { useSupportsEIP1559 } from '../../hooks/useSupportsEIP1559';
 import { EditGasFeesRow } from '../edit-gas-fees-row/edit-gas-fees-row';
 import { GasFeesRow } from '../gas-fees-row/gas-fees-row';
-import { ConfirmInfoAlertRow } from '../../../../../../../components/app/confirm/info/row/alert-row/alert-row';
-import { RowAlertKey } from '../../../../../../../components/app/confirm/info/row/constants';
-import { useAutomaticGasFeeTokenSelect } from '../../../../../hooks/useAutomaticGasFeeTokenSelect';
 
 export const GasFeesDetails = ({
   setShowCustomizeGasPopover,
@@ -88,7 +90,7 @@ export const GasFeesDetails = ({
           />
         </>
       )}
-      {supportsEIP1559 && !transactionMeta.selectedGasFeeToken && (
+      {supportsEIP1559 && (
         <ConfirmInfoAlertRow
           alertKey={RowAlertKey.Speed}
           data-testid="gas-fee-details-speed"

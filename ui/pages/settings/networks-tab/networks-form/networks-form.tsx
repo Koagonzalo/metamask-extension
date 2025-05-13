@@ -1,11 +1,13 @@
-import log from 'loglevel';
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import {
   type UpdateNetworkFields,
   RpcEndpointType,
 } from '@metamask/network-controller';
-import { Hex, isStrictHexString } from '@metamask/utils';
+import type { Hex } from '@metamask/utils';
+import { isStrictHexString } from '@metamask/utils';
+import log from 'loglevel';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import {
   MetaMetricsEventCategory,
   MetaMetricsEventName,
@@ -17,6 +19,7 @@ import {
   infuraProjectId,
   NETWORK_TO_NAME_MAP,
 } from '../../../../../shared/constants/network';
+import { onlyKeepHost } from '../../../../../shared/lib/only-keep-host';
 import {
   decimalToHex,
   hexToDecimal,
@@ -26,17 +29,7 @@ import {
   isSafeChainId,
 } from '../../../../../shared/modules/network.utils';
 import { jsonRpcRequest } from '../../../../../shared/modules/rpc.utils';
-import { MetaMetricsContext } from '../../../../contexts/metametrics';
-import { useI18nContext } from '../../../../hooks/useI18nContext';
 import { getNetworkConfigurationsByChainId } from '../../../../../shared/modules/selectors/networks';
-import {
-  addNetwork,
-  setEditedNetwork,
-  setTokenNetworkFilter,
-  showDeprecatedNetworkModal,
-  toggleNetworkMenu,
-  updateNetwork,
-} from '../../../../store/actions';
 import {
   Box,
   ButtonLink,
@@ -46,8 +39,18 @@ import {
   FormTextFieldSize,
   HelpText,
   HelpTextSeverity,
+  Tag,
   Text,
 } from '../../../../components/component-library';
+import {
+  DropdownEditor,
+  DropdownEditorStyle,
+} from '../../../../components/multichain/dropdown-editor/dropdown-editor';
+import RpcListItem, {
+  stripKeyFromInfuraUrl,
+  stripProtocol,
+} from '../../../../components/multichain/network-list-menu/rpc-list-item';
+import { MetaMetricsContext } from '../../../../contexts/metametrics';
 import {
   AlignItems,
   BackgroundColor,
@@ -59,17 +62,21 @@ import {
   TextColor,
   TextVariant,
 } from '../../../../helpers/constants/design-system';
-import RpcListItem, {
-  stripKeyFromInfuraUrl,
-  stripProtocol,
-} from '../../../../components/multichain/network-list-menu/rpc-list-item';
+import { useI18nContext } from '../../../../hooks/useI18nContext';
 import {
-  DropdownEditor,
-  DropdownEditorStyle,
-} from '../../../../components/multichain/dropdown-editor/dropdown-editor';
-import { getTokenNetworkFilter } from '../../../../selectors';
+  getIsRpcFailoverEnabled,
+  getTokenNetworkFilter,
+} from '../../../../selectors';
+import {
+  addNetwork,
+  setEditedNetwork,
+  setTokenNetworkFilter,
+  showDeprecatedNetworkModal,
+  toggleNetworkMenu,
+  updateNetwork,
+} from '../../../../store/actions';
+import type { useNetworkFormState } from './networks-form-state';
 import { useSafeChains, rpcIdentifierUtility } from './use-safe-chains';
-import { useNetworkFormState } from './networks-form-state';
 
 export const NetworksForm = ({
   networkFormState,
@@ -87,6 +94,7 @@ export const NetworksForm = ({
   const trackEvent = useContext(MetaMetricsContext);
   const scrollableRef = useRef<HTMLDivElement>(null);
   const networkConfigurations = useSelector(getNetworkConfigurationsByChainId);
+  const isRpcFailoverEnabled = useSelector(getIsRpcFailoverEnabled);
 
   const {
     name,
@@ -100,6 +108,11 @@ export const NetworksForm = ({
     blockExplorers,
     setBlockExplorers,
   } = networkFormState;
+
+  const defaultRpcEndpoint =
+    rpcUrls.defaultRpcEndpointIndex === undefined
+      ? undefined
+      : rpcUrls.rpcEndpoints[rpcUrls.defaultRpcEndpointIndex];
 
   const { safeChains } = useSafeChains();
 
@@ -430,8 +443,16 @@ export const NetworksForm = ({
                 variant={TextVariant.bodyMd}
                 paddingTop={3}
                 paddingBottom={3}
+                display={Display.Flex}
+                alignItems={AlignItems.center}
+                gap={1}
               >
                 {stripProtocol(stripKeyFromInfuraUrl(item.url))}
+                {isRpcFailoverEnabled &&
+                item.failoverUrls &&
+                item.failoverUrls.length > 0 ? (
+                  <Tag label={t('failover')} display={Display.Inline} />
+                ) : null}
               </Text>
             )
           }
@@ -469,6 +490,29 @@ export const NetworksForm = ({
             </HelpText>
           </Box>
         )}
+
+        {isRpcFailoverEnabled &&
+        // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
+        defaultRpcEndpoint &&
+        defaultRpcEndpoint.failoverUrls &&
+        defaultRpcEndpoint.failoverUrls.length > 0 ? (
+          <FormTextField
+            id="failoverRpcUrl"
+            size={FormTextFieldSize.Lg}
+            paddingTop={4}
+            label={t('failoverRpcUrl')}
+            labelProps={{
+              children: undefined,
+              variant: TextVariant.bodyMdMedium,
+            }}
+            textFieldProps={{
+              borderRadius: BorderRadius.LG,
+            }}
+            value={onlyKeepHost(defaultRpcEndpoint.failoverUrls[0])}
+            disabled={true}
+          />
+        ) : null}
+
         <FormTextField
           id="chainId"
           size={FormTextFieldSize.Lg}

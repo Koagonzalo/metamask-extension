@@ -1,13 +1,13 @@
 import { strict as assert } from 'assert';
-import { Suite } from 'mocha';
-import { withFixtures } from '../../helpers';
+import type { Suite } from 'mocha';
+
 import FixtureBuilder from '../../fixture-builder';
-import TestDapp from '../../page-objects/pages/test-dapp';
+import { withFixtures } from '../../helpers';
 import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
+import TestDapp from '../../page-objects/pages/test-dapp';
 
 describe('Content-Security-Policy', function (this: Suite) {
   // TODO: Re-enable this after fixing the CSP override feature. See #31094
-  // eslint-disable-next-line mocha/no-skipped-tests
   it.skip('opening a restricted website should still load the extension', async function () {
     await withFixtures(
       {

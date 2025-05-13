@@ -1,13 +1,14 @@
-import { Mockttp } from 'mockttp';
 import { TransactionType } from '@metamask/transaction-controller';
-import { loginWithoutBalanceValidation } from '../../page-objects/flows/login.flow';
-import { Driver } from '../../webdriver/driver';
+import type { Mockttp } from 'mockttp';
+
 import { DEFAULT_FIXTURE_ACCOUNT } from '../../constants';
-import { withFixtures } from '../../helpers';
 import FixtureBuilder from '../../fixture-builder';
+import { withFixtures } from '../../helpers';
+import { loginWithoutBalanceValidation } from '../../page-objects/flows/login.flow';
 import { switchToNetworkFlow } from '../../page-objects/flows/network.flow';
-import HomePage from '../../page-objects/pages/home/homepage';
 import ActivityListPage from '../../page-objects/pages/home/activity-list';
+import HomePage from '../../page-objects/pages/home/homepage';
+import type { Driver } from '../../webdriver/driver';
 
 const TIMESTAMP_MOCK = 1234;
 
@@ -115,7 +116,7 @@ describe('Incoming Transactions', function () {
           .withUseBasicFunctionalityEnabled()
           .build(),
         title: this.test?.fullTitle(),
-        testSpecificMock: (server: Mockttp) =>
+        testSpecificMock: async (server: Mockttp) =>
           mockAccountsApi(server, {
             transactions: [
               RESPONSE_STANDARD_MOCK,
@@ -137,7 +138,7 @@ describe('Incoming Transactions', function () {
           .withUseBasicFunctionalityEnabled()
           .build(),
         title: this.test?.fullTitle(),
-        testSpecificMock: (server: Mockttp) =>
+        testSpecificMock: async (server: Mockttp) =>
           mockAccountsApi(server, {
             transactions: [RESPONSE_STANDARD_MOCK, RESPONSE_OUTGOING_MOCK],
           }),

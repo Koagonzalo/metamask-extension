@@ -1,14 +1,15 @@
-import { useSelector } from 'react-redux';
+import type { Token } from '@metamask/assets-controllers';
+import type { Hex } from '@metamask/utils';
 import BN from 'bn.js';
-import { Token } from '@metamask/assets-controllers';
-import { Hex } from '@metamask/utils';
+import { useSelector } from 'react-redux';
+
+import { hexToDecimal } from '../../shared/modules/conversion.utils';
 import { getNetworkConfigurationsByChainId } from '../../shared/modules/selectors/networks';
+import { getTokenBalances } from '../ducks/metamask/metamask';
 import {
   tokenBalancesStartPolling,
   tokenBalancesStopPollingByPollingToken,
 } from '../store/actions';
-import { getTokenBalances } from '../ducks/metamask/metamask';
-import { hexToDecimal } from '../../shared/modules/conversion.utils';
 import useMultiPolling from './useMultiPolling';
 
 export const useTokenBalances = ({ chainIds }: { chainIds?: Hex[] } = {}) => {
@@ -41,7 +42,9 @@ export const useTokenTracker = ({
 }) => {
   const { tokenBalances } = useTokenBalances({ chainIds: [chainId] });
 
-  const tokensWithBalances = tokens.reduce((acc, token) => {
+  const tokensWithBalances = tokens.reduce<
+    (Token & { balance: string; string: string; balanceError: unknown })[]
+  >((acc, token) => {
     const hexBalance =
       tokenBalances[address]?.[chainId]?.[token.address as Hex] ?? '0x0';
     if (hexBalance !== '0x0' || !hideZeroBalanceTokens) {
@@ -59,7 +62,7 @@ export const useTokenTracker = ({
       });
     }
     return acc;
-  }, [] as (Token & { balance: string; string: string; balanceError: unknown })[]);
+  }, []);
 
   return {
     tokensWithBalances,

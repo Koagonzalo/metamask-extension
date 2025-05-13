@@ -1,16 +1,15 @@
 import { DateTime } from 'luxon';
-import {
-  MULTICHAIN_NETWORK_BLOCK_EXPLORER_FORMAT_URLS_MAP,
-  MultichainNetworks,
-} from '../../../../shared/constants/multichain/networks';
-import {
-  formatDateWithYearContext,
-  shortenAddress,
-} from '../../../helpers/utils/util';
+
+import type { MultichainNetworks } from '../../../../shared/constants/multichain/networks';
+import { MULTICHAIN_NETWORK_BLOCK_EXPLORER_FORMAT_URLS_MAP } from '../../../../shared/constants/multichain/networks';
 import {
   formatBlockExplorerAddressUrl,
   formatBlockExplorerTransactionUrl,
 } from '../../../../shared/lib/multichain/networks';
+import {
+  formatDateWithYearContext,
+  shortenAddress,
+} from '../../../helpers/utils/util';
 
 /**
  * Creates a transaction URL for block explorer based on network type

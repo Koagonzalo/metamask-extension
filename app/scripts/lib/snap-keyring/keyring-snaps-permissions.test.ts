@@ -1,8 +1,9 @@
+import { KeyringRpcMethod } from '@metamask/keyring-api';
 import {
   SubjectMetadataController,
   SubjectType,
 } from '@metamask/permission-controller';
-import { KeyringRpcMethod } from '@metamask/keyring-api';
+
 import {
   isProtocolAllowed,
   keyringSnapPermissionsBuilder,
@@ -32,7 +33,6 @@ describe('keyringSnapPermissionsBuilder', () => {
   });
 
   describe('Portfolio origin', () => {
-    // @ts-expect-error This is missing from the Mocha type definitions
     it.each(PORTFOLIO_ORIGINS)(
       'returns the methods that can be called by %s',
       (origin: string) => {
@@ -49,7 +49,6 @@ describe('keyringSnapPermissionsBuilder', () => {
       },
     );
 
-    // @ts-expect-error This is missing from the Mocha type definitions
     it.each(PORTFOLIO_ORIGINS)(
       '%s cannot create an account',
       (origin: string) => {
@@ -61,7 +60,6 @@ describe('keyringSnapPermissionsBuilder', () => {
       },
     );
 
-    // @ts-expect-error This is missing from the Mocha type definitions
     it.each(PORTFOLIO_ORIGINS)('%s can submit a request', (origin: string) => {
       const permissions = keyringSnapPermissionsBuilder(mockController, origin);
       expect(permissions()).toContain(KeyringRpcMethod.SubmitRequest);
@@ -113,7 +111,6 @@ describe('keyringSnapPermissionsBuilder', () => {
     expect(permissions()).toStrictEqual([]);
   });
 
-  // @ts-expect-error This is missing from the Mocha type definitions
   it.each([
     '',
     'null',
@@ -139,7 +136,6 @@ describe('keyringSnapPermissionsBuilder', () => {
 });
 
 describe('isProtocolAllowed', () => {
-  // @ts-expect-error This is missing from the Mocha type definitions
   it.each([
     ['http://some-dapp.com', true],
     ['https://some-dapp.com', true],

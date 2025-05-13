@@ -1,5 +1,6 @@
-import { SpinnerElement } from '@metamask/snaps-sdk/jsx';
-import { UIComponentFactory } from './types';
+import type { SpinnerElement } from '@metamask/snaps-sdk/jsx';
+
+import type { UIComponentFactory } from './types';
 
 export const spinner: UIComponentFactory<SpinnerElement> = () => ({
   element: 'Preloader',

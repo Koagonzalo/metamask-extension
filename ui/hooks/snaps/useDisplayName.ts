@@ -1,17 +1,17 @@
-import {
-  CaipChainId,
-  KnownCaipNamespace,
-  CaipNamespace,
-} from '@metamask/utils';
+import type { CaipChainId, CaipNamespace } from '@metamask/utils';
+import { KnownCaipNamespace } from '@metamask/utils';
 import { useSelector } from 'react-redux';
-import {
-  getMemoizedAccountName,
-  getAddressBookEntryByNetwork,
+
+import { decimalToHex } from '../../../shared/modules/conversion.utils';
+import { toChecksumHexAddress } from '../../../shared/modules/hexstring-utils';
+import type {
   AddressBookMetaMaskState,
   AccountsMetaMaskState,
 } from '../../selectors/snaps';
-import { toChecksumHexAddress } from '../../../shared/modules/hexstring-utils';
-import { decimalToHex } from '../../../shared/modules/conversion.utils';
+import {
+  getMemoizedAccountName,
+  getAddressBookEntryByNetwork,
+} from '../../selectors/snaps';
 
 export type UseDisplayNameParams = {
   chain: {
@@ -53,7 +53,5 @@ export const useDisplayName = (
     ),
   );
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   return accountName || (isEip155 && addressBookEntry?.name) || undefined;
 };

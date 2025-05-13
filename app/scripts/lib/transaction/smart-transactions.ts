@@ -1,37 +1,38 @@
-import SmartTransactionsController, {
-  SmartTransactionsControllerSmartTransactionEvent,
-} from '@metamask/smart-transactions-controller';
-import {
-  Fee,
-  Fees,
-  SmartTransactionStatuses,
-  SmartTransaction,
-} from '@metamask/smart-transactions-controller/dist/types';
-import type { Hex } from '@metamask/utils';
-import {
-  TransactionController,
-  TransactionMeta,
-  TransactionParams,
-  TransactionType,
-  type PublishBatchHookTransaction,
-} from '@metamask/transaction-controller';
-import log from 'loglevel';
-import { RestrictedMessenger } from '@metamask/base-controller';
-import {
+import type {
   AddApprovalRequest,
   UpdateRequestState,
   StartFlow,
   EndFlow,
   AcceptRequest,
 } from '@metamask/approval-controller';
+import type { RestrictedMessenger } from '@metamask/base-controller';
+import type { SmartTransactionsControllerSmartTransactionEvent } from '@metamask/smart-transactions-controller';
+import type SmartTransactionsController from '@metamask/smart-transactions-controller';
+import type {
+  Fee,
+  Fees,
+  SmartTransaction,
+} from '@metamask/smart-transactions-controller/dist/types';
+import { SmartTransactionStatuses } from '@metamask/smart-transactions-controller/dist/types';
+import type {
+  TransactionController,
+  TransactionMeta,
+  TransactionParams,
+} from '@metamask/transaction-controller';
+import {
+  TransactionType,
+  type PublishBatchHookTransaction,
+} from '@metamask/transaction-controller';
+import type { Hex } from '@metamask/utils';
+import log from 'loglevel';
 
-import { decimalToHex } from '../../../../shared/modules/conversion.utils';
-import { CANCEL_GAS_LIMIT_DEC } from '../../../../shared/constants/smartTransactions';
-import { isLegacyTransaction } from '../../../../shared/modules/transaction.utils';
 import {
   SMART_TRANSACTION_CONFIRMATION_TYPES,
   ORIGIN_METAMASK,
 } from '../../../../shared/constants/app';
+import { CANCEL_GAS_LIMIT_DEC } from '../../../../shared/constants/smartTransactions';
+import { decimalToHex } from '../../../../shared/modules/conversion.utils';
+import { isLegacyTransaction } from '../../../../shared/modules/transaction.utils';
 
 const namespace = 'SmartTransactions';
 
@@ -80,11 +81,11 @@ class SmartTransactionHook {
 
   #approvalFlowId: string;
 
-  #chainId: Hex;
+  readonly #chainId: Hex;
 
-  #controllerMessenger: SmartTransactionHookMessenger;
+  readonly #controllerMessenger: SmartTransactionHookMessenger;
 
-  #featureFlags: {
+  readonly #featureFlags: {
     extensionActive: boolean;
     mobileActive: boolean;
     smartTransactions: {
@@ -94,23 +95,23 @@ class SmartTransactionHook {
     };
   };
 
-  #isDapp: boolean;
+  readonly #isDapp: boolean;
 
-  #isSmartTransaction: boolean;
+  readonly #isSmartTransaction: boolean;
 
-  #smartTransactionsController: SmartTransactionsController;
+  readonly #smartTransactionsController: SmartTransactionsController;
 
-  #transactionController: TransactionController;
+  readonly #transactionController: TransactionController;
 
-  #transactionMeta: TransactionMeta;
+  readonly #transactionMeta: TransactionMeta;
 
-  #signedTransactionInHex?: string;
+  readonly #signedTransactionInHex?: string;
 
-  #transactions?: PublishBatchHookTransaction[];
+  readonly #transactions?: PublishBatchHookTransaction[];
 
-  #txParams: TransactionParams;
+  readonly #txParams: TransactionParams;
 
-  #shouldShowStatusPage: boolean;
+  readonly #shouldShowStatusPage: boolean;
 
   constructor(request: SubmitSmartTransactionRequest) {
     const {
@@ -125,7 +126,7 @@ class SmartTransactionHook {
     } = request;
     this.#approvalFlowId = '';
     this.#approvalFlowEnded = false;
-    this.#transactionMeta = transactionMeta as TransactionMeta;
+    this.#transactionMeta = transactionMeta;
     this.#signedTransactionInHex = signedTransactionInHex;
     this.#smartTransactionsController = smartTransactionsController;
     this.#transactionController = transactionController;
@@ -404,7 +405,11 @@ class SmartTransactionHook {
     );
   }
 
-  #waitForTransactionHash({ uuid }: { uuid: string }): Promise<string | null> {
+  async #waitForTransactionHash({
+    uuid,
+  }: {
+    uuid: string;
+  }): Promise<string | null> {
     return new Promise((resolve) => {
       this.#controllerMessenger.subscribe(
         'SmartTransactionsController:smartTransaction',
@@ -514,14 +519,14 @@ class SmartTransactionHook {
   }
 }
 
-export const submitSmartTransactionHook = (
+export const submitSmartTransactionHook = async (
   request: SubmitSmartTransactionRequest,
 ) => {
   const smartTransactionHook = new SmartTransactionHook(request);
   return smartTransactionHook.submit();
 };
 
-export const submitBatchSmartTransactionHook = (
+export const submitBatchSmartTransactionHook = async (
   request: SubmitSmartTransactionRequest,
 ) => {
   const smartTransactionHook = new SmartTransactionHook(request);

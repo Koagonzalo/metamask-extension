@@ -1,12 +1,14 @@
 import { useCallback, useContext } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { toChecksumAddress } from 'ethereumjs-util';
 import { isStrictHexString } from '@metamask/utils';
 import {
   formatChainIdToCaip,
+  UnifiedSwapBridgeEventName,
   type SwapsTokenObject,
 } from '@metamask/bridge-controller';
+import { trackUnifiedSwapBridgeEvent } from '../../ducks/bridge/actions';
 import {
   ///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
   getDataCollectionForMarketing,
@@ -38,6 +40,7 @@ import { useCrossChainSwapsEventTracker } from './useCrossChainSwapsEventTracker
 
 const useBridging = () => {
   const history = useHistory();
+  const dispatch = useDispatch();
   const trackEvent = useContext(MetaMetricsContext);
   const trackCrossChainSwapsEvent = useCrossChainSwapsEventTracker();
 
@@ -96,6 +99,23 @@ const useBridging = () => {
             chain_id: providerConfig.chainId,
           },
         });
+        dispatch(
+          trackUnifiedSwapBridgeEvent(
+            UnifiedSwapBridgeEventName.ButtonClicked,
+            {
+              location:
+                location === 'Home'
+                  ? MetaMetricsSwapsEventSource.MainView
+                  : MetaMetricsSwapsEventSource.TokenView,
+              // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              token_symbol_source: token.symbol,
+              // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              token_symbol_destination: null,
+            },
+          ),
+        );
         let url = `${CROSS_CHAIN_SWAP_ROUTE}${PREPARE_SWAP_ROUTE}`;
         url += `?token=${
           isStrictHexString(token.address)

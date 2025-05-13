@@ -1,19 +1,19 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { renderHook } from '@testing-library/react-hooks';
 import { act } from 'react-dom/test-utils';
-import {
-  getCrossChainTokenExchangeRates,
-  getCrossChainMetaMaskCachedBalances,
-} from '../selectors';
+
+import { getNetworkConfigurationsByChainId } from '../../shared/modules/selectors/networks';
 import {
   getCurrentCurrency,
   getCurrencyRates,
   getTokenBalances,
 } from '../ducks/metamask/metamask';
-import { getNetworkConfigurationsByChainId } from '../../shared/modules/selectors/networks';
 import {
-  FormattedTokensWithBalances,
-  useAccountTotalCrossChainFiatBalance,
-} from './useAccountTotalCrossChainFiatBalance';
+  getCrossChainTokenExchangeRates,
+  getCrossChainMetaMaskCachedBalances,
+} from '../selectors';
+import type { FormattedTokensWithBalances } from './useAccountTotalCrossChainFiatBalance';
+import { useAccountTotalCrossChainFiatBalance } from './useAccountTotalCrossChainFiatBalance';
 
 jest.mock('react-redux', () => ({
   useSelector: jest.fn((selector) => selector()),
@@ -236,8 +236,6 @@ describe('useAccountTotalCrossChainFiatBalance', () => {
       );
     });
 
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((result as unknown as Record<string, any>).result.current).toEqual(
       expectedResult,
     );

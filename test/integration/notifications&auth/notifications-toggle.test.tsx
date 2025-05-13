@@ -1,11 +1,12 @@
 import { act, fireEvent, waitFor, screen } from '@testing-library/react';
-import { integrationTestRender } from '../../lib/render-helpers';
-import * as backgroundConnection from '../../../ui/store/background-connection';
-import { createMockImplementation } from '../helpers';
+
 import {
   MetaMetricsEventCategory,
   MetaMetricsEventName,
 } from '../../../shared/constants/metametrics';
+import * as backgroundConnection from '../../../ui/store/background-connection';
+import { integrationTestRender } from '../../lib/render-helpers';
+import { createMockImplementation } from '../helpers';
 import { getMockedNotificationsState } from './data/notification-state';
 
 jest.mock('../../../ui/store/background-connection', () => ({
@@ -128,17 +129,9 @@ describe('Notifications Toggle', () => {
         MetaMetricsEventName.NotificationsSettingsUpdated,
         MetaMetricsEventCategory.NotificationSettings,
         {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           settings_type: 'notifications',
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           was_profile_syncing_on: true,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           old_value: true,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           new_value: false,
         },
       );
@@ -192,14 +185,8 @@ describe('Notifications Toggle', () => {
         MetaMetricsEventName.NotificationsSettingsUpdated,
         MetaMetricsEventCategory.NotificationSettings,
         {
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           settings_type: 'product_announcements',
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           old_value: false,
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           new_value: true,
         },
       );

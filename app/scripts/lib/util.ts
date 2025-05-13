@@ -1,15 +1,15 @@
-import urlLib from 'url';
-import { AccessList } from '@ethereumjs/tx';
+import type { AccessList } from '@ethereumjs/tx';
+import type { MultichainAssetsRatesControllerState } from '@metamask/assets-controllers';
+import type { Provider } from '@metamask/network-controller';
+import type { AssetConversion } from '@metamask/snaps-sdk';
+import type { TransactionMeta } from '@metamask/transaction-controller';
+import { TransactionEnvelopeType } from '@metamask/transaction-controller';
+import type { CaipAssetType } from '@metamask/utils';
+import { parseCaipAssetType } from '@metamask/utils';
 import BN from 'bn.js';
 import { memoize } from 'lodash';
-import {
-  TransactionEnvelopeType,
-  TransactionMeta,
-} from '@metamask/transaction-controller';
-import type { Provider } from '@metamask/network-controller';
-import { CaipAssetType, parseCaipAssetType } from '@metamask/utils';
-import { MultichainAssetsRatesControllerState } from '@metamask/assets-controllers';
-import { AssetConversion } from '@metamask/snaps-sdk';
+import urlLib from 'url';
+
 import {
   ENVIRONMENT_TYPE_BACKGROUND,
   ENVIRONMENT_TYPE_FULLSCREEN,
@@ -22,9 +22,8 @@ import {
   PLATFORM_OPERA,
 } from '../../../shared/constants/app';
 import { CHAIN_IDS, TEST_CHAINS } from '../../../shared/constants/network';
-import { stripHexPrefix } from '../../../shared/modules/hexstring-utils';
 import { getMethodDataAsync } from '../../../shared/lib/four-byte';
-import { getSafeChainsListFromCacheOnly } from '../../../shared/lib/network-utils';
+import { stripHexPrefix } from '../../../shared/modules/hexstring-utils';
 
 /**
  * @see {@link getEnvironmentType}
@@ -96,8 +95,6 @@ function hexToBn(inputHex: string) {
  * @param denominator - The denominator of the fraction multiplier
  * @returns The product of the multiplication
  */
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function BnMultiplyByFraction(
   targetBN: BN,
   numerator: number,
@@ -225,8 +222,6 @@ export function deferredPromise(): DeferredPromise {
  * @param [initialValue] - The initial value to supply to prevValue
  * on first call of the method.
  */
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export function previousValueComparator<A>(
   comparator: (previous: A, next: A) => boolean,
   initialValue: A,
@@ -295,9 +290,7 @@ export function isWebUrl(urlString: string): boolean {
  * @returns Whether to emit the event or not.
  */
 export function shouldEmitDappViewedEvent(metaMetricsId: string): boolean {
-  const isFireFox = getPlatform() === PLATFORM_FIREFOX;
-
-  if (metaMetricsId === null || isFireFox) {
+  if (metaMetricsId === null) {
     return false;
   }
 
@@ -486,101 +479,4 @@ export function getConversionRatesForNativeAsset({
   );
 
   return conversionRateResult;
-}
-
-// Cache for known domains
-let knownDomainsSet: Set<string> | null = null;
-let initPromise: Promise<void> | null = null;
-
-/**
- * Initialize the set of known domains from the chains list
- */
-export async function initializeRpcProviderDomains(): Promise<void> {
-  if (initPromise) {
-    return initPromise;
-  }
-
-  initPromise = (async () => {
-    try {
-      const chainsList = await getSafeChainsListFromCacheOnly();
-      knownDomainsSet = new Set<string>();
-
-      for (const chain of chainsList) {
-        if (chain.rpc && Array.isArray(chain.rpc)) {
-          for (const rpcUrl of chain.rpc) {
-            try {
-              const url = new URL(rpcUrl);
-              knownDomainsSet.add(url.hostname);
-            } catch (e) {
-              // Skip invalid URLs
-              continue;
-            }
-          }
-        }
-      }
-    } catch (error) {
-      console.error('Error initializing known domains:', error);
-      knownDomainsSet = new Set<string>();
-    }
-  })();
-
-  return initPromise;
-}
-
-/**
- * Check if a domain is in the known domains list
- *
- * @param domain - The domain to check
- */
-export function isKnownDomain(domain: string): boolean {
-  return knownDomainsSet?.has(domain?.toLowerCase()) ?? false;
-}
-
-/**
- * Extracts the domain from an RPC endpoint URL with privacy considerations
- *
- * @param rpcUrl - The RPC endpoint URL
- * @param knownDomainsForTesting - Optional Set of known domains for testing purposes
- * @returns The domain for known providers, 'private' for private/custom networks, or 'invalid' for invalid URLs
- */
-export function extractRpcDomain(
-  rpcUrl: string,
-  knownDomainsForTesting?: Set<string>,
-): string {
-  if (!rpcUrl) {
-    return 'invalid';
-  }
-
-  try {
-    // Try to parse the URL directly
-    let url;
-    try {
-      url = new URL(rpcUrl);
-    } catch (e) {
-      // If parsing fails, check if it looks like a domain without protocol
-      if (rpcUrl.includes('://')) {
-        return 'invalid';
-      }
-
-      // Try adding https:// prefix for domain-like strings
-      try {
-        url = new URL(`https://${rpcUrl}`);
-      } catch (e2) {
-        return 'invalid';
-      }
-    }
-
-    // Use the provided test domains if available, otherwise use isKnownDomain
-    if (knownDomainsForTesting) {
-      if (knownDomainsForTesting.has(url.hostname.toLowerCase())) {
-        return url.hostname.toLowerCase();
-      }
-    } else if (isKnownDomain(url.hostname)) {
-      return url.hostname.toLowerCase();
-    }
-
-    return 'private';
-  } catch (error) {
-    return 'invalid';
-  }
 }

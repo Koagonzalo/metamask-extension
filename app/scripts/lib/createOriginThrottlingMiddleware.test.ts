@@ -1,9 +1,9 @@
 import { errorCodes, providerErrors } from '@metamask/rpc-errors';
-import { JsonRpcResponse } from '@metamask/utils';
-import type { Json } from '@metamask/utils';
+import type { JsonRpcResponse, Json } from '@metamask/utils';
+
+import type { ExtendedJSONRPCRequest } from './createOriginThrottlingMiddleware';
 import createOriginThrottlingMiddleware, {
   SPAM_FILTER_ACTIVATED_ERROR,
-  ExtendedJSONRPCRequest,
 } from './createOriginThrottlingMiddleware';
 
 describe('createOriginThrottlingMiddleware', () => {
@@ -27,7 +27,7 @@ describe('createOriginThrottlingMiddleware', () => {
     const next = jest.fn();
     const end = jest.fn();
 
-    await middleware(req, {} as unknown as JsonRpcResponse<Json>, next, end);
+    await middleware(req, {} as unknown as JsonRpcResponse, next, end);
 
     expect(next).toHaveBeenCalled();
     expect(end).not.toHaveBeenCalled();
@@ -48,7 +48,7 @@ describe('createOriginThrottlingMiddleware', () => {
 
     await middleware(
       req,
-      { error: null } as unknown as JsonRpcResponse<Json>,
+      { error: null } as unknown as JsonRpcResponse,
       next,
       end,
     );
@@ -71,7 +71,7 @@ describe('createOriginThrottlingMiddleware', () => {
       error: null,
       id: 1,
       jsonrpc: '2.0',
-    } as unknown as JsonRpcResponse<Json>;
+    } as unknown as JsonRpcResponse;
 
     mockGetThrottledOriginState.mockReturnValue({
       rejections: 1,
@@ -103,7 +103,7 @@ describe('createOriginThrottlingMiddleware', () => {
       },
       id: 1,
       jsonrpc: '2.0',
-    } as unknown as JsonRpcResponse<Json>;
+    } as unknown as JsonRpcResponse;
 
     mockGetThrottledOriginState.mockReturnValueOnce({
       rejections: 0,
@@ -137,7 +137,7 @@ describe('createOriginThrottlingMiddleware', () => {
       }),
       id: 1,
       jsonrpc: '2.0',
-    } as unknown as JsonRpcResponse<Json>;
+    } as unknown as JsonRpcResponse;
 
     mockGetThrottledOriginState.mockReturnValueOnce({
       rejections: 0,

@@ -1,7 +1,7 @@
-import { Driver } from '../../../webdriver/driver';
+import type { Driver } from '../../../webdriver/driver';
 
 class BitcoinSendPage {
-  private driver: Driver;
+  private readonly driver: Driver;
 
   private readonly amountInputField = `input[placeholder="Enter amount to send"]`;
 
@@ -26,8 +26,6 @@ class BitcoinSendPage {
     this.driver = driver;
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_pageIsLoaded(): Promise<void> {
     try {
       await this.driver.waitForMultipleSelectors([
@@ -72,8 +70,6 @@ class BitcoinSendPage {
    *
    * @param amount - The expected amount to validate.
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_amountIsDisplayed(amount: string) {
     console.log(`Check amount ${amount} is displayed on send bitcoin screen`);
     await this.driver.waitForSelector({

@@ -1,27 +1,28 @@
-import { Mockttp } from 'mockttp';
 import { USER_STORAGE_FEATURE_NAMES } from '@metamask/profile-sync-controller/sdk';
-import { withFixtures } from '../../../helpers';
-import FixtureBuilder from '../../../fixture-builder';
-import { mockIdentityServices } from '../mocks';
+import type { Mockttp } from 'mockttp';
+
 import { ACCOUNT_TYPE } from '../../../constants';
-import {
-  IDENTITY_TEAM_PASSWORD,
-  IDENTITY_TEAM_SEED_PHRASE,
-} from '../constants';
+import FixtureBuilder from '../../../fixture-builder';
+import { withFixtures } from '../../../helpers';
 import {
   UserStorageMockttpController,
   UserStorageMockttpControllerEvents,
 } from '../../../helpers/identity/user-storage/userStorageMockttpController';
-import HeaderNavbar from '../../../page-objects/pages/header-navbar';
-import AccountListPage from '../../../page-objects/pages/account-list-page';
-import HomePage from '../../../page-objects/pages/home/homepage';
 import { completeImportSRPOnboardingFlow } from '../../../page-objects/flows/onboarding.flow';
+import AccountListPage from '../../../page-objects/pages/account-list-page';
+import HeaderNavbar from '../../../page-objects/pages/header-navbar';
+import HomePage from '../../../page-objects/pages/home/homepage';
+import {
+  IDENTITY_TEAM_PASSWORD,
+  IDENTITY_TEAM_SEED_PHRASE,
+} from '../constants';
 import { completeOnboardFlowIdentity } from '../flows';
+import { mockIdentityServices } from '../mocks';
+import { arrangeTestUtils } from './helpers';
 import {
   accountsToMockForAccountsSync,
   getAccountsSyncMockResponse,
 } from './mock-data';
-import { arrangeTestUtils } from './helpers';
 
 describe('Account syncing - Add Account', function () {
   this.timeout(160000); // This test is very long, so we need an unusually high timeout
@@ -56,7 +57,7 @@ describe('Account syncing - Add Account', function () {
         {
           fixtures: new FixtureBuilder({ onboarding: true }).build(),
           title: this.test?.fullTitle(),
-          testSpecificMock: (server: Mockttp) => {
+          testSpecificMock: async (server: Mockttp) => {
             userStorageMockttpController.setupPath(
               USER_STORAGE_FEATURE_NAMES.accounts,
               server,
@@ -81,7 +82,6 @@ describe('Account syncing - Add Account', function () {
           await accountListPage.check_pageIsLoaded();
           await accountListPage.check_numberOfAvailableAccounts(
             mockedAccountSyncResponse.length,
-            ACCOUNT_TYPE.Ethereum,
           );
           await accountListPage.check_accountDisplayedInAccountList(
             unencryptedAccounts[0].n,
@@ -115,7 +115,7 @@ describe('Account syncing - Add Account', function () {
         {
           fixtures: new FixtureBuilder({ onboarding: true }).build(),
           title: this.test?.fullTitle(),
-          testSpecificMock: (server: Mockttp) => {
+          testSpecificMock: async (server: Mockttp) => {
             userStorageMockttpController.setupPath(
               USER_STORAGE_FEATURE_NAMES.accounts,
               server,
@@ -141,7 +141,6 @@ describe('Account syncing - Add Account', function () {
 
           await accountListPage.check_numberOfAvailableAccounts(
             accountSyncResponse?.length as number,
-            ACCOUNT_TYPE.Ethereum,
           );
           await accountListPage.check_accountDisplayedInAccountList(
             unencryptedAccounts[0].n,
@@ -168,7 +167,7 @@ describe('Account syncing - Add Account', function () {
         {
           fixtures: new FixtureBuilder({ onboarding: true }).build(),
           title: this.test?.fullTitle(),
-          testSpecificMock: (server: Mockttp) => {
+          testSpecificMock: async (server: Mockttp) => {
             userStorageMockttpController.setupPath(
               USER_STORAGE_FEATURE_NAMES.accounts,
               server,
@@ -193,7 +192,6 @@ describe('Account syncing - Add Account', function () {
           await accountListPage.check_pageIsLoaded();
           await accountListPage.check_numberOfAvailableAccounts(
             mockedAccountSyncResponse.length,
-            ACCOUNT_TYPE.Ethereum,
           );
           await accountListPage.check_accountDisplayedInAccountList(
             unencryptedAccounts[0].n,
@@ -220,7 +218,7 @@ describe('Account syncing - Add Account', function () {
         {
           fixtures: new FixtureBuilder({ onboarding: true }).build(),
           title: this.test?.fullTitle(),
-          testSpecificMock: (server: Mockttp) => {
+          testSpecificMock: async (server: Mockttp) => {
             userStorageMockttpController.setupPath(
               USER_STORAGE_FEATURE_NAMES.accounts,
               server,
@@ -251,7 +249,6 @@ describe('Account syncing - Add Account', function () {
 
           await accountListPage.check_numberOfAvailableAccounts(
             accountSyncResponse?.length as number,
-            ACCOUNT_TYPE.Ethereum,
           );
           await accountListPage.check_accountDisplayedInAccountList(
             unencryptedAccounts[0].n,

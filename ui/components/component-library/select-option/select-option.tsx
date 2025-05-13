@@ -1,17 +1,16 @@
-import React, { useContext } from 'react';
 import classnames from 'classnames';
+import React, { useContext } from 'react';
+
+import { Display } from '../../../helpers/constants/design-system';
 import type { PolymorphicRef, BoxProps } from '../box';
 import { Box } from '../box';
 import { SelectContext } from '../select-wrapper';
-import { Display } from '../../../helpers/constants/design-system';
-import {
+import type {
   SelectOptionProps,
   SelectOptionComponent,
 } from './select-option.types';
 
 export const SelectOption: SelectOptionComponent = React.forwardRef(
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   <C extends React.ElementType = 'div'>(
     { className = '', value, children, ...props }: SelectOptionProps<C>,
     ref?: PolymorphicRef<C>,

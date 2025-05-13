@@ -1,4 +1,5 @@
-import { Collection } from '@metamask/assets-controllers';
+import type { Collection } from '@metamask/assets-controllers';
+
 import { TokenStandard } from '../../shared/constants/transaction';
 import {
   getNFTContractInfo,
@@ -18,7 +19,7 @@ export function useNftCollectionsMetadata(
   requests: UseNftCollectionsMetadataRequest[],
 ): Record<string, Record<string, Collection>> {
   const { value: collectionsMetadata } = useAsyncResult(
-    () => fetchCollections(requests),
+    async () => fetchCollections(requests),
     [JSON.stringify(requests)],
   );
 
@@ -37,7 +38,7 @@ async function fetchCollections(requests: UseNftCollectionsMetadataRequest[]) {
   const chainIds = Object.keys(valuesByChainId);
 
   const responses = await Promise.all(
-    chainIds.map((chainId) => {
+    chainIds.map(async (chainId) => {
       const contractAddresses = valuesByChainId[chainId];
       return fetchCollectionsForChain(contractAddresses, chainId);
     }),
@@ -57,7 +58,7 @@ async function fetchCollectionsForChain(
   chainId: string,
 ) {
   const contractStandardsResponses = await Promise.all(
-    contractAddresses.map((contractAddress) =>
+    contractAddresses.map(async (contractAddress) =>
       getTokenStandardAndDetails(contractAddress, chainId),
     ),
   );

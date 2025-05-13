@@ -1,13 +1,12 @@
-import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
+import React, { useState, useContext } from 'react';
 import { Redirect, useHistory } from 'react-router-dom';
-import Button from '../../../../components/ui/button/button.component';
-import TextField from '../../../../components/ui/text-field';
-import PageContainerFooter from '../../../../components/ui/page-container/page-container-footer';
+
 import {
   isBurnAddress,
   isValidHexAddress,
 } from '../../../../../shared/modules/hexstring-utils';
+import { isDuplicateContact } from '../../../../components/app/contact-list/utils';
 import {
   AvatarAccount,
   AvatarAccountSize,
@@ -19,6 +18,10 @@ import {
   IconSize,
   Text,
 } from '../../../../components/component-library';
+import Button from '../../../../components/ui/button/button.component';
+import PageContainerFooter from '../../../../components/ui/page-container/page-container-footer';
+import TextField from '../../../../components/ui/text-field';
+import { I18nContext } from '../../../../contexts/i18n';
 import {
   AlignItems,
   BackgroundColor,
@@ -30,9 +33,7 @@ import {
   JustifyContent,
   TextVariant,
 } from '../../../../helpers/constants/design-system';
-import { isDuplicateContact } from '../../../../components/app/contact-list/utils';
 import { getImageForChainId } from '../../../../selectors/multichain';
-import { I18nContext } from '../../../../contexts/i18n';
 import { ContactNetworks } from '../contact-networks';
 
 const EditContact = ({

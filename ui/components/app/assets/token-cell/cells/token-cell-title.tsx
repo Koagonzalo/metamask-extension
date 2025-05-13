@@ -1,18 +1,17 @@
 import React from 'react';
+
 import {
   Display,
   FontWeight,
   TextVariant,
 } from '../../../../../helpers/constants/design-system';
-import { Text } from '../../../../component-library';
-import { TokenFiatDisplayInfo } from '../../types';
-import { StakeableLink } from '../../../../multichain/token-list-item/stakeable-link';
-import {
-  TranslateFunction,
-  networkTitleOverrides,
-} from '../../util/networkTitleOverrides';
 import { useI18nContext } from '../../../../../hooks/useI18nContext';
+import { Text } from '../../../../component-library';
+import { StakeableLink } from '../../../../multichain/token-list-item/stakeable-link';
 import Tooltip from '../../../../ui/tooltip';
+import type { TokenFiatDisplayInfo } from '../../types';
+import type { TranslateFunction } from '../../util/networkTitleOverrides';
+import { networkTitleOverrides } from '../../util/networkTitleOverrides';
 
 type TokenCellTitleProps = {
   token: TokenFiatDisplayInfo;
@@ -22,7 +21,7 @@ export const TokenCellTitle = React.memo(
   ({ token }: TokenCellTitleProps) => {
     const t = useI18nContext();
 
-    if (token.title && token.title.length > 12) {
+    if (token.title.length > 12) {
       return (
         <Tooltip
           position="bottom"
@@ -31,7 +30,6 @@ export const TokenCellTitle = React.memo(
         >
           <Text
             as="span"
-            data-testid="multichain-token-list-item-token-name"
             fontWeight={FontWeight.Medium}
             variant={TextVariant.bodyMd}
             display={Display.Block}
@@ -52,7 +50,6 @@ export const TokenCellTitle = React.memo(
         fontWeight={FontWeight.Medium}
         variant={TextVariant.bodyMd}
         ellipsis
-        data-testid="multichain-token-list-item-token-name"
       >
         {networkTitleOverrides(t as TranslateFunction, token)}
         {token.isStakeable && (

@@ -1,15 +1,12 @@
-import { Suite } from 'mocha';
-import { Driver } from '../../webdriver/driver';
+import type { Suite } from 'mocha';
+
+import { E2E_SRP as FIRST_TEST_E2E_SRP } from '../../default-fixture';
+import { WALLET_PASSWORD } from '../../helpers';
 import HeaderNavbar from '../../page-objects/pages/header-navbar';
 import PrivacySettings from '../../page-objects/pages/settings/privacy-settings';
 import SettingsPage from '../../page-objects/pages/settings/settings-page';
-import { E2E_SRP as FIRST_TEST_E2E_SRP } from '../../default-fixture';
-import { WALLET_PASSWORD } from '../../helpers';
-import {
-  SECOND_TEST_E2E_SRP,
-  mockActiveNetworks,
-  withMultiSrp,
-} from './common-multi-srp';
+import type { Driver } from '../../webdriver/driver';
+import { SECOND_TEST_E2E_SRP, withMultiSrp } from './common-multi-srp';
 
 const verifySrp = async (driver: Driver, srp: string, srpIndex: number) => {
   await new HeaderNavbar(driver).openSettingsPage();
@@ -30,10 +27,7 @@ describe('Multi SRP - Reveal Imported SRP', function (this: Suite) {
 
   it('successfully exports the default SRP', async function () {
     await withMultiSrp(
-      {
-        title: this.test?.fullTitle(),
-        testSpecificMock: mockActiveNetworks,
-      },
+      { title: this.test?.fullTitle() },
       async (driver: Driver) => {
         await verifySrp(driver, FIRST_TEST_E2E_SRP, firstSrpIndex);
       },
@@ -42,10 +36,7 @@ describe('Multi SRP - Reveal Imported SRP', function (this: Suite) {
 
   it('successfully exports the imported SRP', async function () {
     await withMultiSrp(
-      {
-        title: this.test?.fullTitle(),
-        testSpecificMock: mockActiveNetworks,
-      },
+      { title: this.test?.fullTitle() },
       async (driver: Driver) => {
         await verifySrp(driver, SECOND_TEST_E2E_SRP, secondSrpIndex);
       },

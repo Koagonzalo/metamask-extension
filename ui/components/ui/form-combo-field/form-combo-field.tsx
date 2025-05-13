@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
+import classnames from 'classnames';
 import React, {
   useCallback,
   useContext,
@@ -7,11 +8,11 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import classnames from 'classnames';
-import { ButtonIcon, ButtonIconSize, IconName } from '../../component-library';
-import { FormTextField } from '../../component-library/form-text-field/deprecated';
+
 import { I18nContext } from '../../../contexts/i18n';
 import { Display, IconColor } from '../../../helpers/constants/design-system';
+import { ButtonIcon, ButtonIconSize, IconName } from '../../component-library';
+import { FormTextField } from '../../component-library/form-text-field/deprecated';
 
 export type FormComboFieldOption = {
   value: string;
@@ -47,8 +48,6 @@ export type FormComboFieldProps<Option extends FormComboFieldOption> = {
   value: string;
 };
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function Option({
   option,
   onClick,
@@ -87,8 +86,6 @@ function Option({
   );
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function Dropdown<Option extends FormComboFieldOption>({
   hideDropdownIfNoOptions,
   maxDropdownHeight,
@@ -105,8 +102,7 @@ function Dropdown<Option extends FormComboFieldOption>({
   width: number;
 }) {
   const t = useContext(I18nContext);
-
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+  // TODO: Replace `any` with type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const ref = useRef<any>();
   const maxHeight = maxDropdownHeight ?? 179;
@@ -147,8 +143,6 @@ function Dropdown<Option extends FormComboFieldOption>({
   );
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export default function FormComboField<Option extends FormComboFieldOption>({
   hideDropdownIfNoOptions = false,
   maxDropdownHeight,
@@ -160,13 +154,11 @@ export default function FormComboField<Option extends FormComboFieldOption>({
   value,
 }: FormComboFieldProps<Option>) {
   const [dropdownVisible, setDropdownVisible] = useState(false);
-
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+  // TODO: Replace `any` with type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const valueRef = useRef<any>();
   const [valueWidth, setValueWidth] = useState(0);
-
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+  // TODO: Replace `any` with type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const inputRef = useRef<any>(null);
   const t = useContext(I18nContext);
@@ -176,7 +168,7 @@ export default function FormComboField<Option extends FormComboFieldOption>({
   });
 
   const handleBlur = useCallback(
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+    // TODO: Replace `any` with type
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (e?: any) => {
       if (e?.relatedTarget?.className !== 'form-combo-field__option') {
@@ -187,7 +179,7 @@ export default function FormComboField<Option extends FormComboFieldOption>({
   );
 
   const handleChange = useCallback(
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+    // TODO: Replace `any` with type
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (e: any) => {
       onChange?.(e.target.value);
@@ -227,7 +219,7 @@ export default function FormComboField<Option extends FormComboFieldOption>({
           inputRef={inputRef}
           placeholder={placeholder}
           onBlur={handleBlur}
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+          // TODO: Replace `any` with type
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           onKeyUp={(e: any) => {
             if (e.key === 'Enter') {

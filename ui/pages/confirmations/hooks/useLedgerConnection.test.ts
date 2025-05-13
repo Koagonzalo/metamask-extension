@@ -2,6 +2,7 @@ import type { KeyringObject } from '@metamask/keyring-controller';
 import type { TransactionMeta } from '@metamask/transaction-controller';
 import type { Hex } from '@metamask/utils';
 import { cloneDeep } from 'lodash';
+
 import {
   HardwareTransportStates,
   LEDGER_USB_VENDOR_ID,
@@ -82,7 +83,7 @@ describe('useLedgerConnection', () => {
       value: {
         getDevices: jest
           .fn()
-          .mockImplementation(() =>
+          .mockImplementation(async () =>
             Promise.resolve([{ vendorId: Number(LEDGER_USB_VENDOR_ID) }]),
           ),
       },
@@ -128,7 +129,7 @@ describe('useLedgerConnection', () => {
         WebHIDConnectedStatuses.unknown;
 
       (window.navigator.hid.getDevices as jest.Mock).mockImplementationOnce(
-        () => Promise.resolve([]),
+        async () => Promise.resolve([]),
       );
 
       renderHookWithConfirmContextProvider(useLedgerConnection, state);

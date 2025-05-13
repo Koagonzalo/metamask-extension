@@ -1,5 +1,6 @@
-import * as mockttp from 'mockttp';
 import { USER_STORAGE_FEATURE_NAMES } from '@metamask/profile-sync-controller/sdk';
+import * as mockttp from 'mockttp';
+
 import { UserStorageMockttpController } from './userStorageMockttpController';
 
 describe('UserStorageMockttpController', () => {
@@ -336,8 +337,6 @@ describe('UserStorageMockttpController', () => {
           path: `${baseUrl}/${USER_STORAGE_FEATURE_NAMES.accounts}`,
           body: {
             getJson: async () => ({
-              // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-              // eslint-disable-next-line @typescript-eslint/naming-convention
               batch_delete: [mockedData[1].HashedKey, mockedData[2].HashedKey],
             }),
           } as unknown as mockttp.CompletedBody,

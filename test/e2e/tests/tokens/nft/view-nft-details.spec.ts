@@ -1,11 +1,11 @@
-import { withFixtures } from '../../../helpers';
-import { SMART_CONTRACTS } from '../../../seeder/smart-contracts';
 import FixtureBuilder from '../../../fixture-builder';
-import Homepage from '../../../page-objects/pages/home/homepage';
-import NFTDetailsPage from '../../../page-objects/pages/nft-details-page';
-import NftListPage from '../../../page-objects/pages/home/nft-list';
+import { withFixtures } from '../../../helpers';
 import { loginWithBalanceValidation } from '../../../page-objects/flows/login.flow';
-import { Driver } from '../../../webdriver/driver';
+import Homepage from '../../../page-objects/pages/home/homepage';
+import NftListPage from '../../../page-objects/pages/home/nft-list';
+import NFTDetailsPage from '../../../page-objects/pages/nft-details-page';
+import { SMART_CONTRACTS } from '../../../seeder/smart-contracts';
+import type { Driver } from '../../../webdriver/driver';
 
 describe('View NFT details', function () {
   const smartContract = SMART_CONTRACTS.NFTS;

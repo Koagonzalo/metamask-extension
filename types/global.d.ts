@@ -1,11 +1,13 @@
 // Many of the state hooks return untyped raw state.
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 // In order for variables to be considered on the global scope they must be
 // declared using var and not const or let, which is why this rule is disabled
 /* eslint-disable no-var */
 
-import * as Sentry from '@sentry/browser';
-import {
+import type { Provider } from '@metamask/network-controller';
+import type * as Sentry from '@sentry/browser';
+import type {
   Success,
   Unsuccessful,
   PROTO,
@@ -16,12 +18,12 @@ import {
   EthereumSignMessage,
   EthereumSignTypedDataTypes,
 } from '@trezor/connect-web';
-import type { Provider } from '@metamask/network-controller';
-import {
+
+import type { Preferences } from '../app/scripts/controllers/preferences-controller';
+import type {
   OffscreenCommunicationTarget,
   TrezorAction,
 } from '../shared/constants/offscreen-communication';
-import type { Preferences } from '../app/scripts/controllers/preferences-controller';
 
 declare class Platform {
   openTab: (opts: { url: string }) => void;
@@ -67,8 +69,6 @@ type ResponseType =
  * input values so that the correct type can be inferred in the callback
  * method
  */
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 type sendMessage = {
   (
     extensionId: string,
@@ -77,14 +77,12 @@ type sendMessage = {
     callback?: (response: Record<string, unknown>) => void,
   ): void;
   (
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+    // TODO: Replace `any` with type
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     message: any,
     options?: Record<string, unknown>,
     callback?: (response: Record<string, unknown>) => void,
   ): void;
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   <T extends EthereumSignTypedDataTypes>(
     message: {
       target: OffscreenCommunicationTarget.trezorOffscreen;
@@ -203,8 +201,7 @@ type sendMessage = {
         url: string;
       };
     },
-
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+    // TODO: Replace `any` with type
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     callback: (response: { result: any; error?: Error }) => void,
   );
@@ -218,7 +215,7 @@ declare class Runtime {
   onMessage: {
     addListener: (
       callback: (
-        // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+        // TODO: Replace `any` with type
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         message: any,
         sender: MessageSender,
@@ -240,33 +237,17 @@ type SentryObject = Sentry & {
 
 type StateHooks = {
   getCustomTraces?: () => { [name: string]: number };
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getCleanAppState?: () => Promise<any>;
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getLogs?: () => any[];
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getMostRecentPersistedState?: () => any;
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getPersistedState: () => Promise<any>;
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getSentryAppState?: () => any;
   getSentryState: () => {
     browser: string;
     version: string;
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     state?: any;
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     persistedState?: any;
   };
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   metamaskGetState?: () => Promise<any>;
   throwTestBackgroundError?: (msg?: string) => Promise<void>;
   throwTestError?: (msg?: string) => void;
@@ -295,8 +276,7 @@ export declare global {
 
   namespace jest {
     // The interface is being used for declaration merging, which is an acceptable exception to this rule.
-    // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions, @typescript-eslint/naming-convention
+    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
     interface Matchers<R> {
       toBeFulfilled(): Promise<R>;
       toNeverResolve(): Promise<R>;
@@ -306,8 +286,6 @@ export declare global {
   /**
    * Unions T with U; U's properties will override T's properties
    */
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   type OverridingUnion<T, U> = Omit<T, keyof U> & U;
 
   function setPreference(key: keyof Preferences, value: boolean);

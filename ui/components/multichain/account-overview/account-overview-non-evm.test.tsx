@@ -1,13 +1,12 @@
 import React from 'react';
+
+import { CHAIN_IDS } from '../../../../shared/constants/network';
 import mockState from '../../../../test/data/mock-state.json';
-import configureStore from '../../../store/store';
 import { renderWithProvider } from '../../../../test/jest/rendering';
 import { setBackgroundConnection } from '../../../store/background-connection';
-import { CHAIN_IDS } from '../../../../shared/constants/network';
-import {
-  AccountOverviewNonEvm,
-  AccountOverviewNonEvmProps,
-} from './account-overview-non-evm';
+import configureStore from '../../../store/store';
+import type { AccountOverviewNonEvmProps } from './account-overview-non-evm';
+import { AccountOverviewNonEvm } from './account-overview-non-evm';
 
 jest.mock('../../../store/actions', () => ({
   tokenBalancesStartPolling: jest.fn().mockResolvedValue('pollingToken'),
@@ -56,6 +55,7 @@ const render = (props: AccountOverviewNonEvmProps = defaultProps) => {
 describe('AccountOverviewBtc', () => {
   beforeEach(() => {
     setBackgroundConnection({
+      setBridgeFeatureFlags: jest.fn(),
       tokenBalancesStartPolling: jest.fn(),
     } as never);
   });
@@ -66,7 +66,6 @@ describe('AccountOverviewBtc', () => {
     expect(queryByTestId('account-overview__asset-tab')).toBeInTheDocument();
     expect(queryByTestId('account-overview__nfts-tab')).not.toBeInTheDocument();
     expect(queryByTestId('account-overview__activity-tab')).toBeInTheDocument();
-    expect(queryByTestId('account-overview__defi-tab')).not.toBeInTheDocument();
   });
 
   it('does not show tokens links', () => {

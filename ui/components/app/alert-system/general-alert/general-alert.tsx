@@ -1,4 +1,14 @@
 import React from 'react';
+
+import type { SecurityProvider } from '../../../../../shared/constants/security-provider';
+import type { AlertSeverity } from '../../../../ducks/confirm-alerts/confirm-alerts';
+import {
+  Display,
+  FontWeight,
+  TextVariant,
+} from '../../../../helpers/constants/design-system';
+import ZENDESK_URLS from '../../../../helpers/constants/zendesk-url';
+import { useI18nContext } from '../../../../hooks/useI18nContext';
 import {
   BannerAlert,
   Box,
@@ -8,17 +18,8 @@ import {
 } from '../../../component-library';
 import Disclosure from '../../../ui/disclosure';
 import { DisclosureVariant } from '../../../ui/disclosure/disclosure.constants';
-import { useI18nContext } from '../../../../hooks/useI18nContext';
-import {
-  Display,
-  FontWeight,
-  TextVariant,
-} from '../../../../helpers/constants/design-system';
-import { SecurityProvider } from '../../../../../shared/constants/security-provider';
-import ZENDESK_URLS from '../../../../helpers/constants/zendesk-url';
-import { getBannerAlertSeverity } from '../utils';
 import { AlertProvider } from '../alert-provider';
-import { AlertSeverity } from '../../../../ducks/confirm-alerts/confirm-alerts';
+import { getBannerAlertSeverity } from '../utils';
 
 export type GeneralAlertProps = {
   description?: string;
@@ -31,8 +32,6 @@ export type GeneralAlertProps = {
   children?: React.ReactNode;
 };
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function ReportLink({
   reportUrl,
   provider,
@@ -61,8 +60,6 @@ function ReportLink({
   );
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function AlertDetails({
   details,
   reportUrl,
@@ -108,8 +105,6 @@ function AlertDetails({
   );
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function GeneralAlert({
   description,
   details,

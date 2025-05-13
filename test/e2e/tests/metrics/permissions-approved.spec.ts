@@ -79,7 +79,7 @@ describe('Permissions Approved Event', function (this: Suite) {
           environment_type: 'background',
           // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          requested_through: MetaMetricsRequestedThrough.EthereumProvider,
+          api_source: MetaMetricsRequestedThrough.EthereumProvider,
         });
         assert.deepStrictEqual(events[1].properties, {
           method: 'eth_requestAccounts',
@@ -93,7 +93,7 @@ describe('Permissions Approved Event', function (this: Suite) {
           environment_type: 'background',
           // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          requested_through: MetaMetricsRequestedThrough.EthereumProvider,
+          api_source: MetaMetricsRequestedThrough.EthereumProvider,
         });
       },
     );

@@ -1,11 +1,12 @@
-import { zeroAddress } from 'ethereumjs-util';
 import * as bridgeController from '@metamask/bridge-controller';
 import { toEvmCaipChainId } from '@metamask/multichain-network-controller';
-import { renderHookWithProvider } from '../../../test/lib/render-helpers';
+import { zeroAddress } from 'ethereumjs-util';
+
+import { MultichainNetworks } from '../../../shared/constants/multichain/networks';
 import { CHAIN_IDS } from '../../../shared/constants/network';
 import { createBridgeMockStore } from '../../../test/data/bridge/mock-bridge-store';
+import { renderHookWithProvider } from '../../../test/lib/render-helpers';
 import { createTestProviderTools } from '../../../test/stub/provider';
-import { MultichainNetworks } from '../../../shared/constants/multichain/networks';
 import useLatestBalance from './useLatestBalance';
 
 const mockCalcLatestSrcBalance = jest.fn();
@@ -18,12 +19,10 @@ jest.mock('@metamask/bridge-controller', () => {
 });
 
 const renderUseLatestBalance = (
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   token: { address: string; decimals?: number | string; chainId: any },
   mockStoreState: object,
 ) =>
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   renderHookWithProvider(() => useLatestBalance(token as any), mockStoreState);
 

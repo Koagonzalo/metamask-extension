@@ -1,10 +1,10 @@
-import { Driver } from '../../../../webdriver/driver';
-import { RawLocator } from '../../../common';
+import type { Driver } from '../../../../webdriver/driver';
+import type { RawLocator } from '../../../common';
 
 class WatchAssetConfirmation {
-  private driver: Driver;
+  private readonly driver: Driver;
 
-  private footerConfirmButton: RawLocator;
+  private readonly footerConfirmButton: RawLocator;
 
   constructor(driver: Driver) {
     this.driver = driver;

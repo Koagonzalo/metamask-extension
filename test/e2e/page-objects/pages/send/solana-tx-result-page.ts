@@ -1,7 +1,7 @@
-import { Driver } from '../../../webdriver/driver';
+import type { Driver } from '../../../webdriver/driver';
 
 class SolanaTxresultPage {
-  private driver: Driver;
+  private readonly driver: Driver;
 
   private readonly closeButton = {
     text: 'Close',
@@ -17,8 +17,6 @@ class SolanaTxresultPage {
     this.driver = driver;
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_isViewTransactionLinkDisplayed() {
     try {
       await this.driver.findClickableElement(this.viewTransactionLink);
@@ -29,8 +27,6 @@ class SolanaTxresultPage {
     }
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_TransactionStatus(sent: boolean): Promise<boolean> {
     const statusText = sent ? 'Sent' : 'Transaction failed';
     try {
@@ -45,8 +41,6 @@ class SolanaTxresultPage {
     }
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_TransactionStatusText(
     amount: string,
     sent: boolean,

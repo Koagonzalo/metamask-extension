@@ -1,30 +1,31 @@
+import type { InternalAccount } from '@metamask/keyring-internal-api';
+import { parseCaipChainId } from '@metamask/utils';
 import React, { useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import { parseCaipChainId } from '@metamask/utils';
-import { InternalAccount } from '@metamask/keyring-internal-api';
-import {
-  getMultichainAccountUrl,
-  getMultichainBlockExplorerUrl,
-} from '../../../helpers/utils/multichain/blockExplorer';
-
-import { MenuItem } from '../../ui/menu';
-import { useI18nContext } from '../../../hooks/useI18nContext';
-import { MetaMetricsContext } from '../../../contexts/metametrics';
+import type {
+  MetaMetricsEventOptions,
+  MetaMetricsEventPayload,
+} from '../../../../shared/constants/metametrics';
 import {
   MetaMetricsEventCategory,
   MetaMetricsEventLinkType,
   MetaMetricsEventName,
-  MetaMetricsEventOptions,
-  MetaMetricsEventPayload,
 } from '../../../../shared/constants/metametrics';
-import { IconName, Text } from '../../component-library';
-import { getBlockExplorerLinkText } from '../../../selectors';
-import { getURLHostName } from '../../../helpers/utils/util';
+import { MetaMetricsContext } from '../../../contexts/metametrics';
 import { NETWORKS_ROUTE } from '../../../helpers/constants/routes';
-import { getMultichainNetwork } from '../../../selectors/multichain';
+import {
+  getMultichainAccountUrl,
+  getMultichainBlockExplorerUrl,
+} from '../../../helpers/utils/multichain/blockExplorer';
+import { getURLHostName } from '../../../helpers/utils/util';
+import { useI18nContext } from '../../../hooks/useI18nContext';
 import { useMultichainSelector } from '../../../hooks/useMultichainSelector';
+import { getBlockExplorerLinkText } from '../../../selectors';
+import { getMultichainNetwork } from '../../../selectors/multichain';
+import { IconName, Text } from '../../component-library';
+import { MenuItem } from '../../ui/menu';
 
 export type ViewExplorerMenuItemProps = {
   /**
@@ -58,12 +59,8 @@ export const openBlockExplorer = (
     event: MetaMetricsEventName.ExternalLinkClicked,
     category: MetaMetricsEventCategory.Navigation,
     properties: {
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       link_type: MetaMetricsEventLinkType.AccountTracker,
       location: metricsLocation,
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       url_domain: getURLHostName(addressLink),
     },
   });
@@ -122,8 +119,6 @@ export const ViewExplorerMenuItem = ({
           category: MetaMetricsEventCategory.Accounts,
           properties: {
             location: metricsLocation,
-            // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             chain_id: chainId,
           },
         });

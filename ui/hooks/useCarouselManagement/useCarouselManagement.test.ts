@@ -1,13 +1,10 @@
 import { renderHook } from '@testing-library/react-hooks';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateSlides } from '../../store/actions';
+
+import type { CarouselSlide } from '../../../shared/constants/app-state';
 import { getSelectedAccountCachedBalance, getSlides } from '../../selectors';
 import { getIsRemoteModeEnabled } from '../../selectors/remote-mode';
-import { CarouselSlide } from '../../../shared/constants/app-state';
-import {
-  getSweepstakesCampaignActive,
-  useCarouselManagement,
-} from './useCarouselManagement';
+import { updateSlides } from '../../store/actions';
 import {
   FUND_SLIDE,
   BRIDGE_SLIDE,
@@ -18,138 +15,90 @@ import {
   SWEEPSTAKES_END,
   ZERO_BALANCE,
   REMOTE_MODE_SLIDE,
-  MULTI_SRP_SLIDE,
-  BACKUPANDSYNC_SLIDE,
-  SOLANA_SLIDE,
-  SMART_ACCOUNT_UPGRADE_SLIDE,
 } from './constants';
+import {
+  getSweepstakesCampaignActive,
+  useCarouselManagement,
+} from './useCarouselManagement';
 
 const SLIDES_ZERO_FUNDS_REMOTE_OFF_SWEEPSTAKES_OFF = [
   { ...FUND_SLIDE, undismissable: true },
-  SMART_ACCOUNT_UPGRADE_SLIDE,
   ///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
   BRIDGE_SLIDE,
   ///: END:ONLY_INCLUDE_IF
   CARD_SLIDE,
   CASH_SLIDE,
-  MULTI_SRP_SLIDE,
-  BACKUPANDSYNC_SLIDE,
-  ///: BEGIN:ONLY_INCLUDE_IF(solana)
-  SOLANA_SLIDE,
-  ///: END:ONLY_INCLUDE_IF
 ];
 
 const SLIDES_POSITIVE_FUNDS_REMOTE_OFF_SWEEPSTAKES_OFF = [
-  SMART_ACCOUNT_UPGRADE_SLIDE,
   ///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
   BRIDGE_SLIDE,
   ///: END:ONLY_INCLUDE_IF
-  { ...FUND_SLIDE, undismissable: false },
   CARD_SLIDE,
+  { ...FUND_SLIDE, undismissable: false },
   CASH_SLIDE,
-  MULTI_SRP_SLIDE,
-  BACKUPANDSYNC_SLIDE,
-  ///: BEGIN:ONLY_INCLUDE_IF(solana)
-  SOLANA_SLIDE,
-  ///: END:ONLY_INCLUDE_IF
 ];
 
 const SLIDES_ZERO_FUNDS_REMOTE_ON_SWEEPSTAKES_OFF = [
   REMOTE_MODE_SLIDE,
   { ...FUND_SLIDE, undismissable: true },
-  SMART_ACCOUNT_UPGRADE_SLIDE,
   ///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
   BRIDGE_SLIDE,
   ///: END:ONLY_INCLUDE_IF
   CARD_SLIDE,
   CASH_SLIDE,
-  MULTI_SRP_SLIDE,
-  BACKUPANDSYNC_SLIDE,
-  ///: BEGIN:ONLY_INCLUDE_IF(solana)
-  SOLANA_SLIDE,
-  ///: END:ONLY_INCLUDE_IF
 ];
 
 const SLIDES_POSITIVE_FUNDS_REMOTE_ON_SWEEPSTAKES_OFF = [
   REMOTE_MODE_SLIDE,
-  SMART_ACCOUNT_UPGRADE_SLIDE,
   ///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
   BRIDGE_SLIDE,
   ///: END:ONLY_INCLUDE_IF
-  { ...FUND_SLIDE, undismissable: false },
   CARD_SLIDE,
+  { ...FUND_SLIDE, undismissable: false },
   CASH_SLIDE,
-  MULTI_SRP_SLIDE,
-  BACKUPANDSYNC_SLIDE,
-  ///: BEGIN:ONLY_INCLUDE_IF(solana)
-  SOLANA_SLIDE,
-  ///: END:ONLY_INCLUDE_IF
 ];
 
 const SLIDES_ZERO_FUNDS_REMOTE_OFF_SWEEPSTAKES_ON = [
   { ...SWEEPSTAKES_SLIDE, dismissed: false },
   { ...FUND_SLIDE, undismissable: true },
-  SMART_ACCOUNT_UPGRADE_SLIDE,
   ///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
   BRIDGE_SLIDE,
   ///: END:ONLY_INCLUDE_IF
   CARD_SLIDE,
   CASH_SLIDE,
-  MULTI_SRP_SLIDE,
-  BACKUPANDSYNC_SLIDE,
-  ///: BEGIN:ONLY_INCLUDE_IF(solana)
-  SOLANA_SLIDE,
-  ///: END:ONLY_INCLUDE_IF
 ];
 
 const SLIDES_POSITIVE_FUNDS_REMOTE_OFF_SWEEPSTAKES_ON = [
   { ...SWEEPSTAKES_SLIDE, dismissed: false },
-  SMART_ACCOUNT_UPGRADE_SLIDE,
   ///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
   BRIDGE_SLIDE,
   ///: END:ONLY_INCLUDE_IF
-  { ...FUND_SLIDE, undismissable: false },
   CARD_SLIDE,
+  { ...FUND_SLIDE, undismissable: false },
   CASH_SLIDE,
-  MULTI_SRP_SLIDE,
-  BACKUPANDSYNC_SLIDE,
-  ///: BEGIN:ONLY_INCLUDE_IF(solana)
-  SOLANA_SLIDE,
-  ///: END:ONLY_INCLUDE_IF
 ];
 
 const SLIDES_ZERO_FUNDS_REMOTE_ON_SWEEPSTAKES_ON = [
   { ...SWEEPSTAKES_SLIDE, dismissed: false },
   REMOTE_MODE_SLIDE,
   { ...FUND_SLIDE, undismissable: true },
-  SMART_ACCOUNT_UPGRADE_SLIDE,
   ///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
   BRIDGE_SLIDE,
   ///: END:ONLY_INCLUDE_IF
   CARD_SLIDE,
   CASH_SLIDE,
-  MULTI_SRP_SLIDE,
-  BACKUPANDSYNC_SLIDE,
-  ///: BEGIN:ONLY_INCLUDE_IF(solana)
-  SOLANA_SLIDE,
-  ///: END:ONLY_INCLUDE_IF
 ];
 
 const SLIDES_POSITIVE_FUNDS_REMOTE_ON_SWEEPSTAKES_ON = [
   { ...SWEEPSTAKES_SLIDE, dismissed: false },
   REMOTE_MODE_SLIDE,
-  SMART_ACCOUNT_UPGRADE_SLIDE,
   ///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
   BRIDGE_SLIDE,
   ///: END:ONLY_INCLUDE_IF
-  { ...FUND_SLIDE, undismissable: false },
   CARD_SLIDE,
+  { ...FUND_SLIDE, undismissable: false },
   CASH_SLIDE,
-  MULTI_SRP_SLIDE,
-  BACKUPANDSYNC_SLIDE,
-  ///: BEGIN:ONLY_INCLUDE_IF(solana)
-  SOLANA_SLIDE,
-  ///: END:ONLY_INCLUDE_IF
 ];
 
 jest.mock('react-redux', () => ({

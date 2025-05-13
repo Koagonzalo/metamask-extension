@@ -1,16 +1,16 @@
+import FixtureBuilder from '../../../fixture-builder';
 import {
   clickNestedButton,
   openActionMenuAndStartSendFlow,
   withFixtures,
 } from '../../../helpers';
-import { SMART_CONTRACTS } from '../../../seeder/smart-contracts';
-import FixtureBuilder from '../../../fixture-builder';
+import { loginWithBalanceValidation } from '../../../page-objects/flows/login.flow';
+import { switchToNetworkFlow } from '../../../page-objects/flows/network.flow';
+import HeaderNavbar from '../../../page-objects/pages/header-navbar';
 import Homepage from '../../../page-objects/pages/home/homepage';
 import NftListPage from '../../../page-objects/pages/home/nft-list';
-import { loginWithBalanceValidation } from '../../../page-objects/flows/login.flow';
-import { Driver } from '../../../webdriver/driver';
-import HeaderNavbar from '../../../page-objects/pages/header-navbar';
-import { switchToNetworkFlow } from '../../../page-objects/flows/network.flow';
+import { SMART_CONTRACTS } from '../../../seeder/smart-contracts';
+import type { Driver } from '../../../webdriver/driver';
 
 describe('Send NFTs', function () {
   const smartContract = SMART_CONTRACTS.NFTS;

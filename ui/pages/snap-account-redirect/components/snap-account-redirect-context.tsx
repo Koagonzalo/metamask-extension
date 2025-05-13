@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   BannerAlert,
   BannerAlertSeverity,
@@ -8,7 +9,6 @@ import {
   ButtonVariant,
   Text,
 } from '../../../components/component-library';
-import type { SnapAccountRedirectProps } from '../snap-account-redirect';
 import {
   AlignItems,
   Display,
@@ -18,6 +18,7 @@ import {
   TextVariant,
 } from '../../../helpers/constants/design-system';
 import { useI18nContext } from '../../../hooks/useI18nContext';
+import type { SnapAccountRedirectProps } from '../snap-account-redirect';
 import SnapAccountRedirectMessage from './snap-account-redirect-message';
 
 const SnapAccountRedirectContent = ({
@@ -77,7 +78,7 @@ const SnapAccountRedirectContent = ({
             </BannerAlert>
           </Box>
         ) : null}
-        {isBlockedUrl === false ? (
+        {!isBlockedUrl ? (
           <Text
             data-testid="snap-account-redirect-content-description"
             textAlign={TextAlign.Center}
@@ -86,7 +87,7 @@ const SnapAccountRedirectContent = ({
             {t('snapAccountRedirectSiteDescription', [snapName])}
           </Text>
         ) : null}
-        {(url.length > 0 || message.length > 0) && isBlockedUrl === false ? (
+        {(url.length > 0 || message.length > 0) && !isBlockedUrl ? (
           <SnapAccountRedirectMessage
             snapName={snapName}
             url={url}

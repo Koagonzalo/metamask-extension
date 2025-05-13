@@ -1,11 +1,20 @@
-import React, {
-  useState,
-  useEffect,
-  MouseEvent as ReactMouseEvent,
-} from 'react';
-import classnames from 'classnames';
-import { State } from '@metamask/snaps-sdk';
+import type { State } from '@metamask/snaps-sdk';
 import { isObject } from '@metamask/utils';
+import classnames from 'classnames';
+import React, { useState, useEffect } from 'react';
+import type { MouseEvent as ReactMouseEvent } from 'react';
+
+import { useSnapInterfaceContext } from '../../../../contexts/snaps';
+import {
+  BackgroundColor,
+  BlockSize,
+  BorderRadius,
+  Display,
+  FlexDirection,
+  IconColor,
+  TextAlign,
+  TextVariant,
+} from '../../../../helpers/constants/design-system';
 import {
   Box,
   ButtonBase,
@@ -21,17 +30,6 @@ import {
   ModalOverlay,
   Text,
 } from '../../../component-library';
-import {
-  BackgroundColor,
-  BlockSize,
-  BorderRadius,
-  Display,
-  FlexDirection,
-  IconColor,
-  TextAlign,
-  TextVariant,
-} from '../../../../helpers/constants/design-system';
-import { useSnapInterfaceContext } from '../../../../contexts/snaps';
 
 export type SnapUISelectorProps = {
   className?: string;
@@ -67,7 +65,6 @@ const SelectorItem: React.FunctionComponent<SelectorItemProps> = ({
   return (
     <ButtonBase
       className="snap-ui-renderer__selector-item"
-      data-testid="snap-ui-renderer__selector-item"
       backgroundColor={
         selected ? BackgroundColor.primaryMuted : BackgroundColor.transparent
       }

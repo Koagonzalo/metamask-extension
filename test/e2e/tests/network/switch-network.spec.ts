@@ -1,14 +1,15 @@
-import { Suite } from 'mocha';
-import { Driver } from '../../webdriver/driver';
-import { withFixtures } from '../../helpers';
+import type { Suite } from 'mocha';
+
 import FixtureBuilder from '../../fixture-builder';
+import { withFixtures } from '../../helpers';
 import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
-import HomePage from '../../page-objects/pages/home/homepage';
-import HeaderNavbar from '../../page-objects/pages/header-navbar';
 import {
   switchToNetworkFlow,
   searchAndSwitchToNetworkFlow,
 } from '../../page-objects/flows/network.flow';
+import HeaderNavbar from '../../page-objects/pages/header-navbar';
+import HomePage from '../../page-objects/pages/home/homepage';
+import type { Driver } from '../../webdriver/driver';
 
 describe('Switch network - ', function (this: Suite) {
   it('Switch networks to existing and new networks', async function () {

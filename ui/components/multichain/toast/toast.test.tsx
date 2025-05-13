@@ -1,11 +1,12 @@
 /* eslint-disable jest/require-top-level-describe */
-import React from 'react';
+import type { InternalAccount } from '@metamask/keyring-internal-api';
 import { fireEvent, render } from '@testing-library/react';
-import { InternalAccount } from '@metamask/keyring-internal-api';
-import { AvatarAccount, AvatarAccountSize } from '../../component-library';
-import { BorderColor } from '../../../helpers/constants/design-system';
-import { createMockInternalAccount } from '../../../../test/jest/mocks';
+import React from 'react';
+
 import { Toast } from '.';
+import { createMockInternalAccount } from '../../../../test/jest/mocks';
+import { BorderColor } from '../../../helpers/constants/design-system';
+import { AvatarAccount, AvatarAccountSize } from '../../component-library';
 
 const mockInternalAccount = createMockInternalAccount();
 

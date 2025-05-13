@@ -1,19 +1,27 @@
-import React from 'react';
+import type { NetworkConfiguration } from '@metamask/network-controller';
+import { RpcEndpointType } from '@metamask/network-controller';
 import { screen, fireEvent } from '@testing-library/react';
-import configureStore from 'redux-mock-store';
+import React from 'react';
 import { useSelector } from 'react-redux';
+import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import sinon from 'sinon';
+
+import { MultichainNetworks } from '../../../../../shared/constants/multichain/networks';
+import { AssetType } from '../../../../../shared/constants/transaction';
+import mockState from '../../../../../test/data/mock-send-state.json';
+import { renderWithProvider } from '../../../../../test/lib/render-helpers';
 import {
-  NetworkConfiguration,
-  RpcEndpointType,
-} from '@metamask/network-controller';
+  getConversionRate,
+  getNativeCurrency,
+  getTokens,
+} from '../../../../ducks/metamask/metamask';
+import { getSwapsBlockedTokens } from '../../../../ducks/send';
+import { getTopAssets } from '../../../../ducks/swaps/swaps';
 import { useI18nContext } from '../../../../hooks/useI18nContext';
+import { useMultichainBalances } from '../../../../hooks/useMultichainBalances';
 import { useNftsCollections } from '../../../../hooks/useNftsCollections';
 import { useTokenTracker } from '../../../../hooks/useTokenTracker';
-import { renderWithProvider } from '../../../../../test/lib/render-helpers';
-import mockState from '../../../../../test/data/mock-send-state.json';
-import { AssetType } from '../../../../../shared/constants/transaction';
 import {
   getNativeCurrencyImage,
   getSelectedAccountCachedBalance,
@@ -23,14 +31,6 @@ import {
   getTokenList,
 } from '../../../../selectors';
 import {
-  getConversionRate,
-  getNativeCurrency,
-  getTokens,
-} from '../../../../ducks/metamask/metamask';
-import { getTopAssets } from '../../../../ducks/swaps/swaps';
-import * as actions from '../../../../store/actions';
-import { getSwapsBlockedTokens } from '../../../../ducks/send';
-import {
   getMultichainNetworkConfigurationsByChainId,
   getMultichainCurrentChainId,
   getMultichainCurrentCurrency,
@@ -39,10 +39,9 @@ import {
   getMultichainCurrentNetwork,
   getMultichainSelectedAccountCachedBalance,
 } from '../../../../selectors/multichain';
-import { MultichainNetworks } from '../../../../../shared/constants/multichain/networks';
-import { useMultichainBalances } from '../../../../hooks/useMultichainBalances';
+import * as actions from '../../../../store/actions';
 import { AssetPickerModal } from './asset-picker-modal';
-import { ERC20Asset } from './types';
+import type { ERC20Asset } from './types';
 
 const mockAssetList = jest.fn();
 jest.mock('./AssetList', () => (props: unknown) => {
@@ -223,7 +222,7 @@ describe('AssetPickerModal', () => {
   });
 
   it('renders no NFTs message when there are no NFTs', () => {
-    sinon.stub(actions, 'detectNfts').returns(() => Promise.resolve());
+    sinon.stub(actions, 'detectNfts').returns(async () => Promise.resolve());
     renderWithProvider(
       <AssetPickerModal
         {...defaultProps}

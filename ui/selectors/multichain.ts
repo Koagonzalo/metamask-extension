@@ -4,54 +4,59 @@ import type {
   MultichainBalancesControllerState,
   RatesControllerState,
 } from '@metamask/assets-controllers';
-import { NetworkType } from '@metamask/controller-utils';
-import { isEvmAccountType, Transaction } from '@metamask/keyring-api';
-import { InternalAccount } from '@metamask/keyring-internal-api';
-import { MultichainTransactionsControllerState } from '@metamask/multichain-transactions-controller';
-import {
-  NetworkConfiguration,
-  RpcEndpointType,
-} from '@metamask/network-controller';
-import { CaipChainId, Hex, KnownCaipNamespace } from '@metamask/utils';
+import type { NetworkType } from '@metamask/controller-utils';
+import type { Transaction } from '@metamask/keyring-api';
+import { isEvmAccountType } from '@metamask/keyring-api';
+import type { InternalAccount } from '@metamask/keyring-internal-api';
+import type { MultichainTransactionsControllerState } from '@metamask/multichain-transactions-controller';
+import type { NetworkConfiguration } from '@metamask/network-controller';
+import { RpcEndpointType } from '@metamask/network-controller';
+import type { CaipChainId, Hex } from '@metamask/utils';
+import { KnownCaipNamespace } from '@metamask/utils';
 import PropTypes from 'prop-types';
 import { createSelector } from 'reselect';
+
+import { getConversionRatesForNativeAsset } from '../../app/scripts/lib/util';
+import { MULTICHAIN_NETWORK_TO_ASSET_TYPES } from '../../shared/constants/multichain/assets';
+import type { MultichainProviderConfig } from '../../shared/constants/multichain/networks';
 import {
   MULTICHAIN_ACCOUNT_TYPE_TO_MAINNET,
   MULTICHAIN_PROVIDER_CONFIGS,
   MULTICHAIN_TOKEN_IMAGE_MAP,
   MultichainNetworks,
-  MultichainProviderConfig,
 } from '../../shared/constants/multichain/networks';
+import {
+  CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP,
+  CHAIN_IDS,
+  TEST_NETWORK_IDS,
+} from '../../shared/constants/network';
 import { Numeric } from '../../shared/modules/Numeric';
+// TODO: Remove restricted import
+// eslint-disable-next-line import/no-restricted-paths
+import type { NetworkState } from '../../shared/modules/selectors/networks';
+import {
+  getCurrentChainId,
+  getNetworkConfigurationsByChainId,
+  getProviderConfig,
+} from '../../shared/modules/selectors/networks';
+// eslint-disable-next-line import/no-restricted-paths
+import { createDeepEqualSelector } from '../../shared/modules/selectors/util';
 import {
   getCompletedOnboarding,
   getConversionRate,
   getCurrentCurrency,
   getNativeCurrency,
 } from '../ducks/metamask/metamask';
-// TODO: Remove restricted import
-// eslint-disable-next-line import/no-restricted-paths
-import { MULTICHAIN_NETWORK_TO_ASSET_TYPES } from '../../shared/constants/multichain/assets';
+import type { AccountsState } from './accounts';
 import {
-  CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP,
-  CHAIN_IDS,
-  TEST_NETWORK_IDS,
-} from '../../shared/constants/network';
-import {
-  getCurrentChainId,
-  getNetworkConfigurationsByChainId,
-  getProviderConfig,
-  NetworkState,
-} from '../../shared/modules/selectors/networks';
-// eslint-disable-next-line import/no-restricted-paths
-import { getConversionRatesForNativeAsset } from '../../app/scripts/lib/util';
-import { createDeepEqualSelector } from '../../shared/modules/selectors/util';
-import {
-  AccountsState,
   getInternalAccounts,
   getSelectedInternalAccount,
   isSolanaAccount,
 } from './accounts';
+import {
+  getSelectedMultichainNetworkConfiguration,
+  type MultichainNetworkConfigState,
+} from './multichain/networks';
 import {
   getIsMainnet,
   getMaybeSelectedInternalAccount,
@@ -59,11 +64,8 @@ import {
   getSelectedAccountCachedBalance,
   getShouldShowFiat,
   getShowFiatInTestnets,
+  getUseCurrencyRateCheck,
 } from './selectors';
-import {
-  getSelectedMultichainNetworkConfiguration,
-  type MultichainNetworkConfigState,
-} from './multichain/networks';
 
 export type AssetsState = {
   metamask: MultichainAssetsControllerState;
@@ -336,10 +338,12 @@ export function getMultichainShouldShowFiat(
   const selectedAccount = account ?? getSelectedInternalAccount(state);
   const isTestnet = getMultichainIsTestnet(state, selectedAccount);
   const isMainnet = !isTestnet;
+  const useCurrencyRateCheck = getUseCurrencyRateCheck(state);
 
   return getMultichainIsEvm(state, selectedAccount)
     ? getShouldShowFiat(state)
-    : isMainnet || (isTestnet && getShowFiatInTestnets(state));
+    : (useCurrencyRateCheck && isMainnet) ||
+        (useCurrencyRateCheck && isTestnet && getShowFiatInTestnets(state));
 }
 
 export function getMultichainDefaultToken(

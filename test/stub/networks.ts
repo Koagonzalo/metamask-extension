@@ -1,13 +1,13 @@
-import {
+import { BtcScope, SolScope } from '@metamask/keyring-api';
+import { type MultichainNetworkControllerState } from '@metamask/multichain-network-controller';
+import type {
   NetworkMetadata,
   NetworkState,
-  NetworkStatus,
-  RpcEndpointType,
 } from '@metamask/network-controller';
-import { type MultichainNetworkControllerState } from '@metamask/multichain-network-controller';
+import { NetworkStatus, RpcEndpointType } from '@metamask/network-controller';
+import type { Hex } from '@metamask/utils';
 import { v4 as uuidv4 } from 'uuid';
-import { Hex } from '@metamask/utils';
-import { BtcScope, SolScope } from '@metamask/keyring-api';
+
 import {
   NETWORK_TO_NAME_MAP,
   CHAIN_ID_TO_CURRENCY_SYMBOL_MAP,
@@ -93,12 +93,6 @@ export const mockMultichainNetworkState =
       },
       selectedMultichainNetworkChainId: BtcScope.Mainnet,
       isEvmSelected: true,
-      networksWithTransactionActivity: {
-        '0x0dcd5d886577d5081b0c52e242ef29e70be3e7bc': {
-          namespace: 'eip155',
-          activeChains: ['0x5'],
-        },
-      },
     };
   };
 

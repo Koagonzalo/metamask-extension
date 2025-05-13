@@ -1,7 +1,7 @@
-import { Driver } from '../../../webdriver/driver';
+import type { Driver } from '../../../webdriver/driver';
 
 class SelectNetwork {
-  private driver: Driver;
+  private readonly driver: Driver;
 
   private readonly addNetworkButton = '[data-testid="test-add-button"]';
 
@@ -31,8 +31,6 @@ class SelectNetwork {
     this.driver = driver;
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_pageIsLoaded(): Promise<void> {
     try {
       await this.driver.waitForMultipleSelectors([
@@ -105,8 +103,6 @@ class SelectNetwork {
     await this.driver.clickElement(this.toggleButton);
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_networkRPCNumber(expectedNumber: number): Promise<void> {
     console.log(
       `Wait for ${expectedNumber} RPC URLs to be displayed in select network dialog`,
@@ -118,8 +114,6 @@ class SelectNetwork {
     console.log(`${expectedNumber} RPC URLs found in select network dialog`);
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_rpcIsSelected(rpcName: string): Promise<void> {
     console.log(`Check RPC ${rpcName} is selected in network dialog`);
     await this.driver.waitForSelector({

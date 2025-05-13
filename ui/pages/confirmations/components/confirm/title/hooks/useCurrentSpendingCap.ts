@@ -1,9 +1,8 @@
-import {
-  TransactionMeta,
-  TransactionType,
-} from '@metamask/transaction-controller';
-import { Confirmation } from '../../../../types/confirm';
+import type { TransactionMeta } from '@metamask/transaction-controller';
+import { TransactionType } from '@metamask/transaction-controller';
+
 import { useAssetDetails } from '../../../../hooks/useAssetDetails';
+import type { Confirmation } from '../../../../types/confirm';
 import { useApproveTokenSimulation } from '../../info/approve/hooks/use-approve-token-simulation';
 
 const isTransactionMeta = (

@@ -1,24 +1,23 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
 import {
   BtcAccountType,
   EthAccountType,
   SolAccountType,
 } from '@metamask/keyring-api';
+import React from 'react';
+import { useSelector } from 'react-redux';
+
 import { useI18nContext } from '../../../hooks/useI18nContext';
-import { BannerAlert, BannerAlertSeverity } from '../../component-library';
 import { getSelectedInternalAccount } from '../../../selectors';
+import { BannerAlert, BannerAlertSeverity } from '../../component-library';
 import { AccountOverviewEth } from './account-overview-eth';
-import { AccountOverviewUnknown } from './account-overview-unknown';
-import { AccountOverviewCommonProps } from './common';
 import { AccountOverviewNonEvm } from './account-overview-non-evm';
+import { AccountOverviewUnknown } from './account-overview-unknown';
+import type { AccountOverviewCommonProps } from './common';
 
 export type AccountOverviewProps = AccountOverviewCommonProps & {
   useExternalServices: boolean;
 };
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export function AccountOverview(props: AccountOverviewProps) {
   const t = useI18nContext();
   const account = useSelector(getSelectedInternalAccount);

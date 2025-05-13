@@ -1,26 +1,27 @@
-import { isStrictHexString, type CaipChainId, type Hex } from '@metamask/utils';
-import { BigNumber } from 'bignumber.js';
 import type { ContractMarketData } from '@metamask/assets-controllers';
-import {
-  AddNetworkFields,
-  NetworkConfiguration,
-} from '@metamask/network-controller';
-import { toChecksumAddress } from 'ethereumjs-util';
+import type { ChainId } from '@metamask/bridge-controller';
 import {
   isSolanaChainId,
-  ChainId,
   type TxData,
   formatChainIdToHex,
   BridgeClientId,
   formatChainIdToCaip,
 } from '@metamask/bridge-controller';
+import type {
+  AddNetworkFields,
+  NetworkConfiguration,
+} from '@metamask/network-controller';
+import { isStrictHexString, type CaipChainId, type Hex } from '@metamask/utils';
+import { BigNumber } from 'bignumber.js';
+import { toChecksumAddress } from 'ethereumjs-util';
+
+import { MultichainNetworks } from '../../../shared/constants/multichain/networks';
+import { toAssetId } from '../../../shared/lib/asset-utils';
+import fetchWithCache from '../../../shared/lib/fetch-with-cache';
 import { decGWEIToHexWEI } from '../../../shared/modules/conversion.utils';
 import { Numeric } from '../../../shared/modules/Numeric';
-import { getTransaction1559GasFeeEstimates } from '../../pages/swaps/swaps.util';
 import { fetchTokenExchangeRates as fetchTokenExchangeRatesUtil } from '../../helpers/utils/util';
-import fetchWithCache from '../../../shared/lib/fetch-with-cache';
-import { toAssetId } from '../../../shared/lib/asset-utils';
-import { MultichainNetworks } from '../../../shared/constants/multichain/networks';
+import { getTransaction1559GasFeeEstimates } from '../../pages/swaps/swaps.util';
 
 type GasFeeEstimate = {
   suggestedMaxPriorityFeePerGas: string;
@@ -107,13 +108,12 @@ const fetchTokenExchangeRates = async (
       functionName: 'fetchSolanaTokenExchangeRates',
     })) as Record<string, { price: number }>;
 
-    exchangeRates = Object.entries(tokenV3PriceResponse).reduce(
-      (acc, [k, curr]) => {
-        acc[k] = curr.price;
-        return acc;
-      },
-      {} as Record<string, number>,
-    );
+    exchangeRates = Object.entries(tokenV3PriceResponse).reduce<
+      Record<string, number>
+    >((acc, [k, curr]) => {
+      acc[k] = curr.price;
+      return acc;
+    }, {});
     return exchangeRates;
   }
   // EVM chains

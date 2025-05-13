@@ -1,17 +1,18 @@
-import React from 'react';
 import { screen, act, waitFor } from '@testing-library/react';
+import React from 'react';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { renderWithProvider } from '../../../../../test/jest';
-import { MetaMaskReduxState } from '../../../../store/store';
-import mockState from '../../../../../test/data/mock-state.json';
+
+import AssetList from '.';
 import { CHAIN_IDS } from '../../../../../shared/constants/network';
+import mockState from '../../../../../test/data/mock-state.json';
+import { renderWithProvider } from '../../../../../test/jest';
+import { getSelectedInternalAccountFromMockState } from '../../../../../test/jest/mocks';
+import { mockNetworkState } from '../../../../../test/stub/networks';
 import { useIsOriginalNativeTokenSymbol } from '../../../../hooks/useIsOriginalNativeTokenSymbol';
 import useMultiPolling from '../../../../hooks/useMultiPolling';
 import { getTokenSymbol } from '../../../../store/actions';
-import { getSelectedInternalAccountFromMockState } from '../../../../../test/jest/mocks';
-import { mockNetworkState } from '../../../../../test/stub/networks';
-import AssetList from '.';
+import type { MetaMaskReduxState } from '../../../../store/store';
 
 // Specific to just the ETH FIAT conversion
 const CONVERSION_RATE = 1597.32;
@@ -88,8 +89,6 @@ jest.mock('react-redux', () => {
 });
 
 jest.mock('../../../../hooks/useMultiPolling', () => ({
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   __esModule: true,
   default: jest.fn(),
 }));

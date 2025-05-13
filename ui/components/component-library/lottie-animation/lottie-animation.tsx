@@ -1,5 +1,4 @@
-import React, { useEffect, useRef } from 'react';
-import {
+import type {
   AnimationConfigWithData,
   AnimationConfigWithPath,
   AnimationItem,
@@ -7,6 +6,7 @@ import {
 // Use lottie_light to avoid unsafe-eval which breaks the CSP
 // https://github.com/airbnb/lottie-web/issues/289#issuecomment-1454909624
 import lottie from 'lottie-web/build/player/lottie_light';
+import React, { useEffect, useRef } from 'react';
 
 export type LottieAnimationProps = {
   data?: object;

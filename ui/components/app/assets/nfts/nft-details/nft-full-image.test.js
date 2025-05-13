@@ -1,16 +1,17 @@
+import { toHex } from '@metamask/controller-utils';
+import { CHAIN_IDS } from '@metamask/transaction-controller';
 import { waitFor } from '@testing-library/react';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { toHex } from '@metamask/controller-utils';
-import { useSelector } from 'react-redux';
-import { CHAIN_IDS } from '@metamask/transaction-controller';
-import { renderWithProvider } from '../../../../../../test/lib/render-helpers';
-import mockState from '../../../../../../test/data/mock-state.json';
-import * as UseGetAssetImageUrlModule from '../../../../../hooks/useGetAssetImageUrl';
+
 import { getNetworkConfigurationsByChainId } from '../../../../../../shared/modules/selectors/networks';
+import mockState from '../../../../../../test/data/mock-state.json';
+import { renderWithProvider } from '../../../../../../test/lib/render-helpers';
 import { mockNetworkState } from '../../../../../../test/stub/networks';
 import { getAllNfts } from '../../../../../ducks/metamask/metamask';
+import * as UseGetAssetImageUrlModule from '../../../../../hooks/useGetAssetImageUrl';
 import { getIpfsGateway, getOpenSeaEnabled } from '../../../../../selectors';
 import NftFullImage from './nft-full-image';
 

@@ -29,7 +29,7 @@ export const generateActionId = () => Date.now() + Math.random();
  */
 // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function submitRequestToBackground<R>(
+export async function submitRequestToBackground<R>(
   method: string,
 
   // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973

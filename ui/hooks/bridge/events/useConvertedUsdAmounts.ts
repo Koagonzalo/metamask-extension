@@ -1,10 +1,11 @@
 /* eslint-disable camelcase */
 import { useSelector } from 'react-redux';
+
+import { getConvertedUsdAmounts } from '../../../../shared/lib/bridge/metrics';
 import {
   getBridgeQuotes,
   getFromAmountInCurrency,
 } from '../../../ducks/bridge/selectors';
-import { getConvertedUsdAmounts } from '../../../../shared/lib/bridge/metrics';
 
 // This hook is used to get the converted USD amounts for the bridge trade
 // It returns the converted token value if the user's selected currency is USD
@@ -17,7 +18,7 @@ export const useConvertedUsdAmounts = () => {
   );
 
   return getConvertedUsdAmounts({
-    activeQuote: activeQuote ?? undefined,
-    fromAmountInputValueInUsd: fromAmountInputValueInUsd.toString(),
+    activeQuote,
+    fromAmountInputValueInUsd,
   });
 };

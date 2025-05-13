@@ -1,14 +1,18 @@
-import { TransactionMeta } from '@metamask/transaction-controller';
-import { Hex } from '@metamask/utils';
+import { toHex } from '@metamask/controller-utils';
+import type {
+  GasFeeToken,
+  TransactionMeta,
+} from '@metamask/transaction-controller';
+import type { Hex } from '@metamask/utils';
 import { act } from '@testing-library/react';
+
+import { getIsSmartTransaction } from '../../../../shared/modules/selectors';
 import { genUnapprovedContractInteractionConfirmation } from '../../../../test/data/confirmations/contract-interaction';
 import { getMockConfirmStateForTransaction } from '../../../../test/data/confirmations/helper';
 import { renderHookWithConfirmContextProvider } from '../../../../test/lib/confirmations/render-helpers';
-import { updateSelectedGasFeeToken } from '../../../store/controller-actions/transaction-controller';
-import { Alert } from '../../../ducks/confirm-alerts/confirm-alerts';
+import type { Alert } from '../../../ducks/confirm-alerts/confirm-alerts';
 import { forceUpdateMetamaskState } from '../../../store/actions';
-import { getIsSmartTransaction } from '../../../../shared/modules/selectors';
-import { GAS_FEE_TOKEN_MOCK } from '../../../../test/data/confirmations/gas';
+import { updateSelectedGasFeeToken } from '../../../store/controller-actions/transaction-controller';
 import { useInsufficientBalanceAlerts } from './alerts/transactions/useInsufficientBalanceAlerts';
 import { useAutomaticGasFeeTokenSelect } from './useAutomaticGasFeeTokenSelect';
 
@@ -20,6 +24,19 @@ jest.mock('../../../store/actions', () => ({
   ...jest.requireActual('../../../store/actions'),
   forceUpdateMetamaskState: jest.fn(),
 }));
+
+const GAS_FEE_TOKEN_MOCK: GasFeeToken = {
+  amount: toHex(1000),
+  balance: toHex(2345),
+  decimals: 3,
+  gas: '0x3',
+  maxFeePerGas: '0x4',
+  maxPriorityFeePerGas: '0x5',
+  rateWei: toHex('1798170000000000000'),
+  recipient: '0x1234567890123456789012345678901234567890',
+  symbol: 'TEST',
+  tokenAddress: '0x1234567890123456789012345678901234567890',
+};
 
 function runHook({
   noGasFeeTokens,

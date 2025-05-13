@@ -1,9 +1,13 @@
-import { strict as assert } from 'assert';
 import { TransactionEnvelopeType } from '@metamask/transaction-controller';
-import { Suite } from 'mocha';
-import { MockedEndpoint } from 'mockttp';
+import { strict as assert } from 'assert';
+import type { Suite } from 'mocha';
+import type { MockedEndpoint } from 'mockttp';
+
 import { openDapp, unlockWallet, WINDOW_TITLES } from '../../../helpers';
-import { Driver } from '../../../webdriver/driver';
+import Confirmation from '../../../page-objects/pages/confirmations/redesign/confirmation';
+import PermitConfirmation from '../../../page-objects/pages/confirmations/redesign/permit-confirmation';
+import TestDapp from '../../../page-objects/pages/test-dapp';
+import type { Driver } from '../../../webdriver/driver';
 import {
   mockPermitDecoding,
   mockSignatureApprovedWithDecoding,
@@ -11,11 +15,7 @@ import {
   scrollAndConfirmAndAssertConfirm,
   withTransactionEnvelopeTypeFixtures,
 } from '../helpers';
-import { TestSuiteArguments } from '../transactions/shared';
-import TestDapp from '../../../page-objects/pages/test-dapp';
-import Confirmation from '../../../page-objects/pages/confirmations/redesign/confirmation';
-import PermitConfirmation from '../../../page-objects/pages/confirmations/redesign/permit-confirmation';
-import { MetaMetricsRequestedThrough } from '../../../../../shared/constants/metametrics';
+import type { TestSuiteArguments } from '../transactions/shared';
 import {
   assertAccountDetailsMetrics,
   assertHeaderInfoBalance,
@@ -72,7 +72,6 @@ describe('Confirmation Signature - Permit', function (this: Suite) {
           decodingChangeTypes: ['LISTING', 'RECEIVE'],
           decodingResponse: 'CHANGE',
           decodingDescription: null,
-          requestedThrough: MetaMetricsRequestedThrough.EthereumProvider,
         });
 
         await assertVerifiedResults(driver, publicAddress);
@@ -112,7 +111,6 @@ describe('Confirmation Signature - Permit', function (this: Suite) {
           decodingChangeTypes: ['LISTING', 'RECEIVE'],
           decodingResponse: 'CHANGE',
           decodingDescription: null,
-          requestedThrough: MetaMetricsRequestedThrough.EthereumProvider,
         });
       },
       mockSignatureRejectedWithDecoding,

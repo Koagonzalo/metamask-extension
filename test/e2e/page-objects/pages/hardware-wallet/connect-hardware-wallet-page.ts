@@ -1,11 +1,11 @@
-import { Driver } from '../../../webdriver/driver';
+import type { Driver } from '../../../webdriver/driver';
 
 /**
  * Represents the page for connecting hardware wallets.
  * This page allows users to initiate connections with various hardware wallet types.
  */
 class ConnectHardwareWalletPage {
-  private driver: Driver;
+  private readonly driver: Driver;
 
   private readonly connectHardwareWalletPageTitle = {
     text: 'Connect a hardware wallet',
@@ -22,8 +22,6 @@ class ConnectHardwareWalletPage {
     this.driver = driver;
   }
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   async check_pageIsLoaded(): Promise<void> {
     try {
       await this.driver.waitForMultipleSelectors([

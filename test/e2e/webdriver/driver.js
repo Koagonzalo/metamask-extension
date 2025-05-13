@@ -1,5 +1,7 @@
-const { promises: fs } = require('fs');
 const { strict: assert } = require('assert');
+const cssToXPath = require('css-to-xpath');
+const { promises: fs } = require('fs');
+const lodash = require('lodash');
 const {
   By,
   Condition,
@@ -8,11 +10,10 @@ const {
   ThenableWebDriver, // eslint-disable-line no-unused-vars -- this is imported for JSDoc
   WebElement, // eslint-disable-line no-unused-vars -- this is imported for JSDoc
 } = require('selenium-webdriver');
-const cssToXPath = require('css-to-xpath');
 const { sprintf } = require('sprintf-js');
-const lodash = require('lodash');
-const { quoteXPathText } = require('../../helpers/quoteXPathText');
+
 const { isManifestV3 } = require('../../../shared/modules/mv3.utils');
+const { quoteXPathText } = require('../../helpers/quoteXPathText');
 const { WindowHandles } = require('../background-socket/window-handles');
 
 const PAGES = {
@@ -492,28 +493,9 @@ class Driver {
   /**
    * Quits the browser session, closing all windows and tabs.
    *
-   * This was previously implemented as just `await this.driver.quit()`, but on Windows,
-   * that was causing Google Chrome for Testing to not close, and sit open indefinitely
-   * taking CPU load. It is also possible that this was causing some cascading errors on CI.
-   *
    * @returns {Promise} promise resolving after quitting
    */
   async quit() {
-    if (this.browser === 'chrome') {
-      try {
-        const handles = await this.driver.getAllWindowHandles();
-
-        for (const handle of handles) {
-          await this.driver.switchTo().window(handle);
-          await this.driver.close();
-        }
-      } catch (e) {
-        console.info(
-          'Problem encountered closing Chrome windows/tabs, but continuing anyway',
-        );
-      }
-    }
-
     await this.driver.quit();
   }
 
@@ -564,19 +546,10 @@ class Driver {
    * Finds a clickable element on the page using the given locator.
    *
    * @param {string | object} rawLocator - Element locator
-   * @param {object} guards
-   * @param {number} [guards.waitAtLeastGuard] - Minimum milliseconds to wait before passing
-   * @param {number} [guards.timeout]  - Timeout in milliseconds
+   * @param {number} timeout - Timeout in milliseconds
    * @returns {Promise<WebElement>} A promise that resolves to the found clickable element.
    */
-  async findClickableElement(
-    rawLocator,
-    { waitAtLeastGuard = 0, timeout = this.timeout } = {},
-  ) {
-    assert(timeout > waitAtLeastGuard);
-    if (waitAtLeastGuard > 0) {
-      await this.delay(waitAtLeastGuard);
-    }
+  async findClickableElement(rawLocator, timeout = this.timeout) {
     const element = await this.findElement(rawLocator, timeout);
     await Promise.all([
       this.driver.wait(until.elementIsVisible(element), timeout),

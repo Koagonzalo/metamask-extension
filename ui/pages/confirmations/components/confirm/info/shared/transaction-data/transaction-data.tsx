@@ -1,38 +1,37 @@
-import React from 'react';
-import { TransactionMeta } from '@metamask/transaction-controller';
 import { hexStripZeros } from '@ethersproject/bytes';
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
+import type { TransactionMeta } from '@metamask/transaction-controller';
+import type { Hex } from '@metamask/utils';
 import _ from 'lodash';
-import { Hex } from '@metamask/utils';
-import { useDecodedTransactionData } from '../../hooks/useDecodedTransactionData';
-import { ConfirmInfoSection } from '../../../../../../../components/app/confirm/info/row/section';
+import React from 'react';
+
+import type { UniswapPathPool } from '../../../../../../../../app/scripts/lib/transaction/decode/uniswap';
+import { hasTransactionData } from '../../../../../../../../shared/modules/transaction.utils';
+import type {
+  DecodedTransactionDataMethod,
+  DecodedTransactionDataParam,
+} from '../../../../../../../../shared/types/transaction-decode';
+import { DecodedTransactionDataSource } from '../../../../../../../../shared/types/transaction-decode';
+import { renderShortTokenId } from '../../../../../../../components/app/assets/nfts/nft-details/utils';
 import {
   ConfirmInfoRow,
   ConfirmInfoRowAddress,
   ConfirmInfoRowDivider,
   ConfirmInfoRowText,
 } from '../../../../../../../components/app/confirm/info/row';
+import { ConfirmInfoExpandableRow } from '../../../../../../../components/app/confirm/info/row/expandable-row';
+import { ConfirmInfoSection } from '../../../../../../../components/app/confirm/info/row/section';
+import { Box } from '../../../../../../../components/component-library';
+import Preloader from '../../../../../../../components/ui/icon/preloader';
 import {
   Display,
   FlexWrap,
   JustifyContent,
 } from '../../../../../../../helpers/constants/design-system';
-import { Box } from '../../../../../../../components/component-library';
 import { useI18nContext } from '../../../../../../../hooks/useI18nContext';
-import { ConfirmInfoExpandableRow } from '../../../../../../../components/app/confirm/info/row/expandable-row';
-import Preloader from '../../../../../../../components/ui/icon/preloader';
-import {
-  DecodedTransactionDataMethod,
-  DecodedTransactionDataParam,
-  DecodedTransactionDataSource,
-} from '../../../../../../../../shared/types/transaction-decode';
 // TODO: Remove restricted import
 // eslint-disable-next-line import/no-restricted-paths
-import { UniswapPathPool } from '../../../../../../../../app/scripts/lib/transaction/decode/uniswap';
 import { useConfirmContext } from '../../../../../context/confirm';
-import { hasTransactionData } from '../../../../../../../../shared/modules/transaction.utils';
-import { renderShortTokenId } from '../../../../../../../components/app/assets/nfts/nft-details/utils';
+import { useDecodedTransactionData } from '../../hooks/useDecodedTransactionData';
 
 export const TransactionData = ({
   data,
@@ -96,8 +95,6 @@ export const TransactionData = ({
   );
 };
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export function Container({
   children,
   isLoading,
@@ -120,8 +117,6 @@ export function Container({
         <ConfirmInfoRow
           label={t('advancedDetailsDataDesc')}
           copyEnabled={Boolean(transactionData)}
-          // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31880
-          // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
           copyText={transactionData || undefined}
         >
           <Box>{isLoading && <Preloader size={20} />}</Box>
@@ -132,8 +127,6 @@ export function Container({
   );
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function RawDataRow({ transactionData }: { transactionData: string }) {
   const t = useI18nContext();
   return (
@@ -146,8 +139,6 @@ function RawDataRow({ transactionData }: { transactionData: string }) {
   );
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function FunctionContainer({
   method,
   source,
@@ -205,8 +196,6 @@ function FunctionContainer({
   );
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function ParamValue({
   param,
   source,
@@ -238,8 +227,6 @@ function ParamValue({
   return <ConfirmInfoRowText text={valueString} />;
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function ParamRow({
   param,
   index,
@@ -278,8 +265,6 @@ function ParamRow({
   );
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function UniswapPath({
   pathPools,
   chainId,

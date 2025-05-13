@@ -1,10 +1,11 @@
 import React from 'react';
-import { renderWithProvider } from '../../../../test/jest';
-import configureStore from '../../../store/store';
+
 import mockState from '../../../../test/data/mock-state.json';
-import { MetamaskIdentityProvider } from '../../../contexts/identity';
+import { renderWithProvider } from '../../../../test/jest';
 import { backupAndSyncFeaturesTogglesTestIds } from '../../../components/app/identity/backup-and-sync-features-toggles/backup-and-sync-features-toggles';
 import { backupAndSyncToggleTestIds } from '../../../components/app/identity/backup-and-sync-toggle/backup-and-sync-toggle';
+import { MetamaskIdentityProvider } from '../../../contexts/identity';
+import configureStore from '../../../store/store';
 import BackupAndSyncTab from './backup-and-sync-tab.component';
 
 const render = () => {

@@ -1,4 +1,5 @@
 import startCase from 'lodash/startCase';
+
 import { version as VERSION } from '../package.json';
 
 start().catch(console.error);
@@ -141,7 +142,7 @@ async function start(): Promise<void> {
   const storybookUrl = `${HOST_URL}/storybook-build/index.html`;
   const storybookLink = `<a href="${storybookUrl}">Storybook</a>`;
 
-  const tsMigrationDashboardUrl = `${HOST_URL}/ts-migration-dashboard/index.html`;
+  const tsMigrationDashboardUrl = `${BUILD_LINK_BASE}/ts-migration-dashboard/index.html`;
   const tsMigrationDashboardLink = `<a href="${tsMigrationDashboardUrl}">Dashboard</a>`;
 
   // links to bundle browser builds
@@ -328,18 +329,23 @@ async function start(): Promise<void> {
       common: prBundleSizeStats.common.size,
     };
 
-    const devSizes = Object.keys(prSizes).reduce((sizes, part) => {
+    const devSizes = Object.keys(prSizes).reduce<
+      Record<keyof typeof prSizes, number>
+    >((sizes, part) => {
       sizes[part as keyof typeof prSizes] =
         devBundleSizeStats[MERGE_BASE_COMMIT_HASH][part] || 0;
       return sizes;
-    }, {} as Record<keyof typeof prSizes, number>);
+    }, {});
 
-    const diffs = Object.keys(prSizes).reduce((output, part) => {
-      output[part] =
-        prSizes[part as keyof typeof prSizes] -
-        devSizes[part as keyof typeof prSizes];
-      return output;
-    }, {} as Record<string, number>);
+    const diffs = Object.keys(prSizes).reduce<Record<string, number>>(
+      (output, part) => {
+        output[part] =
+          prSizes[part as keyof typeof prSizes] -
+          devSizes[part as keyof typeof prSizes];
+        return output;
+      },
+      {},
+    );
 
     const sizeDiffRows = Object.keys(diffs).map(
       (part) =>

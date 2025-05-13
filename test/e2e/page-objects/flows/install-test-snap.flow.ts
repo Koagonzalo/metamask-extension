@@ -1,8 +1,9 @@
-import { Driver } from '../../webdriver/driver';
+import { WINDOW_TITLES } from '../../helpers';
+import type { Driver } from '../../webdriver/driver';
 import SnapInstall from '../pages/dialog/snap-install';
 import SnapInstallWarning from '../pages/dialog/snap-install-warning';
-import { TestSnaps, buttonLocator } from '../pages/test-snaps';
-import { WINDOW_TITLES } from '../../helpers';
+import type { buttonLocator } from '../pages/test-snaps';
+import { TestSnaps } from '../pages/test-snaps';
 
 /**
  * Open test snaps page in a new window tab, click on the button.
@@ -11,19 +12,13 @@ import { WINDOW_TITLES } from '../../helpers';
  *
  * @param driver - WebDriver instance used to interact with the browser.
  * @param buttonName - The name of the button to click.
- * @param options - Optional parameters.
- * @param options.withWarning - Whether the installation will have a warning dialog, default is false.
- * @param options.withExtraScreen - Whether there is an extra screen after the Ok, defaults to false.
+ * @param withWarning - Whether the installation will have a warning dialog, default is false.
  */
 export async function openTestSnapClickButtonAndInstall(
   driver: Driver,
   buttonName: keyof typeof buttonLocator,
-  options: {
-    withWarning?: boolean;
-    withExtraScreen?: boolean;
-  } = {},
+  withWarning = false,
 ) {
-  const { withWarning = false, withExtraScreen = false } = options;
   const snapInstall = new SnapInstall(driver);
   const snapInstallWarning = new SnapInstallWarning(driver);
   const testSnaps = new TestSnaps(driver);
@@ -31,17 +26,13 @@ export async function openTestSnapClickButtonAndInstall(
   await testSnaps.scrollAndClickButton(buttonName);
   await driver.switchToWindowWithTitle(WINDOW_TITLES.Dialog);
   await snapInstall.check_pageIsLoaded();
-  await snapInstall.clickConnectButton();
+  await snapInstall.clickNextButton();
   await snapInstall.clickConfirmButton();
   if (withWarning) {
     await snapInstallWarning.check_pageIsLoaded();
     await snapInstallWarning.clickCheckboxPermission();
     await snapInstallWarning.clickConfirmButton();
   }
-  if (withExtraScreen) {
-    await snapInstall.clickOkButtonAndContinueOnDialog();
-  } else {
-    await snapInstall.clickOkButton();
-  }
+  await snapInstall.clickNextButton();
   await driver.switchToWindowWithTitle(WINDOW_TITLES.TestSnaps);
 }

@@ -1,9 +1,10 @@
-import { Suite } from 'mocha';
-import { withFixtures } from '../../helpers';
+import type { Suite } from 'mocha';
+
 import FixtureBuilder from '../../fixture-builder';
-import HomePage from '../../page-objects/pages/home/homepage';
-import { Driver } from '../../webdriver/driver';
+import { withFixtures } from '../../helpers';
 import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
+import HomePage from '../../page-objects/pages/home/homepage';
+import type { Driver } from '../../webdriver/driver';
 
 describe('Lock and unlock', function (this: Suite) {
   it('successfully unlocks after lock', async function () {

@@ -1,5 +1,5 @@
 // BEGIN:ONLY_INCLUDE_IF(build-flask)
-import { SnapId } from '@metamask/snaps-sdk';
+import type { SnapId } from '@metamask/snaps-sdk';
 
 export const ACCOUNT_WATCHER_SNAP_ID: SnapId =
   'npm:@metamask/account-watcher' as SnapId;

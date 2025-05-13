@@ -1,9 +1,9 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
+
+import type { IconColor } from '../../../helpers/constants/design-system';
 import type { PolymorphicComponentPropWithRef } from '../box';
-import { IconColor } from '../../../helpers/constants/design-system';
-import { TextDirection, TextProps, TextStyleUtilityProps } from '../text';
-import { IconName } from '../icon';
-import type { IconProps } from '../icon';
+import type { IconName, IconProps } from '../icon';
+import type { TextDirection, TextProps, TextStyleUtilityProps } from '../text';
 
 export enum ButtonBaseSize {
   Sm = 'sm',
@@ -100,14 +100,10 @@ export interface ButtonBaseStyleUtilityProps
   textDirection?: TextDirection;
 }
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export type ButtonBaseProps<C extends React.ElementType> =
   PolymorphicComponentPropWithRef<C, ButtonBaseStyleUtilityProps>;
 
 export type ButtonBaseComponent = <
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   C extends React.ElementType = 'button' | 'a',
 >(
   props: ButtonBaseProps<C>,

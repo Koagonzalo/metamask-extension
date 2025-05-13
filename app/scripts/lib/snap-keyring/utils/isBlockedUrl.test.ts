@@ -1,5 +1,6 @@
-import { ListNames, PhishingController } from '@metamask/phishing-controller';
 import { Messenger } from '@metamask/base-controller';
+import { ListNames, PhishingController } from '@metamask/phishing-controller';
+
 import { isBlockedUrl } from './isBlockedUrl';
 
 describe('isBlockedUrl', () => {
@@ -32,7 +33,6 @@ describe('isBlockedUrl', () => {
     },
   });
 
-  // @ts-expect-error This is missing from the Mocha type definitions
   it.each([
     ['http://metamask.io', false],
     ['https://metamask.io', false],

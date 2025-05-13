@@ -1,12 +1,13 @@
+import { RpcEndpointType } from '@metamask/network-controller';
+import { CHAIN_IDS } from '@metamask/transaction-controller';
+import { screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { screen, fireEvent } from '@testing-library/react';
-import { RpcEndpointType } from '@metamask/network-controller';
-import { CHAIN_IDS } from '@metamask/transaction-controller';
-import { renderWithProvider } from '../../../../../test/lib/render-helpers';
-import mockState from '../../../../../test/data/mock-send-state.json';
+
 import { NETWORK_TO_SHORT_NETWORK_NAME_MAP } from '../../../../../shared/constants/bridge';
+import mockState from '../../../../../test/data/mock-send-state.json';
+import { renderWithProvider } from '../../../../../test/lib/render-helpers';
 import { AssetPickerModalNetwork } from './asset-picker-modal-network';
 
 const mockOnClose = jest.fn();
@@ -41,8 +42,6 @@ describe('AssetPickerModalNetwork', () => {
         },
       ],
       name: 'network',
-
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any,
     networks: [
@@ -76,8 +75,6 @@ describe('AssetPickerModalNetwork', () => {
         ],
         name: 'Network name 4',
       },
-
-      // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ] as any,
   };

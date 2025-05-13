@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+
 import {
   BackgroundColor,
   FontWeight,
@@ -7,6 +8,8 @@ import {
   TextAlign,
   TextVariant,
 } from '../../../../../helpers/constants/design-system';
+import { getCurrencyRates } from '../../../../../selectors';
+import { getMultichainIsEvm } from '../../../../../selectors/multichain';
 import {
   ButtonIcon,
   ButtonIconSize,
@@ -14,9 +17,7 @@ import {
   SensitiveText,
   SensitiveTextLength,
 } from '../../../../component-library';
-import { getCurrencyRates } from '../../../../../selectors';
-import { getMultichainIsEvm } from '../../../../../selectors/multichain';
-import { TokenFiatDisplayInfo } from '../../types';
+import type { TokenFiatDisplayInfo } from '../../types';
 
 type TokenCellSecondaryDisplayProps = {
   token: TokenFiatDisplayInfo;
@@ -42,7 +43,7 @@ export const TokenCellSecondaryDisplay = React.memo(
       return (
         <ButtonIcon
           iconName={IconName.Danger}
-          onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
             e.preventDefault();
             e.stopPropagation();
             handleScamWarningModal(true);

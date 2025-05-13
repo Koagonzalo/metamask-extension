@@ -1,6 +1,7 @@
 import assert from 'node:assert';
-import { describe, it } from 'node:test';
 import { join } from 'node:path';
+import { describe, it } from 'node:test';
+
 import { getLatestCommit } from '../utils/git';
 
 describe('getLatestCommit', () => {

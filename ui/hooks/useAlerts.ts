@@ -1,17 +1,16 @@
-import { useDispatch, useSelector } from 'react-redux';
 import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import type { Alert } from '../ducks/confirm-alerts/confirm-alerts';
+import { setAlertConfirmed as setAlertConfirmedAction } from '../ducks/confirm-alerts/confirm-alerts';
+import { Severity } from '../helpers/constants/design-system';
 import {
-  AlertsState,
   selectAlerts,
   selectConfirmedAlertKeys,
   selectFieldAlerts,
   selectGeneralAlerts,
 } from '../selectors/alerts';
-import {
-  Alert,
-  setAlertConfirmed as setAlertConfirmedAction,
-} from '../ducks/confirm-alerts/confirm-alerts';
-import { Severity } from '../helpers/constants/design-system';
+import type { AlertsState } from '../selectors/alerts';
 
 const useAlerts = (ownerId: string) => {
   const dispatch = useDispatch();

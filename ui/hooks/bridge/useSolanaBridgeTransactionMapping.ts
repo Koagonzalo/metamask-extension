@@ -1,23 +1,21 @@
-import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import {
-  Transaction,
-  TransactionStatus as KeyringTransactionStatus,
-} from '@metamask/keyring-api';
+import type { BridgeAsset } from '@metamask/bridge-controller';
+import { getNativeAssetForChainId } from '@metamask/bridge-controller';
+import type { Transaction } from '@metamask/keyring-api';
+import { TransactionStatus as KeyringTransactionStatus } from '@metamask/keyring-api';
 import { TransactionStatus } from '@metamask/transaction-controller';
 import { isCaipChainId, type CaipChainId } from '@metamask/utils';
-import {
-  BridgeAsset,
-  getNativeAssetForChainId,
-} from '@metamask/bridge-controller';
-import { BridgeHistoryItem } from '@metamask/bridge-status-controller';
-import { Numeric, NumericValue } from '../../../shared/modules/Numeric';
-import { NETWORK_TO_NAME_MAP } from '../../../shared/constants/network';
+import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
+
+import { NETWORK_TO_SHORT_NETWORK_NAME_MAP } from '../../../shared/constants/bridge';
 import {
   MULTICHAIN_PROVIDER_CONFIGS,
   MultichainNetworks,
 } from '../../../shared/constants/multichain/networks';
-import { NETWORK_TO_SHORT_NETWORK_NAME_MAP } from '../../../shared/constants/bridge';
+import { NETWORK_TO_NAME_MAP } from '../../../shared/constants/network';
+import type { NumericValue } from '../../../shared/modules/Numeric';
+import { Numeric } from '../../../shared/modules/Numeric';
+import type { BridgeHistoryItem } from '../../../shared/types/bridge-status';
 import { selectBridgeHistoryForAccount } from '../../ducks/bridge-status/selectors';
 import { KEYRING_TRANSACTION_STATUS_KEY } from '../useMultichainTransactionDisplay';
 

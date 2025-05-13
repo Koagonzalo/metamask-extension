@@ -1,7 +1,7 @@
-import { renderHookWithProvider } from '../../../test/lib/render-helpers';
-import { CHAIN_IDS } from '../../../shared/constants/network';
 import { MultichainNetworks } from '../../../shared/constants/multichain/networks';
+import { CHAIN_IDS } from '../../../shared/constants/network';
 import { createBridgeMockStore } from '../../../test/data/bridge/mock-bridge-store';
+import { renderHookWithProvider } from '../../../test/lib/render-helpers';
 import { useTokenAlerts } from './useTokenAlerts';
 
 const renderUseSolanaAlerts = (mockStoreState: object) =>
@@ -9,8 +9,6 @@ const renderUseSolanaAlerts = (mockStoreState: object) =>
 
 const mockResponse = {
   type: 'warning',
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   feature_id: 'UNSTABLE_TOKEN_PRICE',
   description:
     'The price of this token in USD is highly volatile, indicating a high risk of losing significant value by interacting with it.',

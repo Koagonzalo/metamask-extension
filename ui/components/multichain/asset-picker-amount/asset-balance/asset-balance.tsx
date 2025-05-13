@@ -1,12 +1,13 @@
 import React from 'react';
-import { Box, Text } from '../../../component-library';
+
+import type { Asset } from '../../../../ducks/send';
 import {
   Display,
   TextColor,
   TextVariant,
 } from '../../../../helpers/constants/design-system';
 import { useI18nContext } from '../../../../hooks/useI18nContext';
-import { Asset } from '../../../../ducks/send';
+import { Box, Text } from '../../../component-library';
 import { AssetBalanceText } from './asset-balance-text';
 
 type AssetBalanceProps = {
@@ -14,8 +15,6 @@ type AssetBalanceProps = {
   asset: Asset;
 };
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export function AssetBalance({ asset, error }: AssetBalanceProps) {
   const t = useI18nContext();
 

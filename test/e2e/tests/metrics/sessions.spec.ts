@@ -1,11 +1,11 @@
-import { MockttpServer } from 'mockttp';
+import type { MockttpServer } from 'mockttp';
+
 import FixtureBuilder from '../../fixture-builder';
-import { withFixtures } from '../../helpers';
+import { unlockWallet, withFixtures } from '../../helpers';
 import {
   expectMockRequest,
   expectNoMockRequest,
 } from '../../helpers/mock-server';
-import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
 
 async function mockSentrySession(mockServer: MockttpServer) {
   return [
@@ -38,7 +38,7 @@ describe('Sessions', function () {
         },
       },
       async ({ driver, mockedEndpoint }) => {
-        await loginWithBalanceValidation(driver);
+        await unlockWallet(driver);
         await expectMockRequest(driver, mockedEndpoint[0], { timeout: 3000 });
       },
     );
@@ -59,7 +59,7 @@ describe('Sessions', function () {
         },
       },
       async ({ driver, mockedEndpoint }) => {
-        await loginWithBalanceValidation(driver);
+        await unlockWallet(driver);
         await expectNoMockRequest(driver, mockedEndpoint[0], { timeout: 3000 });
       },
     );

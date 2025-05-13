@@ -1,32 +1,33 @@
-import { Mockttp } from 'mockttp';
 import { USER_STORAGE_FEATURE_NAMES } from '@metamask/profile-sync-controller/sdk';
-import { withFixtures } from '../../../helpers';
-import FixtureBuilder from '../../../fixture-builder';
-import { mockIdentityServices } from '../mocks';
-import {
-  IDENTITY_TEAM_PASSWORD,
-  IDENTITY_TEAM_SEED_PHRASE,
-} from '../constants';
+import type { Mockttp } from 'mockttp';
+
 import { ACCOUNT_TYPE } from '../../../constants';
+import FixtureBuilder from '../../../fixture-builder';
+import { withFixtures } from '../../../helpers';
 import { UserStorageMockttpController } from '../../../helpers/identity/user-storage/userStorageMockttpController';
+import {
+  createNewWalletOnboardingFlow,
+  importSRPOnboardingFlow,
+} from '../../../page-objects/flows/onboarding.flow';
 import AccountListPage from '../../../page-objects/pages/account-list-page';
 import HeaderNavbar from '../../../page-objects/pages/header-navbar';
 import HomePage from '../../../page-objects/pages/home/homepage';
 import OnboardingCompletePage from '../../../page-objects/pages/onboarding/onboarding-complete-page';
 import OnboardingPrivacySettingsPage from '../../../page-objects/pages/onboarding/onboarding-privacy-settings-page';
-import {
-  createNewWalletOnboardingFlow,
-  importSRPOnboardingFlow,
-} from '../../../page-objects/flows/onboarding.flow';
 import PrivacySettings from '../../../page-objects/pages/settings/privacy-settings';
 import SettingsPage from '../../../page-objects/pages/settings/settings-page';
+import {
+  IDENTITY_TEAM_PASSWORD,
+  IDENTITY_TEAM_SEED_PHRASE,
+} from '../constants';
 import { completeOnboardFlowIdentity } from '../flows';
+import { mockIdentityServices } from '../mocks';
 import {
   accountsToMockForAccountsSync,
   getAccountsSyncMockResponse,
 } from './mock-data';
 
-describe('Account syncing - Opt-out Backup and sync', function () {
+describe('Account syncing - Opt-out Profile Sync', function () {
   this.timeout(160000); // This test is very long, so we need an unusually high timeout
 
   const arrange = async () => {
@@ -47,7 +48,7 @@ describe('Account syncing - Opt-out Backup and sync', function () {
   describe('from inside MetaMask', function () {
     let walletSrp: string;
 
-    it('does not sync when backup and sync is turned off - previously synced accounts', async function () {
+    it('does not sync when profile sync is turned off - previously synced accounts', async function () {
       const {
         unencryptedAccounts,
         mockedAccountSyncResponse,
@@ -59,8 +60,8 @@ describe('Account syncing - Opt-out Backup and sync', function () {
         {
           fixtures: new FixtureBuilder({ onboarding: true }).build(),
           title: this.test?.fullTitle(),
-          testSpecificMock: (server: Mockttp) => {
-            // Setting up this mock to ensure that no User Storage requests are made when Backup and sync is off.
+          testSpecificMock: async (server: Mockttp) => {
+            // Setting up this mock to ensure that no User Storage requests are made when Profile Sync is off.
             // If any requests are made, they will match this mock and cause the test to fail, indicating that accounts are being incorrectly synced.
             userStorageMockttpController.setupPath(
               USER_STORAGE_FEATURE_NAMES.accounts,
@@ -99,10 +100,7 @@ describe('Account syncing - Opt-out Backup and sync', function () {
 
           const accountListPage = new AccountListPage(driver);
           await accountListPage.check_pageIsLoaded();
-          await accountListPage.check_numberOfAvailableAccounts(
-            1,
-            ACCOUNT_TYPE.Ethereum,
-          );
+          await accountListPage.check_numberOfAvailableAccounts(1);
           await accountListPage.check_accountIsNotDisplayedInAccountList(
             unencryptedAccounts[0].n,
           );
@@ -116,7 +114,7 @@ describe('Account syncing - Opt-out Backup and sync', function () {
       );
     });
 
-    it('does not sync when backup and sync is turned off - new user', async function () {
+    it('does not sync when profile sync is turned off - new user', async function () {
       const { userStorageMockttpController, defaultAccountOneName } =
         await arrange();
 
@@ -124,8 +122,8 @@ describe('Account syncing - Opt-out Backup and sync', function () {
         {
           fixtures: new FixtureBuilder({ onboarding: true }).build(),
           title: this.test?.fullTitle(),
-          testSpecificMock: (server: Mockttp) => {
-            // Setting up this mock to ensure that no User Storage requests are made when Backup and sync is off.
+          testSpecificMock: async (server: Mockttp) => {
+            // Setting up this mock to ensure that no User Storage requests are made when Profile Sync is off.
             // If any requests are made, they will match this mock and cause the test to fail, indicating that accounts are being incorrectly synced.
             userStorageMockttpController.setupPath(
               USER_STORAGE_FEATURE_NAMES.accounts,
@@ -160,10 +158,7 @@ describe('Account syncing - Opt-out Backup and sync', function () {
 
           const accountListPage = new AccountListPage(driver);
           await accountListPage.check_pageIsLoaded();
-          await accountListPage.check_numberOfAvailableAccounts(
-            1,
-            ACCOUNT_TYPE.Ethereum,
-          );
+          await accountListPage.check_numberOfAvailableAccounts(1);
           await accountListPage.check_accountDisplayedInAccountList(
             defaultAccountOneName,
           );
@@ -196,9 +191,9 @@ describe('Account syncing - Opt-out Backup and sync', function () {
         {
           fixtures: new FixtureBuilder({ onboarding: true }).build(),
           title: this.test?.fullTitle(),
-          // Setting up this mock to ensure that no User Storage requests are made when Backup and sync is off.
+          // Setting up this mock to ensure that no User Storage requests are made when Profile Sync is off.
           // If any requests are made, they will match this mock and cause the test to fail, indicating that accounts are being incorrectly synced.
-          testSpecificMock: (server: Mockttp) => {
+          testSpecificMock: async (server: Mockttp) => {
             userStorageMockttpController.setupPath(
               USER_STORAGE_FEATURE_NAMES.accounts,
               server,
@@ -215,10 +210,7 @@ describe('Account syncing - Opt-out Backup and sync', function () {
 
           const accountListPage = new AccountListPage(driver);
           await accountListPage.check_pageIsLoaded();
-          await accountListPage.check_numberOfAvailableAccounts(
-            1,
-            ACCOUNT_TYPE.Ethereum,
-          );
+          await accountListPage.check_numberOfAvailableAccounts(1);
           await accountListPage.check_accountDisplayedInAccountList(
             defaultAccountOneName,
           );

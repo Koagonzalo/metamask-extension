@@ -1,18 +1,19 @@
 /* eslint-disable jest/require-top-level-describe */
-import React from 'react';
 import { fireEvent, screen } from '@testing-library/react';
 import { merge } from 'lodash';
-import { renderWithProvider } from '../../../../test/jest';
-import configureStore from '../../../store/store';
-import mockState from '../../../../test/data/mock-state.json';
-import { shortenAddress } from '../../../helpers/utils/util';
-import { toChecksumHexAddress } from '../../../../shared/modules/hexstring-utils';
+import React from 'react';
+
+import { AccountListItem, AccountListItemMenuTypes } from '.';
 import {
   SEPOLIA_DISPLAY_NAME,
   CHAIN_IDS,
 } from '../../../../shared/constants/network';
+import { toChecksumHexAddress } from '../../../../shared/modules/hexstring-utils';
+import mockState from '../../../../test/data/mock-state.json';
+import { renderWithProvider } from '../../../../test/jest';
 import { mockNetworkState } from '../../../../test/stub/networks';
-import { AccountListItem, AccountListItemMenuTypes } from '.';
+import { shortenAddress } from '../../../helpers/utils/util';
+import configureStore from '../../../store/store';
 
 const mockAccount = {
   ...mockState.metamask.internalAccounts.accounts[
@@ -210,72 +211,6 @@ describe('AccountListItem', () => {
     });
     expect(container.querySelector('.mm-tag')).not.toBeInTheDocument();
   });
-
-  ///: BEGIN:ONLY_INCLUDE_IF(keyring-snaps)
-  it('renders the tag with the snap name for named snap accounts', () => {
-    const { container } = render(
-      {
-        account: {
-          ...mockAccount,
-          metadata: {
-            ...mockAccount.metadata,
-            snap: {
-              id: mockSnap.id,
-            },
-            keyring: {
-              type: 'Snap Keyring',
-            },
-          },
-          balance: '0x0',
-        },
-      },
-      {
-        metamask: {
-          snaps: {
-            [mockSnap.id]: {
-              ...mockSnap,
-              preinstalled: false,
-            },
-          },
-        },
-      },
-    );
-    const tag = container.querySelector('.mm-tag');
-    expect(tag.textContent).toBe(`${mockSnap.manifest.proposedName} (Beta)`);
-  });
-
-  it('does not render the tag with the snap name for preinstalled snap accounts', () => {
-    const { container } = render(
-      {
-        account: {
-          ...mockAccount,
-          metadata: {
-            ...mockAccount.metadata,
-            snap: {
-              id: 'npm:@metamask/solana-wallet-snap',
-            },
-            keyring: {
-              type: 'Snap Keyring',
-            },
-          },
-          balance: '0x0',
-        },
-      },
-      {
-        metamask: {
-          snaps: {
-            [mockSnap.id]: {
-              ...mockSnap,
-              preinstalled: true,
-            },
-          },
-        },
-      },
-    );
-    const tag = container.querySelector('.mm-tag');
-    expect(tag).not.toBeInTheDocument();
-  });
-  ///: END:ONLY_INCLUDE_IF
 
   describe('Multichain Behaviour', () => {
     describe('currency display', () => {

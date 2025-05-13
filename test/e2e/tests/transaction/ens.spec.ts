@@ -1,13 +1,14 @@
-import { Suite } from 'mocha';
-import { MockttpServer } from 'mockttp';
-import { withFixtures } from '../../helpers';
-import { Driver } from '../../webdriver/driver';
+import type { Suite } from 'mocha';
+import type { MockttpServer } from 'mockttp';
+
 import FixtureBuilder from '../../fixture-builder';
+import { withFixtures } from '../../helpers';
+import { mockMultiNetworkBalancePolling } from '../../mock-balance-polling/mock-balance-polling';
 import { loginWithoutBalanceValidation } from '../../page-objects/flows/login.flow';
 import HomePage from '../../page-objects/pages/home/homepage';
 import SendTokenPage from '../../page-objects/pages/send/send-token-page';
+import type { Driver } from '../../webdriver/driver';
 import { mockServerJsonRpc } from '../ppom/mocks/mock-server-json-rpc';
-import { mockMultiNetworkBalancePolling } from '../../mock-balance-polling/mock-balance-polling';
 
 describe('ENS', function (this: Suite) {
   const sampleAddress: string = '1111111111111111111111111111111111111111';

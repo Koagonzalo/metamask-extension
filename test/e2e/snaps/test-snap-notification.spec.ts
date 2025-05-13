@@ -1,11 +1,12 @@
 import { strict as assert } from 'assert';
-import { Driver } from '../webdriver/driver';
-import { openTestSnapClickButtonAndInstall } from '../page-objects/flows/install-test-snap.flow';
-import { TestSnaps } from '../page-objects/pages/test-snaps';
-import HeaderNavbar from '../page-objects/pages/header-navbar';
-import { withFixtures, unlockWallet, WINDOW_TITLES } from '../helpers';
+
 import FixtureBuilder from '../fixture-builder';
+import { withFixtures, unlockWallet, WINDOW_TITLES } from '../helpers';
+import { openTestSnapClickButtonAndInstall } from '../page-objects/flows/install-test-snap.flow';
+import HeaderNavbar from '../page-objects/pages/header-navbar';
 import NotificationsListPage from '../page-objects/pages/notifications-list-page';
+import { TestSnaps } from '../page-objects/pages/test-snaps';
+import type { Driver } from '../webdriver/driver';
 
 describe('Test Snap Notification', function () {
   it('can send 1 correctly read in-app notification', async function () {

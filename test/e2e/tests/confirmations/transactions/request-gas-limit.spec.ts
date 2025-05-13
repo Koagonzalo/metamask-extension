@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires */
 import { createDappTransaction } from '../../../page-objects/flows/transaction';
-import { Driver } from '../../../webdriver/driver';
+import type { Driver } from '../../../webdriver/driver';
 
 const { strict: assert } = require('assert');
+
 const FixtureBuilder = require('../../../fixture-builder');
 const {
   withFixtures,

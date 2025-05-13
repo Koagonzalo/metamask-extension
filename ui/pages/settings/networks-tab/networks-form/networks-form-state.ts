@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
-import {
+import type {
   RpcEndpointType,
   UpdateNetworkFields,
 } from '@metamask/network-controller';
+import { useEffect, useState } from 'react';
+
 import { hexToDecimal } from '../../../../../shared/modules/conversion.utils';
 
 /**
@@ -16,7 +17,12 @@ export const useNetworkFormState = (existingNetwork?: UpdateNetworkFields) => {
   const [ticker, setTicker] = useState<string>('');
 
   const [rpcUrls, setRpcUrls] = useState<{
-    rpcEndpoints: { name?: string; url: string; type: RpcEndpointType }[];
+    rpcEndpoints: {
+      name?: string;
+      url: string;
+      failoverUrls?: string[];
+      type: RpcEndpointType;
+    }[];
     defaultRpcEndpointIndex?: number;
   }>({
     rpcEndpoints: [],

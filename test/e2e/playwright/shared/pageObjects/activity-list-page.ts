@@ -1,7 +1,7 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
 export class ActivityListPage {
-  private page: Page;
+  private readonly page: Page;
 
   readonly activityItem: Locator;
 

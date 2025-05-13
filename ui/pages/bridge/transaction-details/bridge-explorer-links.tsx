@@ -1,6 +1,8 @@
-import { NetworkConfiguration } from '@metamask/network-controller';
-import React, { useContext } from 'react';
+import type { NetworkConfiguration } from '@metamask/network-controller';
 import type { Hex } from '@metamask/utils';
+import React, { useContext } from 'react';
+
+import { CHAINID_DEFAULT_BLOCK_EXPLORER_HUMAN_READABLE_URL_MAP } from '../../../../shared/constants/common';
 import {
   Box,
   IconName,
@@ -13,7 +15,6 @@ import {
   FlexDirection,
 } from '../../../helpers/constants/design-system';
 import { useI18nContext } from '../../../hooks/useI18nContext';
-import { CHAINID_DEFAULT_BLOCK_EXPLORER_HUMAN_READABLE_URL_MAP } from '../../../../shared/constants/common';
 
 const getBlockExplorerName = (
   chainId: Hex | undefined,
@@ -60,8 +61,6 @@ type ExplorerLinksProps = {
   destBlockExplorerUrl?: string;
 };
 
-// TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export default function BridgeExplorerLinks({
   srcChainId,
   destChainId,

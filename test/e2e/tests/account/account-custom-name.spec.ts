@@ -1,12 +1,13 @@
-import { Suite } from 'mocha';
-import { Driver } from '../../webdriver/driver';
-import { withFixtures } from '../../helpers';
+import type { Suite } from 'mocha';
+
 import { ACCOUNT_TYPE } from '../../constants';
 import FixtureBuilder from '../../fixture-builder';
+import { withFixtures } from '../../helpers';
 import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
-import AccountDetailsModal from '../../page-objects/pages/dialog/account-details-modal';
 import AccountListPage from '../../page-objects/pages/account-list-page';
+import AccountDetailsModal from '../../page-objects/pages/dialog/account-details-modal';
 import HeaderNavbar from '../../page-objects/pages/header-navbar';
+import type { Driver } from '../../webdriver/driver';
 
 const newAccountLabel = 'Custom name';
 const anotherAccountLabel = '2nd custom name';

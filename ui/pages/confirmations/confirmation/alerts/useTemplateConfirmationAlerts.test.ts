@@ -1,12 +1,11 @@
-import { ApprovalRequest } from '@metamask/approval-controller';
+import type { ApprovalRequest } from '@metamask/approval-controller';
 import { useDispatch } from 'react-redux';
 
 import mockState from '../../../../../test/data/mock-state.json';
 import { renderHookWithProvider } from '../../../../../test/lib/render-helpers';
 import * as AlertActions from '../../../../ducks/confirm-alerts/confirm-alerts';
-import * as UpdateEthereumChainAlerts from './useUpdateEthereumChainAlerts';
-
 import { useTemplateConfirmationAlerts } from './useTemplateConfirmationAlerts';
+import * as UpdateEthereumChainAlerts from './useUpdateEthereumChainAlerts';
 
 jest.mock('react-redux', () => ({
   ...jest.requireActual('react-redux'),
@@ -16,7 +15,7 @@ jest.mock('react-redux', () => ({
 const PENDING_APPROVAL_MOCK = {
   id: 'testApprovalId',
   requestData: { testProperty: 'testValue' },
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
+  // TODO: Replace `any` with type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 } as ApprovalRequest<any>;
 

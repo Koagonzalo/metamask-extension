@@ -1,22 +1,22 @@
-import React from 'react';
 import classnames from 'classnames';
-import Jazzicon from '../../ui/jazzicon/jazzicon.component';
+import React from 'react';
+
 import BlockieIdenticon from '../../ui/identicon/blockieIdenticon/blockieIdenticon.component';
-
+import Jazzicon from '../../ui/jazzicon/jazzicon.component';
+import type { AvatarBaseProps } from '../avatar-base';
+import { AvatarBase } from '../avatar-base';
 import type { PolymorphicRef } from '../box';
-
-import { AvatarBase, AvatarBaseProps } from '../avatar-base';
+import type {
+  AvatarAccountComponent,
+  AvatarAccountProps,
+} from './avatar-account.types';
 import {
   AvatarAccountDiameter,
   AvatarAccountVariant,
   AvatarAccountSize,
-  AvatarAccountComponent,
-  AvatarAccountProps,
 } from './avatar-account.types';
 
 export const AvatarAccount: AvatarAccountComponent = React.forwardRef(
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   <C extends React.ElementType = 'div'>(
     {
       size = AvatarAccountSize.Md,

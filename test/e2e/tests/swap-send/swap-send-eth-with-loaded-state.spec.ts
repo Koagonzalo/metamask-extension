@@ -1,19 +1,26 @@
-import { Suite } from 'mocha';
-import { MockttpServer } from 'mockttp';
+import fs from 'fs';
+import type { Suite } from 'mocha';
+import type { MockttpServer } from 'mockttp';
+
+import { DEFAULT_FIXTURE_ACCOUNT } from '../../constants';
+import FixtureBuilder from '../../fixture-builder';
 import {
   logInWithBalanceValidation,
   openActionMenuAndStartSendFlow,
   withFixtures,
 } from '../../helpers';
-import FixtureBuilder from '../../fixture-builder';
 import HeaderNavbar from '../../page-objects/pages/header-navbar';
-import SettingsPage from '../../page-objects/pages/settings/settings-page';
-import AdvancedSettings from '../../page-objects/pages/settings/advanced-settings';
 import HomePage from '../../page-objects/pages/home/homepage';
-import { DEFAULT_FIXTURE_ACCOUNT } from '../../constants';
+import AdvancedSettings from '../../page-objects/pages/settings/advanced-settings';
+import SettingsPage from '../../page-objects/pages/settings/settings-page';
 import { NATIVE_TOKEN_SYMBOL, SwapSendPage } from './swap-send-test-utils';
 
 async function mockSwapQuotes(mockServer: MockttpServer) {
+  const BRIDGE_GET_ALL_FEATURE_FLAGS_PATH =
+    'test/e2e/mock-response-data/bridge-get-all-feature-flags.json';
+  const BRIDGE_GET_ALL_FEATURE_FLAGS = fs.readFileSync(
+    BRIDGE_GET_ALL_FEATURE_FLAGS_PATH,
+  );
   return [
     await mockServer
       .forGet('https://price.api.cx.metamask.io/v2/chains/1/spot-prices')
@@ -21,6 +28,15 @@ async function mockSwapQuotes(mockServer: MockttpServer) {
         statusCode: 200,
         json: {},
       })),
+
+    await mockServer
+      .forGet('https://bridge.dev-api.cx.metamask.io/getAllFeatureFlags')
+      .thenCallback(() => {
+        return {
+          statusCode: 200,
+          json: JSON.parse(BRIDGE_GET_ALL_FEATURE_FLAGS.toString()),
+        };
+      }),
 
     await mockServer
       .forGet(

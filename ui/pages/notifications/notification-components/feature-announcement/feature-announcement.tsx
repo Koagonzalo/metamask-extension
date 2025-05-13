@@ -30,6 +30,8 @@ import {
   ExternalLinkButton,
 } from './annonucement-footer-buttons';
 
+const purify = DOMPurify(window);
+
 const { TRIGGER_TYPES } = NotificationServicesController.Constants;
 
 const isFeatureAnnouncementNotification = isOfTypeNodeGuard([
@@ -101,7 +103,7 @@ export const components: NotificationComponent<FeatureAnnouncementNotification> 
               dangerouslySetInnerHTML={{
                 // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31860
                 // eslint-disable-next-line @typescript-eslint/naming-convention
-                __html: DOMPurify.sanitize(notification.data.longDescription),
+                __html: purify.sanitize(notification.data.longDescription),
               }}
             />
           </Box>

@@ -1,22 +1,25 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useParams } from 'react-router-dom';
-import {
+import type {
   CaipAccountId,
   CaipChainId,
   NonEmptyArray,
-  parseCaipAccountId,
-  KnownCaipNamespace,
 } from '@metamask/utils';
+import { parseCaipAccountId, KnownCaipNamespace } from '@metamask/utils';
 import { uniq } from 'lodash';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useParams } from 'react-router-dom';
+
+import { ToastContainer, Toast } from '../..';
+import { CAIP_FORMATTED_EVM_TEST_CHAINS } from '../../../../../shared/constants/network';
+import { getAllNetworkConfigurationsByCaipChainId } from '../../../../../shared/modules/selectors/networks';
 import {
   AlignItems,
   BlockSize,
   Display,
   FlexDirection,
 } from '../../../../helpers/constants/design-system';
+import { CONNECT_ROUTE } from '../../../../helpers/constants/routes';
 import { useI18nContext } from '../../../../hooks/useI18nContext';
-import { getAllNetworkConfigurationsByCaipChainId } from '../../../../../shared/modules/selectors/networks';
 import {
   getAllPermittedAccountsForSelectedTab,
   getAllPermittedChainsForSelectedTab,
@@ -25,6 +28,10 @@ import {
   getShowPermittedNetworkToastOpen,
   getUpdatedAndSortedAccountsWithCaipAccountId,
 } from '../../../../selectors';
+import type {
+  EvmAndMultichainNetworkConfigurationsWithCaipChainId,
+  MergedInternalAccountWithCaipAccountId,
+} from '../../../../selectors/selectors.types';
 import {
   addPermittedAccounts,
   addPermittedChains,
@@ -45,22 +52,14 @@ import {
   ButtonVariant,
   IconName,
 } from '../../../component-library';
-import { ToastContainer, Toast } from '../..';
-import { NoConnectionContent } from '../connections/components/no-connection';
-import { Content, Footer, Page } from '../page';
-import { SubjectsType } from '../connections/components/connections.types';
-import { CONNECT_ROUTE } from '../../../../helpers/constants/routes';
 import {
   DisconnectAllModal,
   DisconnectType,
 } from '../../disconnect-all-modal/disconnect-all-modal';
 import { PermissionsHeader } from '../../permissions-header/permissions-header';
-import {
-  EvmAndMultichainNetworkConfigurationsWithCaipChainId,
-  MergedInternalAccountWithCaipAccountId,
-} from '../../../../selectors/selectors.types';
-import { CAIP_FORMATTED_EVM_TEST_CHAINS } from '../../../../../shared/constants/network';
-import { endTrace, trace, TraceName } from '../../../../../shared/lib/trace';
+import type { SubjectsType } from '../connections/components/connections.types';
+import { NoConnectionContent } from '../connections/components/no-connection';
+import { Content, Footer, Page } from '../page';
 import { SiteCell } from './site-cell/site-cell';
 
 export const ReviewPermissions = () => {
@@ -93,7 +92,6 @@ export const ReviewPermissions = () => {
     history.push(`${CONNECT_ROUTE}/${requestId}`);
   };
 
-  // TODO: Fix in https://github.com/MetaMask/metamask-extension/issues/31973
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const subjectMetadata: { [key: string]: any } = useSelector(
     getConnectedSitesList,
@@ -108,7 +106,7 @@ export const ReviewPermissions = () => {
       const permissionMethodNames = Object.values(subject.permissions).map(
         ({ parentCapability }: { parentCapability: string }) =>
           parentCapability,
-      ) as string[];
+      );
       if (permissionMethodNames.length > 0) {
         const permissionsRecord = {
           [activeTabOrigin]: permissionMethodNames as NonEmptyArray<string>,
@@ -147,7 +145,7 @@ export const ReviewPermissions = () => {
 
   const connectedChainIds = useSelector((state) =>
     getAllPermittedChainsForSelectedTab(state, activeTabOrigin),
-  ) as CaipChainId[];
+  );
 
   const handleSelectChainIds = async (chainIds: string[]) => {
     if (chainIds.length === 0) {
@@ -172,7 +170,7 @@ export const ReviewPermissions = () => {
 
   const nonRemappedConnectedAccountAddresses = useSelector((state) =>
     getAllPermittedAccountsForSelectedTab(state, activeTabOrigin),
-  ) as CaipAccountId[];
+  );
 
   // This remaps EVM caip account addresses to match the 'eip155:0'
   // value that is currently set in InternalAccount.scopes[0] for
@@ -282,10 +280,8 @@ export const ReviewPermissions = () => {
               hostname={activeTabOrigin}
               onClose={() => setShowDisconnectAllModal(false)}
               onClick={() => {
-                trace({ name: TraceName.DisconnectAllModal });
                 disconnectAllPermissions();
                 setShowDisconnectAllModal(false);
-                endTrace({ name: TraceName.DisconnectAllModal });
               }}
             />
           ) : null}

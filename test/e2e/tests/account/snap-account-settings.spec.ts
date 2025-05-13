@@ -1,12 +1,13 @@
-import { Suite } from 'mocha';
-import { withFixtures } from '../../helpers';
+import type { Suite } from 'mocha';
+
 import FixtureBuilder from '../../fixture-builder';
-import { Driver } from '../../webdriver/driver';
-import AccountListPage from '../../page-objects/pages/account-list-page';
-import ExperimentalSettings from '../../page-objects/pages/settings/experimental-settings';
-import HeaderNavbar from '../../page-objects/pages/header-navbar';
-import SettingsPage from '../../page-objects/pages/settings/settings-page';
+import { withFixtures } from '../../helpers';
 import { loginWithBalanceValidation } from '../../page-objects/flows/login.flow';
+import AccountListPage from '../../page-objects/pages/account-list-page';
+import HeaderNavbar from '../../page-objects/pages/header-navbar';
+import ExperimentalSettings from '../../page-objects/pages/settings/experimental-settings';
+import SettingsPage from '../../page-objects/pages/settings/settings-page';
+import type { Driver } from '../../webdriver/driver';
 
 describe('Add snap account experimental settings', function (this: Suite) {
   it('switch "Enable Add account snap" to on', async function () {

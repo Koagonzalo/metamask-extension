@@ -1,14 +1,18 @@
+import type SmartTransactionsController from '@metamask/smart-transactions-controller';
+import { SmartTransactionStatuses } from '@metamask/smart-transactions-controller/dist/types';
+import type {
+  TransactionControllerMessenger,
+  TransactionMeta,
+} from '@metamask/transaction-controller';
 import {
   CHAIN_IDS,
   type PublishBatchHookRequest,
   type PublishBatchHookTransaction,
   TransactionController,
-  TransactionControllerMessenger,
-  TransactionMeta,
 } from '@metamask/transaction-controller';
-import SmartTransactionsController from '@metamask/smart-transactions-controller';
-import { SmartTransactionStatuses } from '@metamask/smart-transactions-controller/dist/types';
-import { Hex } from '@metamask/utils';
+import type { Hex } from '@metamask/utils';
+
+import { trace } from '../../../../shared/lib/trace';
 import {
   getChainSupportsSmartTransactions,
   getFeatureFlagsByChainId,
@@ -16,14 +20,8 @@ import {
   getSmartTransactionsPreferenceEnabled,
   isHardwareWallet,
 } from '../../../../shared/modules/selectors';
-import {
-  SmartTransactionHookMessenger,
-  submitSmartTransactionHook,
-  submitBatchSmartTransactionHook,
-} from '../../lib/transaction/smart-transactions';
-import { getTransactionById } from '../../lib/transaction/util';
-import { trace } from '../../../../shared/lib/trace';
-
+import type { TransactionMetricsRequest } from '../../../../shared/types/metametrics';
+import { Delegation7702PublishHook } from '../../lib/transaction/hooks/delegation-7702-publish';
 import {
   handlePostTransactionBalanceUpdate,
   handleTransactionAdded,
@@ -34,15 +32,19 @@ import {
   handleTransactionRejected,
   handleTransactionSubmitted,
 } from '../../lib/transaction/metrics';
+import type { SmartTransactionHookMessenger } from '../../lib/transaction/smart-transactions';
 import {
+  submitSmartTransactionHook,
+  submitBatchSmartTransactionHook,
+} from '../../lib/transaction/smart-transactions';
+import { getTransactionById } from '../../lib/transaction/util';
+import type { ControllerFlatState } from '../controller-list';
+import type { TransactionControllerInitMessenger } from '../messengers/transaction-controller-messenger';
+import type {
   ControllerInitFunction,
   ControllerInitRequest,
   ControllerInitResult,
 } from '../types';
-import { TransactionControllerInitMessenger } from '../messengers/transaction-controller-messenger';
-import { ControllerFlatState } from '../controller-list';
-import { TransactionMetricsRequest } from '../../../../shared/types/metametrics';
-import { Delegation7702PublishHook } from '../../lib/transaction/hooks/delegation-7702-publish';
 
 export const TransactionControllerInit: ControllerInitFunction<
   TransactionController,
@@ -70,14 +72,14 @@ export const TransactionControllerInit: ControllerInitFunction<
   } = getControllers(request);
 
   const controller: TransactionController = new TransactionController({
-    getCurrentNetworkEIP1559Compatibility: () =>
+    getCurrentNetworkEIP1559Compatibility: async () =>
       // @ts-expect-error Controller type does not support undefined return value
       initMessenger.call('NetworkController:getEIP1559Compatibility'),
     getCurrentAccountEIP1559Compatibility: async () => true,
     // @ts-expect-error Mismatched types
     getExternalPendingTransactions: (address) =>
       getExternalPendingTransactions(smartTransactionsController(), address),
-    getGasFeeEstimates: (...args) =>
+    getGasFeeEstimates: async (...args) =>
       gasFeeController().fetchGasFeeEstimates(...args),
     getNetworkClientRegistry: (...args) =>
       networkController().getNetworkClientRegistry(...args),
@@ -123,7 +125,7 @@ export const TransactionControllerInit: ControllerInitFunction<
     // @ts-expect-error Controller uses string for names rather than enum
     trace,
     hooks: {
-      beforePublish: (transactionMeta: TransactionMeta) => {
+      beforePublish: async (transactionMeta: TransactionMeta) => {
         const response = initMessenger.call(
           'InstitutionalSnapController:publishHook',
           transactionMeta,
@@ -131,7 +133,9 @@ export const TransactionControllerInit: ControllerInitFunction<
         return response;
       },
 
-      beforeCheckPendingTransactions: (transactionMeta: TransactionMeta) => {
+      beforeCheckPendingTransactions: async (
+        transactionMeta: TransactionMeta,
+      ) => {
         const response = initMessenger.call(
           'InstitutionalSnapController:beforeCheckPendingTransactionHook',
           transactionMeta,
@@ -140,7 +144,7 @@ export const TransactionControllerInit: ControllerInitFunction<
         return response;
       },
       // @ts-expect-error Controller type does not support undefined return value
-      publish: (transactionMeta, signedTx) =>
+      publish: async (transactionMeta, signedTx) =>
         publishHook({
           flatState: getFlatState(),
           initMessenger,
@@ -156,11 +160,11 @@ export const TransactionControllerInit: ControllerInitFunction<
           hookControllerMessenger:
             initMessenger as SmartTransactionHookMessenger,
           flatState: getFlatState(),
-          transactions: _request.transactions as PublishBatchHookTransaction[],
+          transactions: _request.transactions,
         }),
     },
     // @ts-expect-error Keyring controller expects TxData returned but TransactionController expects TypedTransaction
-    sign: (...args) => keyringController().signTransaction(...args),
+    sign: async (...args) => keyringController().signTransaction(...args),
     state: persistedState.TransactionController,
   });
 
@@ -310,7 +314,7 @@ async function publishSmartTransactionHook(
   });
 }
 
-function publishBatchSmartTransactionHook({
+async function publishBatchSmartTransactionHook({
   transactionController,
   smartTransactionsController,
   hookControllerMessenger,
@@ -395,7 +399,7 @@ function addTransactionControllerListeners(
 
   initMessenger.subscribe(
     'TransactionController:unapprovedTransactionAdded',
-    (transactionMeta) =>
+    async (transactionMeta) =>
       handleTransactionAdded(transactionMetricsRequest, { transactionMeta }),
   );
 
