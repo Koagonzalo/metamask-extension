@@ -185,7 +185,7 @@ class HomePage {
     );
   }
 
-  async check_basicFunctionalityOffWarnigMessageIsDisplayed(): Promise<void> {
+  async check_basicFunctionalityOffWarningMessageIsDisplayed(): Promise<void> {
     console.log(
       'Check if basic functionality off warning message is displayed on homepage',
     );
