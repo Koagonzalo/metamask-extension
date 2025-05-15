@@ -1,6 +1,12 @@
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import React, { Component, Suspense } from 'react';
+import React, {
+  Component,
+  Suspense,
+  useCallback,
+  useEffect,
+  useRef,
+} from 'react';
 import { Route, Switch } from 'react-router-dom';
 import IdleTimer from 'react-idle-timer';
 
@@ -93,8 +99,8 @@ import {
 } from './utils';
 
 // Begin Lazy Routes
-const OnboardingFlow = mmLazy(() =>
-  import('../onboarding-flow/onboarding-flow'),
+const OnboardingFlow = mmLazy(
+  () => import('../onboarding-flow/onboarding-flow.js'),
 );
 const Lock = mmLazy(() => import('../lock'));
 const UnlockPage = mmLazy(() => import('../unlock-page'));
@@ -106,117 +112,125 @@ const NotificationDetails = mmLazy(() => import('../notification-details'));
 const Notifications = mmLazy(() => import('../notifications'));
 const SnapList = mmLazy(() => import('../snaps/snaps-list'));
 const SnapView = mmLazy(() => import('../snaps/snap-view'));
-const ConfirmTransaction = mmLazy(() =>
-  import('../confirmations/confirm-transaction'),
+const ConfirmTransaction = mmLazy(
+  () => import('../confirmations/confirm-transaction'),
 );
 const SendPage = mmLazy(() => import('../../components/multichain/pages/send'));
 const Swaps = mmLazy(() => import('../swaps'));
 const CrossChainSwap = mmLazy(() => import('../bridge'));
-const ConfirmAddSuggestedTokenPage = mmLazy(() =>
-  import('../confirm-add-suggested-token'),
+const ConfirmAddSuggestedTokenPage = mmLazy(
+  () => import('../confirm-add-suggested-token'),
 );
-const ConfirmAddSuggestedNftPage = mmLazy(() =>
-  import('../confirm-add-suggested-nft'),
+const ConfirmAddSuggestedNftPage = mmLazy(
+  () => import('../confirm-add-suggested-nft'),
 );
 const ConfirmationPage = mmLazy(() => import('../confirmations/confirmation'));
-const CreateAccountPage = mmLazy(() =>
-  import('../create-account/create-account.component'),
+const CreateAccountPage = mmLazy(
+  () => import('../create-account/create-account.component'),
 );
-const NftFullImage = mmLazy(() =>
-  import('../../components/app/assets/nfts/nft-details/nft-full-image'),
+const NftFullImage = mmLazy(
+  () => import('../../components/app/assets/nfts/nft-details/nft-full-image'),
 );
 const Asset = mmLazy(() => import('../asset'));
 const DeFiPage = mmLazy(() => import('../defi'));
-const PermissionsPage = mmLazy(() =>
-  import('../../components/multichain/pages/permissions-page/permissions-page'),
+const PermissionsPage = mmLazy(
+  () =>
+    import(
+      '../../components/multichain/pages/permissions-page/permissions-page'
+    ),
 );
-const Connections = mmLazy(() =>
-  import('../../components/multichain/pages/connections'),
+const Connections = mmLazy(
+  () => import('../../components/multichain/pages/connections'),
 );
-const ReviewPermissions = mmLazy(() =>
-  import(
-    '../../components/multichain/pages/review-permissions-page/review-permissions-page'
-  ),
+const ReviewPermissions = mmLazy(
+  () =>
+    import(
+      '../../components/multichain/pages/review-permissions-page/review-permissions-page'
+    ),
 );
 const Home = mmLazy(() => import('../home'));
 
 const RemoteModeOverview = mmLazy(() => import('../remote-mode/overview'));
-const RemoteModeSetupSwaps = mmLazy(() =>
-  import('../remote-mode/setup/setup-swaps'),
+const RemoteModeSetupSwaps = mmLazy(
+  () => import('../remote-mode/setup/setup-swaps'),
 );
-const RemoteModeSetupDailyAllowance = mmLazy(() =>
-  import('../remote-mode/setup/setup-daily-allowance'),
+const RemoteModeSetupDailyAllowance = mmLazy(
+  () => import('../remote-mode/setup/setup-daily-allowance'),
 );
 // End Lazy Routes
 
-export default class Routes extends Component {
-  static propTypes = {
-    currentCurrency: PropTypes.string,
-    activeTabOrigin: PropTypes.string,
-    setCurrentCurrencyToUSD: PropTypes.func,
-    isLoading: PropTypes.bool,
-    loadingMessage: PropTypes.string,
-    alertMessage: PropTypes.string,
-    textDirection: PropTypes.string,
-    isNetworkLoading: PropTypes.bool,
-    alertOpen: PropTypes.bool,
-    isUnlocked: PropTypes.bool,
-    setLastActiveTime: PropTypes.func,
-    history: PropTypes.object,
-    location: PropTypes.object,
-    autoLockTimeLimit: PropTypes.number,
-    privacyMode: PropTypes.bool,
-    pageChanged: PropTypes.func.isRequired,
-    browserEnvironmentOs: PropTypes.string,
-    browserEnvironmentBrowser: PropTypes.string,
-    theme: PropTypes.string,
-    showExtensionInFullSizeView: PropTypes.bool,
-    shouldShowSeedPhraseReminder: PropTypes.bool,
-    forgottenPassword: PropTypes.bool,
-    completedOnboarding: PropTypes.bool,
-    isAccountMenuOpen: PropTypes.bool,
-    toggleAccountMenu: PropTypes.func,
-    isNetworkMenuOpen: PropTypes.bool,
-    networkMenuClose: PropTypes.func,
-    accountDetailsAddress: PropTypes.string,
-    isImportNftsModalOpen: PropTypes.bool.isRequired,
-    hideImportNftsModal: PropTypes.func.isRequired,
-    isIpfsModalOpen: PropTypes.bool.isRequired,
-    isBasicConfigurationModalOpen: PropTypes.bool.isRequired,
-    hideIpfsModal: PropTypes.func.isRequired,
-    isImportTokensModalOpen: PropTypes.bool.isRequired,
-    hideImportTokensModal: PropTypes.func.isRequired,
-    isDeprecatedNetworkModalOpen: PropTypes.bool.isRequired,
-    hideDeprecatedNetworkModal: PropTypes.func.isRequired,
-    clearSwitchedNetworkDetails: PropTypes.func.isRequired,
-    switchedNetworkDetails: PropTypes.oneOf([
-      null,
-      PropTypes.shape({
-        origin: PropTypes.string.isRequired,
-        networkClientId: PropTypes.string.isRequired,
-      }),
-    ]),
-    switchedNetworkNeverShowMessage: PropTypes.bool,
-    networkToAutomaticallySwitchTo: PropTypes.object,
-    automaticallySwitchNetwork: PropTypes.func.isRequired,
-    totalUnapprovedConfirmationCount: PropTypes.number.isRequired,
-    currentExtensionPopupId: PropTypes.number,
-    oldestPendingApproval: PropTypes.object,
-    pendingApprovals: PropTypes.arrayOf(PropTypes.object).isRequired,
-    transactionsMetadata: PropTypes.object.isRequired,
-    ///: BEGIN:ONLY_INCLUDE_IF(keyring-snaps)
-    isShowKeyringSnapRemovalResultModal: PropTypes.bool.isRequired,
-    hideShowKeyringSnapRemovalResultModal: PropTypes.func.isRequired,
-    pendingConfirmations: PropTypes.array.isRequired,
-    ///: END:ONLY_INCLUDE_IF
-  };
+const propTypes = {
+  currentCurrency: PropTypes.string,
+  activeTabOrigin: PropTypes.string,
+  setCurrentCurrencyToUSD: PropTypes.func,
+  isLoading: PropTypes.bool,
+  loadingMessage: PropTypes.string,
+  alertMessage: PropTypes.string,
+  textDirection: PropTypes.string,
+  isNetworkLoading: PropTypes.bool,
+  alertOpen: PropTypes.bool,
+  isUnlocked: PropTypes.bool,
+  setLastActiveTime: PropTypes.func,
+  history: PropTypes.object,
+  location: PropTypes.object,
+  autoLockTimeLimit: PropTypes.number,
+  privacyMode: PropTypes.bool,
+  pageChanged: PropTypes.func.isRequired,
+  browserEnvironmentOs: PropTypes.string,
+  browserEnvironmentBrowser: PropTypes.string,
+  theme: PropTypes.string,
+  showExtensionInFullSizeView: PropTypes.bool,
+  shouldShowSeedPhraseReminder: PropTypes.bool,
+  forgottenPassword: PropTypes.bool,
+  completedOnboarding: PropTypes.bool,
+  isAccountMenuOpen: PropTypes.bool,
+  toggleAccountMenu: PropTypes.func,
+  isNetworkMenuOpen: PropTypes.bool,
+  networkMenuClose: PropTypes.func,
+  accountDetailsAddress: PropTypes.string,
+  isImportNftsModalOpen: PropTypes.bool.isRequired,
+  hideImportNftsModal: PropTypes.func.isRequired,
+  isIpfsModalOpen: PropTypes.bool.isRequired,
+  isBasicConfigurationModalOpen: PropTypes.bool.isRequired,
+  hideIpfsModal: PropTypes.func.isRequired,
+  isImportTokensModalOpen: PropTypes.bool.isRequired,
+  hideImportTokensModal: PropTypes.func.isRequired,
+  isDeprecatedNetworkModalOpen: PropTypes.bool.isRequired,
+  hideDeprecatedNetworkModal: PropTypes.func.isRequired,
+  clearSwitchedNetworkDetails: PropTypes.func.isRequired,
+  switchedNetworkDetails: PropTypes.oneOf([
+    null,
+    PropTypes.shape({
+      origin: PropTypes.string.isRequired,
+      networkClientId: PropTypes.string.isRequired,
+    }),
+  ]),
+  switchedNetworkNeverShowMessage: PropTypes.bool,
+  networkToAutomaticallySwitchTo: PropTypes.object,
+  automaticallySwitchNetwork: PropTypes.func.isRequired,
+  totalUnapprovedConfirmationCount: PropTypes.number.isRequired,
+  currentExtensionPopupId: PropTypes.number,
+  oldestPendingApproval: PropTypes.object,
+  pendingApprovals: PropTypes.arrayOf(PropTypes.object).isRequired,
+  transactionsMetadata: PropTypes.object.isRequired,
+  ///: BEGIN:ONLY_INCLUDE_IF(keyring-snaps)
+  isShowKeyringSnapRemovalResultModal: PropTypes.bool.isRequired,
+  hideShowKeyringSnapRemovalResultModal: PropTypes.func.isRequired,
+  pendingConfirmations: PropTypes.array.isRequired,
+  ///: END:ONLY_INCLUDE_IF
+};
 
-  static contextTypes = {
-    t: PropTypes.func,
-    metricsEvent: PropTypes.func,
-  };
+const contextTypes = {
+  t: PropTypes.func,
+  metricsEvent: PropTypes.func,
+};
 
-  componentDidUpdate(prevProps) {
+export default function Routes(props: typeof propTypes) {
+  const prevPropsRef = useRef(props);
+
+  useEffect(() => {
+    const prevProps = prevPropsRef.current;
+
     const {
       theme,
       networkToAutomaticallySwitchTo,
@@ -224,7 +238,8 @@ export default class Routes extends Component {
       totalUnapprovedConfirmationCount,
       isUnlocked,
       currentExtensionPopupId,
-    } = this.props;
+    } = props;
+
     if (theme !== prevProps.theme) {
       setTheme(theme);
     }
@@ -239,7 +254,7 @@ export default class Routes extends Component {
       (prevProps.totalUnapprovedConfirmationCount > 0 ||
         (prevProps.isUnlocked === false && isUnlocked))
     ) {
-      this.props.automaticallySwitchNetwork(
+      props.automaticallySwitchNetwork(
         networkToAutomaticallySwitchTo,
         activeTabOrigin,
       );
@@ -254,16 +269,18 @@ export default class Routes extends Component {
     ) {
       window.close();
     }
-  }
 
-  UNSAFE_componentWillMount() {
+    prevPropsRef.current = props;
+  }, []);
+
+  useEffect(() => {
     const {
       currentCurrency,
       pageChanged,
       setCurrentCurrencyToUSD,
       history,
       showExtensionInFullSizeView,
-    } = this.props;
+    } = props;
 
     const windowType = getEnvironmentType();
     if (showExtensionInFullSizeView && windowType === ENVIRONMENT_TYPE_POPUP) {
@@ -280,12 +297,11 @@ export default class Routes extends Component {
       }
     });
 
-    setTheme(this.props.theme);
-  }
+    setTheme(props.theme);
+  }, []);
 
-  renderRoutes() {
-    const { autoLockTimeLimit, setLastActiveTime, forgottenPassword } =
-      this.props;
+  const renderRoutes = useCallback(() => {
+    const { autoLockTimeLimit, setLastActiveTime, forgottenPassword } = props;
     const RestoreVaultComponent = forgottenPassword ? Route : Initialized;
 
     const routes = (
@@ -412,165 +428,163 @@ export default class Routes extends Component {
     }
 
     return routes;
-  }
+  }, []);
 
-  render() {
-    const {
-      isLoading,
-      isUnlocked,
-      alertMessage,
-      textDirection,
-      loadingMessage,
-      isNetworkLoading,
-      browserEnvironmentOs: os,
-      browserEnvironmentBrowser: browser,
-      shouldShowSeedPhraseReminder,
-      completedOnboarding,
-      isAccountMenuOpen,
-      toggleAccountMenu,
-      isNetworkMenuOpen,
-      accountDetailsAddress,
-      isImportTokensModalOpen,
-      isDeprecatedNetworkModalOpen,
-      location,
-      isImportNftsModalOpen,
-      hideImportNftsModal,
-      isIpfsModalOpen,
-      isBasicConfigurationModalOpen,
-      hideIpfsModal,
-      hideImportTokensModal,
-      hideDeprecatedNetworkModal,
-      clearSwitchedNetworkDetails,
-      networkMenuClose,
-      privacyMode,
-      oldestPendingApproval,
-      pendingApprovals,
-      transactionsMetadata,
-      switchedNetworkDetails,
-      switchedNetworkNeverShowMessage,
-      ///: BEGIN:ONLY_INCLUDE_IF(keyring-snaps)
-      isShowKeyringSnapRemovalResultModal,
-      hideShowKeyringSnapRemovalResultModal,
-      pendingConfirmations,
-      ///: END:ONLY_INCLUDE_IF
-    } = this.props;
-
-    const loadMessage =
-      loadingMessage || isNetworkLoading
-        ? getConnectingLabel(loadingMessage, this.props, this.context)
-        : null;
-
-    const windowType = getEnvironmentType();
-
-    const shouldShowNetworkDeprecationWarning =
-      windowType !== ENVIRONMENT_TYPE_NOTIFICATION &&
-      isUnlocked &&
-      !shouldShowSeedPhraseReminder;
-
-    const paramsConfirmationId = location.pathname.split(
-      '/confirm-transaction/',
-    )[1];
-    const confirmationId = paramsConfirmationId ?? oldestPendingApproval?.id;
-    const pendingApproval = pendingApprovals.find(
-      (approval) => approval.id === confirmationId,
-    );
-    const isCorrectApprovalType = isCorrectSignatureApprovalType(
-      pendingApproval?.type,
-    );
-    const isCorrectTransactionType = isCorrectDeveloperTransactionType(
-      transactionsMetadata[confirmationId]?.type,
-    );
-
-    let isLoadingShown =
-      isLoading &&
-      completedOnboarding &&
-      // In the redesigned screens, we hide the general loading spinner and the
-      // loading states are on a component by component basis.
-      !isCorrectApprovalType &&
-      !isCorrectTransactionType;
-
+  const {
+    isLoading,
+    isUnlocked,
+    alertMessage,
+    textDirection,
+    loadingMessage,
+    isNetworkLoading,
+    browserEnvironmentOs: os,
+    browserEnvironmentBrowser: browser,
+    shouldShowSeedPhraseReminder,
+    completedOnboarding,
+    isAccountMenuOpen,
+    toggleAccountMenu,
+    isNetworkMenuOpen,
+    accountDetailsAddress,
+    isImportTokensModalOpen,
+    isDeprecatedNetworkModalOpen,
+    location,
+    isImportNftsModalOpen,
+    hideImportNftsModal,
+    isIpfsModalOpen,
+    isBasicConfigurationModalOpen,
+    hideIpfsModal,
+    hideImportTokensModal,
+    hideDeprecatedNetworkModal,
+    clearSwitchedNetworkDetails,
+    networkMenuClose,
+    privacyMode,
+    oldestPendingApproval,
+    pendingApprovals,
+    transactionsMetadata,
+    switchedNetworkDetails,
+    switchedNetworkNeverShowMessage,
     ///: BEGIN:ONLY_INCLUDE_IF(keyring-snaps)
-    isLoadingShown =
-      isLoading &&
-      completedOnboarding &&
-      !pendingConfirmations.some(
-        (confirmation) =>
-          confirmation.type ===
-          SNAP_MANAGE_ACCOUNTS_CONFIRMATION_TYPES.showSnapAccountRedirect,
-      ) &&
-      // In the redesigned screens, we hide the general loading spinner and the
-      // loading states are on a component by component basis.
-      !isCorrectApprovalType &&
-      !isCorrectTransactionType;
+    isShowKeyringSnapRemovalResultModal,
+    hideShowKeyringSnapRemovalResultModal,
+    pendingConfirmations,
     ///: END:ONLY_INCLUDE_IF
+  } = props;
 
-    return (
-      <div
-        className={classnames('app', {
-          [`os-${os}`]: os,
-          [`browser-${browser}`]: browser,
-        })}
-        dir={textDirection}
-        onMouseUp={
-          switchedNetworkDetails && !switchedNetworkNeverShowMessage
-            ? clearSwitchedNetworkDetails
-            : undefined
-        }
-      >
-        {shouldShowNetworkDeprecationWarning ? <DeprecatedNetworks /> : null}
-        <QRHardwarePopover />
-        <Modal />
-        <Alert visible={this.props.alertOpen} msg={alertMessage} />
-        {process.env.REMOVE_GNS
-          ? showAppHeader(this.props) && <AppHeader location={location} />
-          : !hideAppHeader(this.props) && <AppHeader location={location} />}
-        {isConfirmTransactionRoute(this.pathname) && <MultichainMetaFoxLogo />}
-        {showOnboardingHeader(location) && <OnboardingAppHeader />}
-        {isAccountMenuOpen ? (
-          <AccountListMenu
-            onClose={toggleAccountMenu}
-            privacyMode={privacyMode}
+  const loadMessage =
+    loadingMessage || isNetworkLoading
+      ? getConnectingLabel(loadingMessage, props, this.context)
+      : null;
+
+  const windowType = getEnvironmentType();
+
+  const shouldShowNetworkDeprecationWarning =
+    windowType !== ENVIRONMENT_TYPE_NOTIFICATION &&
+    isUnlocked &&
+    !shouldShowSeedPhraseReminder;
+
+  const paramsConfirmationId = location.pathname.split(
+    '/confirm-transaction/',
+  )[1];
+  const confirmationId = paramsConfirmationId ?? oldestPendingApproval?.id;
+  const pendingApproval = pendingApprovals.find(
+    (approval) => approval.id === confirmationId,
+  );
+  const isCorrectApprovalType = isCorrectSignatureApprovalType(
+    pendingApproval?.type,
+  );
+  const isCorrectTransactionType = isCorrectDeveloperTransactionType(
+    transactionsMetadata[confirmationId]?.type,
+  );
+
+  let isLoadingShown =
+    isLoading &&
+    completedOnboarding &&
+    // In the redesigned screens, we hide the general loading spinner and the
+    // loading states are on a component by component basis.
+    !isCorrectApprovalType &&
+    !isCorrectTransactionType;
+
+  ///: BEGIN:ONLY_INCLUDE_IF(keyring-snaps)
+  isLoadingShown =
+    isLoading &&
+    completedOnboarding &&
+    !pendingConfirmations.some(
+      (confirmation) =>
+        confirmation.type ===
+        SNAP_MANAGE_ACCOUNTS_CONFIRMATION_TYPES.showSnapAccountRedirect,
+    ) &&
+    // In the redesigned screens, we hide the general loading spinner and the
+    // loading states are on a component by component basis.
+    !isCorrectApprovalType &&
+    !isCorrectTransactionType;
+  ///: END:ONLY_INCLUDE_IF
+
+  return (
+    <div
+      className={classnames('app', {
+        [`os-${os}`]: os,
+        [`browser-${browser}`]: browser,
+      })}
+      dir={textDirection}
+      onMouseUp={
+        switchedNetworkDetails && !switchedNetworkNeverShowMessage
+          ? clearSwitchedNetworkDetails
+          : undefined
+      }
+    >
+      {shouldShowNetworkDeprecationWarning ? <DeprecatedNetworks /> : null}
+      <QRHardwarePopover />
+      <Modal />
+      <Alert visible={props.alertOpen} msg={alertMessage} />
+      {process.env.REMOVE_GNS
+        ? showAppHeader(props) && <AppHeader location={location} />
+        : !hideAppHeader(props) && <AppHeader location={location} />}
+      {isConfirmTransactionRoute(this.pathname) && <MultichainMetaFoxLogo />}
+      {showOnboardingHeader(location) && <OnboardingAppHeader />}
+      {isAccountMenuOpen ? (
+        <AccountListMenu
+          onClose={toggleAccountMenu}
+          privacyMode={privacyMode}
+        />
+      ) : null}
+      {isNetworkMenuOpen ? (
+        <NetworkListMenu onClose={networkMenuClose} />
+      ) : null}
+      <NetworkConfirmationPopover />
+      {accountDetailsAddress ? (
+        <AccountDetails address={accountDetailsAddress} />
+      ) : null}
+      {isImportNftsModalOpen ? (
+        <ImportNftsModal onClose={hideImportNftsModal} />
+      ) : null}
+
+      {isIpfsModalOpen ? <ToggleIpfsModal onClose={hideIpfsModal} /> : null}
+      {isBasicConfigurationModalOpen ? <BasicConfigurationModal /> : null}
+      {isImportTokensModalOpen ? (
+        <ImportTokensModal onClose={hideImportTokensModal} />
+      ) : null}
+      {isDeprecatedNetworkModalOpen ? (
+        <DeprecatedNetworkModal onClose={hideDeprecatedNetworkModal} />
+      ) : null}
+      {
+        ///: BEGIN:ONLY_INCLUDE_IF(keyring-snaps)
+        isShowKeyringSnapRemovalResultModal && (
+          <KeyringSnapRemovalResult
+            isOpen={isShowKeyringSnapRemovalResultModal}
+            onClose={hideShowKeyringSnapRemovalResultModal}
           />
+        )
+        ///: END:ONLY_INCLUDE_IF
+      }
+      <Box className="main-container-wrapper">
+        {isLoadingShown ? <Loading loadingMessage={loadMessage} /> : null}
+        {!isLoading && isNetworkLoading && completedOnboarding ? (
+          <LoadingNetwork />
         ) : null}
-        {isNetworkMenuOpen ? (
-          <NetworkListMenu onClose={networkMenuClose} />
-        ) : null}
-        <NetworkConfirmationPopover />
-        {accountDetailsAddress ? (
-          <AccountDetails address={accountDetailsAddress} />
-        ) : null}
-        {isImportNftsModalOpen ? (
-          <ImportNftsModal onClose={hideImportNftsModal} />
-        ) : null}
-
-        {isIpfsModalOpen ? <ToggleIpfsModal onClose={hideIpfsModal} /> : null}
-        {isBasicConfigurationModalOpen ? <BasicConfigurationModal /> : null}
-        {isImportTokensModalOpen ? (
-          <ImportTokensModal onClose={hideImportTokensModal} />
-        ) : null}
-        {isDeprecatedNetworkModalOpen ? (
-          <DeprecatedNetworkModal onClose={hideDeprecatedNetworkModal} />
-        ) : null}
-        {
-          ///: BEGIN:ONLY_INCLUDE_IF(keyring-snaps)
-          isShowKeyringSnapRemovalResultModal && (
-            <KeyringSnapRemovalResult
-              isOpen={isShowKeyringSnapRemovalResultModal}
-              onClose={hideShowKeyringSnapRemovalResultModal}
-            />
-          )
-          ///: END:ONLY_INCLUDE_IF
-        }
-        <Box className="main-container-wrapper">
-          {isLoadingShown ? <Loading loadingMessage={loadMessage} /> : null}
-          {!isLoading && isNetworkLoading && completedOnboarding ? (
-            <LoadingNetwork />
-          ) : null}
-          {this.renderRoutes()}
-        </Box>
-        {isUnlocked ? <Alerts history={this.props.history} /> : null}
-        <ToastMaster />
-      </div>
-    );
-  }
+        {renderRoutes()}
+      </Box>
+      {isUnlocked ? <Alerts history={props.history} /> : null}
+      <ToastMaster />
+    </div>
+  );
 }
