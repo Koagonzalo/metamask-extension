@@ -42,6 +42,7 @@ jobs:
           is-high-risk-environment: true
           skip-allow-scripts: true
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Download artifact 'build-dist-browserify'
         uses: actions/download-artifact@v4
